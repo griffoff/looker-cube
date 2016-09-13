@@ -3,11 +3,6 @@
   sql_table_name: DW_GA.DIM_COURSE
   fields:
 
-  - dimension: cgi
-    label: 'Course CGI'
-    type: string
-    sql: ${TABLE}.CGI
-
   - dimension: courseid
     type: string
     sql: ${TABLE}.COURSEID
@@ -23,6 +18,8 @@
       url: https://cengage.looker.com/dashboards/test::engagement_toolkit?filter_course={{value}}
     - label: Engagement Toolkit (Dev)
       url: http://dashboard-dev.cengage.info/engtoolkit/{{value}}
+    - label: Engagement Toolkit - Discipline (Dev)
+      url: http://dashboard-dev.cengage.info/engtoolkit/discipline/{{dim_product.hed_discipline._value}}
 
   - dimension: coursename
     label: 'Course Name'
@@ -31,11 +28,10 @@
     links:
     - label: Engagement Toolkit Looker
       url: https://cengage.looker.com/dashboards/test::engagement_toolkit?filter_course={{dim_course.coursekey._value}}
-
-  - dimension: coursetitle
-    type: string
-    label: 'Course Title'
-    sql: ${TABLE}.COURSETITLE
+    - label: Engagement Toolkit (Dev)
+      url: http://dashboard-dev.cengage.info/engtoolkit/{{value}}
+    - label: Engagement Toolkit (Live)
+      url: http://dashboard.cengage.info/engtoolkit/{{value}}
 
   - dimension: dw_ldid
     type: string

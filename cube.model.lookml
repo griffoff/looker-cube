@@ -4,9 +4,6 @@
 - include: "*.view.lookml"       # include all the views
 - include: "*.dashboard.lookml"  # include all the dashboards
 
-- explore: dim_filter
-  hidden: true
-
 - explore: dim_course
   label: 'Course'
   extension: required
@@ -20,6 +17,9 @@
     - join: dim_product
       relationship: many_to_one
       sql_on: ${dim_course.productid} = ${dim_product.productid}
+    - join: dim_institution
+      relationship: many_to_one
+      sql_on: ${dim_course.institutionid} = ${dim_institution.institutionid}
     - join: dim_productplatform
       relationship: many_to_one
       sql_on: ${dim_course.productplatformid} = ${dim_productplatform.productplatformid}
@@ -34,6 +34,20 @@
     - join: fact_siteusage
       sql_on: ${dim_date.datekey} = ${fact_siteusage.eventdatekey}
       relationship: one_to_many
+    - join: fact_activation
+      sql_on: ${dim_date.datekey} = ${fact_activation.activationdatekey}
+      relationship: one_to_many
+    - join: fact_enrollment
+      sql_on: ${dim_date.datekey} = ${fact_enrollment.eventdatekey}
+      relationship: one_to_many
+      
+- explore: dim_institution
+  extension: required
+  joins:
+    - join: dim_location
+      sql_on: ${dim_institution.locationid} = ${dim_location.locationid}
+      relationship: many_to_one
+
 
 - explore: dim_deviceplatform
   extension: required
@@ -68,10 +82,10 @@
       sql_on: ${dim_pagedomain.productplatformid} = ${dim_productplatform.productplatformid}
       relationship: many_to_one
 
-- explore: dim_party
-  hidden: true
+#- explore: dim_party
   
 - explore: dim_user
+  extension: required
   joins:
     - join: dim_party
       sql_on: ${dim_user.mainpartyid} = ${dim_party.partyid}
@@ -211,11 +225,14 @@
     - join: dim_user
       sql_on: ${fact_session.userid} = ${dim_user.userid}
       relationship: many_to_one
-
+      
 - explore: fact_siteusage
   label: 'Web - Site usage'
   extends: [dim_user, dim_course, dim_pagedomain]
   joins:
+    - join: dim_date
+      sql_on: ${fact_siteusage.eventdatekey} = ${dim_date.datekey}
+      relationship: many_to_one
     - join: dim_course
       sql_on: ${fact_siteusage.courseid} = ${dim_course.courseid}
       relationship: many_to_one

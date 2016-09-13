@@ -24,14 +24,18 @@
     sql: ${TABLE}.GUID
 
   - dimension: lastname
+    label: 'Last name'
+    group_label: 'PII'
     type: string
     sql: ${TABLE}.LASTNAME
-    hidden: true
+    #hidden: true
 
   - dimension: mainpartyemail
+    group_label: 'PII'
+    label: 'e-mail address'
     type: string
     sql: ${TABLE}.MAINPARTYEMAIL
-    hidden: true
+    #hidden: true
 
   - dimension: partyid
     type: string
@@ -40,7 +44,7 @@
     hidden: true
 
   - measure: count
-    label: 'No. of People'
+    label: 'No. of people'
     type: count
     drill_fields: [guid]
 

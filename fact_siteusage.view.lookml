@@ -122,18 +122,20 @@
 
   - measure: pageviewtime
     type: number
-    sql: ${TABLE}.PAGEVIEWTIME
+    sql: ${TABLE}.PAGEVIEWTIME/60000.0
     hidden: true
     
   - measure: pageviewtime_avg
     label: 'Page view time (avg)'
     type: avg
     sql: ${pageviewtime}
+    value_format: '0.0 \m\i\n\s'
     
   - measure: pageviewtime_sum
     label: 'Page view time (total)'
     type: sum
-    sql: ${pageviewtime}
+    sql: ${pageviewtime}/60
+    value_format: '0.0 \h\r\s'
 
   - dimension: partyid
     hidden: true
