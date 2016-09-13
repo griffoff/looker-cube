@@ -1,6 +1,6 @@
 - view: fact_siteusage
   label: 'Web Usage'
-  sql_table_name: DW_GA.FACT_SITEUSAGE_V
+  sql_table_name: DW_GA.FACT_SITEUSAGE
   fields:
 
   - dimension: activityid

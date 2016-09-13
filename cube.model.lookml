@@ -1,8 +1,11 @@
-- connection: snowflake_dev
-- label: 'Cube Data on Looker'
+- connection: snowflake_migration_test
+  label: 'Cube Data on Looker'
 
 - include: "*.view.lookml"       # include all the views
 - include: "*.dashboard.lookml"  # include all the dashboards
+
+- explore: dim_filter
+  hidden: true
 
 - explore: dim_course
   #extension: required
@@ -21,6 +24,7 @@
       sql_on: ${dim_course.productplatformid} = ${dim_productplatform.productplatformid}
   
 - explore: dim_date
+  extension: required
   extends: [fact_session, fact_siteusage]
   joins:
     - join: fact_session
@@ -39,9 +43,12 @@
 - explore: dim_learningpath
   extension: required
   joins:
-    - join: parentlearningpath
-      type: left_outer 
-      sql_on: ${dim_learningpath.parentlearningpathid} = ${parentlearningpath.parentlearningpathid}
+    #- join: parentlearningpath
+    #  type: left_outer 
+    #  sql_on: ${dim_learningpath.parentlearningpathid} = ${parentlearningpath.parentlearningpathid}
+    #  relationship: many_to_one
+    - join: dim_master_node
+      sql_on: ${dim_learningpath.masternodeid} = ${dim_master_node.masternodeid}
       relationship: many_to_one
 
 
@@ -93,8 +100,53 @@
     - join: dim_relative_to_end_date
       sql_on: ${fact_activation.daysbeforecourseend} = ${dim_relative_to_end_date.days}
       relationship: many_to_one 
-
+    - join: fact_enrollment
+      sql_on: ${fact_activation.courseid} = ${fact_enrollment.courseid} and ${fact_activation.partyid}) = ${fact_enrollment.partyid})
+      relationship: one_to_many
+      
 - explore: fact_activityoutcome
+  extends: [dim_user, dim_course, dim_learningpath]
+  joins: 
+    - join: dim_completion_date
+      sql_on: ${fact_activityoutcome.completeddatekey} = ${dim_completion_date.datekey}
+      relationship: many_to_one
+    - join: dim_user
+      sql_on: ${fact_activityoutcome.userid} = ${dim_user.userid}
+      relationship: many_to_one
+    - join: dim_product
+      sql_on: ${fact_activityoutcome.productid} = ${dim_product.productid}
+      relationship: many_to_one
+    - join: dim_learningpath
+      sql_on: ${fact_activityoutcome.learningpathid} = ${dim_learningpath.learningpathid}
+      relationship: many_to_one
+    - join: dim_activity
+      sql_on: ${fact_activityoutcome.activityid} = ${dim_activity.activityid}
+      relationship: many_to_one
+    - join: dim_institution
+      sql_on: ${fact_activityoutcome.institutionid} = ${dim_institution.institutionid}
+      relationship: many_to_one
+    - join: dim_course
+      sql_on: ${fact_activityoutcome.courseid} = ${dim_course.courseid}
+      relationship: many_to_one
+    - join: dim_relative_to_start_date
+      sql_on: ${fact_activityoutcome.daysfromcoursestart} = ${dim_relative_to_start_date.days}
+      relationship: many_to_one
+    - join: dim_relative_to_end_date
+      sql_on: ${fact_activityoutcome.daysbeforecourseend} = ${dim_relative_to_end_date.days}
+      relationship: many_to_one
+    - join: dim_relative_to_due_date
+      sql_on: ${fact_activityoutcome.daysleftbeforeduedate} = ${dim_relative_to_due_date.days}
+      relationship: many_to_one
+    - join: dim_time
+      sql_on: ${fact_activityoutcome.timekey} = ${dim_time.timekey}
+      relationship: many_to_one
+    - join: dim_filter
+      sql_on: ${fact_activityoutcome.filterflag} = ${dim_filter.filterflag}
+      relationship: many_to_one
+    - join: fact_activation
+      sql_on: ${fact_activityoutcome.courseid} = ${fact_activation.courseid} and ${fact_activityoutcome.userid} = ${fact_activation.userid}
+      relationship: many_to_one
+     
 
 - explore: fact_appusage
   joins:
@@ -105,7 +157,29 @@
 
 
 - explore: fact_enrollment
-
+  joins: 
+    - join: dim_date
+      sql_on: ${fact_enrollment.eventdatekey} = ${dim_date.datekey}
+      relationship: many_to_one
+    - join: dim_user
+      sql_on: ${fact_enrollment.userid} = ${dim_user.userid}
+      relationship: many_to_one
+    - join: dim_product
+      sql_on: ${fact_enrollment.productid} = ${dim_product.productid}
+      relationship: many_to_one
+    - join: dim_institution
+      sql_on: ${fact_enrollment.institutionid} = ${dim_institution.institutionid}
+      relationship: many_to_one
+    - join: dim_course
+      sql_on: ${fact_enrollment.courseid} = ${dim_course.courseid}
+      relationship: many_to_one
+    - join: dim_relative_to_start_date
+      sql_on: ${fact_enrollment.daysfromcoursestart} = ${dim_relative_to_start_date.days}
+      relationship: many_to_one
+    - join: dim_relative_to_end_date
+      sql_on: ${fact_enrollment.daysbeforecourseend} = ${dim_relative_to_end_date.days}
+      relationship: many_to_one 
+      
 - explore: fact_session
   extends: [dim_user]
   joins:

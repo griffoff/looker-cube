@@ -3,37 +3,65 @@
   sql_table_name: DW_GA.DIM_ACTIVITY
   fields:
 
-  - dimension: activitydescription
-    label: 'Activity Description'
+  - dimension: activitycategory
+    label: 'Category'
     type: string
-    sql: ${TABLE}.ACTIVITYDESCRIPTION
+    sql: ${TABLE}.Category
+  
+  - dimension: activitysubcategory
+    label: 'Sub category'
+    type: string
+    sql: ${TABLE}.SubCategory
+
+  - dimension: activitysubtype
+    label: 'Sub type'
+    type: string
+    sql: ${TABLE}.SubType
 
   - dimension: activityid
     type: number
     sql: ${TABLE}.ACTIVITYID
     primary_key: true
     hidden: true
-
-  - dimension: activitysort
-    type: string
-    sql: ${TABLE}.ACTIVITYSORT
+  
+  - dimension: possiblepoints
+    label: 'Possible points'
+    type: number
+    sql: ${TABLE}.possiblepoints
     hidden: true
-
-  - dimension: activitytitle
-    label: 'Activity Title'
+    
+  - dimension: possiblepoints_bucket
+    label: 'Possible points (bins)'
+    type: tier
+    tiers: [5, 10, 20, 50, 100]
+    style: integer
+    sql: ${possiblepoints}
+  
+  - dimension: APPLICATIONNAME
+    label: 'Application Name'
     type: string
-    sql: ${TABLE}.ACTIVITYTITLE
+    sql: ${TABLE}.APPLICATIONNAME
 
-  - dimension: activitytype
-    label: 'Activity Type'
+  - dimension: assigned
+    label: 'Assigned'
     type: string
-    sql: ${TABLE}.ACTIVITYTYPE
-
-  - dimension: cgi
-    label: 'Activity CGI'
+    sql: ${TABLE}.ASSIGNED
+  
+  - dimension: originalassigned
+    label: 'Originally assigned'
     type: string
-    sql: ${TABLE}.CGI
+    sql: ${TABLE}.ORIGINALASSIGNED
+    
+  - dimension: scorable
+    label: 'Scorable'
+    type: string
+    sql: ${TABLE}.SCORABLE
 
+  - dimension: originalscorable
+    label: 'Originally scorable'
+    type: string
+    sql: ${TABLE}.ORIGINALSCORABLE
+  
   - measure: count
     label: 'No. of Activities'
     type: count

@@ -1,6 +1,6 @@
 - view: dim_date
   label: 'Date'
-  sql_table_name: PROD.DW_GA.DIM_DATE
+  sql_table_name: DW_GA.DIM_DATE
   fields:
 
   - dimension: calendarmonthid
@@ -231,3 +231,7 @@
 - view: dim_end_date
   extends: [dim_date]
   label: 'Course End Date'
+  
+- view: dim_completion_date
+  extends: [dim_date]
+  label: 'Completion Date'

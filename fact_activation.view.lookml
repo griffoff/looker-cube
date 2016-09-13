@@ -1,4 +1,5 @@
 - view: fact_activation
+  label: 'Activations'
   sql_table_name: DW_GA.FACT_ACTIVATION
   fields:
 
@@ -67,12 +68,15 @@
   - measure: noofactivations_base
     type: number
     sql: ${TABLE}.NOOFACTIVATIONS
+    hidden: true
 
   - measure: total_noofactivations
+    label: 'Total activations'
     type: sum
     sql: ${noofactivations_base}
 
   - measure: avg_noofactivations
+    label: 'Avg. activations'
     type: average
     sql: ${noofactivations_base}
     

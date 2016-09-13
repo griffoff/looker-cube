@@ -8,21 +8,23 @@
     sql: ${TABLE}.AMPM
 
   - dimension: hour
-    type: string
+    type: number
     sql: ${TABLE}.HOUR
+    order_by_field: hour24
 
   - dimension: hour24
-    type: string
+    type: number
     sql: ${TABLE}.HOUR24
 
   - dimension: minute
-    type: string
+    type: number
     sql: ${TABLE}.MINUTE
 
   - dimension: time
     type: time
     timeframes: [hour_of_day, minute, raw]
     sql: ${TABLE}.TIME
+    hidden: true
 
   - dimension: timekey
     type: string
@@ -30,7 +32,7 @@
     hidden: true
     primary_key: true
 
-  - measure: count
-    type: count
-    drill_fields: []
+  #- measure: count
+  #  type: count
+  #  drill_fields: []
 
