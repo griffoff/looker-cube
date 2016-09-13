@@ -31,6 +31,7 @@
     primary_key: true
     
   - measure: count
+    label: 'No. of product platforms'
     type: count
     drill_fields: []
 

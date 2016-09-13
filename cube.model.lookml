@@ -8,7 +8,8 @@
   hidden: true
 
 - explore: dim_course
-  #extension: required
+  label: 'Course'
+  extension: required
   joins:
     - join: dim_start_date 
       sql_on: ${dim_course.startdatekey} = ${dim_start_date.datekey}
@@ -77,6 +78,7 @@
       relationship: many_to_one  
   
 - explore: fact_activation
+  label: 'Activations'
   extends: [dim_user, dim_course]
   joins: 
     - join: dim_date
@@ -105,6 +107,7 @@
       relationship: one_to_many
       
 - explore: fact_activityoutcome
+  label: 'Activity Outcomes'
   extends: [dim_user, dim_course, dim_learningpath]
   joins: 
     - join: dim_completion_date
@@ -149,6 +152,7 @@
      
 
 - explore: fact_appusage
+  label: 'App usage'
   joins:
     - join: location
       type: left_outer 
@@ -157,6 +161,7 @@
 
 
 - explore: fact_enrollment
+  label: 'Enrollments'
   joins: 
     - join: dim_date
       sql_on: ${fact_enrollment.eventdatekey} = ${dim_date.datekey}
@@ -181,6 +186,7 @@
       relationship: many_to_one 
       
 - explore: fact_session
+  label: 'Web - Sessions'
   extends: [dim_user]
   joins:
     - join: dim_location
@@ -207,7 +213,8 @@
       relationship: many_to_one
 
 - explore: fact_siteusage
-  extends: [dim_user, dim_course]
+  label: 'Web - Site usage'
+  extends: [dim_user, dim_course, dim_pagedomain]
   joins:
     - join: dim_course
       sql_on: ${fact_siteusage.courseid} = ${dim_course.courseid}

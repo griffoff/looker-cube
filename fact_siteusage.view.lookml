@@ -106,12 +106,34 @@
     sql: ${TABLE}.PAGEINSTANCEID
 
   - measure: pageviewcount
-    type: average
+    type: number
     sql: ${TABLE}.PAGEVIEWCOUNT
+    hidden: true
+    
+  - measure: pageviewcount_avg
+    label: 'Page views (avg)'
+    type: average
+    sql: ${pageviewcount}
+    
+  - measure: pageviewcount_sum
+    label: 'Page views (total)'
+    type: sum
+    sql: ${pageviewcount}
 
   - measure: pageviewtime
-    type: average
+    type: number
     sql: ${TABLE}.PAGEVIEWTIME
+    hidden: true
+    
+  - measure: pageviewtime_avg
+    label: 'Page view time (avg)'
+    type: avg
+    sql: ${pageviewtime}
+    
+  - measure: pageviewtime_sum
+    label: 'Page view time (total)'
+    type: sum
+    sql: ${pageviewtime}
 
   - dimension: partyid
     hidden: true
@@ -138,7 +160,8 @@
     type: string
     sql: ${TABLE}.USERID
 
-  - measure: count
-    type: count
-    drill_fields: [location.locationid]
+  #- measure: count
+  #  label: 'No. of page view records'
+  #  type: count
+  #  drill_fields: [location.locationid]
 
