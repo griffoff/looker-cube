@@ -196,7 +196,13 @@
     type: time
     timeframes: [time, date, week, month]
     sql: ${TABLE}.TAKEENDTIME
-
+    
+  - dimension: takestartdate
+    label: 'Take Start Time'
+    type: date
+    sql: ${TABLE}.TAKESTARTTIME::date
+    hidden: true
+    
   - dimension_group: takestarttime
     label: 'Take Start Time'
     type: time
@@ -205,7 +211,7 @@
 
   - measure: timeduration
     type: number
-    sql: ${TABLE}.TIMEDURATION/1000.0
+    sql: COALESCE(NULLIF(${TABLE}.TIMEDURATION, 0), ${TABLE}.TIMESPENT) /1000.0
     hidden: true
 
   - measure: timeduration_avg

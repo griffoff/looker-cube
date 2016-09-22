@@ -1,6 +1,6 @@
 - view: dim_activity
   label: 'Activity'
-  sql_table_name: DW_GA.DIM_ACTIVITY
+  sql_table_name: DW_GA.DIM_ACTIVITY_V
   fields:
 
   - dimension: activitycategory
@@ -51,6 +51,17 @@
     label: 'Originally assigned'
     type: string
     sql: ${TABLE}.ORIGINALASSIGNED
+    
+  - dimension: assigned_status
+    label: 'Assignment status'
+    type: string
+    sql: |
+      CASE 
+        WHEN ${assigned} = 'Unassigned' AND ${originalassigned} = 'Assigned' THEN 'DE-ASSIGNED'
+        WHEN ${assigned} = 'Assigned' AND ${originalassigned} = 'Unassigned' THEN 'PROMOTED TO ASSIGNED'
+        WHEN ${assigned} = ${originalassigned} THEN ${originalassigned} || ' - NO CHANGE'
+        ELSE ${assigned}
+      END
     
   - dimension: scorable
     label: 'Scorable'

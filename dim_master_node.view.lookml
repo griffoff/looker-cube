@@ -1,7 +1,12 @@
 - view: dim_master_node
   label: 'Master Learning Path'
-  sql_table_name: DW_GA.DIM_MASTER_NODE
+  sql_table_name: DW_GA.DIM_MASTER_NODE_V
   fields:
+  
+  - dimension: first_used_datekey
+    type: number
+    sql: ${TABLE}.firstdatekey
+    hidden: true
   
   - dimension: snapshot_status
     label: 'Status'
@@ -12,6 +17,7 @@
     type: string
     sql: case when ${masternodeid} > -1 then ${TABLE}.level1 else 'New Item - ' || ${dim_learningpath.level1} end
     order_by_field: level1_displayorder
+    drill_fields: [level2, lowest_level]
 
   - dimension: level1_displayorder
     type: string
@@ -22,6 +28,7 @@
     type: string
     sql: case when ${masternodeid} > -1 then ${TABLE}.level2 else 'New Item - ' || ${dim_learningpath.level2} end
     order_by_field: level2_displayorder
+    drill_fields: [level3, lowest_level]
 
   - dimension: level2_displayorder
     type: string
@@ -32,6 +39,7 @@
     type: string
     sql: case when ${masternodeid} > -1 then ${TABLE}.level3 else 'New Item - ' || ${dim_learningpath.level3} end
     order_by_field: level3_displayorder
+    drill_fields: [level4, lowest_level]
 
   - dimension: level3_displayorder
     type: string
@@ -42,6 +50,7 @@
     type: string
     sql: case when ${masternodeid} > -1 then ${TABLE}.level4 else 'New Item - ' || ${dim_learningpath.level4} end
     order_by_field: level4_displayorder
+    drill_fields: [level5, lowest_level]
 
   - dimension: level4_displayorder
     type: string
@@ -73,6 +82,12 @@
   - dimension: level9
     type: string
     sql: case when ${masternodeid} > -1 then ${TABLE}.level9 else 'New Item - ' || ${dim_learningpath.level9} end
+    
+  - dimension: lowest_level
+    label: 'Lowest Level'
+    type: string
+    sql: COALESCE(${TABLE}.LEVEL9,${TABLE}.LEVEL8,${TABLE}.LEVEL7,${TABLE}.LEVEL6,${TABLE}.LEVEL5,${TABLE}.LEVEL4,${TABLE}.LEVEL3,${TABLE}.LEVEL2) 
+
 
   - dimension: mastercoursename
     label: 'Master Course Name'

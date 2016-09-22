@@ -90,7 +90,7 @@
     sql: ${TABLE}.USERID
     hidden: true
 
-  - measure: count
+  - measure: enrollment_count
     type: count
     drill_fields: []
 

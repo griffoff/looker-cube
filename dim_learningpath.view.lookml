@@ -88,6 +88,11 @@
   - dimension: level9
     type: string
     sql: ${TABLE}.LEVEL9
+    
+  - dimension: lowest_level
+    label: 'Lowest Level'
+    type: string
+    sql: COALESCE(${TABLE}.LEVEL9,${TABLE}.LEVEL8,${TABLE}.LEVEL7,${TABLE}.LEVEL6,${TABLE}.LEVEL5,${TABLE}.LEVEL4,${TABLE}.LEVEL3,${TABLE}.LEVEL2) 
 
   - dimension: masternodeid
     type: string

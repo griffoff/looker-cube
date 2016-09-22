@@ -65,8 +65,10 @@
     - join: dim_master_node
       sql_on: ${dim_learningpath.masternodeid} = ${dim_master_node.masternodeid}
       relationship: many_to_one
-
-
+    - join: dim_first_used_date
+      sql_on: ${dim_master_node.first_used_datekey} = ${dim_first_used_date.datekey}
+      relationship: many_to_one
+    
 - explore: dim_location
   extension: required
   joins:
@@ -163,19 +165,90 @@
     - join: fact_activation
       sql_on: ${fact_activityoutcome.courseid} = ${fact_activation.courseid} and ${fact_activityoutcome.userid} = ${fact_activation.userid}
       relationship: many_to_one
-     
+      
+- explore: fact_activity
+  label: 'Instructor Activities'
+  extends: [dim_user, dim_course, dim_learningpath]
+  joins: 
+    - join: dim_eventtype
+      sql_on: ${fact_activity.eventtypeid} = ${dim_eventtype.eventtypeid}
+      relationship: many_to_one
+    - join: dim_created_date
+      sql_on: ${fact_activity.createddatekey} = ${dim_created_date.datekey}
+      relationship: many_to_one
+    - join: dim_user
+      sql_on: ${fact_activity.userid} = ${dim_user.userid}
+      relationship: many_to_one
+    - join: dim_product
+      sql_on: ${fact_activity.productid} = ${dim_product.productid}
+      relationship: many_to_one
+    - join: dim_learningpath
+      sql_on: ${fact_activity.learningpathid} = ${dim_learningpath.learningpathid}
+      relationship: many_to_one
+    - join: dim_activity
+      sql_on: ${fact_activity.activityid} = ${dim_activity.activityid}
+      relationship: many_to_one
+    - join: dim_institution
+      sql_on: ${fact_activity.institutionid} = ${dim_institution.institutionid}
+      relationship: many_to_one
+    - join: dim_course
+      sql_on: ${fact_activity.courseid} = ${dim_course.courseid}
+      relationship: many_to_one
+    - join: dim_relative_to_start_date
+      sql_on: ${fact_activity.daysfromcoursestart} = ${dim_relative_to_start_date.days}
+      relationship: many_to_one
+    - join: dim_relative_to_end_date
+      sql_on: ${fact_activity.daysbeforecourseend} = ${dim_relative_to_end_date.days}
+      relationship: many_to_one
+    - join: dim_time
+      sql_on: ${fact_activity.timekey} = ${dim_time.timekey}
+      relationship: many_to_one
+    - join: dim_filter
+      sql_on: ${fact_activity.filterflag} = ${dim_filter.filterflag}
+      relationship: many_to_one
 
 - explore: fact_appusage
   label: 'App usage'
+  extends: [dim_user, dim_course, dim_learningpath]
   joins:
-    - join: location
-      type: left_outer 
-      sql_on: ${fact_appusage.locationid} = ${location.locationid}
+    - join: dim_learningpath
+      sql_on: ${fact_appusage.learningpathid} = ${dim_learningpath.learningpathid}
       relationship: many_to_one
-
+    - join: dim_location
+      type: left_outer 
+      sql_on: ${fact_appusage.locationid} = ${dim_location.locationid}
+      relationship: many_to_one
+    - join: dim_date
+      sql_on: ${fact_appusage.eventdatekey} = ${dim_date.datekey}
+      relationship: many_to_one
+    - join: dim_user
+      sql_on: ${fact_appusage.userid} = ${dim_user.userid}
+      relationship: many_to_one
+    - join: dim_party
+      sql_on: ${fact_appusage.partyid} = ${dim_party.partyid}
+      relationship: many_to_one
+    - join: dim_product
+      sql_on: ${fact_appusage.productid} = ${dim_product.productid}
+      relationship: many_to_one
+    - join: dim_course
+      sql_on: ${fact_appusage.courseid} = ${dim_course.courseid}
+      relationship: many_to_one
+    - join: dim_deviceplatform
+      sql_on: ${fact_appusage.deviceplatformid} = ${dim_deviceplatform.deviceplatformid}
+      relationship: many_to_one
+    - join: dim_iframeapplication
+      sql_on: ${fact_appusage.iframeapplicationid} = ${dim_iframeapplication.iframeapplicationid}
+      relationship: many_to_one
+    - join: dim_productplatform
+      sql_on: ${fact_appusage.productplatformid} = ${dim_productplatform.productplatformid}
+      relationship: many_to_one
+    - join: dim_time
+      sql_on: ${fact_appusage.timekey} = ${dim_time.timekey}
+      relationship: many_to_one
 
 - explore: fact_enrollment
   label: 'Enrollments'
+  extends: [dim_user, dim_course]
   joins: 
     - join: dim_date
       sql_on: ${fact_enrollment.eventdatekey} = ${dim_date.datekey}
