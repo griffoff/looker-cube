@@ -21,13 +21,11 @@
 
   derived_table:
      sql: |
-      select distinct filterflag
-          ,case 
-              when filterflag = 0 then 'Real Course' 
-              else replace('Idenitified as Test data (#)', '#', filterflag)
-             end as filterdesc
-          ,case when filterflag = -1 then 99 else filterflag end as filtersort
-      from dw_ga.fact_activation
+      select 0 as filterflag, 'Real Course' as filterdesc, 0 as filtersort
+      union select 1, 'Identified as Test Data (1)', 1
+      union select 2, 'Identified as Test Data (2)', 2
+      union select 3, 'Identified as Test Data (3)', 3
+      union select -1, 'Real Course', 0
       order by 3
       
   fields:
@@ -43,7 +41,7 @@
     hidden: true
     
   - dimension: filterdesc
-    label: 'Filter type'
+    label: 'Real or Test (filter flag)'
     type: string
     sql: ${TABLE}.filterdesc
     order_by_field: filtersort

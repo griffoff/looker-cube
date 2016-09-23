@@ -7,6 +7,7 @@
     label: 'Category'
     type: string
     sql: ${TABLE}.Category
+    drill_fields: [dim_learningpath.lowest_level]
   
   - dimension: activitysubcategory
     label: 'Sub category'

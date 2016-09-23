@@ -28,10 +28,10 @@
     links:
     - label: Engagement Toolkit Looker
       url: https://cengage.looker.com/dashboards/test::engagement_toolkit?filter_course={{dim_course.coursekey._value}}
-    - label: Engagement Toolkit (Dev)
-      url: http://dashboard-dev.cengage.info/engtoolkit/{{value}}
+    - label: Engagement Toolkit - Discipline {{dim_product.discipline._value}} (Dev)
+      url: http://dashboard-dev.cengage.info/engtoolkit/discipline/{{dim_product.discipline._value}}
     - label: Engagement Toolkit (Live)
-      url: http://dashboard.cengage.info/engtoolkit/{{value}}
+      url: http://dashboard.cengage.info/engtoolkit/{{dim_course.coursekey._value}}
 
   - dimension: dw_ldid
     type: string
@@ -50,9 +50,9 @@
     hidden: true
 
   - dimension: filterflag
-    label: 'Exclusion Rule (filter flag)'
     type: string
     sql: ${TABLE}.FILTERFLAG
+    hidden: true
 
   - dimension: institutionid
     type: string

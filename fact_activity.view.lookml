@@ -106,5 +106,5 @@
   - measure: count
     label: 'No. of Actions'
     type: count
-    drill_fields: [id, course.courseid]
+    drill_fields: [dim_product.discipline, dim_institution.institutionname, dim_activity.assignment_status, dim_learningpath.lowest_level, count]
 

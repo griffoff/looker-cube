@@ -80,6 +80,9 @@
     label: 'Discipline'
     group_label: 'Categories'
     sql: ${TABLE}.DISCIPLINE
+    links:
+    - label: Engagement Toolkit (Dev)
+      url: http://dashboard-dev.cengage.info/engtoolkit/discipline/{{value}}
 
   - dimension: coursearea_pt
     type: string

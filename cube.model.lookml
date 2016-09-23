@@ -7,6 +7,7 @@
 - explore: dim_course
   label: 'Course'
   extension: required
+  extends: [dim_institution]
   joins:
     - join: dim_start_date 
       sql_on: ${dim_course.startdatekey} = ${dim_start_date.datekey}
@@ -23,6 +24,9 @@
     - join: dim_productplatform
       relationship: many_to_one
       sql_on: ${dim_course.productplatformid} = ${dim_productplatform.productplatformid}
+    - join: dim_filter
+      relationship: many_to_one
+      sql_on: ${dim_course.filterflag} = ${dim_filter.filterflag}
   
 - explore: dim_date
   extension: required
@@ -345,5 +349,17 @@
     - join: dim_relative_to_start_date
       sql_on: ${fact_siteusage.daysfromcoursestart} = ${dim_relative_to_start_date.days}
       relationship: many_to_one
+      
+- explore: full_student_course_metrics
+  label: 'Data Science - Full Student Course Metrics'
+  extends: [dim_course, dim_user]
+  joins:
+    - join: dim_course
+      relationship: many_to_one
+      sql_on: ${coursekey} = ${dim_course.coursekey}
+    - join: dim_party
+      sql_on: ${user_guid} = ${dim_party.guid}
+      relationship: many_to_one
+      
 
 

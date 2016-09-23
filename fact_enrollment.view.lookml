@@ -53,6 +53,7 @@
     hidden: true
 
   - measure: fullenrollment
+    label: 'Full Enrollment'
     type: sum
     sql: ${TABLE}.FULLENROLLMENT
 

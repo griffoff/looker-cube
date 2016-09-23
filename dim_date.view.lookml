@@ -138,10 +138,11 @@
     hidden: true
 
   - dimension: hed_academicyear
-    type: string
+    type: number
     sql: ${TABLE}.HED_ACADEMICYEAR
     label: 'HED Academic Year'
     group_label: 'Calendar - HED Academic Calendar'
+    value_format: '0000'
 
   - dimension: isoweekid
     type: string
