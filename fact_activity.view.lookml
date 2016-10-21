@@ -57,7 +57,8 @@
   - dimension: filterflag
     type: string
     sql: ${TABLE}.FILTERFLAG
-
+    hidden: true
+    
   - dimension: institutionid
     type: string
     sql: ${TABLE}.INSTITUTIONID
