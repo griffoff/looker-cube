@@ -1,5 +1,5 @@
 - view: dim_eventtype
-  label: 'LPN Modification Event'
+  label: 'Learning Path Modifications'
   sql_table_name: DW_GA.DIM_EVENTTYPE
   fields:
 
