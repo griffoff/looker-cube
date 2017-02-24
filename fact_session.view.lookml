@@ -51,7 +51,7 @@
     sql: ${TABLE}.NOOFCOURSES
     hidden: true
     
-  - measure: pageviewcount
+  - dimension: pageviewcount
     type: number
     sql: ${TABLE}.PAGEVIEWCOUNT
     hidden: true
@@ -83,7 +83,7 @@
     type: string
     sql: ${TABLE}.SESSIONNUMBER
 
-  - measure: sessionviewtime
+  - dimension: sessionviewtime
     type: number
     sql: ${TABLE}.SESSIONVIEWTIME
     hidden: true

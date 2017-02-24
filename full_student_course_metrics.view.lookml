@@ -17,7 +17,7 @@
     tiers: [0.001,.1,.2,.3,.4,.5,.6,.7,.8,.9,1]
     sql: ${TABLE}.RECENCY  
     
-  - measure: duration_base
+  - dimension: duration_base
     label: 'Duration (excluding zero)'
     group_label: 'Base Measures'
     type: number
@@ -49,7 +49,7 @@
     sql: (${duration_base} / ${frequency_base})
     value_format: "0.00"
 
-  - measure: Active_Days_base
+  - dimension: Active_Days_base
     label: 'Active_Days  (excluding zero)'
     group_label: 'Base Measures'
     type: number
@@ -71,7 +71,7 @@
     sql: ${duration_total}
     value_format: 0.00\%
     
-  - measure: flashcard_base
+  - dimension: flashcard_base
     label: 'Flashcard (excluding zero)'
     group_label: 'Base Measures'
     type: number
@@ -92,14 +92,14 @@
     sql: ${flashcard_total}
     value_format: 0.00\%
     
-  - measure: search_count_base
+  - dimension: search_count_base
     label: 'Search Count (excluding zero)'
     group_label: 'Base Measures'
     type: number
     sql: NULLIF(${TABLE}.search_COUNT, 0)
     
     
-  - measure: frequency_base
+  - dimension: frequency_base
     type: number
     sql: NULLIF(${TABLE}.FREQUENCY,0)
     
@@ -126,7 +126,7 @@
     type: average
     sql: ${TABLE}.GAP_WEEK
 
-  - measure: highlight_count_base
+  - dimension: highlight_count_base
     label: 'Highlight Count (excluding zero)'
     group_label: 'Base Measures'
     type: number
@@ -151,7 +151,7 @@
     type: average
     sql: ${TABLE}.INTENSITY
     
-  - measure: login_count_base
+  - dimension: login_count_base
     label: 'Login Count (excluding zero)'
     group_label: 'Base Measures'
     type: number
@@ -177,7 +177,7 @@
     type: string
     sql: ${TABLE}.OCTANT
 
-  - measure: pages_read_base
+  - dimension: pages_read_base
     label: 'Pages Read Count (excluding zero)'
     group_label: 'Base Measures'
     type: number
@@ -198,7 +198,7 @@
     sql: ${pages_read}
     value_format: 0.00\%
 
-  - measure: reading_count_base
+  - dimension: reading_count_base
     label: 'Reader Count (excluding zero)'
     group_label: 'Base Measures'
     type: number

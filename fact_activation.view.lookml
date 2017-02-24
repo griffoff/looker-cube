@@ -65,7 +65,7 @@
     convert_tz: false
     sql: ${TABLE}.LOADDATE
 
-  - measure: noofactivations_base
+  - dimension: noofactivations_base
     type: number
     sql: ${TABLE}.NOOFACTIVATIONS
     hidden: true

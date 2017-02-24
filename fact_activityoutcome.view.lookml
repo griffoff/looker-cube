@@ -157,7 +157,7 @@
     sql: ${TABLE}.ROWID
     hidden: true
 
-  - measure: score
+  - dimension: score
     type: number
     sql: case when ${TABLE}.SCORE > 200 then 200 when ${TABLE}.SCORE <0 then null else ${TABLE}.SCORE end
     hidden: true
@@ -209,7 +209,7 @@
     timeframes: [time, date, week, month]
     sql: ${TABLE}.TAKESTARTTIME
 
-  - measure: timeduration
+  - dimension: timeduration
     type: number
     sql: COALESCE(NULLIF(${TABLE}.TIMEDURATION, 0), ${TABLE}.TIMESPENT) /1000.0
     hidden: true
