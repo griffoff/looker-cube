@@ -17,7 +17,7 @@
     tiers: [0.001,.1,.2,.3,.4,.5,.6,.7,.8,.9,1]
     sql: ${TABLE}.RECENCY  
     
-  - measure: duration_base
+  - dimension: duration_base
     label: 'Duration (excluding zero)'
     group_label: 'Base Measures'
     type: number
@@ -49,7 +49,7 @@
     sql: (${duration_base} / ${frequency_base})
     value_format: "0.00"
 
-  - measure: Active_Days_base
+  - dimension: Active_Days_base
     label: 'Active_Days  (excluding zero)'
     group_label: 'Base Measures'
     type: number
@@ -71,7 +71,7 @@
     sql: ${duration_total}
     value_format: 0.00\%
     
-  - measure: flashcard_base
+  - dimension: flashcard_base
     label: 'Flashcard (excluding zero)'
     group_label: 'Base Measures'
     type: number
@@ -92,14 +92,14 @@
     sql: ${flashcard_total}
     value_format: 0.00\%
     
-  - measure: search_count_base
+  - dimension: search_count_base
     label: 'Search Count (excluding zero)'
     group_label: 'Base Measures'
     type: number
     sql: NULLIF(${TABLE}.search_COUNT, 0)
     
     
-  - measure: frequency_base
+  - dimension: frequency_base
     type: number
     sql: NULLIF(${TABLE}.FREQUENCY,0)
     
@@ -126,7 +126,7 @@
     type: average
     sql: ${TABLE}.GAP_WEEK
 
-  - measure: highlight_count_base
+  - dimension: highlight_count_base
     label: 'Highlight Count (excluding zero)'
     group_label: 'Base Measures'
     type: number
@@ -151,7 +151,7 @@
     type: average
     sql: ${TABLE}.INTENSITY
     
-  - measure: login_count_base
+  - dimension: login_count_base
     label: 'Login Count (excluding zero)'
     group_label: 'Base Measures'
     type: number
@@ -177,7 +177,7 @@
     type: string
     sql: ${TABLE}.OCTANT
 
-  - measure: pages_read_base
+  - dimension: pages_read_base
     label: 'Pages Read Count (excluding zero)'
     group_label: 'Base Measures'
     type: number
@@ -198,7 +198,7 @@
     sql: ${pages_read}
     value_format: 0.00\%
 
-  - measure: reading_count_base
+  - dimension: reading_count_base
     label: 'Reader Count (excluding zero)'
     group_label: 'Base Measures'
     type: number
@@ -317,21 +317,21 @@
     sql: ${TABLE}.user_guid
     
     
-  - measure: highlight_diff
+  - dimension: highlight_diff
     label: 'Highlights: Good vs Below Average'
     group_label: 'Diffs: Good vs Below Average'
     type: number
     sql: case when avg(case when Final_TYPE_OF_STUDENT = 'below-average' then highlight_count end) > 0 then (avg(case when Final_TYPE_OF_STUDENT = 'good' then nullif(highlight_count,0) end)/avg(case when Final_TYPE_OF_STUDENT = 'below-average' then nullif(highlight_count,0) end))-1 else 0 end
     value_format: 0.0%
     
-  - measure: login_diff
+  - dimension: login_diff
     label: 'Logins: Good vs Below Average'
     group_label: 'Diffs: Good vs Below Average'
     type: number
     sql: case when avg(case when Final_TYPE_OF_STUDENT = 'below-average' then login_count end) > 0 then ( avg(case when Final_TYPE_OF_STUDENT = 'good' then nullif(login_count,0) end)/avg(case when Final_TYPE_OF_STUDENT = 'below-average' then nullif(login_count,0) end) )-1     else 0 end
     value_format: 0.0%
 
-  - measure: Active_diff
+  - dimension: Active_diff
     label: 'Active: Good vs Below Average'
     group_label: 'Diffs: Good vs Below Average'
     type: number
@@ -345,7 +345,7 @@
   #  sql: case when avg(case when Final_TYPE_OF_STUDENT = 'below-average' then flashcard_count end) > 0 then  (avg(case when Final_TYPE_OF_STUDENT = 'good' then nullif(flashcard_count,0) end)/avg(case when Final_TYPE_OF_STUDENT = 'below-average' then nullif(flashcard_count,0) end))-1 else 0 end
   #  value_format: 0.0%
     
-  - measure: reading_count_diff
+  - dimension: reading_count_diff
     type: number
     label: 'Reading: Good vs Below Average'
     group_label: 'Diffs: Good vs Below Average'
@@ -358,49 +358,49 @@
   #  group_label: 'Final Outcome Good vs Below-Average'
   #  sql: case when avg(case when Final_TYPE_OF_STUDENT = 'below-average' then search_count end) > 0 then  (avg(case when Final_TYPE_OF_STUDENT = 'good' then nullif(search_count,0) end)/avg(case when Final_TYPE_OF_STUDENT = 'below-average' then nullif(search_count,0) end))-1 else 0 end
   #  value_format: 0.0%
-  - measure: active_days_count_D_F_G
+  - dimension: active_days_count_D_F_G
     type: number
     label: 'Degraded from Good: Active'
     group_label: 'Degraders Usage Difference: Initial Good'
     sql: avg(case when Final_TYPE_OF_STUDENT != 'good' and Initial_Type_of_Student = 'good' then Active_days_Logins end)/nullif(avg(case when Final_TYPE_OF_STUDENT not in ('below-average', 'average') and Initial_Type_of_Student = 'good' then Active_days_Logins end), 0) -1
     value_format: 0.0% 
     
-  - measure: flashcard_count_D_F_G
+  - dimension: flashcard_count_D_F_G
     type: number
     label: 'Degraded from Good: Flashcard'
     group_label: 'Degraders Usage Difference: Initial Good'
     sql: avg(case when Final_TYPE_OF_STUDENT != 'good' and Initial_Type_of_Student = 'good' then flashcard_count end)/nullif(avg(case when Final_TYPE_OF_STUDENT not in ('below-average', 'average') and Initial_Type_of_Student = 'good' then flashcard_count end), 0) -1
     value_format: 0.0% 
     
-  - measure: highlight_diff_D_F_G
+  - dimension: highlight_diff_D_F_G
     type: number
     label: 'Degraded from Good: Highlights'
     group_label: 'Degraders Usage Difference: Initial Good'
     sql: avg(case when Final_TYPE_OF_STUDENT != 'good' and Initial_Type_of_Student = 'good' then highlight_count end)/nullif(avg(case when Final_TYPE_OF_STUDENT not in ('below-average', 'average') and Initial_Type_of_Student = 'good' then highlight_count end), 0) -1
     value_format: 0.0%   
 
-  - measure: search_count_D_F_G
+  - dimension: search_count_D_F_G
     type: number
     label: 'Degraded from Good: Search'
     group_label: 'Degraders Usage Difference: Initial Good'
     sql: avg(case when Final_TYPE_OF_STUDENT != 'good' and Initial_Type_of_Student = 'good' then search_count end)/nullif(avg(case when Final_TYPE_OF_STUDENT not in ('below-average', 'average') and Initial_Type_of_Student = 'good' then search_count end), 0) -1
     value_format: 0.0%    
 
-  - measure: login_D_F_G
+  - dimension: login_D_F_G
     type: number
     label: 'Degraded from Good: Login'
     group_label: 'Degraders Usage Difference: Initial Good'
     sql: avg(case when Final_TYPE_OF_STUDENT != 'good' and Initial_Type_of_Student = 'good' then login_count end)/nullif(avg(case when Final_TYPE_OF_STUDENT not in ('below-average', 'average') and Initial_Type_of_Student = 'good' then login_count end), 0) -1
     value_format: 0.0% 
     
-  - measure: reading_count_D_F_G
+  - dimension: reading_count_D_F_G
     type: number
     label: 'Degraded from Good: Reading'
     group_label: 'Degraders Usage Difference: Initial Good'
     sql: avg(case when Final_TYPE_OF_STUDENT != 'good' and Initial_Type_of_Student = 'good' then reading_count end)/nullif(avg(case when Final_TYPE_OF_STUDENT not in ('below-average', 'average') and Initial_Type_of_Student = 'good' then reading_count end), 0) -1
     value_format: 0.0%     
 
-  - measure: active_days_diff_G_BA_numerator
+  - dimension: active_days_diff_G_BA_numerator
     type: number
     label: 'Improved to Good: Active Numerator'
     group_label: 'Improvers Usage Difference: Final Good'
@@ -408,7 +408,7 @@
     sql: avg(case when Final_TYPE_OF_STUDENT = 'good' and Initial_Type_of_Student != 'good' then Active_days_Logins end)
     value_format: 0.0%   
      
-  - measure: active_days_diff_G_BA_denominator
+  - dimension: active_days_diff_G_BA_denominator
     type: number
     label: 'Improved to Good: Active Denominator'
     group_label: 'Improvers Usage Difference: Final Good'
@@ -416,7 +416,7 @@
     sql: avg(case when Final_TYPE_OF_STUDENT not in ('good', 'average') and Initial_Type_of_Student != 'good' then Active_days_Logins end)
     value_format: 0.0%
        
-  - measure: active_days_diff_G_BA
+  - dimension: active_days_diff_G_BA
     type: number
     label: 'Improved to Good: Active'
     group_label: 'Improvers Usage Difference: Final Good'
@@ -426,7 +426,7 @@
 
 
 
-  - measure: highlight_diff_G_BA
+  - dimension: highlight_diff_G_BA
     type: number
     label: 'Improved to Good: Highlights'
     group_label: 'Improvers Usage Difference: Final Good'
@@ -434,52 +434,52 @@
     sql: avg(case when Final_TYPE_OF_STUDENT = 'good' and Initial_Type_of_Student != 'good' then highlight_count end)/nullif(avg(case when Final_TYPE_OF_STUDENT not in ('good', 'average') and Initial_Type_of_Student != 'good' then highlight_count end), 0) -1
     value_format: 0.0%
     
-  - measure: search_count_G_BA
+  - dimension: search_count_G_BA
     type: number
     label: 'Improved to Good: Search'
     group_label: 'Improvers Usage Difference: Final Good'
     sql: avg(case when Final_TYPE_OF_STUDENT = 'good' and Initial_Type_of_Student != 'good' then search_count end)/nullif(avg(case when Final_TYPE_OF_STUDENT not in ('good', 'average') and Initial_Type_of_Student != 'good' then search_count end), 0) -1
     value_format: 0.0%  
   
-  - measure: login_G_BA
+  - dimension: login_G_BA
     type: number
     label: 'Improved to Good: Login'
     group_label: 'Improvers Usage Difference: Final Good'
     sql: avg(case when Final_TYPE_OF_STUDENT = 'good' and Initial_Type_of_Student != 'good' then login_count end)/nullif(avg(case when Final_TYPE_OF_STUDENT not in ('good', 'average') and Initial_Type_of_Student != 'good' then login_count end), 0) -1
     value_format: 0.0%  
   
-  - measure: flashcard_count_G_BA
+  - dimension: flashcard_count_G_BA
     type: number
     label: 'Improved to Good: Flashcard'
     group_label: 'Improvers Usage Difference: Final Good'
     sql: avg(case when Final_TYPE_OF_STUDENT = 'good' and Initial_Type_of_Student != 'good' then flashcard_count end)/nullif(avg(case when Final_TYPE_OF_STUDENT not in ('good', 'average') and Initial_Type_of_Student != 'good' then flashcard_count end), 0) -1
     value_format: 0.0%        
   
-  - measure: reading_count_G_BA
+  - dimension: reading_count_G_BA
     type: number
     label: 'Improved to Good: Reading'
     group_label: 'Improvers Usage Difference: Final Good'
     sql: avg(case when Final_TYPE_OF_STUDENT = 'good' and Initial_Type_of_Student != 'good' then reading_count end)/nullif(avg(case when Final_TYPE_OF_STUDENT not in ('good', 'average') and Initial_Type_of_Student != 'good' then reading_count end), 0) -1
     value_format: 0.0%    
     
-  - measure: good_count
+  - dimension: good_count
     type: number
     sql: sum(case when Final_TYPE_OF_STUDENT = 'good' then 1 end)
   
   - measure: cntr
     type: count
 
-  - measure: below_average_count
+  - dimension: below_average_count
     type: number
     sql: sum(case when Final_TYPE_OF_STUDENT = 'below-average' then 1 end)
       
 
-  - measure: Weekly_Good_Count
+  - dimension: Weekly_Good_Count
     type: number
     alias: WGood
     sql: sum(case when Weekly_TYPE_OF_STUDENT = 'good' then 1 end)
 
-  - measure: Weekly_Below_Average_Count
+  - dimension: Weekly_Below_Average_Count
     type: number
     alias: WBelowAverage
     sql: sum(case when Weekly_TYPE_OF_STUDENT = 'below-average' then 1 end)      

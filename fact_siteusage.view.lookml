@@ -105,7 +105,7 @@
     type: string
     sql: ${TABLE}.PAGEINSTANCEID
 
-  - measure: pageviewcount
+  - dimension: pageviewcount
     type: number
     sql: ${TABLE}.PAGEVIEWCOUNT
     hidden: true
@@ -120,7 +120,7 @@
     type: sum
     sql: ${pageviewcount}
 
-  - measure: pageviewtime
+  - dimension: pageviewtime
     type: number
     sql: ${TABLE}.PAGEVIEWTIME/60000.0
     hidden: true

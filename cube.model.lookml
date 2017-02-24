@@ -361,5 +361,13 @@
       sql_on: ${user_guid} = ${dim_party.guid}
       relationship: many_to_one
       
+- explore: duedates
+  label: 'Upcoming due dates'
+  extends: [dim_course]
+  joins:
+    - join: dim_course 
+      relationship: many_to_one
+      sql_on: ${coursekey} = ${dim_course.coursekey}
+      
 
 
