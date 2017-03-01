@@ -70,10 +70,23 @@ view: dim_user {
   }
 
   dimension: mainpartyrole {
-    label: "User Role"
+    label: "User Role - Raw"
     type: string
     sql: ${TABLE}.MAINPARTYROLE ;;
   }
+
+  dimension: user_role {
+    label: "User Role - Cleaned"
+    type: string
+    sql:
+        CASE
+          WHEN ${mainpartyrole} = 'INSTRUCTOR' THEN 'Instructor'
+          WHEN ${mainpartyrole} = 'STUDENT' THEN 'Student'
+          WHEN ${mainpartyrole} in ('TEACHING_ASSISTANT', 'TEACHING ASSISTANT') THEN 'TA'
+          ELSE 'Other'
+        END ;;
+  }
+
 
   dimension: numberofpageviews {
     label: "Total no. of page views"
