@@ -58,7 +58,7 @@ view: dim_activity {
   dimension: originalassigned {
     label: "Originally assigned"
     type: string
-    sql: ${TABLE}.ORIGINALASSIGNED ;;
+    sql: ${TABLE}.ORIGINALASSIGNEDSTATE ;;
   }
 
   dimension: assigned_status {
