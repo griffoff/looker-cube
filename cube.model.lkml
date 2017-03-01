@@ -11,6 +11,11 @@ explore: dim_course {
   extension: required
   extends: [dim_institution]
 
+  join: course_facts {
+    sql_on: ${dim_course.courseid} = ${course_facts.courseid} ;;
+    relationship: one_to_one
+  }
+
   join: dim_start_date {
     sql_on: ${dim_course.startdatekey} = ${dim_start_date.datekey} ;;
     relationship: many_to_one
