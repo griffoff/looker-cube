@@ -1,6 +1,6 @@
 view: fact_siteusage {
   label: "Web Usage"
-  sql_table_name: DW_GA.FACT_SITEUSAGE ;;
+  sql_table_name: DEV.ZPG.FACT_SITEUSAGE_V ;;
 
   dimension: activityid {
     hidden: yes
@@ -160,6 +160,13 @@ view: fact_siteusage {
     type: sum
     sql: ${pageviewtime}/60 ;;
     value_format: "0.0 \h\r\s"
+  }
+
+  measure: session_count {
+    label: "No. of Sessions"
+    type: count_distinct
+    sql: ${TABLE}.sessionnumber ;;
+    value_format: "#,##0"
   }
 
   dimension: partyid {
