@@ -51,6 +51,13 @@ view: fact_activation_siteusage {
     sql: ${userid} ;;
   }
 
+  measure: site_usage_percent_of_activations{
+    label: "site usage % of activations"
+    type: number
+    value_format_name: percent_1
+    sql: ${user_count}/${fact_activation.user_count} ;;
+  }
+
   measure: pageviewtime_total {
     label: "Page view Time (secs)"
     type: sum

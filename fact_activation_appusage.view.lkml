@@ -57,4 +57,10 @@ view: fact_activation_appusage {
     sql: ${userid} ;;
   }
 
+  measure: app_usage_percent_of_activations{
+    label: "app usage % of activations"
+    type: number
+    value_format_name: percent_1
+    sql: ${user_count}/${fact_activation.user_count} ;;
+  }
 }
