@@ -1,6 +1,13 @@
 view: fact_activation_appusage {
   label: "App Dock"
-  sql_table_name: LOOKER_WORKSHOP.FACT_ACTIVATION_APPUSAGE ;;
+  derived_table: {
+    sql:
+    select CourseId, PartyId, ProductId, ProductPlatformId,UserId
+      ,sum(ClickCount) as Clicks
+    from migration_test.dw_ga.fact_appusage
+    group by 1, 2, 3, 4, 5
+       ;;
+  }
 
   measure: clicks {
     type: sum

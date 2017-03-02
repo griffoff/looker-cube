@@ -1,6 +1,14 @@
 view: fact_activation_siteusage {
   label: "Site Usage"
-  sql_table_name: LOOKER_WORKSHOP.FACT_ACTIVATION_SITEUSAGE ;;
+  derived_table: {
+    sql:
+      select CourseId, PartyId, ProductId, ProductPlatformId,UserId
+        ,sum(ClickCount) as Clicks
+        ,sum(PageViewTime) / 1000.0 as PageViewTime_secs
+        ,avg(PageViewTime) / 1000.0 as Avg_PageViewTime_secs
+      from migration_test.dw_ga.fact_siteusage
+      group by 1, 2, 3, 4, 5;;
+  }
 
   measure: clicks {
     type: sum
