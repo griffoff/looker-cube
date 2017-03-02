@@ -145,6 +145,16 @@ explore: fact_activation {
     relationship: many_to_one
   }
 
+  join: dim_activationfilter {
+    sql_on: ${fact_activation.activationfilterid} = ${dim_activationfilter.activationfilterid} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_activationregion {
+    sql_on: ${fact_activation.activationregionid} = ${dim_activationregion.activationregionid} ;;
+    relationship: many_to_one
+  }
+
   join: dim_user {
     sql_on: ${fact_activation.userid} = ${dim_user.userid} ;;
     relationship: many_to_one

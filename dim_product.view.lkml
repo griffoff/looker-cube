@@ -90,6 +90,18 @@ view: dim_product {
     type: string
     label: "Discipline"
     group_label: "Categories"
+    sql: ${TABLE}.PUBLICATIONSERIES ;;
+
+    link: {
+      label: "Engagement Toolkit (Dev)"
+      url: "http://dashboard-dev.cengage.info/engtoolkit/discipline/{{value}}"
+    }
+  }
+
+  dimension: discipline_old {
+    type: string
+    label: "Discipline (Old)"
+    group_label: "Categories"
     sql: ${TABLE}.DISCIPLINE ;;
 
     link: {

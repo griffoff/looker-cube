@@ -118,6 +118,18 @@ view: fact_activation {
     sql: ${TABLE}.USERID ;;
   }
 
+  dimension: activationfilterid {
+    hidden: yes
+    type: number
+    sql: ${TABLE}.ACTIVATIONFILTERID ;;
+  }
+
+  dimension: activationregionid {
+    hidden: yes
+    type: number
+    sql: ${TABLE}.ACTIVATIONREGIONID ;;
+  }
+
   measure: count {
     type: count
     drill_fields: []
