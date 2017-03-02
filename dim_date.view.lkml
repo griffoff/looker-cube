@@ -9,6 +9,12 @@ view: dim_date {
     hidden: yes
   }
 
+  dimension: fiscalyear {
+    label: "Fiscal Year"
+    type: string
+    sql: ${TABLE}.fiscalyearvalue ;;
+  }
+
   dimension: calendarmonthid {
     type: string
     sql: ${TABLE}.CALENDARMONTHID ;;

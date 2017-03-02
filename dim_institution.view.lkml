@@ -2,6 +2,11 @@ view: dim_institution {
   label: "Institution"
   sql_table_name: DW_GA.DIM_INSTITUTION ;;
 
+  dimension: HED {
+    type: string
+    sql: CASE WHEN (select count(*) from migration_test.looker_workshop.magellan_hed_entities h where h.entity_no = ${entity_no}) > 0 then 'HED' else 'Not HED' end ;;
+  }
+
   dimension: city {
     group_label: "Location"
     type: string
