@@ -5,6 +5,12 @@ view: fact_activation {
   dimension: activationcode {
     type: string
     sql: ${TABLE}.ACTIVATIONCODE ;;
+  }
+
+  dimension: activationcodeuser {
+    type: string
+    sql: ${TABLE}.ACTIVATIONCODE_USER ;;
+    hidden: yes
     primary_key: yes
   }
 
@@ -130,8 +136,9 @@ view: fact_activation {
     sql: ${TABLE}.ACTIVATIONREGIONID ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: []
+  measure: user_count {
+    label: "# Users Activated"
+    type: count_distinct
+    sql:${userid} ;;
   }
 }

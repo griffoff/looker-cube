@@ -189,6 +189,21 @@ explore: fact_activation {
     sql_on: ${fact_activation.courseid} = ${fact_enrollment.courseid} and ${fact_activation.partyid}) = ${fact_enrollment.partyid}) ;;
     relationship: one_to_many
   }
+
+#  join: fact_appusage {
+#    sql_on: (${fact_activation.productplatformid}, ${fact_activation.productid}, ${fact_activation.courseid}, ${fact_activation.partyid}, ${fact_activation.userid}) =  (${fact_appusage.productplatformid}, ${fact_appusage.productid}, ${fact_appusage.courseid}, ${fact_appusage.partyid}, ${fact_appusage.userid});;
+#    relationship: one_to_many
+#  }
+
+join: fact_activation_appusage {
+    sql_on: (${fact_activation.productplatformid}, ${fact_activation.productid}, ${fact_activation.courseid}, ${fact_activation.partyid}, ${fact_activation.userid}) =  (26, ${fact_activation_appusage.productid}, ${fact_activation_appusage.courseid}, ${fact_activation_appusage.partyid}, ${fact_activation_appusage.userid});;
+    relationship: one_to_one
+  }
+
+join: fact_activation_siteusage {
+    sql_on: (${fact_activation.productplatformid}, ${fact_activation.productid}, ${fact_activation.courseid}, ${fact_activation.partyid}, ${fact_activation.userid}) =  (${fact_activation_siteusage.productplatformid}, ${fact_activation_siteusage.productid}, ${fact_activation_siteusage.courseid}, ${fact_activation_siteusage.partyid}, ${fact_activation_siteusage.userid});;
+    relationship: one_to_many
+  }
 }
 
 explore: fact_activityoutcome {
@@ -386,6 +401,7 @@ explore: fact_appusage {
     relationship: many_to_one
   }
 }
+
 
 explore: fact_enrollment {
   label: "Enrollments"
