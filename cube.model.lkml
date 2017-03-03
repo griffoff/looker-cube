@@ -138,7 +138,7 @@ explore: dim_user {
 
 explore: fact_activation {
   label: "Activations"
-  extends: [dim_user, dim_course]
+  extends: [fact_appusage, dim_user, dim_course]
 
   join: dim_date {
     sql_on: ${fact_activation.activationdatekey} = ${dim_date.datekey} ;;
@@ -190,15 +190,21 @@ explore: fact_activation {
     relationship: one_to_many
   }
 
-#  join: fact_appusage {
-#    sql_on: (${fact_activation.productplatformid}, ${fact_activation.productid}, ${fact_activation.courseid}, ${fact_activation.partyid}, ${fact_activation.userid}) =  (${fact_appusage.productplatformid}, ${fact_appusage.productid}, ${fact_appusage.courseid}, ${fact_appusage.partyid}, ${fact_appusage.userid});;
-#    relationship: one_to_many
-#  }
-
-join: fact_activation_appusage {
-    sql_on: (${fact_activation.productplatformid}, ${fact_activation.productid}, ${fact_activation.courseid}, ${fact_activation.partyid}, ${fact_activation.userid}) =  (26, ${fact_activation_appusage.productid}, ${fact_activation_appusage.courseid}, ${fact_activation_appusage.partyid}, ${fact_activation_appusage.userid});;
+  join: activations_totals {
+    type: cross
     relationship: one_to_one
   }
+
+  join: fact_appusage {
+    sql_on: (${fact_activation.productplatformid}, ${fact_activation.productid}, ${fact_activation.courseid}, ${fact_activation.partyid}, ${fact_activation.userid}) =  (26, ${fact_appusage.productid}, ${fact_appusage.courseid}, ${fact_appusage.partyid}, ${fact_appusage.userid})
+          and {% condition fact_appusage.filter_appusage_rank %} ${fact_appusage.app_rank} {% endcondition %};;
+    relationship: one_to_many
+  }
+
+#join: fact_activation_appusage {
+#    sql_on: (${fact_activation.productplatformid}, ${fact_activation.productid}, ${fact_activation.courseid}, ${fact_activation.partyid}, ${fact_activation.userid}) =  (26, ${fact_activation_appusage.productid}, ${fact_activation_appusage.courseid}, ${fact_activation_appusage.partyid}, ${fact_activation_appusage.userid});;
+#    relationship: one_to_one
+#  }
 
 join: fact_activation_siteusage {
     sql_on: (${fact_activation.productplatformid}, ${fact_activation.productid}, ${fact_activation.courseid}, ${fact_activation.partyid}, ${fact_activation.userid}) =  (${fact_activation_siteusage.productplatformid}, ${fact_activation_siteusage.productid}, ${fact_activation_siteusage.courseid}, ${fact_activation_siteusage.partyid}, ${fact_activation_siteusage.userid});;
@@ -400,6 +406,12 @@ explore: fact_appusage {
     sql_on: ${fact_appusage.timekey} = ${dim_time.timekey} ;;
     relationship: many_to_one
   }
+
+  #join:  fact_activation {
+  #  sql_on: (26, ${fact_appusage.productid}, ${fact_appusage.courseid}, ${fact_appusage.partyid}, ${fact_appusage.userid}) = (${fact_activation.productplatformid}, ${fact_activation.productid}, ${fact_activation.courseid}, ${fact_activation.partyid}, ${fact_activation.userid});;
+  #  relationship: many_to_one
+  #}
+
 }
 
 

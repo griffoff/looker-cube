@@ -1,5 +1,5 @@
 view: fact_activation_siteusage {
-  label: "Site Usage"
+  label: "Activations - Site Usage"
   derived_table: {
     sql:
       select CourseId, PartyId, ProductId, ProductPlatformId,UserId
@@ -61,6 +61,11 @@ view: fact_activation_siteusage {
     label: "Avg Page view Time (secs)"
     type: average
     sql: ${TABLE}.Avg_PageViewTime_secs ;;
+  }
+
+  measure:test {
+    type:  number
+    sql: ${user_count} / ${fact_activation.user_count} ;;
   }
 
 }

@@ -141,4 +141,10 @@ view: fact_activation {
     type: count_distinct
     sql:${userid} ;;
   }
+
+  measure: user_percent_of_total {
+    label: " '# Users % of total"
+    type: percent_of_total
+    sql: ${user_count} ;;
+  }
 }
