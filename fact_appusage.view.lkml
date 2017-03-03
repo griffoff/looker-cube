@@ -4,6 +4,7 @@ view: fact_appusage {
     sql: with r as (
         SELECT iframeapplicationid, DENSE_RANK() OVER (ORDER BY count(distinct userid) DESC) as rank
         FROM migration_test.dw_ga.FACT_APPUSAGE
+        where eventdatekey >= to_char(dateadd(YEAR, -1, CURRENT_DATE), 'yyyymmdd')::int
         GROUP BY 1
       )
       select f.*, r.rank
