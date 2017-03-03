@@ -190,11 +190,6 @@ explore: fact_activation {
     relationship: one_to_many
   }
 
-  join: activations_totals {
-    type: cross
-    relationship: one_to_one
-  }
-
   join: fact_appusage {
     sql_on: (${fact_activation.productplatformid}, ${fact_activation.productid}, ${fact_activation.courseid}, ${fact_activation.partyid}, ${fact_activation.userid}) =  (26, ${fact_appusage.productid}, ${fact_appusage.courseid}, ${fact_appusage.partyid}, ${fact_appusage.userid})
           and {% condition fact_appusage.filter_appusage_rank %} ${fact_appusage.app_rank} {% endcondition %};;

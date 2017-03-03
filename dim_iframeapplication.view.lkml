@@ -1,36 +1,6 @@
 view: dim_iframeapplication {
   label: "App Dock"
-  derived_table: {
-    sql:
-    WITH apps AS (
-        SELECT
-          DISTINCT
-          f.iframeapplicationid AS id
-          ,iframeapplicationname AS name
-          ,displayname
-          ,split_part(replace(iframeapplicationname, ' '), '...SHIFT+R', 0) AS matchname
-          ,split_part(iframeapplicationname, '... SHIFT+R', 0) AS matchname2
-          ,cnt
-        FROM dw_ga.dim_iframeapplication f
-        INNER JOIN (SELECT iframeapplicationid, count(*) AS cnt FROM dw_ga.fact_appusage GROUP BY 1) a ON f.iframeapplicationid = a.iframeapplicationid
-      )
-      ,ranks AS (
-        SELECT matchname, displayname, name, RANK() OVER (PARTITION BY matchname ORDER BY cnt DESC) AS RANK
-        FROM apps
-      )
-      ,names as (
-        SELECT
-            DISTINCT b.id, InitCap(COALESCE(a.displayname, b.displayname, a.name, b.name)) AS displayname
-        FROM apps b
-        left JOIN ranks a ON a.matchname = b.matchname
-                  AND a.RANK = 1
-      )
-      select a.*, n.displayname as bestdisplayname
-      from DW_GA.DIM_IFRAMEAPPLICATION a
-      inner join names n on a.iframeapplicationid = n.id
-      ;;
-  }
-  #sql_table_name: DW_GA.DIM_IFRAMEAPPLICATION ;;
+  sql_table_name: looker_workshop.DIM_IFRAMEAPPLICATION ;;
 
   dimension: displayname {
     label: "Display Name"

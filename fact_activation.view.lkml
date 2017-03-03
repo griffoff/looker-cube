@@ -143,7 +143,7 @@ view: fact_activation {
   }
 
   measure: user_percent_of_total {
-    label: " '# Users % of total"
+    label: "# Users % of total"
     type: percent_of_total
     sql: ${user_count} ;;
   }

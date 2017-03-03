@@ -1,15 +1,24 @@
 view: fact_appusage {
   label: "App Dock"
   derived_table: {
-    sql: with r as (
-        SELECT iframeapplicationid, DENSE_RANK() OVER (ORDER BY count(distinct userid) DESC) as rank
-        FROM migration_test.dw_ga.FACT_APPUSAGE
-        where eventdatekey >= to_char(dateadd(YEAR, -1, CURRENT_DATE), 'yyyymmdd')::int
+    sql:
+      with r as (
+        SELECT a.bestdisplayname, DENSE_RANK() OVER (ORDER BY sum(CLICKCOUNT)  DESC) as rank
+        FROM dw_ga.FACT_APPUSAGE f
+        inner join looker_workshop.dim_iframeapplication a on  f.iframeapplicationid = a.iframeapplicationid
+        INNER JOIN dw_ga.dim_date ON f.eventdatekey = dim_date.datekey
+        where dim_date.fiscalyearvalue = 'FY16'
+        --where f.eventdatekey >= to_char(dateadd(YEAR, -1, CURRENT_DATE), 'yyyymmdd')::int
         GROUP BY 1
       )
-      select f.*, r.rank
+      ,r2 AS (
+        SELECT a.iframeapplicationid, r.rank
+        FROM r
+        INNER JOIN looker_workshop.dim_iframeapplication a ON r.bestdisplayname = a.bestdisplayname
+      )
+      select f.*, r2.rank
       from dw_ga.fact_appusage f
-      inner join r on f.iframeapplicationid = r.iframeapplicationid
+      inner join r2 on f.iframeapplicationid = r2.iframeapplicationid
           ;;
   }
   #sql_table_name: DW_GA.FACT_APPUSAGE ;;
