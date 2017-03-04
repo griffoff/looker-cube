@@ -2,6 +2,13 @@ view: dim_user {
   label: "User"
   sql_table_name: DW_GA.DIM_USER ;;
 
+  dimension: userid {
+    type:  number
+    sql:  ${TABLE}.userid ;;
+    primary_key: yes
+    hidden: yes
+  }
+
   dimension: dayssincefirstvisit {
     label: "Days since first visit"
     type: number
@@ -123,13 +130,6 @@ view: dim_user {
     label: "Total session view time"
     type: number
     sql: ${TABLE}.SESSIONVIEWTIME ;;
-  }
-
-  dimension: userid {
-    type: string
-    sql: ${TABLE}.USERID ;;
-    hidden: yes
-    primary_key: yes
   }
 
   dimension: weekssincefirstactivated {

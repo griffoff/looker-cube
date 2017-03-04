@@ -134,6 +134,11 @@ explore: dim_user {
     sql_on: ${dim_user.mainpartyid} = ${dim_party.partyid} ;;
     relationship: many_to_one
   }
+
+  join: user_facts {
+    sql_on: ${dim_user.userid} = ${user_facts.userid} ;;
+    relationship: one_to_one
+  }
 }
 
 explore: fact_activation {
