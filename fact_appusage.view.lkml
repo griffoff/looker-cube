@@ -3,7 +3,9 @@ view: fact_appusage {
   derived_table: {
     sql:
       with r as (
-        SELECT a.bestdisplayname, DENSE_RANK() OVER (ORDER BY sum(CLICKCOUNT)  DESC) as rank
+        SELECT a.bestdisplayname
+              ,DENSE_RANK() OVER (ORDER BY sum(CLICKCOUNT)  DESC) as clickrank
+              ,DENSE_RANK() OVER (ORDER BY count(distinct userid)  DESC) as userrank
         FROM dw_ga.FACT_APPUSAGE f
         inner join looker_workshop.dim_iframeapplication a on  f.iframeapplicationid = a.iframeapplicationid
         INNER JOIN dw_ga.dim_date ON f.eventdatekey = dim_date.datekey
@@ -153,18 +155,34 @@ view: fact_appusage {
   #}
 
   filter: filter_appusage_rank {
-    label: "Overall Rank - Filter"
+    label: "Overall Click Rank - Filter"
+    type: number
+    default_value: "1 to 10"
+    suggestions: ["1 to 5", "1 to 10"]
+  }
+
+  filter: filter_appusage_rank_user {
+    label: "Overall User Rank - Filter"
     type: number
     default_value: "1 to 10"
     suggestions: ["1 to 5", "1 to 10"]
   }
 
   dimension: app_rank {
-    label: "Overall Rank"
-    description: "The overal rank of an app based on total usage"
+    label: "Overall Rank (by Total Clicks)"
+    description: "The overal rank of an app based on total clicks"
     suggestions: ["1 to 5", "1 to 10"]
     type: number
-    sql: ${TABLE}.RANK ;;
+    sql: ${TABLE}.CLICKRANK ;;
+    can_filter: no
+  }
+
+  dimension: app_rank_user {
+    label: "Overall Rank (by # Users)"
+    description: "The overal rank of an app based on # users"
+    suggestions: ["1 to 5", "1 to 10"]
+    type: number
+    sql: ${TABLE}.USERRANK ;;
     can_filter: no
   }
 

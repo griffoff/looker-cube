@@ -192,7 +192,10 @@ explore: fact_activation {
 
   join: fact_appusage {
     sql_on: (${fact_activation.productplatformid}, ${fact_activation.productid}, ${fact_activation.courseid}, ${fact_activation.partyid}, ${fact_activation.userid}) =  (26, ${fact_appusage.productid}, ${fact_appusage.courseid}, ${fact_appusage.partyid}, ${fact_appusage.userid})
-          and {% condition fact_appusage.filter_appusage_rank %} ${fact_appusage.app_rank} {% endcondition %};;
+          and {% condition fact_appusage.filter_appusage_rank %} ${fact_appusage.app_rank} {% endcondition %}
+          and {% condition fact_appusage.filter_appusage_rank_user %} ${fact_appusage.app_rank_user} {% endcondition %}
+          ;;
+
     relationship: one_to_many
   }
 
