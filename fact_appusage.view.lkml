@@ -14,11 +14,11 @@ view: fact_appusage {
         GROUP BY 1
       )
       ,r2 AS (
-        SELECT a.iframeapplicationid, r.rank
+        SELECT a.iframeapplicationid, r.clickrank, r.userrank
         FROM r
         INNER JOIN looker_workshop.dim_iframeapplication a ON r.bestdisplayname = a.bestdisplayname
       )
-      select f.*, r2.rank
+      select f.*, r2.clickrank, r2.userrank
       from dw_ga.fact_appusage f
       inner join r2 on f.iframeapplicationid = r2.iframeapplicationid
           ;;
