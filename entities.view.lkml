@@ -1,4 +1,5 @@
 view: entities {
+  label: "Entities"
   sql_table_name: STG_CLTS.ENTITIES ;;
 
   dimension: city_nm {
@@ -37,6 +38,7 @@ view: entities {
   }
 
   dimension: entity_no {
+    primary_key: yes
     type: string
     sql: ${TABLE}.ENTITY_NO ;;
   }

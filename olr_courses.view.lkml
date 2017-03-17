@@ -1,4 +1,5 @@
 view: olr_courses {
+  label: "Courses"
   sql_table_name: STG_CLTS.OLR_COURSES ;;
 
   dimension: begin_date {
@@ -27,6 +28,7 @@ view: olr_courses {
   }
 
   dimension: course_key {
+    primary_key: yes
     type: string
     sql: ${TABLE}.COURSE_KEY ;;
   }
