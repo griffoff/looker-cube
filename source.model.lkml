@@ -19,5 +19,6 @@ explore: olr_courses {
 
   join: activations_olr {
     sql_on: ${olr_courses.context_id}=${activations_olr.context_id} ;;
+    relationship: one_to_many
   }
 }

@@ -587,6 +587,11 @@ explore: full_student_course_metrics {
     sql_on: ${user_guid} = ${dim_party.guid} ;;
     relationship: many_to_one
   }
+
+  join: dim_user {
+    relationship: many_to_one
+    sql_on: ${dim_user.mainpartyid} = ${dim_party.partyid} ;;
+  }
 }
 
 explore: duedates {
