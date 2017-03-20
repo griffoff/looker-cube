@@ -10,7 +10,7 @@ explore: csfitakes {
 
    label: "Surveys"
    join: dim_course {
-      sql_on: ${csfitakes.coursekey} = ${dim_course.coursekey};;
+      #sql_on: ${csfitakes.coursekey} = ${dim_course.coursekey};;
       relationship: many_to_one
    }
   }
