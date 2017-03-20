@@ -131,10 +131,21 @@ view: aplia_passive_survey {
     sql: ${TABLE}.RSRC ;;
   }
 
-  dimension: startdate {
-    type: string
+   dimension_group: startdate {
+    label: "Survey Date"
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
     sql: ${TABLE}.STARTDATE ;;
   }
+
 
   dimension: status {
     type: string
@@ -225,4 +236,12 @@ measure: detractor {
       end
     ;;
   }
+
+measure: NPSScore {
+  type: number
+  sql:
+    (${promoter}-${detractor})/nullif(${NPSRespondent},0)
+                ;;
+    value_format_name: percent_0
+}
 }
