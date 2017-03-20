@@ -1,9 +1,10 @@
-connection: "snowflake_dev"
+connection: "snowflake_migration_test"
+include: "dims.model.lkml"
+
 label:"Item Analysis"
 
 include: "*.view.lkml"         # include all views in this project
-include: "*.dashboard.lookml"  # include all dashboards in this project
-include: "cube.model.lkml"
+include: "*.dashboard.lkml"  # include all dashboards in this project
 
 explore: csfitakes {
   label: "CSFI data"
