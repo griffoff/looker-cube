@@ -9,7 +9,6 @@ include: "*.view"
 # include all the dashboards
 include: "*.dashboard"
 
-
 explore: fact_activation {
   label: "Activations"
   extends: [fact_appusage, dim_user, dim_course]
@@ -276,6 +275,11 @@ explore: fact_appusage {
 
   join: dim_time {
     sql_on: ${fact_appusage.timekey} = ${dim_time.timekey} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_relative_to_start_date {
+    sql_on: (datediff(day, to_date(${dim_course.startdatekey}::string, 'YYYYMMDD'), to_date(${fact_appusage.eventdatekey}::string, 'YYYYMMDD')) = ${dim_relative_to_start_date.days} ;;
     relationship: many_to_one
   }
 
