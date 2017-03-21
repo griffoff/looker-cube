@@ -67,7 +67,7 @@ view: dim_relativedate {
   }
 
   dimension: weeks {
-    hidden: yes
+    label: "Relative Weeks No."
     type: number
     sql: ${TABLE}.WEEKS ;;
   }

@@ -279,7 +279,7 @@ explore: fact_appusage {
   }
 
   join: dim_relative_to_start_date {
-    sql_on: (datediff(day, to_date(${dim_course.startdatekey}::string, 'YYYYMMDD'), to_date(${fact_appusage.eventdatekey}::string, 'YYYYMMDD')) = ${dim_relative_to_start_date.days} ;;
+    sql_on: datediff(day, to_date(nullif(${dim_course.startdatekey}, -1)::string, 'YYYYMMDD'), to_date(nullif(${fact_appusage.eventdatekey}, -1)::string, 'YYYYMMDD')) = ${dim_relative_to_start_date.days} ;;
     relationship: many_to_one
   }
 
