@@ -2,9 +2,18 @@ view: mankiw_questions {
   label: "MANKIW Questions"
   sql_table_name: ZPG.MANKIW_QUESTIONS ;;
 
+  set: take_details {
+    fields: [take_oid, user_oid]
+  }
+
   dimension: activityitemuri {
     type: string
     sql: ${TABLE}.ACTIVITYITEMURI ;;
+  }
+
+  dimension: activityuri {
+    type: string
+    sql: ${TABLE}.ACTIVITYURI ;;
   }
 
   dimension: coursekey {
@@ -95,6 +104,10 @@ view: mankiw_questions {
   dimension: take_oid {
     type: string
     sql: ${TABLE}.TAKE_OID ;;
+    link: {
+        label:"View in Analytics Diagnostic Tool"
+        url: "https://analytics-tools.cengage.info/diagnostictool/#/activity-take/view/production/id/{{value}}"
+      }
   }
 
   dimension_group: take_submissiondate {
@@ -134,8 +147,14 @@ view: mankiw_questions {
       sql:  ${user_oid} ;;
   }
 
-  measure: activity_count {
+  measure: item_count {
     label: "# activities"
+    type: count_distinct
+    sql:  ${activityuri} ;;
+  }
+
+  measure: activity_count {
+    label: "# items"
     type: count_distinct
     sql:  ${activityitemuri} ;;
   }
@@ -144,6 +163,13 @@ view: mankiw_questions {
     label: "# takes"
     type: count_distinct
     sql:  ${take_oid} ;;
+    drill_fields: [take_details*]
+  }
+
+  measure:  take_count_percent {
+    label: "% takes"
+    type:  percent_of_total
+    sql: ${take_count} ;;
   }
 
   measure: course_count {

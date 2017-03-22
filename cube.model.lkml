@@ -457,7 +457,7 @@ explore: full_student_course_metrics {
   }
 
   join: dim_party {
-    sql_on: ${user_guid} = ${dim_party.guid} ;;
+    sql_on: ${full_student_course_metrics.user_guid} = ${dim_party.guid} ;;
     relationship: many_to_one
   }
 

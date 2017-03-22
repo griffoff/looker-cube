@@ -11,5 +11,6 @@ label: "Qualtrics Surveys"
    label: "Aplia Passive Survey"
    join: dim_course {
     sql_on: ${aplia_passive_survey.coursecontextid} = ${dim_course.coursekey};;
+    relationship: many_to_one
    }
  }

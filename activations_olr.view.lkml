@@ -1,20 +1,54 @@
 view: activations_olr {
   sql_table_name: STG_CLTS.ACTIVATIONS_OLR ;;
 
+  set: activation_details {
+    fields: [actv_entity_name, actv_code, actv_dt_date, user_guid, actv_user_type, actv_region, platform]
+  }
+
   dimension: actv_code {
     type: string
     sql: ${TABLE}.ACTV_CODE ;;
+    primary_key: yes
+  }
+
+  dimension: actv_count {
+    label: "Activation count"
+    type: number
+    sql: ${TABLE}.ACTV_COUNT ;;
+  }
+
+  dimension: actv_counter_base {
+    label: "Activation count"
+    type: number
+    sql: case when ${TABLE}.ACTV_COUNT > 0 then ${actv_code} || ${actv_dt_date} || ${user_guid} end;;
+    hidden: yes
+  }
+
+  dimension:  is_hed {
+    label: "Is HED"
+    type: yesno
+    sql:  case when ${magellan_hed_entities.entity_no} is not null then True else False end ;;
+  }
+
+  measure: actv_counter {
+    label: "Distinct activations"
+    type: count_distinct
+    sql: ${actv_counter_base} ;;
+    drill_fields: [activation_details*]
   }
 
   measure: actv_code_count {
-    label: "distinct activation codes"
+    label: "Distinct activation codes"
     type: count_distinct
     sql: ${actv_code} ;;
+    drill_fields: [activation_details*]
   }
 
-  measure: actv_count {
+  measure: m_actv_count {
+    label: "Activation count"
     type: sum
-    sql: ${TABLE}.ACTV_COUNT ;;
+    sql: ${actv_count} ;;
+    drill_fields: [activation_details*]
   }
 
   dimension_group: actv_dt {
@@ -137,7 +171,7 @@ view: activations_olr {
   }
 
   measure: count {
+    label: "Record count"
     type: count
-    drill_fields: [actv_entity_name, actv_code, actv_dt_date]
   }
 }
