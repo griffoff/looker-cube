@@ -155,6 +155,12 @@ view: fact_activityoutcome {
     sql: ${TABLE}.nooftakes::float ;;
   }
 
+  measure: nooftakes_sum {
+    label: "# of Takes"
+    type: sum
+    sql: ${TABLE}.nooftakes::int ;;
+  }
+
   dimension: partyid {
     type: string
     sql: ${TABLE}.PARTYID ;;

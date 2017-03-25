@@ -21,5 +21,13 @@ explore: mankiw_questions {
   join: dim_course {
     sql_on: ${mankiw_questions.coursekey} = ${dim_course.coursekey};;
     relationship: many_to_one
+    }
+  }
+explore: soa_questions {
+  label: "SOA data"
+  extends: [dim_course]
+  join: dim_course {
+    sql_on: ${soa_questions.coursekey} = ${dim_course.coursekey};;
+    relationship: many_to_one
   }
 }

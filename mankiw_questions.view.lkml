@@ -13,7 +13,11 @@ view: mankiw_questions {
 
   dimension: activityuri {
     type: string
-    sql: ${TABLE}.ACTIVITYURI ;;
+    sql: ${TABLE}.ACTIVITYURI::string ;;
+    link: {
+      label: "View in Analytics Diagnostic Tool"
+      url: "https://analytics-tools.cengage.info/diagnostictool/#/activity/view/production/uri/{{value}}"
+    }
   }
 
   dimension: coursekey {
@@ -126,14 +130,40 @@ view: mankiw_questions {
 
   dimension: timespent {
     type: number
-    sql: ${TABLE}.TIMESPENT ;;
+    sql: ${TABLE}.TIMESPENT / 86400.0 ;;
+    hidden: yes
+    value_format: "h:mm:ss"
+  }
+
+  measure: timespent_avg {
+    label: "Time spent (avg)"
+    type:  average
+    sql: ${timespent} ;;
+    group_label: "Time spent"
+    value_format: "h:mm:ss"
+  }
+
+  measure: timespent_min {
+    label: "Time spent (min)"
+    type:  min
+    sql: case when ${markedtaken} then ${timespent} end ;;
+    group_label: "Time spent"
+    value_format: "h:mm:ss"
+  }
+
+  measure: timespent_max {
+    label: "Time spent (max)"
+    type:  max
+    sql: ${timespent} ;;
+    group_label: "Time spent"
+    value_format: "h:mm:ss"
   }
 
   dimension: timespent_bin {
     type: tier
     tiers: [0, 500, 1000, 2000, 5000, 10000]
     style: integer
-    sql: ${TABLE}.TIMESPENT ;;
+    sql: ${timespent} ;;
   }
 
   dimension: user_oid {
