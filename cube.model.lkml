@@ -38,6 +38,11 @@ explore: fact_activation {
     relationship: many_to_one
   }
 
+  join: dim_productplatform {
+    relationship: many_to_one
+    sql_on: ${fact_activation.productplatformid} = ${dim_productplatform.productplatformid} ;;
+  }
+
   join: dim_institution {
     sql_on: ${fact_activation.institutionid} = ${dim_institution.institutionid} ;;
     relationship: many_to_one

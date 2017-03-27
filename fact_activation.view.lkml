@@ -1,6 +1,6 @@
 view: fact_activation {
   label: "Activations"
-  sql_table_name: DW_GA.FACT_ACTIVATION ;;
+  sql_table_name: ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION ;;
 
   dimension: activationcode {
     type: string
