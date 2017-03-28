@@ -90,6 +90,7 @@ view: dim_product {
     type: string
     label: "Discipline"
     group_label: "Categories"
+    #sql: CASE WHEN ${TABLE}.PUBLICATIONSERIES = 'Not Specified' THEN ${TABLE}.DISCIPLINE ELSE ${TABLE}.PUBLICATIONSERIES  END;;
     sql: ${TABLE}.PUBLICATIONSERIES ;;
 
     link: {

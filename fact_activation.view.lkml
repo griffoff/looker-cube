@@ -2,6 +2,10 @@ view: fact_activation {
   label: "Activations"
   sql_table_name: ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION ;;
 
+  set: coursedetails {
+    fields: [dim_course.coursekey, activationcode]
+  }
+
   dimension: activationcode {
     type: string
     sql: ${TABLE}.ACTIVATIONCODE ;;
@@ -92,12 +96,14 @@ view: fact_activation {
     label: "Total activations"
     type: sum
     sql: ${noofactivations_base} ;;
+    drill_fields: [coursedetails*]
   }
 
   measure: avg_noofactivations {
     label: "Avg. activations"
     type: average
     sql: ${noofactivations_base} ;;
+    drill_fields: [coursedetails*]
   }
 
   dimension: partyid {
