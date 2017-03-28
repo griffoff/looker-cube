@@ -1,3 +1,4 @@
+include: "mankiw_questions.view.lkml"
 include: "mankiw_questions"
 
 view: soa_questions {
