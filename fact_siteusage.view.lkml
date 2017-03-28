@@ -8,8 +8,15 @@ view: fact_siteusage {
     sql: ${TABLE}.ACTIVITYID ;;
   }
 
-  measure: clickcount {
+  measure: clickcount_avg {
+    label: "Clicks (avg)"
     type: average
+    sql: ${TABLE}.CLICKCOUNT ;;
+  }
+
+  measure: clickcount {
+    label: "Clicks (total)"
+    type: sum
     sql: ${TABLE}.CLICKCOUNT ;;
   }
 
