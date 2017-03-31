@@ -10,10 +10,28 @@ connection: "snowflake_migration_test"
 include: "*.view.lkml"         # include all views in this project
 include: "*.dashboard.lookml"  # include all dashboards in this project
 
+explore:  dim_product {
+  label: "Product"
+
+  join:  productfamilymap {
+    sql_on: ${dim_product.productfamily} = ${productfamilymap.prod_family_description} ;;
+    relationship: many_to_one
+  }
+  join: activations_dashboard_20170330 {
+    sql_on: ${dim_product.discipline} = ${activations_dashboard_20170330.discipline}   ;;
+    relationship: many_to_one
+  }
+
+  join: activations_from_JW {
+    sql_on: ${activations_dashboard_20170330.discipline} = ${activations_from_JW.discipline}   ;;
+    relationship: many_to_one
+  }
+}
+
 explore: dim_course {
   label: "Course"
   extension: required
-  extends: [dim_institution]
+  extends: [dim_institution, dim_product]
 
   join: course_facts {
     sql_on: ${dim_course.courseid} = ${course_facts.courseid} ;;

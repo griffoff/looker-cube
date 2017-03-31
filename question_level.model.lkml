@@ -31,3 +31,12 @@ explore: soa_questions {
     relationship: many_to_one
   }
 }
+
+explore: all_questions {
+    label: "All Covalent data"
+    extends: [dim_course]
+    join: dim_course {
+      sql_on: ${all_questions.coursekey} = ${dim_course.coursekey};;
+      relationship: many_to_one
+  }
+}

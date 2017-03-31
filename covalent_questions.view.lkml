@@ -1,6 +1,6 @@
 view: mankiw_questions {
   label: "MANKIW Questions"
-  sql_table_name: ZPG.MANKIW_QUESTIONS ;;
+  sql_table_name: DEV.ZPG.MANKIW_QUESTIONS ;;
 
   set: take_details {
     fields: [take_oid, user_oid]
@@ -212,4 +212,28 @@ view: mankiw_questions {
     type: count
     drill_fields: [coursekey, activityitemuri, label, normalscore, take_oid,take_submissiondate_date, user_oid]
   }
+}
+
+view: soa_questions {
+  extends: [mankiw_questions]
+  sql_table_name: dev.zpg.soa_questions ;;
+  label: "SOA Questions"
+
+  dimension: container_type {
+    type: string
+    sql: ${TABLE}.containerType ;;
+  }
+
+  dimension: activity_type {
+    type: string
+    sql: ${TABLE}.activity_Type ;;
+  }
+
+}
+
+view: all_questions {
+  extends: [soa_questions]
+  sql_table_name: dev.zpg.all_questions ;;
+  label: "All Covalent Questions"
+
 }

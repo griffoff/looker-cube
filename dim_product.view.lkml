@@ -1,3 +1,23 @@
+view: productfamilymap {
+  label: "Product"
+  sql_table_name:  dev.zpg.productfamilymap;;
+
+  dimension: prod_family_description {
+    type:  string
+    sql: ${TABLE}.prod_family_description ;;
+    primary_key: yes
+    hidden:  yes
+  }
+
+  dimension: discipline_description {
+    label: "Discipline Description (E1)"
+    group_label: "Categories"
+    type: string
+    sql: ${TABLE}.discipline_description ;;
+  }
+
+}
+
 view: dim_product {
   label: "Product"
   sql_table_name: DW_GA.DIM_PRODUCT ;;
@@ -58,13 +78,6 @@ view: dim_product {
     sql: ${TABLE}.PUBLICATIONGROUP ;;
   }
 
-  dimension: publicationseries {
-    type: string
-    label: "Publication Series"
-    group_label: "Publication Categories"
-    sql: ${TABLE}.PUBLICATIONSERIES ;;
-  }
-
   dimension: techproductcode {
     type: string
     label: "Tech Product Code"
@@ -86,18 +99,66 @@ view: dim_product {
     sql: ${TABLE}.COURSEAREA ;;
   }
 
+  dimension: publicationseries {
+    type: string
+    label: "Publication Series"
+    group_label: "Publication Categories"
+    sql: ${TABLE}.PUBLICATIONSERIES ;;
+  }
+
   dimension: discipline {
     type: string
     label: "Discipline"
     group_label: "Categories"
-    #sql: CASE WHEN ${TABLE}.PUBLICATIONSERIES = 'Not Specified' THEN ${TABLE}.DISCIPLINE ELSE ${TABLE}.PUBLICATIONSERIES  END;;
-    sql: ${TABLE}.PUBLICATIONSERIES ;;
+    sql:  CASE WHEN ${publicationgroup} = 'Career Ed' THEN ${minorsubjectmatter}
+               WHEN ${productfamily} = 'MT CRMS Literature' THEN 'Literature'
+               WHEN ${publicationseries} in ('CT-Networking', 'CT-Prog/PC/HD', 'CT-Revealed Series') THEN 'Creative and Technical'
+               WHEN ${publicationseries} like 'CT-%' THEN 'Computing'
+               WHEN ${publicationseries} like '%History%'
+                  OR ${coursearea} = 'History: U.S. Survey' THEN 'History'
+               WHEN ${publicationseries} = 'Composition' THEN 'English'
+               WHEN ${publicationseries} like 'Biology%' THEN 'Biology'
+               WHEN ${publicationseries} = 'Human Resources Management' THEN 'Management'
+               WHEN ${publicationseries} = 'Health Sciences' THEN 'Sports/Health/Recreat/Leisure'
+               WHEN ${publicationseries} = 'Intro Poli Sci' THEN 'Political Science'
+               WHEN ${publicationseries} = 'FreshmanOrient/College Success' THEN 'Freshman Orientation/College'
+               WHEN ${publicationseries} = 'Nutrition' THEN 'Life Sciences'
+               WHEN ${publicationseries} = 'General Business' THEN 'Business'
+               WHEN ${publicationseries} = 'Not Specified' THEN ${majorsubjectmatter}
+               ELSE ${publicationseries}
+          END;;
+#     sql: ${TABLE}.PUBLICATIONSERIES ;;
 
+    description: "
+      derived from PublicationSeries
+      except
+        - Nelson Canda which = MajorSubjectMatter
+        - publication group: Career Ed = MinorSubjectMatter
+       - also History includes U.S. History
+      "
     link: {
       label: "Engagement Toolkit (Dev)"
       url: "http://dashboard-dev.cengage.info/engtoolkit/discipline/{{value}}"
     }
+
+    drill_fields: [productfamily]
   }
+
+#   measure: discipline_rank {
+#     label: "Discipline - Rank"
+#     group_label: "Categories"
+#     type: number
+#     sql: row_number() over (order by SUM(noofactivations) desc) ;;
+#   }
+#
+#   dimension: discipline_rank_tier  {
+#     label: "Discipline - Rank (tiers)"
+#     group_label: "Categories"
+#     type: tier
+#     style: interval
+#     tiers: [10, 20, 50]
+#     sql: row_number() over (order by SUM(noofactivations) desc) ;;
+#   }
 
   dimension: discipline_old {
     type: string
