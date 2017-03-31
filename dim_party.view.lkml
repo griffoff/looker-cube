@@ -31,18 +31,17 @@ view: dim_party {
     group_label: "PII"
     type: string
     sql: ${TABLE}.LASTNAME ;;
+    hidden: yes
   }
-
-  #hidden: true
 
   dimension: mainpartyemail {
     group_label: "PII"
     label: "e-mail address"
     type: string
     sql: ${TABLE}.MAINPARTYEMAIL ;;
+    hidden: yes
   }
 
-  #hidden: true
 
   dimension: partyid {
     type: string

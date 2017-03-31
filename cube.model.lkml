@@ -1,144 +1,41 @@
 connection: "snowflake_migration_test"
 label:"Cube Data on Looker"
+
+#include dims model
+include: "dims.model.lkml"
 # include all the views
 include: "*.view"
 
 # include all the dashboards
 include: "*.dashboard"
 
-explore: dim_course {
-  label: "Course"
-  extension: required
-  extends: [dim_institution]
+explore:  dim_learningpath_explore {
+  # extends: [fact_activityoutcome, fact_siteusage]
+  extends: [dim_course]
+  view_name: dim_learningpath
+  label: "Learning Path"
 
-  join: course_facts {
-    sql_on: ${dim_course.courseid} = ${course_facts.courseid} ;;
-    relationship: one_to_one
-  }
-
-  join: dim_start_date {
-    sql_on: ${dim_course.startdatekey} = ${dim_start_date.datekey} ;;
-    relationship: many_to_one
-  }
-
-  join: dim_end_date {
-    sql_on: ${dim_course.enddatekey} = ${dim_end_date.datekey} ;;
-    relationship: many_to_one
-  }
-
-  join: dim_product {
-    relationship: many_to_one
-    sql_on: ${dim_course.productid} = ${dim_product.productid} ;;
-  }
-
-  join: dim_institution {
-    relationship: many_to_one
-    sql_on: ${dim_course.institutionid} = ${dim_institution.institutionid} ;;
-  }
-
-  join: dim_productplatform {
-    relationship: many_to_one
-    sql_on: ${dim_course.productplatformid} = ${dim_productplatform.productplatformid} ;;
-  }
-
-  join: dim_filter {
-    relationship: many_to_one
-    sql_on: ${dim_course.filterflag} = ${dim_filter.filterflag} ;;
-  }
-}
-
-explore: dim_date {
-  extension: required
-  extends: [fact_session, fact_siteusage]
-
-  join: fact_session {
-    sql_on: ${dim_date.datekey} = ${fact_session.eventdatekey} ;;
+  join:  fact_activityoutcome {
     relationship: one_to_many
+    sql_on: ${dim_learningpath.learningpathid} = ${fact_activityoutcome.learningpathid} ;;
   }
 
-  join: fact_siteusage {
-    sql_on: ${dim_date.datekey} = ${fact_siteusage.eventdatekey} ;;
+  join:  fact_siteusage {
     relationship: one_to_many
+    sql_on: ${dim_learningpath.learningpathid} = ${fact_siteusage.learningpathid} ;;
   }
 
-  join: fact_activation {
-    sql_on: ${dim_date.datekey} = ${fact_activation.activationdatekey} ;;
-    relationship: one_to_many
-  }
-
-  join: fact_enrollment {
-    sql_on: ${dim_date.datekey} = ${fact_enrollment.eventdatekey} ;;
-    relationship: one_to_many
-  }
-}
-
-explore: dim_institution {
-  extension: required
-
-  join: dim_location {
-    sql_on: ${dim_institution.locationid} = ${dim_location.locationid} ;;
+  join: dim_course {
     relationship: many_to_one
+    sql_on: ${fact_siteusage.courseid} = ${dim_course.courseid};;
   }
-}
 
-explore: dim_deviceplatform {
-  extension: required
-}
-
-explore: dim_eventtype {
-  extension: required
-}
-
-explore: dim_learningpath {
-  extension: required
-  #- join: parentlearningpath
-  #  type: left_outer
-  #  sql_on: ${dim_learningpath.parentlearningpathid} = ${parentlearningpath.parentlearningpathid}
-  #  relationship: many_to_one
   join: dim_master_node {
-    sql_on: ${dim_learningpath.masternodeid} = ${dim_master_node.masternodeid} ;;
     relationship: many_to_one
+    sql_on: ${dim_learningpath.masternodeid} = ${dim_master_node.masternodeid};;
   }
 
-  join: dim_first_used_date {
-    sql_on: ${dim_master_node.first_used_datekey} = ${dim_first_used_date.datekey} ;;
-    relationship: many_to_one
-  }
-}
 
-explore: dim_location {
-  extension: required
-
-  join: location {
-    type: left_outer
-    sql_on: ${dim_location.locationid} = ${location.locationid} ;;
-    relationship: many_to_one
-  }
-}
-
-explore: dim_pagedomain {
-  extension: required
-
-  join: dim_productplatform {
-    sql_on: ${dim_pagedomain.productplatformid} = ${dim_productplatform.productplatformid} ;;
-    relationship: many_to_one
-  }
-}
-
-#- explore: dim_party
-
-explore: dim_user {
-  extension: required
-
-  join: dim_party {
-    sql_on: ${dim_user.mainpartyid} = ${dim_party.partyid} ;;
-    relationship: many_to_one
-  }
-
-  join: user_facts {
-    sql_on: ${dim_user.userid} = ${user_facts.userid} ;;
-    relationship: one_to_one
-  }
 }
 
 explore: fact_activation {
@@ -168,6 +65,11 @@ explore: fact_activation {
   join: dim_product {
     sql_on: ${fact_activation.productid} = ${dim_product.productid} ;;
     relationship: many_to_one
+  }
+
+  join: dim_productplatform {
+    relationship: many_to_one
+    sql_on: ${fact_activation.productplatformid} = ${dim_productplatform.productplatformid} ;;
   }
 
   join: dim_institution {
@@ -410,6 +312,11 @@ explore: fact_appusage {
     relationship: many_to_one
   }
 
+  join: dim_relative_to_start_date {
+    sql_on: datediff(day, to_date(nullif(${dim_course.startdatekey}, -1)::string, 'YYYYMMDD'), to_date(nullif(${fact_appusage.eventdatekey}, -1)::string, 'YYYYMMDD')) = ${dim_relative_to_start_date.days} ;;
+    relationship: many_to_one
+  }
+
   #join:  fact_activation {
   #  sql_on: (26, ${fact_appusage.productid}, ${fact_appusage.courseid}, ${fact_appusage.partyid}, ${fact_appusage.userid}) = (${fact_activation.productplatformid}, ${fact_activation.productid}, ${fact_activation.courseid}, ${fact_activation.partyid}, ${fact_activation.userid});;
   #  relationship: many_to_one
@@ -584,7 +491,7 @@ explore: full_student_course_metrics {
   }
 
   join: dim_party {
-    sql_on: ${user_guid} = ${dim_party.guid} ;;
+    sql_on: ${full_student_course_metrics.user_guid} = ${dim_party.guid} ;;
     relationship: many_to_one
   }
 

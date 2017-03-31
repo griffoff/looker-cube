@@ -155,6 +155,12 @@ view: fact_activityoutcome {
     sql: ${TABLE}.nooftakes::float ;;
   }
 
+  measure: nooftakes_sum {
+    label: "# of Takes"
+    type: sum
+    sql: ${TABLE}.nooftakes::int ;;
+  }
+
   dimension: partyid {
     type: string
     sql: ${TABLE}.PARTYID ;;
@@ -248,15 +254,31 @@ view: fact_activityoutcome {
 
   dimension: timeduration {
     type: number
-    sql: COALESCE(NULLIF(${TABLE}.TIMEDURATION, 0), ${TABLE}.TIMESPENT) /1000.0 ;;
+    # sql: COALESCE(NULLIF(${TABLE}.TIMEDURATION, 0), ${TABLE}.TIMESPENT) /1000.0 ;;
+    sql: NULLIF(${TABLE}.TIMESPENT, 0) /1000.0 ;;
     hidden: yes
   }
 
-  measure: timeduration_avg {
-    label: "Avg. Duration (hrs)"
+  measure: duration {
     type: average
-    sql: ${timeduration}/3600.0 ;;
-    value_format: "#,##0.0 \h\r\s"
+    # sql: COALESCE(NULLIF(${TABLE}.TIMEDURATION, 0), ${TABLE}.TIMESPENT) /1000.0 ;;
+    sql: NULLIF(${TABLE}.TIMEDURATION /1000.0, 0)/86400.0 ;;
+    value_format: "h:mm:ss"
+    hidden: no
+  }
+
+  measure: timespent {
+    type: average
+    sql: NULLIF(${TABLE}.TIMESPENT /1000.0, 0)/86400.0 ;;
+    value_format: "h:mm:ss"
+    hidden: no
+  }
+
+  measure: timeduration_avg {
+    label: "Avg. Duration"
+    type: average
+    sql: ${timeduration}/86400.0 ;;
+    value_format: "h:mm:ss"
   }
 
   dimension: timeduration_bucket {
@@ -264,19 +286,13 @@ view: fact_activityoutcome {
     type: tier
     tiers: [0, 5, 15, 30, 60]
     style: relational
-    sql: ${TABLE}.TIMEDURATION/60000.0 ;;
+    sql: ${TABLE}.TIMEDURATION/60.0 ;;
     value_format: "0 \m\i\n\s"
   }
 
   dimension: timekey {
     type: string
     sql: ${TABLE}.TIMEKEY ;;
-    hidden: yes
-  }
-
-  dimension: timespent {
-    type: number
-    sql: ${TABLE}.TIMESPENT ;;
     hidden: yes
   }
 

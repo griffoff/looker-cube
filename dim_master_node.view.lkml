@@ -98,10 +98,17 @@ view: dim_master_node {
     sql: case when ${masternodeid} > -1 then ${TABLE}.level9 else 'New Item - ' || ${dim_learningpath.level9} end ;;
   }
 
+  dimension:  lowest_level_sort {
+    type:  number
+    hidden: no
+    sql: (ifnull(${level1_displayorder}+1, 1) * 10000000) + (ifnull(${level2_displayorder}+1, 1) * 1000000) + (ifnull(${level3_displayorder}+1, 1) * 10000) + (ifnull(${level4_displayorder}+1, 1) * 100) + ifnull(${level5_displayorder}+1, 1) ;;
+  }
+
   dimension: lowest_level {
     label: "Lowest Level"
     type: string
     sql: COALESCE(${TABLE}.LEVEL9,${TABLE}.LEVEL8,${TABLE}.LEVEL7,${TABLE}.LEVEL6,${TABLE}.LEVEL5,${TABLE}.LEVEL4,${TABLE}.LEVEL3,${TABLE}.LEVEL2) ;;
+    order_by_field: lowest_level_sort
   }
 
   dimension: mastercoursename {

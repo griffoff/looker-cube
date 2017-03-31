@@ -235,6 +235,7 @@ view: products {
   dimension: isbn13 {
     type: string
     sql: ${TABLE}.ISBN13 ;;
+    primary_key: yes
   }
 
   dimension: item_cd {

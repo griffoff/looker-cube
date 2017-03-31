@@ -8,8 +8,15 @@ view: fact_siteusage {
     sql: ${TABLE}.ACTIVITYID ;;
   }
 
-  measure: clickcount {
+  measure: clickcount_avg {
+    label: "Clicks (avg)"
     type: average
+    sql: ${TABLE}.CLICKCOUNT ;;
+  }
+
+  measure: clickcount {
+    label: "Clicks (total)"
+    type: sum
     sql: ${TABLE}.CLICKCOUNT ;;
   }
 
@@ -144,22 +151,22 @@ view: fact_siteusage {
 
   dimension: pageviewtime {
     type: number
-    sql: ${TABLE}.PAGEVIEWTIME/60000.0 ;;
+    sql: ${TABLE}.PAGEVIEWTIME/1000.0 ;;
     hidden: yes
   }
 
   measure: pageviewtime_avg {
     label: "Page view time (avg)"
     type: average
-    sql: ${pageviewtime} ;;
-    value_format: "0.0 \m\i\n\s"
+    sql: NULLIF(${pageviewtime}, 0)/86400.0 ;;
+    value_format: "h:mm:ss"
   }
 
   measure: pageviewtime_sum {
     label: "Page view time (total)"
     type: sum
-    sql: ${pageviewtime}/60 ;;
-    value_format: "0.0 \h\r\s"
+    sql: ${pageviewtime}/86400.0 ;;
+    value_format: "hh:mm:ss"
   }
 
   measure: session_count {

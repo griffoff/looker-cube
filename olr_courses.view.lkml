@@ -2,8 +2,18 @@ view: olr_courses {
   label: "Courses"
   sql_table_name: STG_CLTS.OLR_COURSES ;;
 
-  dimension: begin_date {
-    type: string
+  dimension_group: begin_date {
+    label: "Course Start"
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
     sql: ${TABLE}.BEGIN_DATE ;;
   }
 
