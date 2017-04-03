@@ -178,15 +178,15 @@ view: mankiw_questions {
   }
 
   measure: item_count {
-    label: "# activities"
-    type: count_distinct
-    sql:  ${activityuri} ;;
-  }
-
-  measure: activity_count {
     label: "# items"
     type: count_distinct
     sql:  ${activityitemuri} ;;
+  }
+
+  measure: activity_count {
+    label: "# activities"
+    type: count_distinct
+    sql:  ${activityuri} ;;
   }
 
   measure: take_count {

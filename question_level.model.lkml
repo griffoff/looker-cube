@@ -38,5 +38,10 @@ explore: all_questions {
     join: dim_course {
       sql_on: ${all_questions.coursekey} = ${dim_course.coursekey};;
       relationship: many_to_one
-  }
+    }
+
+    join: dim_productplatform {
+      sql_on: split_part(${all_questions.activityuri}, ':', 1) = lower(${dim_productplatform.productplatform}) ;;
+      relationship: many_to_one
+    }
 }

@@ -144,12 +144,12 @@ view: dim_product {
     drill_fields: [productfamily]
   }
 
-#   measure: discipline_rank {
-#     label: "Discipline - Rank"
-#     group_label: "Categories"
-#     type: number
-#     sql: row_number() over (order by SUM(noofactivations) desc) ;;
-#   }
+  measure: discipline_rank {
+    label: "Discipline - Rank"
+    group_label: "Categories"
+    type: string
+    sql: row_number() over (order by SUM(noofactivations) desc) ;;
+  }
 #
 #   dimension: discipline_rank_tier  {
 #     label: "Discipline - Rank (tiers)"
@@ -159,6 +159,23 @@ view: dim_product {
 #     tiers: [10, 20, 50]
 #     sql: row_number() over (order by SUM(noofactivations) desc) ;;
 #   }
+
+  measure: discipline_rank_2 {
+    label: "Discipline - Rank 2"
+    group_label: "Categories"
+    type: string
+    sql:
+      CASE
+      WHEN row_number() over (order by SUM(noofactivations) desc)
+      <20 THEN '0-20'
+      WHEN row_number() over (order by SUM(noofactivations) desc)
+      <80 THEN '20-80'
+      ELSE '>80'
+      END
+
+      ;;
+  }
+
 
   dimension: discipline_old {
     type: string

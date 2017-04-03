@@ -229,6 +229,7 @@ explore: fact_activity {
   join: dim_course {
     sql_on: ${fact_activity.courseid} = ${dim_course.courseid} ;;
     relationship: many_to_one
+    type: full_outer
   }
 
   join: dim_relative_to_start_date {
