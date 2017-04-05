@@ -48,8 +48,14 @@ view: mankiw_questions {
   dimension: normalscore {
     hidden: yes
     type: number
-    sql: IFF(${TABLE}.SCOREREQUIRED OR ${TABLE}.MARKEDTAKEN, ${TABLE}.NORMALSCORE, NULL) ;;
+    sql: IFF(${TABLE}.SCOREREQUIRED OR ${TABLE}.MARKEDTAKEN, ${TABLE}.NORMALSCORE, NULLIF(${TABLE}.NORMALSCORE, 0)) ;;
   }
+
+#   dimension: normalscore {
+#     hidden: yes
+#     type: number
+#     sql: NULLIF(${TABLE}.NORMALSCORE, 0) ;;
+#   }
 
   dimension: normalscore_bucket {
     label: "Score Bins"
@@ -96,13 +102,28 @@ view: mankiw_questions {
   }
 
   dimension: scorerequired {
+    label: "Assigned"
     type: yesno
     sql: ${TABLE}.SCOREREQUIRED ;;
   }
 
-  measure: required {
+  measure: assigned_count {
+    label: "# assigned"
     type: sum
     sql: CASE WHEN ${scorerequired} THEN 1 END ;;
+  }
+
+  measure: not_assigned_count {
+    label: "# not assigned"
+    type: sum
+    sql: CASE WHEN not ${scorerequired} THEN 1 END ;;
+  }
+
+  measure: assigned_percent {
+    label: "% assigned"
+    type: number
+    sql: COUNT(CASE WHEN ${scorerequired} THEN 1 END)::float / COUNT(*) ;;
+    value_format_name: percent_1
   }
 
   dimension: take_oid {
@@ -235,5 +256,96 @@ view: all_questions {
   extends: [soa_questions]
   sql_table_name: dev.zpg.all_questions ;;
   label: "All Covalent Questions"
+
+  measure: attempts_sum {
+    label: "# attempts"
+    type: sum
+    sql: ${TABLE}.attempts ;;
+  }
+
+  measure: attempts_avg {
+    label: "avg. attempts"
+    type: average
+    sql: ${TABLE}.attempts ;;
+  }
+
+  dimension: label_level0 {
+    type: string
+    group_label: "Item Hierarchy"
+    label: "Level 0"
+    sql: ${TABLE}.label_level0 ;;
+  }
+
+  dimension: label_level1 {
+    type: string
+    group_label: "Item Hierarchy"
+    label: "Level 1"
+    sql: ${TABLE}.label_level1 ;;
+  }
+
+  dimension: label_level2 {
+    type: string
+    group_label: "Item Hierarchy"
+    label: "Level 2"
+    sql: ${TABLE}.label_level2 ;;
+  }
+
+  dimension: label_level3 {
+    type: string
+    group_label: "Item Hierarchy"
+    label: "Level 3"
+    sql: ${TABLE}.label_level3 ;;
+  }
+
+  dimension: label_level4 {
+    type: string
+    group_label: "Item Hierarchy"
+    label: "Level 4"
+    sql: ${TABLE}.label_level4 ;;
+  }
+
+  dimension: label_level5 {
+    type: string
+    group_label: "Item Hierarchy"
+    label: "Level 5"
+    sql: ${TABLE}.label_level5 ;;
+  }
+
+  dimension: label_level6 {
+    type: string
+    group_label: "Item Hierarchy"
+    label: "Level 6"
+    sql: ${TABLE}.label_level6 ;;
+  }
+
+  dimension: nodeType {
+    type: string
+    sql: ${TABLE}.nodeType ;;
+  }
+
+  dimension: difficulty {
+    type: number
+    sql: ${TABLE}.difficulty ;;
+  }
+
+  dimension: itemName {
+    type: string
+    sql: coalesce(${TABLE}.itemName, ${TABLE}.label) ;;
+  }
+
+  dimension: problemType {
+    type: string
+    sql: ${TABLE}.problemType ;;
+  }
+
+  dimension: bookAbbr {
+    type: string
+    sql: ${TABLE}.bookAbbr ;;
+  }
+
+  dimension: bookSectionId {
+    type: string
+    sql: ${TABLE}.bookSectionId ;;
+  }
 
 }
