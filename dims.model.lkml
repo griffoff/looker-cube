@@ -20,6 +20,7 @@ explore:  dim_product {
   join: activations_dashboard_20170330 {
     sql_on: ${dim_product.discipline} = ${activations_dashboard_20170330.discipline}   ;;
     relationship: many_to_one
+    type: full_outer
   }
 
   join: activations_from_JW {

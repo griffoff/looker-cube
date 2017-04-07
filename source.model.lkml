@@ -27,3 +27,17 @@ explore: olr_courses {
     relationship: many_to_one
   }
 }
+
+explore: snapshot {
+  label: "MindTap - snapshot"
+
+  join:  org {
+    sql_on: ${snapshot.org_id} = ${org.id} ;;
+    relationship: one_to_one
+  }
+
+  join:  node {
+    sql_on: ${snapshot.id} = ${node.snapshot_id} ;;
+  }
+
+}

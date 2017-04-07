@@ -110,9 +110,18 @@ view: dim_product {
     type: string
     label: "Discipline"
     group_label: "Categories"
-    sql:  CASE WHEN ${publicationgroup} = 'Career Ed' THEN ${minorsubjectmatter}
+    sql:  CASE
+               WHEN ${publicationgroup} in ('Career Ed', 'SWEP') THEN
+                    CASE
+                        WHEN ${minorsubjectmatter} = 'Office Management' THEN 'Course Tech Office Management'
+                        WHEN ${minorsubjectmatter} = 'Health Admin and Management' THEN 'Health Information Management'
+                        ELSE ${minorsubjectmatter}
+                        END
                WHEN ${productfamily} = 'MT CRMS Literature' THEN 'Literature'
                WHEN ${publicationseries} in ('CT-Networking', 'CT-Prog/PC/HD', 'CT-Revealed Series') THEN 'Creative and Technical'
+                --??
+               WHEN ${publicationseries} = 'CPG-Networking Security' then 'Creative and Technical'
+                --??
                WHEN ${publicationseries} like 'CT-%' THEN 'Computing'
                WHEN ${publicationseries} like '%History%'
                   OR ${coursearea} = 'History: U.S. Survey' THEN 'History'
@@ -124,9 +133,25 @@ view: dim_product {
                WHEN ${publicationseries} = 'FreshmanOrient/College Success' THEN 'Freshman Orientation/College'
                WHEN ${publicationseries} = 'Nutrition' THEN 'Life Sciences'
                WHEN ${publicationseries} = 'General Business' THEN 'Business'
-               WHEN ${publicationseries} = 'Not Specified' THEN ${majorsubjectmatter}
+               WHEN ${publicationseries} = 'Not Specified' THEN
+                    ${majorsubjectmatter}
+                    /*
+                    CASE
+                    WHEN ${majorsubjectmatter} = 'Accross Cengage Disciplines' THEN 'Other ' || ${publicationgroup}
+                    ELSE ${majorsubjectmatter}
+                    END
+                    */
+               WHEN ${publicationseries} = 'Applied Math' THEN 'Applied Math-SMT'
+               WHEN ${publicationseries} = 'Earth Science' THEN 'Earth Sciences'
+               WHEN ${publicationseries} = 'Milady - Cosmetology' THEN 'Cosmetology'
+               WHEN ${publicationseries} = 'UNKNOWN' THEN 'Not Specified'
+               WHEN ${publicationseries} in ('Civil Engineering', 'General Engineering') then 'PGR 142-' || ${publicationseries}
+               WHEN ${publicationseries} = 'Religion' then 'Religion & Phenomena'
+               WHEN ${publicationseries} = 'Mass Communication' then 'Communication Arts'
+               WHEN ${publicationseries} = 'Literature/Upper Level English' then 'Literature'
                ELSE ${publicationseries}
-          END;;
+        END
+;;
 #     sql: ${TABLE}.PUBLICATIONSERIES ;;
 
     description: "

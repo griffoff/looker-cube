@@ -4,7 +4,23 @@ view: activations_dashboard_20170330 {
   derived_table: {
     sql:  select column1 as ProductGroup, column2 as discipline, column3::int as ActivationsFY16
           from values
-('SSBH','Psychology',82723)
+('SSBH','Literature',3634)
+,('SSBH','Communication Arts',2581)
+,('SSBH','Social Work',913)
+,('SSBH','Anthropology',430)
+,('SSBH','Radio/TV/Film',177)
+,('SSBH','German',0)
+,('SSBH','Religion & Phenomena',12)
+,('SSBH','4LTR Criminal Justice',0)
+,('SSBH','4LTR Marketing',0)
+,('SSBH','Accounting',17)
+,('SSBH','4LTR Business',0)
+,('SSBH','4LTR Business Communication',4)
+,('SSBH','4LTR Social Science/Sociology',0)
+,('SSBH','Humanities',3)
+,('SSBH','Other Humanities',7)
+,('SSBH','Other Quant Business',0)
+,('SSBH','Psychology',82723)
 ,('SSBH','Political Science',35470)
 ,('SSBH','Economics',63712)
 ,('SSBH','Business Law',43426)
@@ -64,19 +80,27 @@ view: activations_dashboard_20170330 {
 ,('Skills','Agriscience',26)
 ,('Skills','Drafting',0)
 ,('Skills','Respiratory Care',0)
+,('Other', 'PGR 142-General Engineering', 1088)
+,('Other', 'PGR 142-Civil Engineering', 73)
+,('Other', 'Not Specified', 22)
       ;;
   }
 
   dimension: discipline {
     type: string
     sql: ${TABLE}.discipline ;;
-    primary_key: yes
   }
 
   dimension: productgroup {
     label: "Product Group"
     type: string
     sql: ${TABLE}.productgroup ;;
+  }
+
+  dimension: key {
+    type: string
+    sql: ${productgroup}||${discipline} ;;
+    primary_key: yes
   }
 
   measure: activations_fy16 {
