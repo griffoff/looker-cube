@@ -107,24 +107,32 @@ view: mankiw_questions {
     sql: ${TABLE}.SCOREREQUIRED ;;
   }
 
-  measure: assigned_count {
-    label: "# assigned"
+  measure: manual_grading_count {
+    label: "# requiring manual grading"
     type: sum
     sql: CASE WHEN ${scorerequired} THEN 1 END ;;
   }
 
-  measure: not_assigned_count {
-    label: "# not assigned"
+  measure: automatic_grading_count {
+    label: "# automatically graded"
     type: sum
     sql: CASE WHEN not ${scorerequired} THEN 1 END ;;
   }
 
-  measure: assigned_percent {
-    label: "% assigned"
+  measure: manual_grading_percent {
+    label: "% requiring manual grading"
     type: number
     sql: COUNT(CASE WHEN ${scorerequired} THEN 1 END)::float / COUNT(*) ;;
     value_format_name: percent_1
   }
+
+#   measure:  assigned {
+#    TO DO
+#   }
+
+#   measure:  unassigned {
+#    TO DO
+#   }
 
   dimension: take_oid {
     type: string
