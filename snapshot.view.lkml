@@ -204,7 +204,8 @@ view: snapshot {
   }
 
   measure: count {
-    type: count
+    type: count_distinct
+    sql: ${id} ;;
     drill_fields: [detail*]
   }
 

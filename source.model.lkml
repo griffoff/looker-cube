@@ -36,8 +36,22 @@ explore: snapshot {
     relationship: one_to_one
   }
 
+  join:  parent_org {
+    from: org
+    sql_on: ${org.parent_id} = ${parent_org.id} ;;
+    relationship: one_to_one
+  }
+
   join:  node {
     sql_on: ${snapshot.id} = ${node.snapshot_id} ;;
+  }
+
+  join: user_org_profile {
+    sql_on: ${snapshot.org_id} = ${user_org_profile.org_id} ;;
+  }
+
+  join:  role {
+    sql_on: ${user_org_profile.role_id} = ${role.id} ;;
   }
 
 }

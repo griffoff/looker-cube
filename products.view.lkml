@@ -1,6 +1,13 @@
 view: products {
   label: "Products"
-  sql_table_name: STG_CLTS.PRODUCTS ;;
+  derived_table: {
+    sql:
+    select *
+    from STG_CLTS.PRODUCTS
+    where isbn13 not like '%CAN%TECH%'
+    ;;
+  }
+#   sql_table_name: STG_CLTS.PRODUCTS ;;
 
   dimension: acquisition_ed_cd {
     type: string

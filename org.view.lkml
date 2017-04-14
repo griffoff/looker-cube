@@ -23,8 +23,14 @@ view: org {
   }
 
   dimension: external_id {
+    description: "This is the coursekey when related to a snapshot"
     type: string
     sql: ${TABLE}.EXTERNAL_ID ;;
+    link: {
+      label: "Cube - Activations"
+      url: "/explore/cube/fact_activation?fields=dim_course.coursekey,fact_activation.total_noofactivations,&f[dim_course.coursekey]={{ value }}"
+      icon_url: "http://www.looker.com/favicon.ico"
+    }
   }
 
   dimension: last_modified_by {
