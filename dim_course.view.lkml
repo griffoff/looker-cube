@@ -15,6 +15,11 @@ view: dim_course {
     primary_key: yes
 
     link: {
+      label:"View in Analytics Diagnostic Tool"
+      url: "https://analytics-tools.cengage.info/diagnostictool/analytics/production/course/course-key/{{value}}"
+    }
+
+    link: {
       label: "Engagement Toolkit (Looker)"
       url: "https://cengage.looker.com/dashboards/test::engagement_toolkit?filter_course={{value}}"
     }

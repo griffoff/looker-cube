@@ -338,7 +338,14 @@ view: all_questions {
 
   dimension: itemName {
     type: string
-    sql: coalesce(${TABLE}.itemName, ${TABLE}.label) ;;
+    sql: coalesce(${TABLE}.itemName, ${TABLE}.label_level0, ${TABLE}.label) ;;
+  }
+
+  dimension: itemNameIsUseful {
+    label: "Item name is useful"
+    description: "Item name is neither blank or numeric"
+    type: yesno
+    sql: ${itemName} is null or try_cast(${itemName} as float) is null  ;;
   }
 
   dimension: problemType {
@@ -355,5 +362,55 @@ view: all_questions {
     type: string
     sql: ${TABLE}.bookSectionId ;;
   }
+
+  dimension: courseUri {
+    type: string
+    sql: ${TABLE}.COURSEURI ;;
+    link: {
+      label: "View in Analytics Diagnostic Tool"
+      url: "https://analytics-tools.cengage.info/diagnostictool/#/course/view/production/uri/{{value}}"
+    }
+  }
+
+  dimension: activity_label {
+    type: string
+    sql: ${TABLE}.ACTIVITY_LABEL ;;
+  }
+
+  measure:  correct_count {
+    description: "# of times the item was completed with full marks"
+    label: "# correct"
+    type: sum
+    sql: case when ${possiblescore} > 0 and ${normalscore} = 1 then 1 end;;
+  }
+
+  measure:  correct_users {
+    description: "# of students with full marks on the item"
+    label: "# students correct"
+    type: count_distinct
+    sql: case when ${possiblescore} > 0 and ${normalscore} = 1 then ${user_oid} end;;
+  }
+
+  measure:  users_attempted {
+    description: "# of students who attempted the item"
+    label: "# students attempted"
+    type: count_distinct
+    sql: case when ${possiblescore} > 0 then ${user_oid} end;;
+  }
+
+  measure:  correct_user_percent {
+    description: "% of students who got full marks on the item"
+    label: "% correct"
+    type: number
+    sql: ${correct_users} / nullif(${users_attempted}, 0);;
+    value_format_name: percent_1
+  }
+
+  dimension: scorable {
+    type: yesno
+    sql: ${possiblescore} > 0 ;;
+  }
+
+
 
 }
