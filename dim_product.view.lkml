@@ -344,7 +344,10 @@ view: dim_product {
     hidden: yes
   }
 
-
+  dimension: prod_family_cd {
+    type: string
+    sql: ${products.prod_family_cd} ;;
+  }
 
   measure: count {
     label: "No. of Products"
