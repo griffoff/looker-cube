@@ -344,6 +344,8 @@ view: dim_product {
     hidden: yes
   }
 
+
+
   measure: count {
     label: "No. of Products"
     type: count
