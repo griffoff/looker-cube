@@ -571,6 +571,8 @@ view: products {
   }
 
   dimension: prod_family_cd {
+    label: "Product Family Code"
+    group_label: "Categories"
     type: string
     sql: ${TABLE}.PROD_FAMILY_CD ;;
   }

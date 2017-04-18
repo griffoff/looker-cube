@@ -28,6 +28,13 @@ explore:  dim_product {
     sql_on: ${activations_dashboard_20170330.discipline} = ${activations_from_JW.discipline}   ;;
     relationship: many_to_one
   }
+  join: products {
+    view_label: "Product"
+    sql_on: ${dim_product.isbn13} = ${products.isbn13};;
+    relationship:  one_to_one
+    fields: [prod_family_cd, isbn13]
+
+  }
 }
 
 explore: dim_course {
