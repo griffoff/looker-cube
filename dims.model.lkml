@@ -32,7 +32,7 @@ explore:  dim_product {
     view_label: "Product"
     sql_on: ${dim_product.isbn13} = ${products.isbn13};;
     relationship:  one_to_one
-    fields: [prod_family_cd, isbn13]
+    fields: [products.prod_family_cd, products.available_dt*, products.copyright_yr]
 
   }
 }

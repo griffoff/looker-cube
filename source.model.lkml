@@ -44,14 +44,17 @@ explore: snapshot {
 
   join:  node {
     sql_on: ${snapshot.id} = ${node.snapshot_id} ;;
+    relationship: one_to_many
   }
 
   join: user_org_profile {
     sql_on: ${snapshot.org_id} = ${user_org_profile.org_id} ;;
+    relationship: one_to_many
   }
 
   join:  role {
     sql_on: ${user_org_profile.role_id} = ${role.id} ;;
+    relationship: many_to_one
   }
 
 }

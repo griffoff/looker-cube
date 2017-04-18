@@ -34,8 +34,22 @@ view: products {
     sql: ${TABLE}.AUDIENCE_DE ;;
   }
 
-  dimension: available_dt {
-    type: string
+  set: available_dt {
+    fields: [available_dt_date, available_dt_month, available_dt_quarter, available_dt_raw, available_dt_time, available_dt_week, available_dt_year]
+  }
+
+  dimension_group: available_dt {
+    label: "Available"
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
     sql: ${TABLE}.AVAILABLE_DT ;;
   }
 
@@ -90,8 +104,10 @@ view: products {
   }
 
   dimension: copyright_yr {
-    type: string
+    label: "Copyright Year"
+    type: number
     sql: ${TABLE}.COPYRIGHT_YR ;;
+    value_format: "0000"
   }
 
   dimension: custom_pub_flg {
