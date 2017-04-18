@@ -104,7 +104,7 @@ view: mankiw_questions {
   dimension: scorerequired {
     label: "Assigned"
     type: yesno
-    sql: ${TABLE}.SCOREREQUIRED ;;
+    sql: coalesce(${TABLE}.SCOREREQUIRED, false) ;;
   }
 
   measure: manual_grading_count {
@@ -144,6 +144,7 @@ view: mankiw_questions {
   }
 
   dimension_group: take_submissiondate {
+    label: "Take Submission"
     type: time
     timeframes: [
       raw,
@@ -277,6 +278,28 @@ view: all_questions {
     sql: ${TABLE}.attempts ;;
   }
 
+  dimension: activity_creationDateKey {
+    type: number
+    sql: ${TABLE}.activity_creationDateKey ;;
+    hidden: yes
+  }
+
+  dimension_group: creation_date {
+    label: "Activity Creation"
+    sql: ${TABLE}.activity_creationDate ;;
+    type:  time
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+  }
+
   dimension: label_level0 {
     type: string
     group_label: "Item Hierarchy"
@@ -395,6 +418,7 @@ view: all_questions {
     description: "# of students who attempted the item"
     label: "# students attempted"
     type: count_distinct
+    #sql: case when ${possiblescore} > 0 and (not ${scorerequired} or ${normalscore} > 0) then ${user_oid} end;;
     sql: case when ${possiblescore} > 0 then ${user_oid} end;;
   }
 

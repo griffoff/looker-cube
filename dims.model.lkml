@@ -17,6 +17,7 @@ explore:  dim_product {
     sql_on: ${dim_product.productfamily} = ${productfamilymap.prod_family_description} ;;
     relationship: many_to_one
   }
+
   join: activations_dashboard_20170330 {
     sql_on: ${dim_product.discipline} = ${activations_dashboard_20170330.discipline}   ;;
     relationship: many_to_one
@@ -68,6 +69,11 @@ explore: dim_course {
     relationship: many_to_one
     sql_on: ${dim_course.filterflag} = ${dim_filter.filterflag} ;;
   }
+
+#   join:  fact_activation {
+#     sql_on: ${dim_course.courseid} = ${fact_activation.courseid} ;;
+#     relationship: one_to_many
+#   }
 }
 
 explore: dim_date {

@@ -40,6 +40,12 @@ explore: all_questions {
       relationship: many_to_one
     }
 
+    join: dim_creationdate {
+      from: dim_date
+      sql_on: ${all_questions.activity_creationDateKey} = ${dim_creationdate.datekey} ;;
+      relationship: many_to_one
+    }
+
 #     join: dim_productplatform {
 #       sql_on: split_part(${all_questions.activityuri}, ':', 1) = lower(${dim_productplatform.productplatform}) ;;
 #       relationship: many_to_one
