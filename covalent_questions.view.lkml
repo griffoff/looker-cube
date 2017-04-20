@@ -1,9 +1,41 @@
 view: mankiw_questions {
   label: "MANKIW Questions"
-  sql_table_name: DEV.ZPG.MANKIW_QUESTIONS ;;
+
+}
+
+view: soa_questions {
+  extends: [mankiw_questions]
+  sql_table_name: dev.zpg.soa_questions ;;
+  label: "SOA Questions"
+
+
+
+}
+
+view: all_questions {
+  sql_table_name: dev.zpg.all_questions ;;
+  label: "All Covalent Questions"
 
   set: take_details {
-    fields: [take_oid, user_oid]
+    fields: [coursekey, take_submissiondate_date, take_oid, normalscore_avg, timespent_avg]
+  }
+
+  set: activity_details {
+    fields: [take_details*, activityuri, activity_label]
+  }
+
+  set: item_details {
+    fields: [activity_details*, activityitemuri, itemName, markedtaken, scorerequired]
+  }
+
+  dimension: container_type {
+    type: string
+    sql: ${TABLE}.containerType ;;
+  }
+
+  dimension: activity_type {
+    type: string
+    sql: ${TABLE}.activity_Type ;;
   }
 
   dimension: activityitemuri {
@@ -41,8 +73,11 @@ view: mankiw_questions {
   }
 
   measure: taken {
+    label: "# items completed"
+    description: "No. of times an item has been completed"
     type: sum
     sql: CASE WHEN ${markedtaken} THEN 1 END ;;
+    drill_fields: [item_details*]
   }
 
   dimension: normalscore {
@@ -102,7 +137,7 @@ view: mankiw_questions {
   }
 
   dimension: scorerequired {
-    label: "Assigned"
+    label: "Requires Manual Grading"
     type: yesno
     sql: coalesce(${TABLE}.SCOREREQUIRED, false) ;;
   }
@@ -138,9 +173,9 @@ view: mankiw_questions {
     type: string
     sql: ${TABLE}.TAKE_OID ;;
     link: {
-        label:"View in Analytics Diagnostic Tool"
-        url: "https://analytics-tools.cengage.info/diagnostictool/#/activity-take/view/production/id/{{value}}"
-      }
+      label:"View in Analytics Diagnostic Tool"
+      url: "https://analytics-tools.cengage.info/diagnostictool/#/activity-take/view/production/id/{{value}}"
+    }
   }
 
   dimension_group: take_submissiondate {
@@ -202,21 +237,23 @@ view: mankiw_questions {
   }
 
   measure: user_count {
-      label: "# users"
-      type: count_distinct
-      sql:  ${user_oid} ;;
+    label: "# users"
+    type: count_distinct
+    sql:  ${user_oid} ;;
   }
 
   measure: item_count {
     label: "# items"
     type: count_distinct
     sql:  ${activityitemuri} ;;
+    drill_fields: [item_details*]
   }
 
   measure: activity_count {
     label: "# activities"
     type: count_distinct
     sql:  ${activityuri} ;;
+    drill_fields: [activity_details*]
   }
 
   measure: take_count {
@@ -240,31 +277,15 @@ view: mankiw_questions {
 
   measure: count {
     type: count
-    drill_fields: [coursekey, activityitemuri, label, normalscore, take_oid,take_submissiondate_date, user_oid]
-  }
-}
-
-view: soa_questions {
-  extends: [mankiw_questions]
-  sql_table_name: dev.zpg.soa_questions ;;
-  label: "SOA Questions"
-
-  dimension: container_type {
-    type: string
-    sql: ${TABLE}.containerType ;;
+    drill_fields: [coursekey, activityitemuri, label, normalscore, take_oid, take_submissiondate_date, user_oid]
   }
 
-  dimension: activity_type {
-    type: string
-    sql: ${TABLE}.activity_Type ;;
+  dimension: id {
+    hidden: yes
+    primary_key: yes
+    sql: ${TABLE}.nextval ;;
+    #sql: ${TABLE}.id ;;
   }
-
-}
-
-view: all_questions {
-  extends: [soa_questions]
-  sql_table_name: dev.zpg.all_questions ;;
-  label: "All Covalent Questions"
 
   measure: attempts_sum {
     label: "# attempts"
@@ -360,6 +381,7 @@ view: all_questions {
   }
 
   dimension: itemName {
+    label: "Item Name"
     type: string
     sql: coalesce(${TABLE}.itemName, ${TABLE}.label_level0, ${TABLE}.label) ;;
   }

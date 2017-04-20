@@ -12,6 +12,7 @@ include: "*.dashboard.lookml"  # include all dashboards in this project
 
 explore:  dim_product {
   label: "Product"
+  extension: required
 
   join:  productfamilymap {
     sql_on: ${dim_product.productfamily} = ${productfamilymap.prod_family_description} ;;
@@ -77,10 +78,10 @@ explore: dim_course {
     sql_on: ${dim_course.filterflag} = ${dim_filter.filterflag} ;;
   }
 
-#   join:  fact_activation {
-#     sql_on: ${dim_course.courseid} = ${fact_activation.courseid} ;;
-#     relationship: one_to_many
-#   }
+  join:  fact_activation {
+    sql_on: ${dim_course.courseid} = ${fact_activation.courseid} ;;
+    relationship: one_to_many
+  }
 }
 
 explore: dim_date {

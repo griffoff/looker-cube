@@ -41,6 +41,7 @@ explore: all_questions {
     }
 
     join: dim_creationdate {
+      view_label: "Activity Creation Date"
       from: dim_date
       sql_on: ${all_questions.activity_creationDateKey} = ${dim_creationdate.datekey} ;;
       relationship: many_to_one
