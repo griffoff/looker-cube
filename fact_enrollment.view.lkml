@@ -2,6 +2,13 @@ view: fact_enrollment {
   label: "Enrollments"
   sql_table_name: DW_GA.FACT_ENROLLMENT ;;
 
+  dimension: key {
+    type: string
+    primary_key: yes
+    hidden: yes
+    sql: ${userid} || ${courseid} || ${eventdatekey} || ${enrollmentstatusid} ;;
+  }
+
   dimension: courseid {
     type: string
     sql: ${TABLE}.COURSEID ;;

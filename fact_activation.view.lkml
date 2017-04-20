@@ -1,3 +1,38 @@
+view: fact_activation_by_course {
+  label: "Activations"
+  derived_table: {
+    sql:
+    select courseid, sum(NOOFACTIVATIONS) as NOOFACTIVATIONS
+    from ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION
+    group by 1;;
+  }
+
+  dimension: courseid {
+    hidden: yes
+    type: string
+    primary_key: yes
+    sql: ${TABLE}.COURSEID ;;
+  }
+
+  dimension: noofactivations_base {
+    type: number
+    sql: ${TABLE}.NOOFACTIVATIONS ;;
+    hidden: yes
+  }
+
+  measure: total_noofactivations {
+    label: "Total activations"
+    type: sum
+    sql: ${noofactivations_base} ;;
+  }
+
+  measure: avg_noofactivations {
+    label: "Avg. activations"
+    type: average
+    sql: ${noofactivations_base} ;;
+  }
+}
+
 view: fact_activation {
   label: "Activations"
   sql_table_name: ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION ;;

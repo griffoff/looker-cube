@@ -79,8 +79,9 @@ explore: dim_course {
   }
 
   join:  fact_activation {
+    from: fact_activation_by_course
     sql_on: ${dim_course.courseid} = ${fact_activation.courseid} ;;
-    relationship: one_to_many
+    relationship: one_to_one
   }
 }
 
