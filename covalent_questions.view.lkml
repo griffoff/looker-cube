@@ -452,6 +452,13 @@ view: all_questions {
     value_format_name: percent_1
   }
 
+  measure: item_usage_proportion  {
+    label: "% Item Usage"
+    description: "% of users who did this item of the total activated users on courses with this item"
+    sql: ${user_count} / nullif(${fact_activation.total_noofactivations}, 0) ;;
+    value_format_name: percent_1
+  }
+
   dimension: scorable {
     type: yesno
     sql: ${possiblescore} > 0 ;;
