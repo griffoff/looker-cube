@@ -56,5 +56,9 @@ explore: snapshot {
     sql_on: ${user_org_profile.role_id} = ${role.id} ;;
     relationship: many_to_one
   }
+ join: activity {
+   sql_on:  ${node.id} = ${activity.id};;
+   relationship: one_to_one
+ }
 
 }
