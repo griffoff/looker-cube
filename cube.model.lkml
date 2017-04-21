@@ -41,6 +41,7 @@ explore:  dim_learningpath_explore {
 explore: fact_activation {
   label: "Activations"
   extends: [fact_appusage, dim_user, dim_course]
+  fields: [ALL_FIELDS*, -fact_activation_by_course.total_noofactivations, -fact_activation_by_course.avg_noofactivations]
 
   join: dim_date {
     sql_on: ${fact_activation.activationdatekey} = ${dim_date.datekey} ;;
@@ -181,10 +182,10 @@ explore: fact_activityoutcome {
     relationship: many_to_one
   }
 
-  join: fact_activation {
-    sql_on: ${fact_activityoutcome.courseid} = ${fact_activation.courseid} and ${fact_activityoutcome.userid} = ${fact_activation.userid} ;;
-    relationship: many_to_one
-  }
+#   join: fact_activation {
+#     sql_on: ${fact_activityoutcome.courseid} = ${fact_activation.courseid} and ${fact_activityoutcome.userid} = ${fact_activation.userid} ;;
+#     relationship: many_to_one
+#   }
 }
 
 explore: fact_activity {

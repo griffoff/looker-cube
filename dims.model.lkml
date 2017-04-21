@@ -78,9 +78,8 @@ explore: dim_course {
     sql_on: ${dim_course.filterflag} = ${dim_filter.filterflag} ;;
   }
 
-  join:  fact_activation {
-    from: fact_activation_by_course
-    sql_on: ${dim_course.courseid} = ${fact_activation.courseid} ;;
+  join:  fact_activation_by_course {
+    sql_on: ${dim_course.courseid} = ${fact_activation_by_course.courseid} ;;
     relationship: one_to_one
   }
 }
