@@ -15,22 +15,22 @@ explore: csfitakes {
    }
   }
 
-explore: mankiw_questions {
-  label: "Mankiw data"
-  extends: [dim_course]
-  join: dim_course {
-    sql_on: ${mankiw_questions.coursekey} = ${dim_course.coursekey};;
-    relationship: many_to_one
-    }
-  }
-explore: soa_questions {
-  label: "SOA data"
-  extends: [dim_course]
-  join: dim_course {
-    sql_on: ${soa_questions.coursekey} = ${dim_course.coursekey};;
-    relationship: many_to_one
-  }
-}
+# explore: mankiw_questions {
+#   label: "Mankiw data"
+#   extends: [dim_course]
+#   join: dim_course {
+#     sql_on: ${mankiw_questions.coursekey} = ${dim_course.coursekey};;
+#     relationship: many_to_one
+#     }
+#   }
+# explore: soa_questions {
+#   label: "SOA data"
+#   extends: [dim_course]
+#   join: dim_course {
+#     sql_on: ${soa_questions.coursekey} = ${dim_course.coursekey};;
+#     relationship: many_to_one
+#   }
+# }
 
 explore: all_questions {
     label: "All Covalent data"

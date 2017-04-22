@@ -4,7 +4,9 @@ view: fact_activation_by_course {
     sql:
     select courseid, sum(NOOFACTIVATIONS) as NOOFACTIVATIONS
     from ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION
-    group by 1;;
+    group by 1
+    order by 1;;
+    sql_trigger_value: select count(*) from dw_ga.fact_activation ;;
   }
 
   dimension: courseid {

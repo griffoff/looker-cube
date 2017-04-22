@@ -16,8 +16,12 @@ view: all_questions {
   sql_table_name: dev.zpg.all_questions ;;
   label: "All Covalent Questions"
 
+  set: course_details {
+    fields: [coursekey, normalscore_avg, timespent_avg, fact_activation.total_noofactivations]
+  }
+
   set: take_details {
-    fields: [coursekey, take_submissiondate_date, take_oid, normalscore_avg, timespent_avg]
+    fields: [course_details*, take_submissiondate_date, take_oid]
   }
 
   set: activity_details {
@@ -64,7 +68,7 @@ view: all_questions {
 
   dimension: label {
     type: string
-    sql: ${TABLE}.LABEL ;;
+    sql: ${TABLE}.LABEL::string ;;
   }
 
   dimension: markedtaken {
@@ -106,7 +110,7 @@ view: all_questions {
     type: average
     sql: ${normalscore} ;;
     value_format_name: percent_1
-    drill_fields: [coursekey, activityitemuri, label, normalscore, take_oid,take_submissiondate_date, user_oid]
+    drill_fields: [item_details*]
   }
 
   measure: normalscore_min {
@@ -273,6 +277,7 @@ view: all_questions {
     label: "# courses"
     type: count_distinct
     sql: ${coursekey} ;;
+    drill_fields: [course_details*]
   }
 
   measure: count {
@@ -325,7 +330,7 @@ view: all_questions {
     type: string
     group_label: "Item Hierarchy"
     label: "Level 0"
-    sql: ${TABLE}.label_level0 ;;
+    sql: ${TABLE}.label_level0::string ;;
   }
 
   dimension: label_level1 {
@@ -386,11 +391,45 @@ view: all_questions {
     sql: coalesce(${TABLE}.itemName, ${TABLE}.label_level0, ${TABLE}.label) ;;
   }
 
+  dimension: itemNameBase {
+    label: "Item Name"
+    hidden: yes
+    type: string
+    sql: ${TABLE}.itemName::string ;;
+  }
+
+  dimension: itemNameIsBlank {
+    label: "Item name is blank"
+    group_label: "Item name filters"
+    type:  yesno
+    sql: (
+          ${itemNameBase} IS NULL
+          OR ${label_level0} IS NULL
+          OR ${label} IS NULL
+          )
+          ;;
+  }
+
+  dimension:  itemNameIsNumeric {
+    label:"Item name is numeric"
+    description: "Is the item name just a number?
+      note: This filter will slow things down dramatically"
+    group_label: "Item name filters"
+    type:  yesno
+    sql: (
+          try_cast(${itemNameBase} as float) IS NOT NULL
+          OR try_cast(${label_level0} as float) IS NOT NULL
+          OR try_cast(${label} as float) IS NOT NULL
+          )
+          ;;
+  }
+
   dimension: itemNameIsUseful {
     label: "Item name is useful"
+    group_label: "Item name filters"
     description: "Item name is neither blank or numeric"
     type: yesno
-    sql: ${itemName} is null or try_cast(${itemName} as float) is null  ;;
+    sql: NOT ${itemNameIsBlank} AND NOT ${itemNameIsNumeric} ;;
   }
 
   dimension: problemType {
@@ -454,8 +493,9 @@ view: all_questions {
 
   measure: item_usage_proportion  {
     label: "% Item Usage"
+    type: number
     description: "% of users who did this item of the total activated users on courses with this item"
-    sql: ${user_count} / nullif(${fact_activation.total_noofactivations}, 0) ;;
+    sql: ${user_count} / nullif(${fact_activation_by_course.total_noofactivations}, 0) ;;
     value_format_name: percent_1
   }
 

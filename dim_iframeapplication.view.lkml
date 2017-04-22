@@ -7,6 +7,10 @@ view: dim_iframeapplication {
     type: string
     #sql: COALESCE(${TABLE}.DISPLAYNAME, ${iframeapplicationname}) ;;
     sql: COALESCE(${TABLE}.BESTDISPLAYNAME, ${iframeapplicationname}) ;;
+    link: {
+      label: "MindApp details on Inside"
+      url: "http://inside/sites/DevOps/SitePages/{{ value }}.aspx"
+    }
   }
 
   dimension: dw_ldid {
@@ -33,6 +37,10 @@ view: dim_iframeapplication {
     label: "Application Name"
     type: string
     sql: REPLACE(REPLACE(REPLACE(REPLACE(${TABLE}.IFRAMEAPPLICATIONNAME, '_', ' '), 'LAUNCH', ''), 'VIEW', ''), 'FLASH CARDS', 'FLASHCARDS') ;;
+    link: {
+      label: "MindApp details on Inside"
+      url: "http://inside/sites/DevOps/SitePages/{{ value }}.aspx"
+    }
   }
 
   measure: count {
