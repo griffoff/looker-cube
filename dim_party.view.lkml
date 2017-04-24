@@ -16,14 +16,29 @@ view: dim_party {
   }
 
   dimension: firstname {
+    label: "First name"
+    group_label: "PII"
     type: string
     sql: ${TABLE}.FIRSTNAME ;;
-    hidden: yes
+    html:
+    {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
+      {{ value }}
+    {% else %}
+      [Masked]
+    {% endif %}  ;;
   }
 
   dimension: guid {
+    label: "SSO Guid"
+    group_label: "PII"
     type: string
     sql: ${TABLE}.GUID ;;
+    html:
+    {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
+      {{ value }}
+    {% else %}
+      [Masked]
+    {% endif %}  ;;
   }
 
   dimension: lastname {
@@ -31,7 +46,18 @@ view: dim_party {
     group_label: "PII"
     type: string
     sql: ${TABLE}.LASTNAME ;;
-    hidden: yes
+#     sql:
+#     CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes'
+#     THEN ${TABLE}.LASTNAME
+#     ELSE
+#     MD5(${TABLE}.LASTNAME || "salt")
+#     END ;;
+    html:
+       {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
+         {{ value }}
+       {% else %}
+         [Masked]
+       {% endif %}  ;;
   }
 
   dimension: mainpartyemail {
@@ -39,15 +65,22 @@ view: dim_party {
     label: "e-mail address"
     type: string
     sql: ${TABLE}.MAINPARTYEMAIL ;;
-    hidden: yes
+    html:
+      {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
+        {{ value }}
+      {% else %}
+        [Masked]
+      {% endif %}  ;;
   }
 
 
   dimension: partyid {
+    label: "Party Id"
+    description: "Internal non PII person identifier"
     type: string
     sql: ${TABLE}.PARTYID ;;
     primary_key: yes
-    hidden: yes
+    hidden: no
   }
 
   measure: count {

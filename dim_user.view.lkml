@@ -3,6 +3,10 @@ view: dim_user {
   sql_table_name: DW_GA.DIM_USER ;;
 
   dimension: userid {
+    label: "User Id"
+    description: "Internal non PII User/Account identifier.
+    A person may have multiple accounts.
+    Party Id represents the identifier for a person"
     type:  number
     sql:  ${TABLE}.userid ;;
     primary_key: yes
