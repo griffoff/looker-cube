@@ -6,7 +6,7 @@ view: fact_activation_siteusage {
         ,sum(ClickCount) as Clicks
         ,sum(PageViewTime) / 1000.0 as PageViewTime_secs
         ,avg(PageViewTime) / 1000.0 as Avg_PageViewTime_secs
-      from migration_test.dw_ga.fact_siteusage
+      from dw_ga.fact_siteusage
       group by 1, 2, 3, 4, 5;;
   }
 

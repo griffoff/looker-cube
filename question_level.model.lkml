@@ -1,4 +1,4 @@
-connection: "snowflake_migration_test"
+connection: "snowflake_prod"
 include: "dims.model.lkml"
 
 label:"Item Analysis"

@@ -4,7 +4,7 @@ view: dim_institution {
 
   dimension: HED {
     type: string
-    sql: CASE WHEN (select count(*) from migration_test.looker_workshop.magellan_hed_entities h where h.entity_no = ${entity_no}) > 0 then 'HED' else 'Not HED' end ;;
+    sql: CASE WHEN (select count(*) from looker_workshop.magellan_hed_entities h where h.entity_no = ${entity_no}) > 0 then 'HED' else 'Not HED' end ;;
   }
 
   dimension: city {

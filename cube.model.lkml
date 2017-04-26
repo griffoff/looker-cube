@@ -1,4 +1,4 @@
-connection: "snowflake_migration_test"
+connection: "snowflake_prod"
 label:"Cube Data on Looker"
 
 #include dims model

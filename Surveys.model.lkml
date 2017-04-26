@@ -1,4 +1,4 @@
-connection: "snowflake_migration_test"
+connection: "snowflake_prod"
 
 include: "*.view.lkml"
 include: "*.dashboard.lookml"  # include all dashboards in this project
