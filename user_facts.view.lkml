@@ -33,9 +33,27 @@ view: user_facts {
   dimension: user_score_category {
     label: "User Score Category (Gradable)"
     type: tier
-    tiers: [0, 0.4, 0.7, 0.9]
+    tiers: [0.4, 0.7, 0.9]
     style: relational
     sql: ${gradable_score} ;;
+    value_format_name: percent_0
+  }
+
+  dimension: user_score_category_non_gradable {
+    label: "User Score Category (Non-Gradable)"
+    type: tier
+    tiers: [0.4, 0.7, 0.9]
+    style: relational
+    sql: ${nongradable_score} ;;
+    value_format_name: percent_0
+  }
+
+  dimension: user_score_category_overall {
+    label: "User Score Category (Overall)"
+    type: tier
+    tiers: [0.4, 0.7, 0.9]
+    style: relational
+    sql: ${overall_score} ;;
     value_format_name: percent_0
   }
 

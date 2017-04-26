@@ -61,4 +61,23 @@ explore: snapshot {
    relationship: one_to_one
  }
 
+ join: created_by_user {
+    view_label: "Created By"
+    from: user
+    sql_on:  ${node.created_by} = ${created_by_user.id};;
+    relationship: many_to_one
+  }
+
+  join: created_by_user_org_profile {
+    from: user_org_profile
+    sql_on: (${snapshot.org_id}, ${node.created_by}) = (${created_by_user_org_profile.org_id}, ${created_by_user_org_profile.user_id}) ;;
+    relationship: one_to_one
+  }
+
+  join: created_by_role {
+    from:  role
+    sql_on: ${created_by_user_org_profile.role_id} = ${created_by_role.id} ;;
+    relationship: many_to_one
+  }
+
 }
