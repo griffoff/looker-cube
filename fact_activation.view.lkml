@@ -1,12 +1,12 @@
 view: fact_activation_by_course {
-  label: "Activations"
+  view_label: "Activations"
   derived_table: {
     sql:
     select courseid, sum(NOOFACTIVATIONS) as NOOFACTIVATIONS
     from ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION
     group by 1
     order by 1;;
-    sql_trigger_value: select count(*) from dw_ga.fact_activation ;;
+    sql_trigger_value: select count(*) from ZPG_ACTIVATIONS.dw_ga.fact_activation ;;
   }
 
   dimension: courseid {
@@ -36,7 +36,7 @@ view: fact_activation_by_course {
 }
 
 view: fact_activation {
-  label: "Activations"
+  view_label: "Activations"
   sql_table_name: ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION ;;
 
   set: coursedetails {

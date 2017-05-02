@@ -119,6 +119,14 @@ view: dim_course {
     hidden: yes
   }
 
+  dimension: is_lms_integrated {
+    label: "LMS Integrated"
+    type: yesno
+    sql: length(split_part(${coursekey}, '-', 1)) > 15
+        and array_size(split(${coursekey}, '-')) >= 2
+        and ${productplatformid}= 26 ;;
+  }
+
   measure: count {
     label: "No. of Courses"
     type: count
