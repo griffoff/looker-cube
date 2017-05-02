@@ -31,6 +31,14 @@ explore: csfitakes {
 #     relationship: many_to_one
 #   }
 # }
+explore: productqnaproblemview {
+  label: "Aplia Link"
+  extends: [dim_course]
+  join: dim_course {
+    sql_on: ${productqnaproblemview.context_id} = ${dim_course.coursekey};;
+    relationship: many_to_one
+  }
+}
 
 explore: all_questions {
     label: "All Covalent data"
