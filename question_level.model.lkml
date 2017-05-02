@@ -31,6 +31,14 @@ explore: csfitakes {
 #     relationship: many_to_one
 #   }
 # }
+explore: problems_assigned {
+  label: "Aplia Link"
+  extends: [productqnaproblemview]
+  join: productqnaproblemview {
+    sql_on: ${problems_assigned.problem_id} = ${productqnaproblemview.problem_id};;
+    relationship: many_to_one
+  }
+}
 explore: productqnaproblemview {
   label: "Aplia Link"
   extends: [dim_course]
