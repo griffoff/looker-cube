@@ -6,6 +6,8 @@ label:"Item Analysis"
 include: "*.view.lkml"         # include all views in this project
 include: "*.dashboard.lkml"  # include all dashboards in this project
 
+case_sensitive: no
+
 explore: csfitakes {
   label: "CSFI data"
   extends: [dim_course]

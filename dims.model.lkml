@@ -10,6 +10,8 @@ connection: "snowflake_prod"
 include: "*.view.lkml"         # include all views in this project
 include: "*.dashboard.lookml"  # include all dashboards in this project
 
+case_sensitive: no
+
 explore:  dim_product {
   label: "Product"
   extension: required
