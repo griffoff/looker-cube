@@ -387,6 +387,14 @@ view: all_questions {
     sql: ${TABLE}.difficulty ;;
   }
 
+
+  dimension: structure_activity_sort {
+    label: "Activity Sort (from course structure)"
+    hidden: yes
+    type: string
+    sql: ${TABLE}.structure_activity_sort ;;
+  }
+
   dimension: itemName {
     label: "Item Name"
     type: string
@@ -436,7 +444,7 @@ view: all_questions {
 
   dimension: problemType {
     type: string
-    sql: ${TABLE}.problemType ;;
+    sql: ${TABLE}.problemType::string ;;
   }
 
   dimension: bookAbbr {
@@ -468,6 +476,7 @@ view: all_questions {
     label: "Activity Label"
     type: string
     sql: coalesce(${structure_activity_label}, ${TABLE}.ACTIVITY_LABEL) ;;
+    #order_by_field: structure_activity_sort
   }
 
   dimension: structure_activity_label {
