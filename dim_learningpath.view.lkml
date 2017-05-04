@@ -4,15 +4,36 @@ view: dim_learningpath {
   derived_table: {
     sql:
     select
-    lp.*
-    ,case when lp.masternodeid = -1
-    then
-        COALESCE(lp.LEVEL9,lp.LEVEL8,lp.LEVEL7,lp.LEVEL6,lp.LEVEL5,lp.LEVEL4,lp.LEVEL3,lp.LEVEL2)
-    else
-        COALESCE(m.LEVEL9,m.LEVEL8,m.LEVEL7,m.LEVEL6,m.LEVEL5,m.LEVEL4,m.LEVEL3,m.LEVEL2)
-    end as lowest_level
+        lp.learningpathid
+        ,lp.learningcourse
+        ,coalesce(m.level1, lp.level1) as level1
+        ,coalesce(m.level2, lp.level2) as level2
+        ,coalesce(m.level3, lp.level3) as level3
+        ,coalesce(m.level4, lp.level4) as level4
+        ,coalesce(m.level5, lp.level5) as level5
+        ,coalesce(m.level6, lp.level6) as level6
+        ,coalesce(m.level7, lp.level7) as level7
+        ,coalesce(m.level8, lp.level8) as level8
+        ,coalesce(m.level9, lp.level9) as level9
+        ,coalesce(m.level1_displayorder, lp.level1_displayorder) as level1_displayorder
+        ,coalesce(m.level2_displayorder, lp.level2_displayorder) as level2_displayorder
+        ,coalesce(m.level3_displayorder, lp.level3_displayorder) as level3_displayorder
+        ,coalesce(m.level4_displayorder, lp.level4_displayorder) as level4_displayorder
+        ,coalesce(m.level5_displayorder, lp.level5_displayorder) as level5_displayorder
+        ,lp.learningtype
+        ,lp.eventtypeid
+        ,lp.origname
+        ,lp.origsequence
+        ,lp.parentlearningpathid
+        ,case when lp.masternodeid = -1
+        then
+            COALESCE(m.LEVEL9,m.LEVEL8,m.LEVEL7,m.LEVEL6,m.LEVEL5,m.LEVEL4,m.LEVEL3,m.LEVEL2)
+        else
+            COALESCE(lp.LEVEL9,lp.LEVEL8,lp.LEVEL7,lp.LEVEL6,lp.LEVEL5,lp.LEVEL4,lp.LEVEL3,lp.LEVEL2)
+        end as lowest_level
     from DW_GA.DIM_LEARNINGPATH lp
-    inner JOIN DW_GA.DIM_MASTER_NODE m  ON lp.MASTERNODEID = m.MASTERNODEID ;;
+    inner JOIN DW_GA.DIM_MASTER_NODE m  ON lp.MASTERNODEID = m.MASTERNODEID  ;;
+
     sql_trigger_value: select count(*) from dw_ga.dim_learningpath ;;
   }
 
