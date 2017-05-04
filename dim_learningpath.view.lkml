@@ -119,6 +119,20 @@ view: dim_learningpath {
     order_by_field: lowest_level_sort
   }
 
+  dimension:  lowest_level_category {
+    label: "Lowest LP Level category"
+    description: "More useful categorization for awesomeness"
+    type: string
+    sql: case when ${lowest_level} ilike '%Mastery Training%' then 'Mastery Training'
+              when ${lowest_level} ilike '%Quiz%' then 'Quiz'
+              when ${lowest_level} ilike '%Practice Test%' then 'Practice Test'
+              when ${lowest_level} ilike '%COMPLETE Apply%' then 'Complete Apply'
+              when ${lowest_level} ilike '%COMPLETE Research%' then 'Complete Research'
+              when ${lowest_level} ilike '%START Zoom%' then 'Start Zoom'
+              else 'Uncategorized'
+              end;;
+  }
+
   dimension: masternodeid {
     type: string
     sql: ${TABLE}.MASTERNODEID ;;
