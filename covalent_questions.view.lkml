@@ -68,6 +68,7 @@ view: all_questions {
   }
 
   dimension: label {
+    hidden: yes
     type: string
     sql: ${TABLE}.LABEL::string ;;
   }
