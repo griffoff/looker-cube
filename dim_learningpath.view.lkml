@@ -1,11 +1,31 @@
 view: dim_learningpath {
   label: "Learning Path"
-  sql_table_name: DW_GA.DIM_LEARNINGPATH ;;
+  #sql_table_name: DW_GA.DIM_LEARNINGPATH ;;
+  derived_table: {
+    sql:
+    select
+    lp.*
+    ,case when lp.masternodeid = -1
+    then
+        COALESCE(lp.LEVEL9,lp.LEVEL8,lp.LEVEL7,lp.LEVEL6,lp.LEVEL5,lp.LEVEL4,lp.LEVEL3,lp.LEVEL2)
+    else
+        COALESCE(m.LEVEL9,m.LEVEL8,m.LEVEL7,m.LEVEL6,m.LEVEL5,m.LEVEL4,m.LEVEL3,m.LEVEL2)
+    end as lowest_level
+    from DW_GA.DIM_LEARNINGPATH lp
+    inner JOIN DW_GA.DIM_MASTER_NODE m  ON lp.MASTERNODEID = m.MASTERNODEID ;;
+    sql_trigger_value: select count(*) from dw_ga.dim_learningpath ;;
+  }
 
   dimension: eventtypeid {
     type: string
     sql: ${TABLE}.EVENTTYPEID ;;
     hidden: yes
+  }
+
+  dimension: snapshot_status {
+    label: "Status"
+    type: string
+    sql: case when ${masternodeid} > -1 then 'Core item' else 'Added to snapshot' end ;;
   }
 
   dimension: learningcourse {
@@ -115,7 +135,8 @@ view: dim_learningpath {
   dimension: lowest_level {
     label: "Lowest Level"
     type: string
-    sql: COALESCE(${TABLE}.LEVEL9,${TABLE}.LEVEL8,${TABLE}.LEVEL7,${TABLE}.LEVEL6,${TABLE}.LEVEL5,${TABLE}.LEVEL4,${TABLE}.LEVEL3,${TABLE}.LEVEL2) ;;
+    #sql: COALESCE(${TABLE}.LEVEL9,${TABLE}.LEVEL8,${TABLE}.LEVEL7,${TABLE}.LEVEL6,${TABLE}.LEVEL5,${TABLE}.LEVEL4,${TABLE}.LEVEL3,${TABLE}.LEVEL2) ;;
+    sql: ${TABLE}.lowest_level ;;
     order_by_field: lowest_level_sort
   }
 
