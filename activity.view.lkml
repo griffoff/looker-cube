@@ -141,7 +141,7 @@ dimension: subtype {
 }
 
 measure: count {
-  label: "Count"
+  label: "# activities"
   type: count_distinct
   sql:  ${id} ;;
 

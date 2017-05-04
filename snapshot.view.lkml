@@ -204,8 +204,16 @@ view: snapshot {
   }
 
   measure: count {
+    label: "# Snapshots"
     type: count_distinct
     sql: ${id} ;;
+    drill_fields: [detail*]
+  }
+
+  measure: master_count {
+    label: "# Masters"
+    type: count_distinct
+    sql: ${parent_id} ;;
     drill_fields: [detail*]
   }
 

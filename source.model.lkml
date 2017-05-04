@@ -80,4 +80,9 @@ explore: snapshot {
     relationship: many_to_one
   }
 
+  join: app {
+    sql_on: ${activity.app_activity_id} = ${app.id} ;;
+    relationship: many_to_one
+  }
+
 }

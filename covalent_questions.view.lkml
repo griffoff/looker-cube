@@ -38,6 +38,7 @@ view: all_questions {
   }
 
   dimension: activity_type {
+    hidden: yes
     type: string
     sql: ${TABLE}.activity_Type ;;
   }
@@ -458,7 +459,40 @@ view: all_questions {
 
   dimension: activity_label {
     type: string
+    hidden: yes
     sql: ${TABLE}.ACTIVITY_LABEL ;;
+  }
+
+  dimension: combined_activity_label {
+    label: "Activity Label"
+    type: string
+    sql: coalesce(${structure_activity_label}, ${TABLE}.ACTIVITY_LABEL) ;;
+  }
+
+  dimension: structure_activity_label {
+    label: "Activity Label (from course structure)"
+    hidden: yes
+    type: string
+    sql: ${TABLE}.structure_activity_label ;;
+  }
+
+  dimension: structure_activity_type {
+    label: "Activity Type (from course structure)"
+    hidden: yes
+    type: string
+    sql: ${TABLE}.structure_activity_type ;;
+  }
+
+  dimension: combined_activity_type {
+    label: "Activity Type"
+    type: string
+    sql: coalesce(${TABLE}.structure_activity_type, ${activity_type}) ;;
+  }
+
+  dimension: gradability {
+    label: "Gradability (MindTap only)"
+    type: string
+    sql: ${TABLE}.gradability ;;
   }
 
   measure:  correct_count {
