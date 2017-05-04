@@ -106,6 +106,30 @@ view: user {
     drill_fields: [detail*]
   }
 
+  dimension: is_internal {
+    label: "Internal User"
+    type: yesno
+    sql:
+             ${TABLE}.email not ilike '%cengage%.com'
+          OR ${TABLE}.email not ilike '%qai%.com'
+          OR ${TABLE}.email not ilike '%testaccount.com'
+          OR ${TABLE}.email not ilike '%development%'
+          OR ${TABLE}.EMAIL not ilike '%@nelson.com'
+          OR ${TABLE}.EMAIL not ilike '%@swlearning.com'
+          OR ${TABLE}.EMAIL not ilike '%@lunarlogic.com'
+          OR ${TABLE}.EMAIL not ilike '%@mtx.com'
+          OR ${TABLE}.EMAIL not ilike '%@mtxqa.com'
+          OR ${TABLE}.EMAIL not ilike '%@henley.com'
+          OR ${TABLE}.EMAIL not ilike '%@concentricsky.com'
+          OR ${TABLE}.EMAIL not ilike '%@test.com'
+          OR ${TABLE}.EMAIL not ilike '%@ng.com'
+          OR ${TABLE}.EMAIL not ilike '%@qa4u.com'
+          OR ${TABLE}.EMAIL not ilike '%@aplia.com'
+          OR ${TABLE}.EMAIL not ilike '%@qainfotech.net'
+          OR lower(${TABLE}.EMAIL) not in ('inst1_gateway_130514@yahoo.com','01_gtwy_instructor_30042015@gmail.com','i1_instructor_16052014@gmail.com','i9_instructor_040814@gmail.com','i19_instructor_091014@gmail.com')
+      ;;
+  }
+
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
