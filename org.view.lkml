@@ -78,6 +78,15 @@ view: org {
     drill_fields: [detail*]
   }
 
+  dimension: is_internal {
+    label: "Internal Org"
+    type: yesno
+    sql: ${TABLE}.NAME ilike '%test%'
+        or ${TABLE}.NAME ilike '%demo%'
+        or ${TABLE}.NAME ilike '%sales%'
+        ;;
+  }
+
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
