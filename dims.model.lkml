@@ -143,6 +143,11 @@ explore: dim_learningpath {
     sql_on: ${dim_master_node.first_used_datekey} = ${dim_first_used_date.datekey} ;;
     relationship: many_to_one
   }
+
+  join: lp_node_map {
+    sql_on: ${dim_learningpath.learningpathid} = ${lp_node_map.learningpathid} ;;
+    relationship: one_to_many
+  }
 }
 
 explore: dim_location {

@@ -1,3 +1,40 @@
+view: lp_node_map {
+  label: "Map to Mindtap Source"
+  derived_table: {
+    sql:
+    select distinct dl.learningpathid, f.id as node_id, n.snapshot_id
+      from dw_ga.fact_activity f
+      join dw_ga.dim_learningpath dl on f.learningpathid=dl.learningpathid
+      join stg_mindtap.node n on f.id = n.id
+      ;;
+  }
+
+  dimension: learningpathid {
+    type:  number
+    sql: ${TABLE}.learningpathid ;;
+    hidden: yes
+  }
+
+  dimension: nodeid {
+    type:  number
+    sql: ${TABLE}.node_id ;;
+    link: {
+      label: "Source - MindTap"
+      url: "/explore/source/snapshot?fields=node.id,node.name,node.count,app.display_name,&f[node.id]={{ value }}"
+    }
+  }
+
+  dimension: snapshotid {
+    type:  number
+    sql: ${TABLE}.snapshot_id ;;
+    link: {
+      label: "Source - MindTap"
+      url: "/explore/source/snapshot?fields=snapshot.id,node.name,app.display_name,&f[snapshot.id]={{ value }}"
+    }
+  }
+
+}
+
 view: dim_learningpath {
   label: "Learning Path"
   #sql_table_name: DW_GA.DIM_LEARNINGPATH ;;
@@ -25,6 +62,7 @@ view: dim_learningpath {
         ,lp.origname
         ,lp.origsequence
         ,lp.parentlearningpathid
+        ,lp.masternodeid
         ,case when lp.masternodeid = -1
         then
             COALESCE(m.LEVEL9,m.LEVEL8,m.LEVEL7,m.LEVEL6,m.LEVEL5,m.LEVEL4,m.LEVEL3,m.LEVEL2)
@@ -32,7 +70,8 @@ view: dim_learningpath {
             COALESCE(lp.LEVEL9,lp.LEVEL8,lp.LEVEL7,lp.LEVEL6,lp.LEVEL5,lp.LEVEL4,lp.LEVEL3,lp.LEVEL2)
         end as lowest_level
     from DW_GA.DIM_LEARNINGPATH lp
-    inner JOIN DW_GA.DIM_MASTER_NODE m  ON lp.MASTERNODEID = m.MASTERNODEID  ;;
+    inner JOIN DW_GA.DIM_MASTER_NODE m  ON lp.MASTERNODEID = m.MASTERNODEID
+    ;;
 
     sql_trigger_value: select count(*) from dw_ga.dim_learningpath ;;
   }
