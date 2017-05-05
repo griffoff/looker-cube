@@ -52,11 +52,11 @@ view: dim_learningpath {
         ,coalesce(m.level7, lp.level7) as level7
         ,coalesce(m.level8, lp.level8) as level8
         ,coalesce(m.level9, lp.level9) as level9
-        ,coalesce(m.level1_displayorder, lp.level1_displayorder) as level1_displayorder
-        ,coalesce(m.level2_displayorder, lp.level2_displayorder) as level2_displayorder
-        ,coalesce(m.level3_displayorder, lp.level3_displayorder) as level3_displayorder
-        ,coalesce(m.level4_displayorder, lp.level4_displayorder) as level4_displayorder
-        ,coalesce(m.level5_displayorder, lp.level5_displayorder) as level5_displayorder
+        ,min(coalesce(m.level1_displayorder, lp.level1_displayorder)) over (partition by lp.masternodeid) as level1_displayorder
+        ,min(coalesce(m.level2_displayorder, lp.level2_displayorder)) over (partition by lp.masternodeid) as level2_displayorder
+        ,min(coalesce(m.level3_displayorder, lp.level3_displayorder)) over (partition by lp.masternodeid) as level3_displayorder
+        ,min(coalesce(m.level4_displayorder, lp.level4_displayorder)) over (partition by lp.masternodeid) as level4_displayorder
+        ,min(coalesce(m.level5_displayorder, lp.level5_displayorder)) over (partition by lp.masternodeid) as level5_displayorder
         ,lp.learningtype
         ,lp.eventtypeid
         ,lp.origname
