@@ -30,10 +30,10 @@ explore:  dim_learningpath_explore {
     sql_on: ${fact_siteusage.courseid} = ${dim_course.courseid};;
   }
 
-  join: dim_master_node {
-    relationship: many_to_one
-    sql_on: ${dim_learningpath.masternodeid} = ${dim_master_node.masternodeid};;
-  }
+#   join: dim_master_node {
+#     relationship: many_to_one
+#     sql_on: ${dim_learningpath.masternodeid} = ${dim_master_node.masternodeid};;
+#   }
 
 
 }
@@ -437,10 +437,10 @@ explore: fact_siteusage {
     relationship: many_to_one
   }
 
-  join: dim_master_node {
-    sql_on: ${fact_siteusage.masternodeid} = ${dim_master_node.masternodeid} ;;
-    relationship: many_to_one
-  }
+#   join: dim_master_node {
+#     sql_on: ${fact_siteusage.masternodeid} = ${dim_master_node.masternodeid} ;;
+#     relationship: many_to_one
+#   }
 
   join: dim_party {
     sql_on: ${fact_siteusage.partyid} = ${dim_party.partyid} ;;

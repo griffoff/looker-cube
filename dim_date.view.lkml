@@ -293,11 +293,6 @@ view: dim_created_date {
   label: "Created Date"
 }
 
-view: dim_first_used_date {
-  extends: [dim_date]
-  label: "First Used Date"
-}
-
 view: dim_completion_date {
   extends: [dim_date]
   label: "Completion Date"

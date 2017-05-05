@@ -63,17 +63,37 @@ view: dim_learningpath {
         ,lp.origsequence
         ,lp.parentlearningpathid
         ,lp.masternodeid
+        ,f.firstdatekey
+        ,case when lp.masternodeid = -1 then -1 else min(f.firstdatekey) over (partition by lp.masternodeid) end as masterfirstdatekey
         ,case when lp.masternodeid = -1
-        then
-            COALESCE(m.LEVEL9,m.LEVEL8,m.LEVEL7,m.LEVEL6,m.LEVEL5,m.LEVEL4,m.LEVEL3,m.LEVEL2)
-        else
-            COALESCE(lp.LEVEL9,lp.LEVEL8,lp.LEVEL7,lp.LEVEL6,lp.LEVEL5,lp.LEVEL4,lp.LEVEL3,lp.LEVEL2)
-        end as lowest_level
+          then
+              COALESCE(m.LEVEL9,m.LEVEL8,m.LEVEL7,m.LEVEL6,m.LEVEL5,m.LEVEL4,m.LEVEL3,m.LEVEL2)
+          else
+              COALESCE(lp.LEVEL9,lp.LEVEL8,lp.LEVEL7,lp.LEVEL6,lp.LEVEL5,lp.LEVEL4,lp.LEVEL3,lp.LEVEL2)
+          end as lowest_level
     from DW_GA.DIM_LEARNINGPATH lp
     inner JOIN DW_GA.DIM_MASTER_NODE m  ON lp.MASTERNODEID = m.MASTERNODEID
+    left join (
+        select
+            learningpathid, min(startdatekey) as firstdatekey
+        from dw_ga.fact_activityoutcome
+        group by 1
+        ) f on lp.learningpathid = f.learningpathid
     ;;
 
     sql_trigger_value: select count(*) from dw_ga.dim_learningpath ;;
+  }
+
+  dimension: first_used_datekey {
+    type: number
+    sql: ${TABLE}.firstdatekey ;;
+    hidden: yes
+  }
+
+  dimension: master_first_used_datekey {
+    type: number
+    sql: ${TABLE}.masterfirstdatekey ;;
+    hidden: yes
   }
 
   dimension: eventtypeid {
@@ -217,7 +237,7 @@ view: dim_learningpath {
   dimension: masternodeid {
     type: string
     sql: ${TABLE}.MASTERNODEID ;;
-    hidden: no
+    hidden: yes
   }
 
   dimension: origname {

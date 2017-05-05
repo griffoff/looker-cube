@@ -140,9 +140,19 @@ explore: dim_learningpath {
   #}
 
   join: dim_first_used_date {
-    sql_on: ${dim_master_node.first_used_datekey} = ${dim_first_used_date.datekey} ;;
+    view_label: "First Used"
+    from:  dim_date
+    sql_on: ${dim_learningpath.first_used_datekey} = ${dim_first_used_date.datekey} ;;
     relationship: many_to_one
   }
+
+  join: dim_master_first_used_date {
+    view_label: "First Used (Master)"
+    from:  dim_date
+    sql_on: ${dim_learningpath.master_first_used_datekey} = ${dim_master_first_used_date.datekey} ;;
+    relationship: many_to_one
+  }
+
 
   join: lp_node_map {
     sql_on: ${dim_learningpath.learningpathid} = ${lp_node_map.learningpathid} ;;
