@@ -1,6 +1,12 @@
 view: fact_siteusage {
   label: "Web Usage"
-  sql_table_name: DEV.ZPG.FACT_SITEUSAGE_V ;;
+  sql_table_name: DW_GA.FACT_SITEUSAGE ;;
+
+  dimension: pk {
+    sql: ${TABLE}.pageinstanceid || ${TABLE}.userid || ${TABLE}.learningpathid || ${TABLE}.eventdate || ${TABLE}.daysfromcoursestart ;;
+    hidden: yes
+    primary_key: yes
+  }
 
   dimension: activityid {
     hidden: yes
@@ -126,7 +132,6 @@ view: fact_siteusage {
 
   dimension: pageinstanceid {
     hidden: yes
-    primary_key: yes
     type: string
     sql: ${TABLE}.PAGEINSTANCEID ;;
   }
@@ -204,6 +209,13 @@ view: fact_siteusage {
     hidden: yes
     type: string
     sql: ${TABLE}.USERID ;;
+  }
+
+  measure: percent_of_activations {
+    label: "% of Activations"
+    type: number
+    sql: ${dim_party.count} / NULLIF(${fact_activation_by_course.total_noofactivations}, 0) ;;
+    value_format_name: percent_1
   }
 }
 
