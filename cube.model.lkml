@@ -481,6 +481,14 @@ explore: fact_siteusage {
     sql_on: ${fact_siteusage.daysfromcoursestart} = ${dim_relative_to_start_date.days} ;;
     relationship: many_to_one
   }
+
+  join: fact_activityoutcome {
+    sql_on: ${fact_siteusage.learningpathid} = ${fact_activityoutcome.learningpathid}
+          and ${fact_siteusage.userid} = ${fact_activityoutcome.userid}
+          and ${fact_siteusage.eventdatekey} = ${fact_activityoutcome.startdatekey}
+          ;;
+    relationship: many_to_many
+  }
 }
 
 explore: full_student_course_metrics {

@@ -2,9 +2,15 @@ view: fact_activityoutcome {
   label: "Activity Outcomes"
   sql_table_name: DW_GA.FACT_ACTIVITYOUTCOME ;;
 
-  dimension: id {
+  dimension: rowid {
+    type: number
+    sql: ${TABLE}.ROWID ;;
+    hidden: yes
     primary_key: yes
-    type: string
+  }
+
+  dimension: id {
+    type: number
     sql: ${TABLE}.ID ;;
     hidden: yes
   }
@@ -153,6 +159,7 @@ view: fact_activityoutcome {
     label: "Avg. no. of Takes"
     type: average
     sql: ${TABLE}.nooftakes::float ;;
+    value_format_name: decimal_1
   }
 
   measure: nooftakes_sum {
@@ -182,12 +189,6 @@ view: fact_activityoutcome {
   dimension: productid {
     type: string
     sql: ${TABLE}.PRODUCTID ;;
-    hidden: yes
-  }
-
-  dimension: rowid {
-    type: string
-    sql: ${TABLE}.ROWID ;;
     hidden: yes
   }
 
@@ -268,6 +269,7 @@ view: fact_activityoutcome {
   }
 
   measure: timespent {
+    label: "Avg. Time spent"
     type: average
     sql: NULLIF(${TABLE}.TIMESPENT /1000.0, 0)/86400.0 ;;
     value_format: "h:mm:ss"
