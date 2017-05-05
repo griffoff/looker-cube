@@ -72,7 +72,7 @@ view: dim_learningpath {
               COALESCE(lp.LEVEL9,lp.LEVEL8,lp.LEVEL7,lp.LEVEL6,lp.LEVEL5,lp.LEVEL4,lp.LEVEL3,lp.LEVEL2)
           end as lowest_level
     from DW_GA.DIM_LEARNINGPATH lp
-    inner JOIN DW_GA.DIM_MASTER_NODE m  ON lp.MASTERNODEID = m.MASTERNODEID
+    LEFT JOIN DW_GA.DIM_MASTER_NODE m  ON lp.MASTERNODEID = m.MASTERNODEID and lp.masternodeid != -1
     left join (
         select
             learningpathid, min(startdatekey) as firstdatekey
