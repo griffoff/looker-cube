@@ -134,10 +134,10 @@ explore: dim_learningpath {
   #  type: left_outer
   #  sql_on: ${dim_learningpath.parentlearningpathid} = ${parentlearningpath.parentlearningpathid}
   #  relationship: many_to_one
-  join: dim_master_node {
-    sql_on: ${dim_learningpath.masternodeid} = ${dim_master_node.masternodeid} ;;
-    relationship: many_to_one
-  }
+  #join: dim_master_node {
+  #  sql_on: ${dim_learningpath.masternodeid} = ${dim_master_node.masternodeid} ;;
+  #  relationship: many_to_one
+  #}
 
   join: dim_first_used_date {
     sql_on: ${dim_master_node.first_used_datekey} = ${dim_first_used_date.datekey} ;;
