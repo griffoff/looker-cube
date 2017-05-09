@@ -19,58 +19,56 @@ view: dim_party {
     label: "First name"
     group_label: "PII"
     type: string
-    sql: ${TABLE}.FIRSTNAME ;;
-    html:
-    {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
-      {{ value }}
-    {% else %}
-      [Masked]
-    {% endif %}  ;;
+    sql:
+    CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' THEN
+    ${TABLE}.FIRSTNAME
+    ELSE
+    MD5(${TABLE}.FIRSTNAME || "salt")
+    END ;;
   }
 
   dimension: guid {
     label: "SSO Guid"
     group_label: "PII"
     type: string
-    sql: ${TABLE}.GUID ;;
-    html:
-    {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
-      {{ value }}
-    {% else %}
-      [Masked]
-    {% endif %}  ;;
+    sql:
+    CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' THEN
+    ${TABLE}.GUID
+    ELSE
+    MD5(${TABLE}.GUID || "salt")
+    END ;;
   }
 
   dimension: lastname {
     label: "Last name"
     group_label: "PII"
     type: string
-    sql: ${TABLE}.LASTNAME ;;
-#     sql:
-#     CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes'
-#     THEN ${TABLE}.LASTNAME
-#     ELSE
-#     MD5(${TABLE}.LASTNAME || "salt")
-#     END ;;
-    html:
-       {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
-         {{ value }}
-       {% else %}
-         [Masked]
-       {% endif %}  ;;
+    #sql: ${TABLE}.LASTNAME ;;
+    sql:
+     CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' THEN
+        ${TABLE}.LASTNAME
+     ELSE
+        MD5(${TABLE}.LASTNAME || "salt")
+     END ;;
   }
 
   dimension: mainpartyemail {
     group_label: "PII"
     label: "e-mail address"
     type: string
-    sql: ${TABLE}.MAINPARTYEMAIL ;;
-    html:
-      {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
-        {{ value }}
-      {% else %}
-        [Masked]
-      {% endif %}  ;;
+    sql:
+    CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' THEN
+    ${TABLE}.MAINPARTYEMAIL
+    ELSE
+    MD5(${TABLE}.MAINPARTYEMAIL || "salt")
+    END ;;
+#     sql: ${TABLE}.MAINPARTYEMAIL ;;
+#     html:
+#       {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
+#         {{ value }}
+#       {% else %}
+#         [Masked]
+#       {% endif %}  ;;
   }
 
 
