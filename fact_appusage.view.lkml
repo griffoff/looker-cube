@@ -187,8 +187,8 @@ view: fact_appusage {
     can_filter: no
   }
 
-  measure: count {
-    type: count
-    drill_fields: [location.locationid]
-  }
+#   measure: count {
+#     type: count
+#     drill_fields: [location.locationid]
+#   }
 }

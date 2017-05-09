@@ -111,7 +111,7 @@ view: dim_institution {
   }
 
   measure: count {
-    label: "No. of institutions"
+    label: "# Institutions"
     type: count
     drill_fields: [institutionname]
   }

@@ -42,7 +42,7 @@ explore:  dim_learningpath_explore {
 explore: fact_activation {
   label: "Activations"
   extends: [fact_appusage, dim_user, dim_course]
-  fields: [ALL_FIELDS*, -fact_activation_by_course.total_noofactivations, -fact_activation_by_course.avg_noofactivations]
+  fields: [ALL_FIELDS*, -fact_activation_by_course.ALL_FIELDS*]
 
   join: dim_date {
     sql_on: ${fact_activation.activationdatekey} = ${dim_date.datekey} ;;
