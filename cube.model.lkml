@@ -27,7 +27,8 @@ explore:  dim_learningpath_explore {
 
   join: dim_course {
     relationship: many_to_one
-    sql_on: ${fact_siteusage.courseid} = ${dim_course.courseid};;
+    sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
+#     sql_on: ${fact_siteusage.courseid} = ${dim_course.courseid};;
   }
 
 #   join: dim_master_node {
@@ -63,23 +64,24 @@ explore: fact_activation {
     relationship: many_to_one
   }
 
-  join: dim_product {
-    sql_on: ${fact_activation.productid} = ${dim_product.productid} ;;
-    relationship: many_to_one
-  }
-
-  join: dim_productplatform {
-    relationship: many_to_one
-    sql_on: ${fact_activation.productplatformid} = ${dim_productplatform.productplatformid} ;;
-  }
-
-  join: dim_institution {
-    sql_on: ${fact_activation.institutionid} = ${dim_institution.institutionid} ;;
-    relationship: many_to_one
-  }
+#   join: dim_product {
+#     sql_on: ${fact_activation.productid} = ${dim_product.productid} ;;
+#     relationship: many_to_one
+#   }
+#
+#   join: dim_productplatform {
+#     relationship: many_to_one
+#     sql_on: ${fact_activation.productplatformid} = ${dim_productplatform.productplatformid} ;;
+#   }
+#
+#   join: dim_institution {
+#     sql_on: ${fact_activation.institutionid} = ${dim_institution.institutionid} ;;
+#     relationship: many_to_one
+#   }
 
   join: dim_course {
-    sql_on: ${fact_activation.courseid} = ${dim_course.courseid} ;;
+    sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
+#     sql_on: ${fact_activation.courseid} = ${dim_course.courseid} ;;
     relationship: many_to_one
   }
 
@@ -132,10 +134,16 @@ explore: fact_activityoutcome {
     relationship: many_to_one
   }
 
-  join: dim_product {
-    sql_on: ${fact_activityoutcome.productid} = ${dim_product.productid} ;;
-    relationship: many_to_one
-  }
+#   join: dim_product {
+#     sql_on: ${fact_activityoutcome.productid} = ${dim_product.productid} ;;
+#     relationship: many_to_one
+#   }
+#
+#   join: dim_institution {
+#     sql_on: ${fact_activityoutcome.institutionid} = ${dim_institution.institutionid} ;;
+#     relationship: many_to_one
+#   }
+
 
   join: dim_learningpath {
     sql_on: ${fact_activityoutcome.learningpathid} = ${dim_learningpath.learningpathid} ;;
@@ -147,13 +155,9 @@ explore: fact_activityoutcome {
     relationship: many_to_one
   }
 
-  join: dim_institution {
-    sql_on: ${fact_activityoutcome.institutionid} = ${dim_institution.institutionid} ;;
-    relationship: many_to_one
-  }
-
   join: dim_course {
-    sql_on: ${fact_activityoutcome.courseid} = ${dim_course.courseid} ;;
+#     sql_on: ${fact_activityoutcome.courseid} = ${dim_course.courseid} ;;
+    sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
     relationship: many_to_one
   }
 
@@ -207,10 +211,15 @@ explore: fact_activity {
     relationship: many_to_one
   }
 
-  join: dim_product {
-    sql_on: ${fact_activity.productid} = ${dim_product.productid} ;;
-    relationship: many_to_one
-  }
+#   join: dim_product {
+#     sql_on: ${fact_activity.productid} = ${dim_product.productid} ;;
+#     relationship: many_to_one
+#   }
+#
+#     join: dim_institution {
+#     sql_on: ${fact_activity.institutionid} = ${dim_institution.institutionid} ;;
+#     relationship: many_to_one
+#   }
 
   join: dim_learningpath {
     sql_on: ${fact_activity.learningpathid} = ${dim_learningpath.learningpathid} ;;
@@ -222,13 +231,9 @@ explore: fact_activity {
     relationship: many_to_one
   }
 
-  join: dim_institution {
-    sql_on: ${fact_activity.institutionid} = ${dim_institution.institutionid} ;;
-    relationship: many_to_one
-  }
-
   join: dim_course {
-    sql_on: ${fact_activity.courseid} = ${dim_course.courseid} ;;
+    sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
+    #sql_on: ${fact_activity.courseid} = ${dim_course.courseid} ;;
     relationship: many_to_one
     type: full_outer
   }
@@ -284,13 +289,9 @@ explore: fact_appusage {
     relationship: many_to_one
   }
 
-  join: dim_product {
-    sql_on: ${fact_appusage.productid} = ${dim_product.productid} ;;
-    relationship: many_to_one
-  }
-
   join: dim_course {
-    sql_on: ${fact_appusage.courseid} = ${dim_course.courseid} ;;
+    sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
+    #sql_on: ${fact_appusage.courseid} = ${dim_course.courseid} ;;
     relationship: many_to_one
   }
 
@@ -304,10 +305,15 @@ explore: fact_appusage {
     relationship: many_to_one
   }
 
-  join: dim_productplatform {
-    sql_on: ${fact_appusage.productplatformid} = ${dim_productplatform.productplatformid} ;;
-    relationship: many_to_one
-  }
+#   join: dim_product {
+#     sql_on: ${fact_appusage.productid} = ${dim_product.productid} ;;
+#     relationship: many_to_one
+#   }
+#
+#   join: dim_productplatform {
+#     sql_on: ${fact_appusage.productplatformid} = ${dim_productplatform.productplatformid} ;;
+#     relationship: many_to_one
+#   }
 
   join: dim_time {
     sql_on: ${fact_appusage.timekey} = ${dim_time.timekey} ;;
@@ -341,18 +347,19 @@ explore: fact_enrollment {
     relationship: many_to_one
   }
 
-  join: dim_product {
-    sql_on: ${fact_enrollment.productid} = ${dim_product.productid} ;;
-    relationship: many_to_one
-  }
-
-  join: dim_institution {
-    sql_on: ${fact_enrollment.institutionid} = ${dim_institution.institutionid} ;;
-    relationship: many_to_one
-  }
+#   join: dim_product {
+#     sql_on: ${fact_enrollment.productid} = ${dim_product.productid} ;;
+#     relationship: many_to_one
+#   }
+#
+#   join: dim_institution {
+#     sql_on: ${fact_enrollment.institutionid} = ${dim_institution.institutionid} ;;
+#     relationship: many_to_one
+#   }
 
   join: dim_course {
-    sql_on: ${fact_enrollment.courseid} = ${dim_course.courseid} ;;
+#     sql_on: ${fact_enrollment.courseid} = ${dim_course.courseid} ;;
+    sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
     relationship: many_to_one
   }
 
@@ -418,7 +425,8 @@ explore: fact_siteusage {
   }
 
   join: dim_course {
-    sql_on: ${fact_siteusage.courseid} = ${dim_course.courseid} ;;
+#     sql_on: ${fact_siteusage.courseid} = ${dim_course.courseid} ;;
+    sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
     relationship: many_to_one
   }
 
@@ -457,10 +465,10 @@ explore: fact_siteusage {
     relationship: many_to_one
   }
 
-  join: dim_product {
-    sql_on: ${fact_siteusage.productid} = ${dim_product.productid} ;;
-    relationship: many_to_one
-  }
+#   join: dim_product {
+#     sql_on: ${fact_siteusage.productid} = ${dim_product.productid} ;;
+#     relationship: many_to_one
+#   }
 
   join: dim_time {
     sql_on: ${fact_siteusage.timekey} = ${dim_time.timekey} ;;
