@@ -53,6 +53,15 @@ explore: problems_assigned {
   }
 }
 
+explore: problem_usage {
+  label: "Aplia Usage Data actual and possible"
+  extends: [productqnaproblemview]
+  join: productqnaproblemview {
+    sql_on: ${problem_usage.problem_id} = ${productqnaproblemview.problem_id};;
+    relationship: many_to_one
+  }
+}
+
 explore: all_questions {
     label: "All Covalent data"
     extends: [dim_course]
