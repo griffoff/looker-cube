@@ -81,4 +81,9 @@ view: productqnaproblemview {
     type: count
     drill_fields: [discipline_name, subdiscipline_name, problem.problem_id]
   }
+  measure: problem_count {
+    label: "# of problem IDs"
+    type: count_distinct
+    sql: ${TABLE}.PROBLEM_ID;;
+  }
 }
