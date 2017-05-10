@@ -128,7 +128,7 @@ view: dim_course {
   }
 
   measure: count {
-    label: "No. of Courses"
+    label: "# Courses"
     type: count
     drill_fields: [coursename]
   }

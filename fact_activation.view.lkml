@@ -9,6 +9,10 @@ view: fact_activation_by_course {
     sql_trigger_value: select count(*) from ZPG_ACTIVATIONS.dw_ga.fact_activation ;;
   }
 
+  set: ALL_FIELDS {
+    fields: [courseid,avg_noofactivations,course_count,institution_count,noofactivations_base,total_noofactivations]
+  }
+
   dimension: courseid {
     hidden: yes
     type: string
@@ -32,6 +36,18 @@ view: fact_activation_by_course {
     label: "Avg. activations"
     type: average
     sql: ${noofactivations_base} ;;
+  }
+
+  measure: institution_count {
+    label: "# Institutions with activations"
+    type: count_distinct
+    sql: case when ${TABLE}.NOOFACTIVATIONS > 0 then ${dim_institution.institutionid} end ;;
+  }
+
+  measure: course_count {
+    label: "# Courses with activations"
+    type: count_distinct
+    sql: ${courseid} ;;
   }
 }
 
@@ -189,5 +205,17 @@ view: fact_activation {
     label: "# Users % of total"
     type: percent_of_total
     sql: ${user_count} ;;
+  }
+
+  measure: institution_count {
+    label: "# Institutions with activations"
+    type: count_distinct
+    sql: case when ${TABLE}.NOOFACTIVATIONS > 0 then ${dim_institution.institutionid} end ;;
+  }
+
+  measure: course_count {
+    label: "# Courses with activations"
+    type: count_distinct
+    sql: ${courseid} ;;
   }
 }

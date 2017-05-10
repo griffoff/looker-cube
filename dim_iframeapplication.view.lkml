@@ -76,6 +76,7 @@ view: dim_iframeapplication {
   }
 
   measure: count {
+    label: "# apps"
     type: count
     drill_fields: [iframeapplicationname, displayname]
   }
