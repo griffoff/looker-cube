@@ -194,7 +194,7 @@ view: fact_activityoutcome {
 
   dimension: score {
     type: number
-    sql: case when ${TABLE}.SCORE > 200 then 200 when ${TABLE}.SCORE <0 then null else ${TABLE}.SCORE end ;;
+    sql: case when ${TABLE}.SCORE > 100 then 100 when ${TABLE}.SCORE <0 then null else ${TABLE}.SCORE end / 100.0 ;;
     hidden: yes
   }
 
@@ -202,28 +202,28 @@ view: fact_activityoutcome {
     label: "Score (avg)"
     type: average
     sql: ${score} ;;
-    value_format: "0.0\%"
+    value_format_name: percent_1
   }
 
   measure: score_dev {
     label: "Score (std dev)"
     type: number
     sql: STDDEV(${score}) ;;
-    value_format: "0.0\%"
+    value_format_name: percent_1
   }
 
   measure: score_max {
     label: "Score (max)"
     type: max
     sql: ${score} ;;
-    value_format: "0.0\%"
+    value_format_name: percent_1
   }
 
   measure: score_min {
     label: "Score (min)"
     type: min
     sql: ${score} ;;
-    value_format: "0.0\%"
+    value_format_name: percent_1
   }
 
   dimension: startdatekey {
