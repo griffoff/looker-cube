@@ -49,26 +49,40 @@ view: dim_activity {
     sql: ${TABLE}.APPLICATIONNAME ;;
   }
 
-  dimension: assigned {
-    label: "Assigned"
+  dimension: gradable {
+    label: "Graded"
     type: string
-    sql: ${TABLE}.ASSIGNED ;;
+    #sql: ${TABLE}.ASSIGNED ;;
+    sql: decode(${TABLE}.ASSIGNED, 'Assigned', 'Graded', 'Unassigned', 'Not Graded', ${TABLE}.ASSIGNED);;
   }
 
-  dimension: originalassigned {
-    label: "Originally assigned"
+  dimension: originallygradable {
+    label: "Originally graded"
     type: string
-    sql: ${TABLE}.ORIGINALASSIGNEDSTATE ;;
+    sql: decode(${TABLE}.ORIGINALASSIGNEDSTATE, 'Assigned', 'Graded', 'Unassigned', 'Not Graded', ${TABLE}.ORIGINALASSIGNEDSTATE) ;;
   }
 
-  dimension: assigned_status {
-    label: "Assignment status"
+  dimension: gradable_status {
+    label: "Gradable status"
     type: string
     sql: CASE
-        WHEN ${assigned} = 'Unassigned' AND ${originalassigned} = 'Assigned' THEN 'DE-ASSIGNED'
-        WHEN ${assigned} = 'Assigned' AND ${originalassigned} = 'Unassigned' THEN 'PROMOTED TO ASSIGNED'
-        WHEN ${assigned} = ${originalassigned} THEN ${originalassigned} || ' - NO CHANGE'
-        ELSE ${assigned}
+        WHEN ${gradable} != ${originallygradable} THEN
+          CASE WHEN ${originallygradable} = 'Graded' THEN 'Demoted to Not Graded'
+              ELSE 'Promoted to Graded'
+              END
+        ELSE ${originallygradable} || ' - NO CHANGE'
+        END
+       ;;
+  }
+
+  dimension: scorable_status {
+    label: "Scorable status"
+    type: string
+    sql: CASE
+        WHEN ${scorable} = 'Scorable' AND ${originalscorable} = 'Not Scorable' THEN 'Demoted to Not Scorable'
+        WHEN ${scorable} = 'Not Scorable' AND ${originalscorable} = 'Scorable' THEN 'Promoted TO Practice'
+        WHEN ${scorable} = ${originalscorable} THEN ${originalscorable} || ' - NO CHANGE'
+        ELSE ${scorable}
       END
        ;;
   }
@@ -86,8 +100,50 @@ view: dim_activity {
   }
 
   measure: count {
-    label: "No. of Activities"
-    type: count
+    label: "# Activities"
+    type: count_distinct
+    sql: ${dim_course.courseid} ;;
     drill_fields: []
+  }
+
+  measure:  count_gradable {
+    label: "# Gradable activities"
+    type: count_distinct
+    sql: case when ${gradable} = 'Graded' then ${dim_course.courseid} end;;
+    hidden:  yes
+  }
+
+  measure:  count_practice {
+    label: "# Practice activities"
+    type: count_distinct
+    sql: case when ${gradable} != 'Graded' and ${scorable} = 'Scorable' then ${dim_course.courseid} end;;
+    hidden:  yes
+  }
+
+  measure:  gradable_percent {
+    label: "% Gradable"
+    description: "proportion of times activity was gradable"
+    type: number
+    sql:  ${count_gradable}/${count};;
+    value_format_name:  percent_1
+    hidden:  no
+  }
+
+  measure:  practice_percent {
+    label: "% Practice"
+    description: "proportion of times activity was practice"
+    type: number
+    sql:  ${count_practice}/${count};;
+    value_format_name:  percent_1
+    hidden:  no
+  }
+
+  measure:  not_practice_or_graded_percent {
+    label: "% not practice/gradable"
+    description: "proportion of times activity was neither practice or gradable"
+    type: number
+    sql:  ${count} - (${count_practice} + ${count_practice})/${count};;
+    value_format_name:  percent_1
+    hidden:  no
   }
 }

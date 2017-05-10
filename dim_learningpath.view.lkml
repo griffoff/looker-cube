@@ -260,8 +260,22 @@ view: dim_learningpath {
   }
 
   measure: count {
-    label: "No. of learning path items"
+    label: "# Learning path items"
     type: count
+  }
+
+  measure:  count_gradable {
+    label: "# Gradable items"
+    type: sum
+    sql: ${dim_activity.count_gradable};;
+  }
+
+  measure:  gradable_percent {
+    label: "% Gradable"
+    description: "proportion of times activity was gradable"
+    type: number
+    sql:  ${count_gradable}/${count};;
+    value_format_name: percent_1
   }
 }
 
