@@ -61,6 +61,14 @@ explore: problem_usage {
     relationship: many_to_one
   }
 }
+explore: problem_product_family_year {
+  label: "Aplia Usage Data actual and possible year over year"
+  extends: [dim_course]
+  join: dim_course {
+    sql_on: ${problem_product_family_year.coursekey} = ${dim_course.coursekey};;
+    relationship: many_to_one
+  }
+}
 
 explore: all_questions {
     label: "All Covalent data"
