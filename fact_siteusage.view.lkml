@@ -211,11 +211,6 @@ view: fact_siteusage {
     sql: ${TABLE}.USERID ;;
   }
 
-  measure:  inverse_percent_of_activations {
-    sql: 1-${percent_of_activations} ;;
-    hidden: yes
-  }
-
   measure: percent_of_activations {
     label: "% of Activations"
     description: "
@@ -224,21 +219,25 @@ view: fact_siteusage {
       no. of people who accessed vs no. of people who were exposed to this feature
     "
     type: number
-    sql: ${dim_party.count} / NULLIF(${fact_activation_by_course.total_noofactivations}, 0) ;;
+    sql: COALESCE(${dim_party.count} / NULLIF(${fact_activation_by_course.total_noofactivations}, 0.0),0) ;;
     value_format_name: percent_1
     html:
       {% if value > 0.6 %}
-      {% assign intensity = ({{value}} - 0.6)/(1-0.6) %}
+      {% assign intensity = (value - 0.6)/(1 - 0.6) %}
       <div style="height: 100%;background-color: rgba(25,200,25,{{intensity}}); text-align:center; color:white">
       {% elsif value > 0.4 %}
-      {% assign intensity = ({{value}} - 0.4)/(0.6-0.4) %}
+      {% assign intensity = (value - 0.4)/(0.6 - 0.4) %}
       <div style="height: 100%;background-color: rgba(230,130,50,{{intensity}}); text-align:center; color:white">
       {% else %}
-      {% assign intensity = ({{value}})/0.4 %}
+      {% assign intensity = 1 %}
       <div style="height: 100%;background-color: rgba(200,25,25,{{intensity}}); text-align:center; color:white">
       {% endif %}
       {{ rendered_value }} </div>
       ;;
+      #add this to the end to see the intensity value for debugging
+      #<div>{{intensity}}</div>
+      # for the lower bound - waiting on a fix/response from looker as it generates an error
+      #{% assign intensity = (0.4 - value) / 0.4 %}
   }
 }
 
