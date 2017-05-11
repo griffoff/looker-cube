@@ -2,9 +2,16 @@ view: fact_activation_by_course {
   view_label: "Activations"
   derived_table: {
     sql:
-    select courseid, sum(NOOFACTIVATIONS) as NOOFACTIVATIONS
-    from ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION
-    group by 1
+    select
+        a.courseid
+        ,a.productid
+        ,cengageacademicyear || cengageacademicterm as cengageacademictermid
+        ,sum(NOOFACTIVATIONS) as NOOFACTIVATIONS
+        ,sum(sum(NOOFACTIVATIONS)) over (partition by a.productid, d.cengageacademicyear || d.cengageacademicterm) as product_activations
+    from ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION a
+    inner join dw_ga.dim_course c on a.courseid = c.courseid
+    inner join dw_ga.dim_date d on c.startdatekey = d.datekey
+    group by 1, 2, 3
     order by 1;;
     sql_trigger_value: select count(*) from ZPG_ACTIVATIONS.dw_ga.fact_activation ;;
   }
@@ -28,6 +35,12 @@ view: fact_activation_by_course {
 
   measure: total_noofactivations {
     label: "Total activations"
+    description: "
+    The total number of activations for courses in this context
+    e.g.
+          at item level it will represent the no. of activations
+          on courses where this item appears
+    "
     type: sum
     sql: ${noofactivations_base} ;;
   }
@@ -48,6 +61,17 @@ view: fact_activation_by_course {
     label: "# Courses with activations"
     type: count_distinct
     sql: ${courseid} ;;
+  }
+
+  measure: activations_for_isbn {
+    label: "Total activations for ISBN"
+    description: "The total number of activations for all courses for the ISBN started in the same semester related to the current context
+    e.g.
+          at item level it will represent the no. of activations
+          on all courses with the same CORE TEXT ISBN and start semester as the course where this item appears
+    "
+    type: max
+    sql: ${TABLE}.product_activations ;;
   }
 }
 
