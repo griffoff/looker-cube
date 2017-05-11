@@ -127,6 +127,11 @@ view: dim_activity {
     sql:  ${count_gradable}/${count};;
     value_format_name:  percent_1
     hidden:  no
+    html:
+    <div style="width:100%;">
+    <div style="width: {{rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">{{rendered_value}}</div>
+    </div>
+    ;;
   }
 
   measure:  practice_percent {
@@ -136,6 +141,11 @@ view: dim_activity {
     sql:  ${count_practice}/${count};;
     value_format_name:  percent_1
     hidden:  no
+    html:
+    <div style="width:100%;">
+    <div style="width: {{rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">{{rendered_value}}</div>
+    </div>
+    ;;
   }
 
   measure:  not_practice_or_graded_percent {
@@ -145,5 +155,10 @@ view: dim_activity {
     sql:  ${count} - (${count_practice} + ${count_practice})/${count};;
     value_format_name:  percent_1
     hidden:  no
+    html:
+    <div style="width:100%;">
+    <div style="width: {{rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">{{rendered_value}}</div>
+    </div>
+    ;;
   }
 }

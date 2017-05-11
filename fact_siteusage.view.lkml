@@ -213,9 +213,19 @@ view: fact_siteusage {
 
   measure: percent_of_activations {
     label: "% of Activations"
+    description: "
+    No. of people / Total activations is this context
+    i.e.
+      no. of people who accessed vs no. of people who were exposed to this feature
+    "
     type: number
-    sql: ${dim_party.count} / NULLIF(${fact_activation_by_course.total_noofactivations}, 0) ;;
+    sql: COALESCE(${dim_party.count} / NULLIF(${fact_activation_by_course.total_noofactivations}, 0.0),0) ;;
     value_format_name: percent_1
+    html:
+      <div style="width:100%;">
+        <div style="width: {{rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">{{rendered_value}}</div>
+      </div>
+    ;;
   }
 }
 
