@@ -203,6 +203,20 @@ view: fact_activityoutcome {
     type: average
     sql: ${score} ;;
     value_format_name: percent_1
+    html: {% if value >= 0.9 %}
+       {% assign intensity = (value - 0.6)/(1 - 0.6) %}
+       {% assign color="17, 160, 17" %}
+      {% elsif value >= 0.7 %}
+       {% assign intensity = (value - 0.4)/(0.6 - 0.4) %}
+       {% assign color="255,248,71" %}
+      {% else %}
+       {% assign intensity = 1 %}
+       {% assign color="211,6,6" %}
+      {% endif %}
+      <div style="width:100%;">
+        <div style="width: {{rendered_value}};background-color: rgba({{color}}, {{intensity}});text-align:center; overflow:visible">{{rendered_value}}</div>
+      </div>
+      ;;
   }
 
   measure: score_dev {

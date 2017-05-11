@@ -222,22 +222,10 @@ view: fact_siteusage {
     sql: COALESCE(${dim_party.count} / NULLIF(${fact_activation_by_course.total_noofactivations}, 0.0),0) ;;
     value_format_name: percent_1
     html:
-      {% if value > 0.6 %}
-      {% assign intensity = (value - 0.6)/(1 - 0.6) %}
-      <div style="height: 100%;background-color: rgba(25,200,25,{{intensity}}); text-align:center; color:white">
-      {% elsif value > 0.4 %}
-      {% assign intensity = (value - 0.4)/(0.6 - 0.4) %}
-      <div style="height: 100%;background-color: rgba(230,130,50,{{intensity}}); text-align:center; color:white">
-      {% else %}
-      {% assign intensity = 1 %}
-      <div style="height: 100%;background-color: rgba(200,25,25,{{intensity}}); text-align:center; color:white">
-      {% endif %}
-      {{ rendered_value }} </div>
-      ;;
-      #add this to the end to see the intensity value for debugging
-      #<div>{{intensity}}</div>
-      # for the lower bound - waiting on a fix/response from looker as it generates an error
-      #{% assign intensity = (0.4 - value) / 0.4 %}
+      <div style="width:100%;">
+        <div style="width: {{rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">{{rendered_value}}</div>
+      </div>
+    ;;
   }
 }
 
