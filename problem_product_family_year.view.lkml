@@ -6,9 +6,15 @@ view: problem_product_family_year {
     sql: ${TABLE}.COURSEKEY ;;
   }
 
-  measure: num_of_courses_actual {
+  measure: num_assigned {
+    label: "# of courses assigned "
     type: sum
-    sql: ${TABLE}.NUM_OF_COURSES_ACTUAL ;;
+    sql: ${TABLE}.NUMBER_ASSIGNED ;;
+  }
+  measure: num_Answered {
+    label: "# of answers "
+    type: sum
+    sql: ${TABLE}.number_Answered ;;
   }
 
   dimension: problem_id {
@@ -16,16 +22,15 @@ view: problem_product_family_year {
     sql: ${TABLE}.PROBLEM_ID ;;
   }
 
-  measure: product_family_size {
-    type: sum
-    sql: ${TABLE}.PRODUCT_FAMILY_SIZE ;;
-  }
-
   dimension: productfamily {
     type: string
     sql: ${TABLE}.PRODUCTFAMILY ;;
   }
 
+  dimension: ProblemTitle {
+    type: string
+    sql: ${TABLE}.PROBLEM_TITLE ;;
+  }
   dimension: startdatekey {
     type: string
     sql: ${TABLE}.STARTDATEKEY ;;
