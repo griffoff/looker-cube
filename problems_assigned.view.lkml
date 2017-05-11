@@ -2,7 +2,7 @@ view: problems_assigned {
   sql_table_name: STG_APLIA.PROBLEMS_ASSIGNED ;;
 
   measure: num_answers {
-    type: number
+    type: sum
     sql: ${TABLE}.NUM_ANSWERS ;;
   }
   measure: num_answers_avg {
@@ -17,7 +17,7 @@ view: problems_assigned {
   }
 
   measure: num_assigned {
-    type: number
+    type: sum
     sql: ${TABLE}.NUM_ASSIGNED_ASSIGNMENTS ;;
   }
   measure: num_assigned_avg {
