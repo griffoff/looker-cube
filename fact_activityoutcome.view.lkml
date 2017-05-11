@@ -204,17 +204,28 @@ view: fact_activityoutcome {
     sql: ${score} ;;
     value_format_name: percent_1
     html: {% if value >= 0.9 %}
-       {% assign intensity = (value - 0.6)/(1 - 0.6) %}
+       {% assign intensity = (value - 0.9)/(1 - 0.6) %}
        {% assign color="17, 160, 17" %}
+       {% assign fontcolor="white" %}
       {% elsif value >= 0.7 %}
-       {% assign intensity = (value - 0.4)/(0.6 - 0.4) %}
+       {% assign intensity = (value - 0.7)/(0.9 - 0.7) %}
        {% assign color="255,248,71" %}
+       {% assign fontcolor="black" %}
       {% else %}
        {% assign intensity = 1 %}
        {% assign color="211,6,6" %}
+       {% assign fontcolor="white" %}
       {% endif %}
       <div style="width:100%;">
-        <div style="width: {{rendered_value}};background-color: rgba({{color}}, {{intensity}});text-align:center; overflow:visible">{{rendered_value}}</div>
+        <div style="width: {{score_dev_lower._rendered_value}}; border-right: thin solid darkgray;">
+          <div style="width: {{rendered_value}};background-color: rgba({{color}}, {{intensity}});text-align:center; color: {{fontcolor}}; overflow:visible"
+                title="avg score: {{rendered_value}}
+    +1 std.dev: {{score_dev_upper._rendered_value}}
+    -1 std.dev: {{score_dev_lower._rendered_value}}">
+            <span style="width: {{score_dev_upper._rendered_value}}; border-right: thin solid darkgray;"></span>
+              {{rendered_value}}
+          </div>
+        </div>
       </div>
       ;;
   }
@@ -223,6 +234,20 @@ view: fact_activityoutcome {
     label: "Score (std dev)"
     type: number
     sql: STDDEV(${score}) ;;
+    value_format_name: percent_1
+  }
+
+  measure: score_dev_lower {
+    hidden: yes
+    type: number
+    sql: ${score_avg} - STDDEV(${score}) ;;
+    value_format_name: percent_1
+  }
+
+  measure: score_dev_upper {
+    hidden: yes
+    type: number
+    sql: ${score_avg} + STDDEV(${score}) ;;
     value_format_name: percent_1
   }
 
