@@ -143,7 +143,7 @@ view: fact_appusage {
 
   dimension:click_per_user_buckets {
     type: tier
-    tiers: [1,4,8]
+    tiers: [2,5,9]
     style: relational
     sql: ${TABLE}.clickcount ;;
   }
