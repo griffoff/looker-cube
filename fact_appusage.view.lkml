@@ -141,6 +141,13 @@ view: fact_appusage {
     hidden: yes
   }
 
+  dimension:click_per_user_buckets {
+    type: tier
+    tiers: [1,4,8]
+    style: relational
+    sql: ${TABLE}.clickcount ;;
+  }
+
   measure: user_count {
     label: "# of Users"
     type: count_distinct
