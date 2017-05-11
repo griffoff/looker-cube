@@ -61,6 +61,15 @@ explore: problem_usage {
     relationship: many_to_one
   }
 }
+
+explore: product_family_raw {
+  label: "Product_Family Rollup"
+  extends: [problem_product_family_year]
+  join: problem_product_family_year {
+    sql_on: ${problem_product_family_year.productfamily} = ${product_family_raw.productfamily};;
+    relationship: many_to_one
+  }
+}
 explore: problem_product_family_year {
   label: "Aplia Usage Data actual and possible year over year"
   extends: [dim_course]
