@@ -46,7 +46,7 @@ view: fact_appusage_by_user {
     label: "App usage buckets"
     type: tier
     style: integer
-    tiers: [4, 8]
+    tiers: [2, 4, 8]
     sql: ${appclicks_base} ;;
   }
 
