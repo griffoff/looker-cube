@@ -9,35 +9,28 @@ include: "*.view"
 # include all the dashboards
 include: "*.dashboard"
 
-explore:  dim_learningpath_explore {
-  # extends: [fact_activityoutcome, fact_siteusage]
-  extends: [dim_course]
-  view_name: dim_learningpath
-  label: "Learning Path"
-
-  join:  fact_activityoutcome {
-    relationship: one_to_many
-    sql_on: ${dim_learningpath.learningpathid} = ${fact_activityoutcome.learningpathid} ;;
-  }
-
-  join:  fact_siteusage {
-    relationship: one_to_many
-    sql_on: ${dim_learningpath.learningpathid} = ${fact_siteusage.learningpathid} ;;
-  }
-
-  join: dim_course {
-    relationship: many_to_one
-    sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
-#     sql_on: ${fact_siteusage.courseid} = ${dim_course.courseid};;
-  }
-
-#   join: dim_master_node {
-#     relationship: many_to_one
-#     sql_on: ${dim_learningpath.masternodeid} = ${dim_master_node.masternodeid};;
+# explore:  dim_learningpath_explore {
+#   # extends: [fact_activityoutcome, fact_siteusage]
+#   extends: [dim_course]
+#   view_name: dim_learningpath
+#   label: "Learning Path"
+#
+#   join:  fact_activityoutcome {
+#     relationship: one_to_many
+#     sql_on: ${dim_learningpath.learningpathid} = ${fact_activityoutcome.learningpathid} ;;
 #   }
-
-
-}
+#
+#   join:  fact_siteusage {
+#     relationship: one_to_many
+#     sql_on: ${dim_learningpath.learningpathid} = ${fact_siteusage.learningpathid} ;;
+#   }
+#
+#   join: dim_course {
+#     relationship: many_to_one
+#     sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
+#   }
+#
+# }
 
 explore: fact_activation {
   label: "Activations"
