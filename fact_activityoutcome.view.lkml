@@ -204,17 +204,20 @@ view: fact_activityoutcome {
     sql: ${score} ;;
     value_format_name: percent_1
     html: {% if value >= 0.9 %}
-       {% assign intensity = (value - 0.9)/(1 - 0.6) %}
+       {% assign intensity = value | minus: 0.9 | divided_by: 0.1 %}
        {% assign color="17, 160, 17" %}
        {% assign fontcolor="white" %}
       {% elsif value >= 0.7 %}
-       {% assign intensity = (value - 0.7)/(0.9 - 0.7) %}
+       {% assign intensity = value | minus: 0.7 | divided_by: 0.2 %}
        {% assign color="255,248,71" %}
        {% assign fontcolor="black" %}
       {% else %}
-       {% assign intensity = 1 %}
+       {% assign intensity = 0.7 | minus: value | divided_by: 0.7 %}
        {% assign color="211,6,6" %}
        {% assign fontcolor="white" %}
+      {% endif %}
+      {% if intensity < 0.5 %}
+        {% assign intensity = 0.5%}
       {% endif %}
       <div style="width:100%;">
         <div style="width: {{score_dev_upper._rendered_value}}; border-right: thin solid darkgray;">
