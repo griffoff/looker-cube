@@ -18,12 +18,58 @@ view: fact_siteusage {
     label: "Clicks (avg)"
     type: average
     sql: ${TABLE}.CLICKCOUNT ;;
+    html:
+    <div style="width:100%;">
+      <div title="max: {{clickcount_avg_max._rendered_value}}" style="width: {{clickcount_avg_percent._rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">
+        {{rendered_value}}
+      </div>
+    </div>;;
+  }
+
+  measure: clickcount_max {
+    label: "Clicks (max)"
+    type: number
+    sql: max(${clickcount} ) over ();;
+  }
+
+  measure: clickcount_avg_max {
+    label: "Clicks (avg) (max)"
+    type: number
+    sql: max(${clickcount_avg} ) over ();;
+    hidden: yes
+  }
+
+  measure: clickcount_total_max {
+    label: "Clicks (max) (max)"
+    type: number
+    sql: max(${clickcount}) over ();;
+    hidden: yes
+  }
+
+  measure: clickcount_avg_percent {
+    type: number
+    sql: ${clickcount_avg_max}/${clickcount_avg_max} ;;
+    value_format_name: percent_1
+    hidden:  yes
+  }
+
+  measure: clickcount_percent {
+    type: number
+    sql: ${clickcount}/${clickcount_max} ;;
+    value_format_name: percent_1
+    hidden:  yes
   }
 
   measure: clickcount {
     label: "Clicks (total)"
     type: sum
     sql: ${TABLE}.CLICKCOUNT ;;
+    html:
+    <div style="width:100%;">
+      <div title="max: {{clickcount_max._rendered_value}}" style="width: {{clickcount_percent._rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">
+        {{rendered_value}}
+      </div>
+    </div>;;
   }
 
   dimension: courseenddatekey {
