@@ -217,12 +217,12 @@ view: fact_activityoutcome {
        {% assign fontcolor="white" %}
       {% endif %}
       <div style="width:100%;">
-        <div style="width: {{score_dev_lower._rendered_value}}; border-right: thin solid darkgray;">
+        <div style="width: {{score_dev_upper._rendered_value}}; border-right: thin solid darkgray;">
           <div style="width: {{rendered_value}};background-color: rgba({{color}}, {{intensity}});text-align:center; color: {{fontcolor}}; overflow:visible"
                 title="avg score: {{rendered_value}}
     +1 std.dev: {{score_dev_upper._rendered_value}}
     -1 std.dev: {{score_dev_lower._rendered_value}}">
-            <span style="width: {{score_dev_upper._rendered_value}}; border-right: thin solid darkgray;"></span>
+            <span style="width: {{score_dev_lower._rendered_value}}; border-right: thin solid darkgray;"></span>
               {{rendered_value}}
           </div>
         </div>
@@ -240,14 +240,14 @@ view: fact_activityoutcome {
   measure: score_dev_lower {
     hidden: yes
     type: number
-    sql: ${score_avg} - STDDEV(${score}) ;;
+    sql: ${score_avg} - ${score_dev};;
     value_format_name: percent_1
   }
 
   measure: score_dev_upper {
     hidden: yes
     type: number
-    sql: ${score_avg} + STDDEV(${score}) ;;
+    sql: ${score_avg} + ${score_dev} ;;
     value_format_name: percent_1
   }
 
