@@ -23,8 +23,14 @@ view: dim_party {
     CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' THEN
     ${TABLE}.FIRSTNAME
     ELSE
-    MD5(${TABLE}.FIRSTNAME || "salt")
+    MD5(${TABLE}.FIRSTNAME || 'salt')
     END ;;
+    html:
+    {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
+    {{ value }}
+    {% else %}
+    [Masked]
+    {% endif %}  ;;
   }
 
   dimension: guid {
@@ -35,8 +41,14 @@ view: dim_party {
     CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' THEN
     ${TABLE}.GUID
     ELSE
-    MD5(${TABLE}.GUID || "salt")
+    MD5(${TABLE}.GUID || 'salt')
     END ;;
+    html:
+    {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
+    {{ value }}
+    {% else %}
+    [Masked]
+    {% endif %}  ;;
   }
 
   dimension: lastname {
@@ -48,8 +60,14 @@ view: dim_party {
      CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' THEN
         ${TABLE}.LASTNAME
      ELSE
-        MD5(${TABLE}.LASTNAME || "salt")
+        MD5(${TABLE}.LASTNAME || 'salt')
      END ;;
+    html:
+    {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
+    {{ value }}
+    {% else %}
+    [Masked]
+    {% endif %}  ;;
   }
 
   dimension: mainpartyemail {
@@ -60,15 +78,14 @@ view: dim_party {
     CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' THEN
     ${TABLE}.MAINPARTYEMAIL
     ELSE
-    MD5(${TABLE}.MAINPARTYEMAIL || "salt")
+    MD5(${TABLE}.MAINPARTYEMAIL || 'salt')
     END ;;
-#     sql: ${TABLE}.MAINPARTYEMAIL ;;
-#     html:
-#       {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
-#         {{ value }}
-#       {% else %}
-#         [Masked]
-#       {% endif %}  ;;
+    html:
+      {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
+        {{ value }}
+      {% else %}
+        [Masked]
+      {% endif %}  ;;
   }
 
 

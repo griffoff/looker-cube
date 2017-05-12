@@ -26,9 +26,12 @@ view: dim_iframeapplication {
               left JOIN ranks a ON a.matchname = b.matchname
                         AND a.RANK = 1
             )
-            select a.*, n.displayname as bestdisplayname
-                from DW_GA.DIM_IFRAMEAPPLICATION a
-                inner join names n on a.iframeapplicationid = n.id
+            select
+                a.*
+                ,REPLACE(n.displayname, '_', ' ') as bestdisplayname
+                ,REPLACE(REPLACE(REPLACE(REPLACE(a.IFRAMEAPPLICATIONNAME, '_', ' '), 'LAUNCH', ''), 'VIEW', ''), 'FLASH CARDS', 'FLASHCARDS') as CleanedApplicationName
+            from DW_GA.DIM_IFRAMEAPPLICATION a
+            inner join names n on a.iframeapplicationid = n.id
     ;;
 
     sql_trigger_value: select count(*) from DW_GA.dim_iframeapplication ;;
@@ -68,7 +71,7 @@ view: dim_iframeapplication {
   dimension: iframeapplicationname {
     label: "Application Name"
     type: string
-    sql: REPLACE(REPLACE(REPLACE(REPLACE(${TABLE}.IFRAMEAPPLICATIONNAME, '_', ' '), 'LAUNCH', ''), 'VIEW', ''), 'FLASH CARDS', 'FLASHCARDS') ;;
+    sql: ${TABLE}.CleanedApplicationName ;;
     link: {
       label: "MindApp details on Inside"
       url: "http://inside/sites/DevOps/SitePages/{{ value }}.aspx"

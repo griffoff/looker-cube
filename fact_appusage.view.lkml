@@ -22,6 +22,7 @@ view: fact_appusage {
       from dw_ga.fact_appusage f
       inner join r2 on f.iframeapplicationid = r2.iframeapplicationid
           ;;
+      sql_trigger_value: select count(*) from dw_ga.fact_appusage ;;
   }
   #sql_table_name: DW_GA.FACT_APPUSAGE ;;
 
