@@ -150,7 +150,7 @@ view: dim_activity {
 
   measure:  gradable_vs_practice {
     label: "% Gradable vs practice"
-    sql: 1 ;;
+    sql: ${gradable_percent} ;;
     html:
     <div style="position:absolute;height:100%;width:100%;border:thin solid darkgray;">
       <div style="height:6px;width: {{gradable_percent._rendered_value}};background-color: rgba(17,160,17, 0.8);text-align:center; overflow:visible" title="gradable: {{gradable_percent._rendered_value}}">&nbsp;</div>
