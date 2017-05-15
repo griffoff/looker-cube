@@ -51,13 +51,13 @@ view: dim_filter {
   dimension: is_internal {
     label: "Internal Course"
     type: yesno
-    sql: ${TABLE}.filterflag != 0 ;;
+    sql: ${TABLE}.filterflag not in (0, -1) ;;
   }
 
   dimension: is_external {
     label: "Real Course"
     description: "Flag to identify real courses, rather than test/demo/internal"
     type: yesno
-    sql: ${TABLE}.filterflag = 0 ;;
+    sql: ${TABLE}.filterflag in (0, -1) ;;
   }
 }
