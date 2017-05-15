@@ -21,14 +21,15 @@ view: dim_iframeapplication {
             )
             ,names as (
               SELECT
-                  DISTINCT b.id, InitCap(COALESCE(a.displayname, b.displayname, a.name, b.name)) AS displayname
+                  DISTINCT b.id, Replace(InitCap(COALESCE(a.displayname, b.displayname, a.name, b.name)), '_', ' ') AS displayname
               FROM apps b
               left JOIN ranks a ON a.matchname = b.matchname
                         AND a.RANK = 1
             )
             select
-                a.*
-                ,REPLACE(n.displayname, '_', ' ') as bestdisplayname
+                max(iframeapplicationid) over (partition by n.displayname) as iframeapplicationid_group
+                ,a.*
+                ,n.displayname as bestdisplayname
                 ,REPLACE(REPLACE(REPLACE(REPLACE(a.IFRAMEAPPLICATIONNAME, '_', ' '), 'LAUNCH', ''), 'VIEW', ''), 'FLASH CARDS', 'FLASHCARDS') as CleanedApplicationName
             from DW_GA.DIM_IFRAMEAPPLICATION a
             inner join names n on a.iframeapplicationid = n.id
@@ -58,6 +59,12 @@ view: dim_iframeapplication {
     type: time
     timeframes: [time, date, week, month]
     sql: ${TABLE}.DW_LDTS ;;
+    hidden: yes
+  }
+
+  dimension: iframeapplicationid_group {
+    type: string
+    sql: ${TABLE}.IFRAMEAPPLICATIONID_GROUP ;;
     hidden: yes
   }
 

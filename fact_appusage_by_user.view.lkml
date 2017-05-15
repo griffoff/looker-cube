@@ -1,45 +1,60 @@
+view: course_apps {
+  derived_table: {
+    sql:
+    select distinct iframeapplicationid, courseid
+    from dw_ga.fact_appusage
+    ;;
+  }
+}
+
 view: fact_appusage_by_user {
   view_label: "App Dock"
   derived_table: {
 #
 #     This generates appclicks per user per course, but only for people who have used an app
 #
-#     sql:
+#      sql:
+#        with usage as (
+#         select courseid, iframeapplicationid, partyid, coalesce(sum(clickcount), 0) as clickcount
+#         from dw_ga.fact_appusage
+#         group by 1, 2, 3
+#         )
 #       select
-#           row_number() over (order by 2, 3, 4) as pk
+#           row_number() over (order by 2,3,4) as pk
 #           ,p.partyid
-#           ,app.iframeapplicationid
-#           ,c.courseid
+#           ,a.iframeapplicationid
+#           ,act.courseid
 #           ,sum(clickcount) as appclicks
 #       FROM dw_ga.dim_party p
-#       cross join dw_ga.dim_iframeapplication app
-#       cross join dw_ga.dim_course c
-#       left join dw_ga.fact_appusage a on (c.courseid, p.partyid, app.iframeapplicationid) = (a.courseid, a.partyid, a.iframeapplicationid)
+#       inner join ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION act on p.partyid = act.partyid
+#       left join usage a on (act.courseid, p.partyid) = (a.courseid, a.partyid)
 #       group by 2,3,4
 #       ;;
+
 #
-#     This generates appclicks per user per course, for all apps ever used in that given course by any user
+#    This generates appclicks per user per course, for all apps ever used in that given course by any user
 #
     sql:
       with app as (
-        select distinct courseid, iframeapplicationid
-        from dw_ga.fact_appusage
+        select distinct courseid, a.iframeapplicationid, a.iframeapplicationid_group
+        from dw_ga.fact_appusage u
+        inner join ${dim_iframeapplication.SQL_TABLE_NAME} a on u.iframeapplicationid = a.iframeapplicationid
         )
       ,usage as (
-        select courseid, iframeapplicationid, partyid, sum(clickcount) as clickcount
+        select courseid, iframeapplicationid, userid, sum(clickcount) as clickcount
         from dw_ga.fact_appusage
         group by 1, 2, 3
         )
       select
-          p.partyid || app.iframeapplicationid || act.courseid as pk
-          ,p.partyid
-          ,app.iframeapplicationid
+          u.userid || app.iframeapplicationid_group || act.courseid as pk
+          ,u.userid
+          ,app.iframeapplicationid_group as iframeapplicationid
           ,act.courseid
           ,sum(clickcount) as appclicks
-      FROM dw_ga.dim_party p
-      inner join dw_ga.fact_activation act on p.partyid = act.partyid
+      FROM dw_ga.dim_user u
+      inner join dw_ga.fact_activation act on u.userid = act.userid
       inner join app on act.courseid = app.courseid
-      left join usage a on (app.courseid, app.iframeapplicationid, p.partyid) = (a.courseid, a.iframeapplicationid, a.partyid)
+      left join usage a on (app.courseid, app.iframeapplicationid, u.userid) = (a.courseid, a.iframeapplicationid, a.userid)
       group by 2,3,4
 ;;
 
@@ -52,9 +67,9 @@ view: fact_appusage_by_user {
     primary_key: yes
   }
 
-  dimension: partyid {
+  dimension: userid {
     hidden: yes
-    sql: ${TABLE}.partyid ;;
+    sql: ${TABLE}.userid ;;
   }
 
   dimension: iframeapplicationid {

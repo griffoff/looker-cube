@@ -69,7 +69,7 @@ view: fact_activation_by_course {
     at item level it will represent the no. of activations
     on courses where this item appears
     "
-    type: sum
+    type: sum_distinct
     sql: ${noofactivations_base} ;;
   }
 

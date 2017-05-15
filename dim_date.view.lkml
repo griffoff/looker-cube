@@ -280,20 +280,20 @@ view: dim_date {
 
 view: dim_start_date {
   extends: [dim_date]
-  label: "Course Start Date"
+  label: "Date - Course Start"
 }
 
 view: dim_end_date {
   extends: [dim_date]
-  label: "Course End Date"
+  label: "Date - Course End"
 }
 
 view: dim_created_date {
   extends: [dim_date]
-  label: "Created Date"
+  label: "Date Created"
 }
 
 view: dim_completion_date {
   extends: [dim_date]
-  label: "Completion Date"
+  label: "Date Completed"
 }
