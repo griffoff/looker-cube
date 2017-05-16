@@ -181,7 +181,7 @@ explore: dim_pagedomain {
 
 #- explore: dim_party
 
-explore: dim_user {
+explore:  dim_user {
   extension: required
 
   join: dim_party {

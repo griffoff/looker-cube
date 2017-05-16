@@ -41,6 +41,10 @@ view: dim_party {
     sql_trigger_value: select count(*) from dw_ga.dim_party ;;
   }
 
+  set: personDetails {
+    fields: [dim_course.coursekey, dim_course.coursename, guid, mainpartyemail, firstname, lastname, fact_activation.total_noofactivations, is_external, dim_user.productsactivated, fact_activation_by_course.total_noofactivations]
+  }
+
   dimension: dw_ldid {
     type: string
     sql: ${TABLE}.DW_LDID ;;
@@ -153,6 +157,6 @@ view: dim_party {
   measure: count {
     label: "No. of people"
     type: count
-    drill_fields: [dim_course.coursekey, dim_course.coursename, guid, dim_relative_to_start_date.weeksname, fact_activation.total_noofactivations, is_external, dim_user.productsactivated, fact_activation_by_course.total_noofactivations]
+    drill_fields: [personDetails*]
   }
 }

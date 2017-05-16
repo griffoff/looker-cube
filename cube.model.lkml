@@ -34,7 +34,7 @@ include: "*.dashboard"
 
 explore: fact_activation {
   label: "Activations"
-  extends: [fact_appusage, dim_user, dim_course]
+  extends: [fact_appusage, dim_course]
   fields: [ALL_FIELDS*, -fact_activation_by_course.ALL_FIELDS*]
 
   join: dim_date {
@@ -55,6 +55,16 @@ explore: fact_activation {
   join: dim_user {
     sql_on: ${fact_activation.userid} = ${dim_user.userid} ;;
     relationship: many_to_one
+  }
+
+  join: dim_party {
+    sql_on: ${dim_user.mainpartyid} = ${dim_party.partyid} ;;
+    relationship: many_to_one
+  }
+
+  join: user_facts {
+    sql_on: ${dim_user.userid} = ${user_facts.userid} ;;
+    relationship: one_to_one
   }
 
   join: dim_course {
@@ -272,7 +282,7 @@ explore:  fact_appusage_by_user {
 
 explore: fact_appusage {
   label: "App usage - old"
-  extends: [dim_user, dim_course, dim_learningpath]
+  extends: [dim_course, dim_learningpath]
 
   join: dim_learningpath {
     sql_on: ${fact_appusage.learningpathid} = ${dim_learningpath.learningpathid} ;;
