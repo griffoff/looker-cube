@@ -13,10 +13,10 @@ view: fact_activation_by_course {
     select
         a.courseid
         ,p.isbn13
-        ,cengageacademicyear || cengageacademicterm as cengageacademictermid
+        ,d.fiscalyearvalue as date_granularity
         ,c.is_lms_integrated
         ,sum(NOOFACTIVATIONS) as NOOFACTIVATIONS
-        ,sum(sum(NOOFACTIVATIONS)) over (partition by p.isbn13, c.is_lms_integrated, d.cengageacademicyear || d.cengageacademicterm) as product_activations
+        ,sum(sum(NOOFACTIVATIONS)) over (partition by p.isbn13, c.is_lms_integrated, d.fiscalyearvalue) as product_activations
     from ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION a
     inner join c on a.courseid = c.courseid
     inner join dw_ga.dim_product p on c.productid = p.productid
@@ -27,7 +27,11 @@ view: fact_activation_by_course {
   }
 
   set: ALL_FIELDS {
-    fields: [courseid,avg_noofactivations,course_count,institution_count,noofactivations_base,total_noofactivations,activations_for_isbn, isbn13, is_lms_integrated, cengageacademictermid]
+    fields: [courseid,avg_noofactivations,course_count,institution_count,noofactivations_base,total_noofactivations,activations_for_isbn, isbn13, is_lms_integrated, date_granularity]
+  }
+
+  set: course_detail {
+    fields: [dim_start_date.calendarmonthname, dim_course.coursekey, dim_product.isbn13, total_noofactivations, activations_for_isbn]
   }
 
   dimension: courseid {
@@ -49,10 +53,10 @@ view: fact_activation_by_course {
     sql: ${TABLE}.is_lms_integrated ;;
   }
 
-  dimension: cengageacademictermid {
+  dimension: date_granularity {
     hidden: yes
     type: string
-    sql: ${TABLE}.cengageacademictermid ;;
+    sql: ${TABLE}.date_granularity ;;
   }
 
   dimension: noofactivations_base {
@@ -71,6 +75,7 @@ view: fact_activation_by_course {
     "
     type: sum_distinct
     sql: ${noofactivations_base} ;;
+    drill_fields: [course_detail*]
   }
 
   measure: avg_noofactivations {
@@ -92,14 +97,15 @@ view: fact_activation_by_course {
   }
 
   measure: activations_for_isbn {
-    label: "Total activations for ISBN"
-    description: "The total number of activations for all courses for the ISBN started in the same semester related to the current context
+    label: "Total activations for ISBN and Fiscal Year"
+    description: "The total number of activations for all courses for the ISBN started in the same fiscal year related to the current context
     e.g.
     at item level it will represent the no. of activations
-    on all courses with the same CORE TEXT ISBN and start semester as the course where this item appears
+    on all courses with the same CORE TEXT ISBN and start fiscal year as the course where this item appears
     "
     type: sum_distinct
     sql: ${TABLE}.product_activations ;;
-    sql_distinct_key: ${isbn13} || ${cengageacademictermid} || ${is_lms_integrated} ;;
+    sql_distinct_key: ${isbn13} || ${date_granularity} || ${is_lms_integrated} ;;
+    drill_fields: [course_detail*]
   }
 }
