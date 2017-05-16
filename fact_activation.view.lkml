@@ -6,6 +6,10 @@ view: fact_activation {
     fields: [dim_course.coursekey, activationcode]
   }
 
+  set: ALL_FIELDS {
+    fields: [courseid,avg_noofactivations,course_count,institution_count,noofactivations_base,total_noofactivations,institutionid]
+  }
+
   dimension: activationcode {
     type: string
     sql: ${TABLE}.ACTIVATIONCODE ;;
