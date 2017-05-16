@@ -31,7 +31,7 @@ view: fact_activation_by_course {
   }
 
   set: course_detail {
-    fields: [dim_start_date.calendarmonthname, dim_course.coursekey, dim_product.isbn13, total_noofactivations, activations_for_isbn]
+    fields: [dim_start_date.calendarmonthname, dim_course.coursekey, dim_product.isbn13, is_lms_integrated, total_noofactivations, activations_for_isbn]
   }
 
   dimension: courseid {

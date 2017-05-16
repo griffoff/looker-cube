@@ -481,11 +481,6 @@ explore: fact_siteusage {
     relationship: many_to_one
   }
 
-  join: dim_start_date {
-    sql_on: ${fact_siteusage.coursestartdatekey} = ${dim_start_date.datekey} ;;
-    relationship: many_to_one
-  }
-
   join: dim_relative_to_start_date {
     sql_on: ${fact_siteusage.daysfromcoursestart} = ${dim_relative_to_start_date.days} ;;
     relationship: many_to_one

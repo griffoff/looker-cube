@@ -153,6 +153,6 @@ view: dim_party {
   measure: count {
     label: "No. of people"
     type: count
-    drill_fields: [guid]
+    drill_fields: [dim_course.coursekey, dim_course.coursename, guid, dim_relative_to_start_date.weeksname, fact_activation.total_noofactivations, is_external, dim_user.productsactivated, fact_activation_by_course.total_noofactivations]
   }
 }

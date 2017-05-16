@@ -193,4 +193,9 @@ explore: dim_user {
     sql_on: ${dim_user.userid} = ${user_facts.userid} ;;
     relationship: one_to_one
   }
+
+  join: fact_activation  {
+    sql_on: (${dim_course.courseid}, ${dim_user.userid}) = (${fact_activation.courseid}, ${fact_activation.userid}) ;;
+    relationship: one_to_one
+  }
 }
