@@ -46,7 +46,6 @@ view: fact_activation_by_course {
   dimension: institutionid {
     hidden: yes
     type: string
-    primary_key: yes
     sql: ${TABLE}.INSTITUTIONID ;;
   }
 
