@@ -1,5 +1,5 @@
 view: dim_filter {
-  label: "Course"
+  label: "Course / Section Details"
   # # You can specify the table name if it's different from the view name:
   #   sql_table_name: my_schema_name.dim_filter
   #
@@ -44,6 +44,7 @@ view: dim_filter {
   dimension: filterdesc {
     label: "Real or Test (filter flag)"
     type: string
+    hidden: yes
     sql: ${TABLE}.filterdesc ;;
     order_by_field: filtersort
   }
@@ -51,6 +52,7 @@ view: dim_filter {
   dimension: is_internal {
     label: "Internal Course"
     type: yesno
+    hidden: yes
     sql: ${TABLE}.filterflag not in (0, -1) ;;
   }
 
