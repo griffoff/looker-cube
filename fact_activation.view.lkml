@@ -97,14 +97,14 @@ view: fact_activation {
   }
 
   measure: total_noofactivations {
-    label: "Total activations"
+    label: "Total Activations"
     type: sum
     sql: ${noofactivations_base} ;;
     drill_fields: [coursedetails*]
   }
 
   measure: avg_noofactivations {
-    label: "Avg. activations"
+    label: "Avg. Activations"
     type: average
     sql: ${noofactivations_base} ;;
     drill_fields: [coursedetails*]

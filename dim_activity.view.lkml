@@ -3,20 +3,23 @@ view: dim_activity {
   sql_table_name: DW_GA.DIM_ACTIVITY_V ;;
 
   dimension: activitycategory {
-    label: "Category"
+    label: " Category (Lvl 1)"
+    description: "Broad activity categories. (ex: Aplia Assignment, LAMS Lesson, Reading, Media, YouSeeU, etc.)"
     type: string
     sql: ${TABLE}.Category ;;
     drill_fields: [dim_learningpath.lowest_level]
   }
 
   dimension: activitysubcategory {
-    label: "Sub category"
+    label: " Category (Lvl 2)"
+    description: "More specific activity subcategory (e.g Category is Assignment, subcategory is assessment and homework)"
     type: string
     sql: ${TABLE}.SubCategory ;;
   }
 
   dimension: activitysubtype {
-    label: "Sub type"
+    label: " Category (Lvl 3)"
+    description: "Most specific activity categories. Product/discipline specific. (ex: saa, csfi, virtuallab, etc.)"
     type: string
     sql: ${TABLE}.SubType ;;
   }
@@ -36,7 +39,8 @@ view: dim_activity {
   }
 
   dimension: possiblepoints_bucket {
-    label: "Possible points (bins)"
+    label: "Possible Points (bins)"
+    description: "The possible points of an activity for a coursekey grouped into bins. (ex: 5 to 10 pts, 10 to 20 pts). Is not relative to other courses. Useful when comparing activities from the same coursekey"
     type: tier
     tiers: [5, 10, 20, 50, 100]
     style: integer
@@ -44,26 +48,30 @@ view: dim_activity {
   }
 
   dimension: APPLICATIONNAME {
-    label: "Application Name"
+    label: " Activity Application"
+    description: "The name of the application where the activity is located or created from. (ex: CNOW, Aplia, Lams, etc.)"
     type: string
     sql: ${TABLE}.APPLICATIONNAME ;;
   }
 
   dimension: gradable {
-    label: "Graded"
+    label: " Gradeable  (Current)"
+    description: "Denotes if an activity is currently assigned, not assigned, hidden, or removed."
     type: string
     #sql: ${TABLE}.ASSIGNED ;;
     sql: decode(${TABLE}.ASSIGNED, 'Assigned', 'Graded', 'Unassigned', 'Not Graded', ${TABLE}.ASSIGNED);;
   }
 
   dimension: originallygradable {
-    label: "Originally graded"
+    label: " Gradeable  (Original)"
+    description: "The original graded (assigned) state of an activity upon creation of the course"
     type: string
     sql: decode(${TABLE}.ORIGINALASSIGNEDSTATE, 'Assigned', 'Graded', 'Unassigned', 'Not Graded', ${TABLE}.ORIGINALASSIGNEDSTATE) ;;
   }
 
   dimension: gradable_status {
-    label: "Gradable status"
+    label: " Gradeable (Change)"
+    description: "Denotes if an activity's current graded (assigned) state differs from the original graded (assigned) state due to an instructor modification"
     type: string
     sql: CASE
         WHEN ${gradable} != ${originallygradable} THEN
@@ -76,7 +84,8 @@ view: dim_activity {
   }
 
   dimension: scorable_status {
-    label: "Scorable status"
+    label: " Scorable (Change)"
+    description: "Denotes if an activity's current scorable state differs from the original scorable state"
     type: string
     sql: CASE
         WHEN ${scorable} = 'Scorable' AND ${originalscorable} = 'Not Scorable' THEN 'Demoted to Not Scorable'
@@ -88,19 +97,22 @@ view: dim_activity {
   }
 
   dimension: scorable {
-    label: "Scorable"
+    label: " Scorable  (Current)"
+    description: "Denotes the current scorable state of an assignment (assigned or unassigned). Unassigned activities marked scorable = Practice"
     type: string
     sql: ${TABLE}.SCORABLE ;;
   }
 
   dimension: originalscorable {
-    label: "Originally scorable"
+    label: " Scorable  (Original)"
+    description: "The original scorable state of an activity upon creation of the course"
     type: string
     sql: ${TABLE}.ORIGINALSCORABLE ;;
   }
 
   measure: count {
     label: "# Activities"
+    description: "The count of courses containing an activity"
     type: count_distinct
     sql: ${dim_course.courseid} ;;
     drill_fields: []
@@ -149,7 +161,8 @@ view: dim_activity {
   }
 
   measure:  gradable_vs_practice {
-    label: "% Gradable vs practice"
+    label: "% Gradable vs Practice"
+    description: "Visual representation of the proportion of times an activity was gradable vs practice"
     sql: ${gradable_percent} ;;
     html:
     <div style="position:absolute;height:100%;width:100%;border:thin solid darkgray;">
@@ -163,7 +176,8 @@ view: dim_activity {
     label: "% not practice or gradable"
     description: "proportion of times activity was neither practice or gradable"
     type: number
-    sql:  ${count} - (${count_practice} + ${count_practice})/${count};;
+    #sql:  ${count} - (${count_practice} + ${count_practice})/${count};; --- Calculation was not adding up this is the old calculation. Below is new. Please correct if I misunderstood (Chip)
+    sql:  (${count} - (${count_practice} + ${count_gradable}))/${count};;
     value_format_name:  percent_1
     hidden:  no
     html:
