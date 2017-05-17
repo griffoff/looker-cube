@@ -155,7 +155,7 @@ view: dim_party {
   }
 
   measure: count {
-    label: "No. of people"
+    label: "# Users"
     type: count
     drill_fields: [personDetails*]
   }

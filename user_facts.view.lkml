@@ -1,5 +1,5 @@
 view: user_facts {
-  label: "User - Facts"
+  label: "User"
   derived_table: {
     sql: SELECT
         userId
@@ -28,6 +28,7 @@ view: user_facts {
   dimension: overall_score {
     type: number
     sql: ${TABLE}.OVERALL_SCORE ;;
+    hidden: yes
   }
 
   dimension: user_score_category {
@@ -46,6 +47,7 @@ view: user_facts {
     style: relational
     sql: ${nongradable_score} ;;
     value_format_name: percent_0
+    hidden: yes
   }
 
   dimension: user_score_category_overall {
@@ -55,34 +57,41 @@ view: user_facts {
     style: relational
     sql: ${overall_score} ;;
     value_format_name: percent_0
+    hidden: yes
   }
 
   dimension: gradable_score {
     type: number
     sql: ${TABLE}.GRADABLE_SCORE ;;
+    hidden: yes
   }
 
   dimension: nongradable_score {
     type: number
     sql: ${TABLE}.NONGRADABLE_SCORE ;;
+    hidden: yes
   }
 
   dimension: gradable_activities_completed {
+    label: "# Gradable activities completed"
     type: string
     sql: ${TABLE}.GRADABLE_ACTIVITIES_COMPLETED ;;
   }
 
   dimension: nongradable_activities_completed {
+    label: "# Non gradable activities completed"
     type: string
     sql: ${TABLE}.NONGRADABLE_ACTIVITIES_COMPLETED ;;
   }
 
   dimension: activities_completed {
+    label: "# Activities completed"
     type: string
     sql: ${TABLE}.ACTIVITIES_COMPLETED ;;
   }
 
   dimension: avg_attempts {
+    label: "Avg # Attempts"
     type: string
     sql: ${TABLE}.AVG_ATTEMPTS ;;
   }
@@ -90,11 +99,13 @@ view: user_facts {
   dimension: avg_gradable_attempts {
     type: string
     sql: ${TABLE}.AVG_GRADABLE_ATTEMPTS ;;
+    hidden: yes
   }
 
   dimension: avg_nongradable_attempts {
     type: string
     sql: ${TABLE}.AVG_NONGRADABLE_ATTEMPTS ;;
+    hidden: yes
   }
 
   set: detail {
