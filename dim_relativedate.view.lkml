@@ -4,6 +4,7 @@ view: dim_relativedate {
 
   dimension: category {
     type: string
+    hidden: yes
     sql: ${TABLE}.CATEGORY ;;
   }
 
@@ -16,6 +17,7 @@ view: dim_relativedate {
 
   dimension: daysname {
     label: "Relative Days"
+    hidden: yes
     type: string
     sql: ${TABLE}.DAYSNAME ;;
     order_by_field: days
@@ -24,6 +26,7 @@ view: dim_relativedate {
   dimension: daysbucket {
     label: "Relative Days Bucket"
     type: tier
+    hidden: yes
     tiers: [
       1,
       2,
@@ -45,6 +48,7 @@ view: dim_relativedate {
 
   dimension: monthsname {
     label: "Relative Months"
+    hidden: yes
     type: string
     sql: ${TABLE}.MONTHSNAME ;;
     order_by_field: months
@@ -53,6 +57,7 @@ view: dim_relativedate {
   dimension: monthsbucket {
     label: "Relative Months Bucket"
     type: tier
+    hidden: yes
     tiers: [
       1,
       2,
@@ -67,13 +72,14 @@ view: dim_relativedate {
   }
 
   dimension: weeks {
-    label: "Relative Weeks No."
+    label: "Week No. Relative to Course Start Date"
     type: number
+    hidden: yes
     sql: ${TABLE}.WEEKS ;;
   }
 
   dimension: weeksname {
-    label: "Relative Weeks"
+    label: "Weeks Relative to Course Start Date"
     type: string
     sql: ${TABLE}.WEEKSNAME ;;
     order_by_field: weeks
@@ -82,7 +88,7 @@ view: dim_relativedate {
 
 view: dim_relative_to_start_date {
   extends: [dim_relativedate]
-  label: "Relative To Start Date"
+  label: "Date - Course Start"
 }
 
 view: dim_relative_to_end_date {

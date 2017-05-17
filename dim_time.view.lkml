@@ -1,5 +1,5 @@
 view: dim_time {
-  label: "Time"
+  label: "Time of Day"
   sql_table_name: DW_GA.DIM_TIME ;;
 
   dimension: ampm {
