@@ -37,7 +37,7 @@ explore: problem {
     relationship: many_to_one
   }
   join: aplia_course_map {
-    sql_on: ${aplia_course_map.guid}} = ${course.guid} ;;
+    sql_on: ${aplia_course_map.guid} = ${course.guid} ;;
     relationship: one_to_one
   }
   join: course {

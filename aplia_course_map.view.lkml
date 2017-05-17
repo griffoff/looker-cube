@@ -1,7 +1,7 @@
 view: aplia_course_map {
   derived_table: {
-    sql: select distinct guid,context_id from stg_aplia.courses;;
-    sql_trigger_value: select count(*) from stg_aplia.courses ;;
+    sql: select distinct guid,course_id from stg_aplia.course;;
+    sql_trigger_value: select count(*) from stg_aplia.course ;;
     }
 
   dimension: course_id {
