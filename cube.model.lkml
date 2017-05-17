@@ -134,11 +134,11 @@ explore: fact_activityoutcome {
     relationship: many_to_one
   }
 
-#   join: dim_relative_to_start_date {
-#     sql_on: ${fact_activityoutcome.daysfromcoursestart} = ${dim_relative_to_start_date.days} ;;
-#     relationship: many_to_one
-#   }
-#
+  join: dim_relative_to_start_date {
+    sql_on: ${fact_activityoutcome.daysfromcoursestart} = ${dim_relative_to_start_date.days} ;;
+    relationship: many_to_one
+  }
+
 #   join: dim_relative_to_end_date {
 #     sql_on: ${fact_activityoutcome.daysbeforecourseend} = ${dim_relative_to_end_date.days} ;;
 #     relationship: many_to_one
