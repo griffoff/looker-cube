@@ -20,7 +20,53 @@ view: productfamilymap {
 
 view: dim_product {
   label: "Product"
-  sql_table_name: DW_GA.DIM_PRODUCT ;;
+  #sql_table_name: DW_GA.DIM_PRODUCT ;;
+  derived_table: {
+    sql: select *,
+CASE
+               WHEN dw_ga.dim_product.PUBLICATIONGROUP in ('Career Ed', 'SWEP') THEN
+                    CASE
+                        WHEN dw_ga.dim_product.MINORSUBJECTMATTER = 'Office Management' THEN 'Course Tech Office Management'
+                        WHEN dw_ga.dim_product.MINORSUBJECTMATTER = 'Health Admin and Management' THEN 'Health Information Management'
+                        ELSE dw_ga.dim_product.MINORSUBJECTMATTER
+                        END
+               WHEN dw_ga.dim_product.PRODUCTFAMILY = 'MT CRMS Literature' THEN 'Literature'
+               WHEN dw_ga.dim_product.PUBLICATIONSERIES in ('CT-Networking', 'CT-Prog/PC/HD', 'CT-Revealed Series') THEN 'Creative and Technical'
+                --??
+               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'CPG-Networking Security' then 'Creative and Technical'
+                --??
+               WHEN dw_ga.dim_product.PUBLICATIONSERIES like 'CT-%' THEN 'Computing'
+               WHEN dw_ga.dim_product.PUBLICATIONSERIES like '%History%'
+                  OR dw_ga.dim_product.COURSEAREA = 'History: U.S. Survey' THEN 'History'
+               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Composition' THEN 'English'
+               WHEN dw_ga.dim_product.PUBLICATIONSERIES like 'Biology%' THEN 'Biology'
+               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Human Resources Management' THEN 'Management'
+               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Health Sciences' THEN 'Sports/Health/Recreat/Leisure'
+               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Intro Poli Sci' THEN 'Political Science'
+               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'FreshmanOrient/College Success' THEN 'Freshman Orientation/College'
+               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Nutrition' THEN 'Life Sciences'
+               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'General Business' THEN 'Business'
+               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Not Specified' THEN
+                    dw_ga.dim_product.MAJORSUBJECTMATTER
+                    /*
+                    CASE
+                    WHEN dim_product.MAJORSUBJECTMATTER = 'Accross Cengage Disciplines' THEN 'Other ' || dim_product.PUBLICATIONGROUP
+                    ELSE dim_product.MAJORSUBJECTMATTER
+                    END
+                    */
+               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Applied Math' THEN 'Applied Math-SMT'
+               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Earth Science' THEN 'Earth Sciences'
+               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Milady - Cosmetology' THEN 'Cosmetology'
+               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'UNKNOWN' THEN 'Not Specified'
+               WHEN dw_ga.dim_product.PUBLICATIONSERIES in ('Civil Engineering', 'General Engineering') then 'PGR 142-' || dim_product.PUBLICATIONSERIES
+               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Religion' then 'Religion & Phenomena'
+               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Mass Communication' then 'Communication Arts'
+               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Literature/Upper Level English' then 'Literature'
+               ELSE dw_ga.dim_product.PUBLICATIONSERIES
+        END
+    as discipline_rollup from dw_ga.dim_product;;
+    sql_trigger_value: select count(*) from dw_ga.dim_product ;;
+  }
 
   dimension: course {
     label: "Course Name"
@@ -105,54 +151,54 @@ view: dim_product {
     group_label: "Publication Categories"
     sql: ${TABLE}.PUBLICATIONSERIES ;;
   }
-
   dimension: discipline {
     type: string
     label: "Discipline"
-    group_label: "Categories"
-    sql:  CASE
-               WHEN ${publicationgroup} in ('Career Ed', 'SWEP') THEN
-                    CASE
-                        WHEN ${minorsubjectmatter} = 'Office Management' THEN 'Course Tech Office Management'
-                        WHEN ${minorsubjectmatter} = 'Health Admin and Management' THEN 'Health Information Management'
-                        ELSE ${minorsubjectmatter}
-                        END
-               WHEN ${productfamily} = 'MT CRMS Literature' THEN 'Literature'
-               WHEN ${publicationseries} in ('CT-Networking', 'CT-Prog/PC/HD', 'CT-Revealed Series') THEN 'Creative and Technical'
-                --??
-               WHEN ${publicationseries} = 'CPG-Networking Security' then 'Creative and Technical'
-                --??
-               WHEN ${publicationseries} like 'CT-%' THEN 'Computing'
-               WHEN ${publicationseries} like '%History%'
-                  OR ${coursearea} = 'History: U.S. Survey' THEN 'History'
-               WHEN ${publicationseries} = 'Composition' THEN 'English'
-               WHEN ${publicationseries} like 'Biology%' THEN 'Biology'
-               WHEN ${publicationseries} = 'Human Resources Management' THEN 'Management'
-               WHEN ${publicationseries} = 'Health Sciences' THEN 'Sports/Health/Recreat/Leisure'
-               WHEN ${publicationseries} = 'Intro Poli Sci' THEN 'Political Science'
-               WHEN ${publicationseries} = 'FreshmanOrient/College Success' THEN 'Freshman Orientation/College'
-               WHEN ${publicationseries} = 'Nutrition' THEN 'Life Sciences'
-               WHEN ${publicationseries} = 'General Business' THEN 'Business'
-               WHEN ${publicationseries} = 'Not Specified' THEN
-                    ${majorsubjectmatter}
-                    /*
-                    CASE
-                    WHEN ${majorsubjectmatter} = 'Accross Cengage Disciplines' THEN 'Other ' || ${publicationgroup}
-                    ELSE ${majorsubjectmatter}
-                    END
-                    */
-               WHEN ${publicationseries} = 'Applied Math' THEN 'Applied Math-SMT'
-               WHEN ${publicationseries} = 'Earth Science' THEN 'Earth Sciences'
-               WHEN ${publicationseries} = 'Milady - Cosmetology' THEN 'Cosmetology'
-               WHEN ${publicationseries} = 'UNKNOWN' THEN 'Not Specified'
-               WHEN ${publicationseries} in ('Civil Engineering', 'General Engineering') then 'PGR 142-' || ${publicationseries}
-               WHEN ${publicationseries} = 'Religion' then 'Religion & Phenomena'
-               WHEN ${publicationseries} = 'Mass Communication' then 'Communication Arts'
-               WHEN ${publicationseries} = 'Literature/Upper Level English' then 'Literature'
-               ELSE ${publicationseries}
-        END
-;;
-#     sql: ${TABLE}.PUBLICATIONSERIES ;;
+   group_label: "Categories"
+#     sql:  CASE
+#                WHEN ${publicationgroup} in ('Career Ed', 'SWEP') THEN
+#                     CASE
+#                         WHEN ${minorsubjectmatter} = 'Office Management' THEN 'Course Tech Office Management'
+#                         WHEN ${minorsubjectmatter} = 'Health Admin and Management' THEN 'Health Information Management'
+#                         ELSE ${minorsubjectmatter}
+#                         END
+#                WHEN ${productfamily} = 'MT CRMS Literature' THEN 'Literature'
+#                WHEN ${publicationseries} in ('CT-Networking', 'CT-Prog/PC/HD', 'CT-Revealed Series') THEN 'Creative and Technical'
+#                 --??
+#                WHEN ${publicationseries} = 'CPG-Networking Security' then 'Creative and Technical'
+#                 --??
+#                WHEN ${publicationseries} like 'CT-%' THEN 'Computing'
+#                WHEN ${publicationseries} like '%History%'
+#                   OR ${coursearea} = 'History: U.S. Survey' THEN 'History'
+#                WHEN ${publicationseries} = 'Composition' THEN 'English'
+#                WHEN ${publicationseries} like 'Biology%' THEN 'Biology'
+#                WHEN ${publicationseries} = 'Human Resources Management' THEN 'Management'
+#                WHEN ${publicationseries} = 'Health Sciences' THEN 'Sports/Health/Recreat/Leisure'
+#                WHEN ${publicationseries} = 'Intro Poli Sci' THEN 'Political Science'
+#                WHEN ${publicationseries} = 'FreshmanOrient/College Success' THEN 'Freshman Orientation/College'
+#                WHEN ${publicationseries} = 'Nutrition' THEN 'Life Sciences'
+#                WHEN ${publicationseries} = 'General Business' THEN 'Business'
+#                WHEN ${publicationseries} = 'Not Specified' THEN
+#                     ${majorsubjectmatter}
+#                     /*
+#                     CASE
+#                     WHEN ${majorsubjectmatter} = 'Accross Cengage Disciplines' THEN 'Other ' || ${publicationgroup}
+#                     ELSE ${majorsubjectmatter}
+#                     END
+#                     */
+#                WHEN ${publicationseries} = 'Applied Math' THEN 'Applied Math-SMT'
+#                WHEN ${publicationseries} = 'Earth Science' THEN 'Earth Sciences'
+#                WHEN ${publicationseries} = 'Milady - Cosmetology' THEN 'Cosmetology'
+#                WHEN ${publicationseries} = 'UNKNOWN' THEN 'Not Specified'
+#                WHEN ${publicationseries} in ('Civil Engineering', 'General Engineering') then 'PGR 142-' || ${publicationseries}
+#                WHEN ${publicationseries} = 'Religion' then 'Religion & Phenomena'
+#                WHEN ${publicationseries} = 'Mass Communication' then 'Communication Arts'
+#                WHEN ${publicationseries} = 'Literature/Upper Level English' then 'Literature'
+#                ELSE ${publicationseries}
+#         END
+# ;;
+
+     sql: ${TABLE}.discipline_rollup;;
 
     description: "
       derived from PublicationSeries

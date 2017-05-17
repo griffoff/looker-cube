@@ -36,9 +36,13 @@ explore: problem {
     sql_on: ${problem.problem_set_guid} = ${apliacontent.guid} ;;
     relationship: many_to_one
   }
-  join: course {
-    sql_on: ${course.guid} = ${apliacontent.context_guid} ;;
+  join: aplia_course_map {
+    sql_on: ${aplia_course_map.guid} = ${apliacontent.context_guid} ;;
     relationship: many_to_one
+  }
+  join: course {
+    sql_on: ${course.course_id} = ${aplia_course_map.course_id} ;;
+    relationship: one_to_one
   }
 
   join: answer{
@@ -51,7 +55,7 @@ explore: problem {
   }
 
   join: apliacontext {
-    sql_on: ${apliacontext.guid}=${course.guid} ;;
+    sql_on: ${apliacontext.guid}=${aplia_course_map.guid} ;;
     relationship: one_to_many
   }
 

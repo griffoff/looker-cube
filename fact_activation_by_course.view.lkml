@@ -3,15 +3,18 @@ view: fact_activation_by_product {
   derived_table: {
     sql: select
               by_product_fk as pk
-              ,isbn13,is_lms_integrated,institutionid,date_granularity,max(product_activations) as product_activations
-          from ${fact_activation_by_course.SQL_TABLE_NAME}
-          group by 1, 2, 3, 4, 5
+              ,isbn13,is_lms_integrated,date_granularity,sum(product_activations) as product_activations
+          from (
+            select distinct by_product_fk,isbn13,is_lms_integrated,date_granularity,institutionid,product_activations
+            from ${fact_activation_by_course.SQL_TABLE_NAME}
+            )
+          group by 1, 2, 3, 4
           order by 1;;
           sql_trigger_value: select count(*) from ${fact_activation_by_course.SQL_TABLE_NAME} ;;
   }
 
   set:  ALL_FIELDS {
-    fields: [isbn13, is_lms_integrated, date_granularity, institutionid, activations_for_isbn]
+    fields: [isbn13, is_lms_integrated, date_granularity, activations_for_isbn]
   }
 
   set:  details {
@@ -23,12 +26,6 @@ view: fact_activation_by_product {
     type: string
     hidden: yes
     sql: ${TABLE}.pk ;;
-  }
-
-  dimension: institutionid {
-    hidden: yes
-    type: string
-    sql: ${TABLE}.INSTITUTIONID ;;
   }
 
   dimension: isbn13 {
@@ -72,33 +69,34 @@ view: fact_activation_by_course {
     sql:
     with c as (
       select
-        courseid
-        ,productid
-        ,institutionid
-        ,startdatekey
-        ,case when length(split_part(coursekey, '-', 1)) > 15 and array_size(split(coursekey, '-')) >= 2 and productplatformid= 26 then 'yes' else 'no' end as is_lms_integrated
-      from dw_ga.dim_course
+        c.courseid
+        ,c.productid
+        ,c.institutionid
+        ,case when length(split_part(c.coursekey, '-', 1)) > 15 and array_size(split(c.coursekey, '-')) >= 2 and c.productplatformid= 26 then 'yes' else 'no' end as is_lms_integrated
+        ,COALESCE(d.fiscalyearvalue, 'UNKNOWN') as date_granularity
+      from dw_ga.dim_course c
+      left join dw_ga.dim_date d on case when c.startdatekey = -1 then c.enddatekey else c.startdatekey end = d.datekey
       )
     select
         a.courseid
         ,p.isbn13
-        ,d.fiscalyearvalue as date_granularity
+        ,c.date_granularity
         ,c.is_lms_integrated
         ,c.institutionid
-        ,p.isbn13 || c.is_lms_integrated || c.institutionid || d.fiscalyearvalue as by_product_fk
+        ,p.isbn13 || c.is_lms_integrated || c.date_granularity as by_product_fk
+        --,p.isbn13 || c.institutionid || c.is_lms_integrated || c.date_granularity as by_product_fk
         ,sum(NOOFACTIVATIONS) as NOOFACTIVATIONS
-        ,sum(sum(NOOFACTIVATIONS)) over (partition by p.isbn13, c.institutionid, c.is_lms_integrated, d.fiscalyearvalue) as product_activations
+        ,sum(sum(NOOFACTIVATIONS)) over (partition by p.isbn13, c.institutionid, c.is_lms_integrated, c.date_granularity) as product_activations
     from ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION a
     inner join c on a.courseid = c.courseid
     inner join dw_ga.dim_product p on c.productid = p.productid
-    inner join dw_ga.dim_date d on c.startdatekey = d.datekey
     group by 1, 2, 3, 4, 5
     order by 1;;
     sql_trigger_value: select count(*) from ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION;;
   }
 
   set: ALL_FIELDS {
-    fields: [courseid,avg_noofactivations,course_count,institution_count,noofactivations_base,total_noofactivations]
+    fields: [courseid,avg_noofactivations,course_count,institution_count,noofactivations_base,total_noofactivations,institutionid]
   }
 
   set: course_detail {
@@ -111,6 +109,13 @@ view: fact_activation_by_course {
     primary_key: yes
     sql: ${TABLE}.COURSEID ;;
   }
+
+  dimension: institutionid {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.INSTITUTIONID ;;
+  }
+
 
   dimension: by_product_fk {
     hidden: yes
@@ -133,6 +138,7 @@ view: fact_activation_by_course {
     "
     type: sum_distinct
     sql: ${noofactivations_base} ;;
+    sql_distinct_key: ${courseid} ;;
     drill_fields: [course_detail*]
   }
 
@@ -168,7 +174,7 @@ view: fact_activation_by_course {
 #   }
 
   measure: activations_for_isbn {
-    label: "Total activations for ISBN and Fiscal Year (Old)"
+    label: "Total activations for ISBN and Fiscal Year and Institution"
     description: "The total number of activations for all courses for the ISBN started in the same fiscal year related to the current context
     e.g.
     at item level it will represent the no. of activations
@@ -176,7 +182,7 @@ view: fact_activation_by_course {
     "
     type: sum_distinct
     sql: ${TABLE}.product_activations ;;
-    sql_distinct_key: ${by_product_fk}  ;;
+    sql_distinct_key: ${by_product_fk} || ${institutionid}  ;;
     drill_fields: [course_detail*]
   }
 }

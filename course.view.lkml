@@ -279,6 +279,7 @@ view: course {
   }
 
   measure: count {
+    hidden: yes
     label: "# Courses"
     type: count
     drill_fields: [course_id, university_name]

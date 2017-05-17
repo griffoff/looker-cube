@@ -79,6 +79,7 @@ view: dim_learningpath {
         from dw_ga.fact_activityoutcome
         group by 1
         ) f on lp.learningpathid = f.learningpathid
+        where lp.learningtype = 'Activity'
     ;;
 
     sql_trigger_value: select count(*) from dw_ga.dim_learningpath ;;
