@@ -5,16 +5,19 @@ view: dim_location {
   dimension: city {
     type: string
     sql: ${TABLE}.CITY ;;
+    hidden: yes
   }
 
   dimension: country {
     type: string
     sql: ${TABLE}.COUNTRY ;;
+    hidden: yes
   }
 
   dimension: countrycode {
     type: string
     sql: ${TABLE}.COUNTRYCODE ;;
+    hidden: yes
   }
 
   dimension: dw_ldid {
@@ -50,6 +53,8 @@ view: dim_location {
   }
 
   dimension: location {
+    group_label: "Location"
+    label: "Coordinates"
     type: location
     sql_latitude: ${latitude} ;;
     sql_longitude: ${longitude} ;;
@@ -59,21 +64,24 @@ view: dim_location {
     label: "Postal/Zip code"
     type: string
     sql: ${TABLE}.POSTALCODE ;;
+    hidden: yes
   }
 
   dimension: region {
     type: string
     sql: ${TABLE}.REGION ;;
+    hidden: yes
   }
 
   dimension: regioncode {
     label: "Region code"
     type: string
     sql: ${TABLE}.REGIONCODE ;;
+    hidden: yes
   }
 
   measure: count {
-    label: "No. of locations"
+    label: "# of locations"
     type: count
     drill_fields: [location.country, location.city, location.region]
   }
