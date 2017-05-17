@@ -28,6 +28,23 @@ explore: olr_courses {
   }
 }
 
+explore: problem {
+  label: "Aplia  - problem"
+  join: apliacontent{
+    sql_on: ${problem.problem_set_guid} = ${apliacontent.guid} ;;
+    relationship: many_to_one
+  }
+  join: course {
+    sql_on: ${course.guid} = ${apliacontent.context_guid} ;;
+    relationship: many_to_one
+  }
+
+  join: apliacontext {
+    sql_on: ${apliacontext.guid}=${course.guid} ;;
+    relationship: one_to_many
+  }
+}
+
 explore: snapshot {
   label: "MindTap - snapshot"
 
