@@ -22,7 +22,7 @@ view: dim_institution {
   dimension: postalcode {
     group_label: "Location"
     label: "Postal/Zip code"
-    type: string
+    type: zipcode
     sql: ${TABLE}.POSTALCODE ;;
   }
 
