@@ -38,7 +38,7 @@ view: fact_activityoutcome {
     type: string
     sql:  CASE
               WHEN ${TABLE}.COMPLETED = 'true' THEN 'Completed'
-              WHEN ${TABLE}.COMPLETED = 'false' THEN 'Started (Not Completed)'
+              WHEN ${TABLE}.COMPLETED = 'false' THEN 'In Progress'
           ELSE 'Not Attempted'
           END;;
   }

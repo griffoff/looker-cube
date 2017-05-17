@@ -3,8 +3,8 @@ view: dim_activity {
   sql_table_name: DW_GA.DIM_ACTIVITY_V ;;
 
   dimension: activitycategory {
-    group_label: "Category"
-    label: " Category (Lvl 1)"
+    group_label: "Activity Category"
+    label: "Activity Category (Lvl 1)"
     description: "Broad activity categories. (ex: Aplia Assignment, LAMS Lesson, Reading, Media, YouSeeU, etc.)"
     type: string
     sql: ${TABLE}.Category ;;
@@ -12,16 +12,16 @@ view: dim_activity {
   }
 
   dimension: activitysubcategory {
-    group_label: "Category"
-    label: " Category (Lvl 2)"
+    group_label: "Activity Category"
+    label: "Activity Category (Lvl 2)"
     description: "More specific activity subcategory (e.g Category is Assignment, subcategory is assessment and homework)"
     type: string
     sql: ${TABLE}.SubCategory ;;
   }
 
   dimension: activitysubtype {
-    group_label: "Category"
-    label: " Category (Lvl 3)"
+    group_label: "Activity Category"
+    label: "Activity Category (Lvl 3)"
     description: "Most specific activity categories. Product/discipline specific. (ex: saa, csfi, virtuallab, etc.)"
     type: string
     sql: ${TABLE}.SubType ;;
