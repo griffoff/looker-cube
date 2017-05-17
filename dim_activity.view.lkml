@@ -49,14 +49,14 @@ view: dim_activity {
 
   dimension: APPLICATIONNAME {
     label: " Activity Application"
-    description: "The name of the application the activity is located or created from. (ex: CNOW, Aplia, Lams, etc.)"
+    description: "The name of the application where the activity is located or created from. (ex: CNOW, Aplia, Lams, etc.)"
     type: string
     sql: ${TABLE}.APPLICATIONNAME ;;
   }
 
   dimension: gradable {
     label: " Gradeable  (Current)"
-    description: "Denotes if an activity is currently assigned for a grade or not"
+    description: "Denotes if an activity is currently assigned, not assigned, hidden, or removed."
     type: string
     #sql: ${TABLE}.ASSIGNED ;;
     sql: decode(${TABLE}.ASSIGNED, 'Assigned', 'Graded', 'Unassigned', 'Not Graded', ${TABLE}.ASSIGNED);;
@@ -98,7 +98,7 @@ view: dim_activity {
 
   dimension: scorable {
     label: " Scorable  (Current)"
-    #description: ""
+    description: "Denotes the current scorable state of an assignment (assigned or unassigned). Unassigned activities marked scorable = Practice"
     type: string
     sql: ${TABLE}.SCORABLE ;;
   }
@@ -112,6 +112,7 @@ view: dim_activity {
 
   measure: count {
     label: "# Activities"
+    description: "The count of courses containing an activity"
     type: count_distinct
     sql: ${dim_course.courseid} ;;
     drill_fields: []
@@ -160,7 +161,8 @@ view: dim_activity {
   }
 
   measure:  gradable_vs_practice {
-    label: "% Gradable vs practice"
+    label: "% Gradable vs Practice"
+    description: "Visual representation of the proportion of times an activity was gradable vs practice"
     sql: ${gradable_percent} ;;
     html:
     <div style="position:absolute;height:100%;width:100%;border:thin solid darkgray;">
@@ -174,7 +176,8 @@ view: dim_activity {
     label: "% not practice or gradable"
     description: "proportion of times activity was neither practice or gradable"
     type: number
-    sql:  ${count} - (${count_practice} + ${count_practice})/${count};;
+    #sql:  ${count} - (${count_practice} + ${count_practice})/${count};; --- Calculation was not adding up this is the old calculation. Below is new. Please correct if I misunderstood (Chip)
+    sql:  (${count} - (${count_practice} + ${count_gradable}))/${count};;
     value_format_name:  percent_1
     hidden:  no
     html:
