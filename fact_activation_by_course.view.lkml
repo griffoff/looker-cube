@@ -6,6 +6,7 @@ view: fact_activation_by_course {
       select
         courseid
         ,productid
+        ,institutionid
         ,startdatekey
         ,case when length(split_part(coursekey, '-', 1)) > 15 and array_size(split(coursekey, '-')) >= 2 and productplatformid= 26 then 'yes' else 'no' end as is_lms_integrated
       from dw_ga.dim_course
@@ -15,19 +16,20 @@ view: fact_activation_by_course {
         ,p.isbn13
         ,d.fiscalyearvalue as date_granularity
         ,c.is_lms_integrated
+        ,c.institutionid
         ,sum(NOOFACTIVATIONS) as NOOFACTIVATIONS
-        ,sum(sum(NOOFACTIVATIONS)) over (partition by p.isbn13, c.is_lms_integrated, d.fiscalyearvalue) as product_activations
+        ,sum(sum(NOOFACTIVATIONS)) over (partition by p.isbn13, c.institutionid, c.is_lms_integrated, d.fiscalyearvalue) as product_activations
     from ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION a
     inner join c on a.courseid = c.courseid
     inner join dw_ga.dim_product p on c.productid = p.productid
     inner join dw_ga.dim_date d on c.startdatekey = d.datekey
-    group by 1, 2, 3, 4
+    group by 1, 2, 3, 4, 5
     order by 1;;
     sql_trigger_value: select count(*) from ZPG_ACTIVATIONS.dw_ga.fact_activation ;;
   }
 
   set: ALL_FIELDS {
-    fields: [courseid,avg_noofactivations,course_count,institution_count,noofactivations_base,total_noofactivations,activations_for_isbn, isbn13, is_lms_integrated, date_granularity]
+    fields: [courseid,avg_noofactivations,course_count,institution_count,noofactivations_base,total_noofactivations,activations_for_isbn, isbn13, is_lms_integrated, date_granularity,institutionid]
   }
 
   set: course_detail {
@@ -39,6 +41,12 @@ view: fact_activation_by_course {
     type: string
     primary_key: yes
     sql: ${TABLE}.COURSEID ;;
+  }
+
+  dimension: institutionid {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.INSTITUTIONID ;;
   }
 
   dimension: isbn13 {
@@ -105,7 +113,7 @@ view: fact_activation_by_course {
     "
     type: sum_distinct
     sql: ${TABLE}.product_activations ;;
-    sql_distinct_key: ${isbn13} || ${date_granularity} || ${is_lms_integrated} ;;
+    sql_distinct_key: ${isbn13} || ${date_granularity} || ${institutionid} || ${is_lms_integrated}  ;;
     drill_fields: [course_detail*]
   }
 }
