@@ -37,10 +37,10 @@ explore: fact_activation {
   extends: [fact_appusage, dim_course]
   fields: [ALL_FIELDS*, -fact_activation_by_course.ALL_FIELDS*]
 
-  join: dim_date {
-    sql_on: ${fact_activation.activationdatekey} = ${dim_date.datekey} ;;
-    relationship: many_to_one
-  }
+#   join: dim_date {
+#     sql_on: ${fact_activation.activationdatekey} = ${dim_date.datekey} ;;
+#     relationship: many_to_one
+#   }
 
   join: dim_activationfilter {
     sql_on: ${fact_activation.activationfilterid} = ${dim_activationfilter.activationfilterid} ;;
@@ -78,10 +78,10 @@ explore: fact_activation {
     relationship: many_to_one
   }
 
-  join: dim_relative_to_end_date {
-    sql_on: ${fact_activation.daysbeforecourseend} = ${dim_relative_to_end_date.days} ;;
-    relationship: many_to_one
-  }
+#   join: dim_relative_to_end_date {
+#     sql_on: ${fact_activation.daysbeforecourseend} = ${dim_relative_to_end_date.days} ;;
+#     relationship: many_to_one
+#   }
 
   join: fact_enrollment {
     sql_on: ${fact_activation.courseid} = ${fact_enrollment.courseid} and ${fact_activation.partyid}) = ${fact_enrollment.partyid}) ;;
@@ -107,10 +107,10 @@ explore: fact_activityoutcome {
   label: "Activity Outcomes"
   extends: [dim_user, dim_course, dim_learningpath]
 
-  join: dim_completion_date {
-    sql_on: ${fact_activityoutcome.completeddatekey} = ${dim_completion_date.datekey} ;;
-    relationship: many_to_one
-  }
+#   join: dim_completion_date {
+#     sql_on: ${fact_activityoutcome.completeddatekey} = ${dim_completion_date.datekey} ;;
+#     relationship: many_to_one
+#   }
 
   join: dim_user {
     sql_on: ${fact_activityoutcome.userid} = ${dim_user.userid} ;;
@@ -133,20 +133,20 @@ explore: fact_activityoutcome {
     relationship: many_to_one
   }
 
-  join: dim_relative_to_start_date {
-    sql_on: ${fact_activityoutcome.daysfromcoursestart} = ${dim_relative_to_start_date.days} ;;
-    relationship: many_to_one
-  }
-
-  join: dim_relative_to_end_date {
-    sql_on: ${fact_activityoutcome.daysbeforecourseend} = ${dim_relative_to_end_date.days} ;;
-    relationship: many_to_one
-  }
-
-  join: dim_relative_to_due_date {
-    sql_on: ${fact_activityoutcome.daysleftbeforeduedate} = ${dim_relative_to_due_date.days} ;;
-    relationship: many_to_one
-  }
+#   join: dim_relative_to_start_date {
+#     sql_on: ${fact_activityoutcome.daysfromcoursestart} = ${dim_relative_to_start_date.days} ;;
+#     relationship: many_to_one
+#   }
+#
+#   join: dim_relative_to_end_date {
+#     sql_on: ${fact_activityoutcome.daysbeforecourseend} = ${dim_relative_to_end_date.days} ;;
+#     relationship: many_to_one
+#   }
+#
+#   join: dim_relative_to_due_date {
+#     sql_on: ${fact_activityoutcome.daysleftbeforeduedate} = ${dim_relative_to_due_date.days} ;;
+#     relationship: many_to_one
+#   }
 
   join: dim_time {
     sql_on: ${fact_activityoutcome.timekey} = ${dim_time.timekey} ;;
@@ -161,7 +161,7 @@ explore: fact_activityoutcome {
 }
 
 explore: fact_activity {
-  label: "Instructor Activities"
+  label: "Instructor Modifications"
   extends: [dim_user, dim_course, dim_learningpath]
 
   join: dim_eventtype {
@@ -206,10 +206,10 @@ explore: fact_activity {
     relationship: many_to_one
   }
 
-  join: dim_relative_to_end_date {
-    sql_on: ${fact_activity.daysbeforecourseend} = ${dim_relative_to_end_date.days} ;;
-    relationship: many_to_one
-  }
+#   join: dim_relative_to_end_date {
+#     sql_on: ${fact_activity.daysbeforecourseend} = ${dim_relative_to_end_date.days} ;;
+#     relationship: many_to_one
+#   }
 
   join: dim_time {
     sql_on: ${fact_activity.timekey} = ${dim_time.timekey} ;;
@@ -300,10 +300,10 @@ explore: fact_appusage {
     relationship: many_to_one
   }
 
-  join: dim_date {
-    sql_on: ${fact_appusage.eventdatekey} = ${dim_date.datekey} ;;
-    relationship: many_to_one
-  }
+#   join: dim_date {
+#     sql_on: ${fact_appusage.eventdatekey} = ${dim_date.datekey} ;;
+#     relationship: many_to_one
+#   }
 
   join: dim_user {
     sql_on: ${fact_appusage.userid} = ${dim_user.userid} ;;
@@ -353,10 +353,10 @@ explore: fact_enrollment {
   label: "Enrollments"
   extends: [dim_user, dim_course]
 
-  join: dim_date {
-    sql_on: ${fact_enrollment.eventdatekey} = ${dim_date.datekey} ;;
-    relationship: many_to_one
-  }
+#   join: dim_date {
+#     sql_on: ${fact_enrollment.eventdatekey} = ${dim_date.datekey} ;;
+#     relationship: many_to_one
+#   }
 
   join: dim_user {
     sql_on: ${fact_enrollment.userid} = ${dim_user.userid} ;;
@@ -393,6 +393,7 @@ explore: fact_enrollment {
 explore: fact_session {
   label: "Web - Sessions"
   extends: [dim_user]
+  extension: required
 
   join: dim_location {
     sql_on: ${fact_session.locationid} = ${dim_location.locationid} ;;
@@ -436,6 +437,7 @@ explore: fact_siteusage {
   extends: [dim_user, dim_course, dim_pagedomain]
 
   join: dim_date {
+    view_label: "Date - Date of activity"
     sql_on: ${fact_siteusage.eventdatekey} = ${dim_date.datekey} ;;
     relationship: many_to_one
   }
@@ -510,32 +512,32 @@ explore: fact_siteusage {
   }
 }
 
-explore: full_student_course_metrics {
-  label: "Data Science - Full Student Course Metrics"
-  extends: [dim_course, dim_user]
-
-  join: dim_course {
-    relationship: many_to_one
-    sql_on: ${coursekey} = ${dim_course.coursekey} ;;
-  }
-
-  join: dim_party {
-    sql_on: ${full_student_course_metrics.user_guid} = ${dim_party.guid} ;;
-    relationship: many_to_one
-  }
-
-  join: dim_user {
-    relationship: many_to_one
-    sql_on: ${dim_user.mainpartyid} = ${dim_party.partyid} ;;
-  }
-}
-
-explore: duedates {
-  label: "Upcoming due dates"
-  extends: [dim_course]
-
-  join: dim_course {
-    relationship: many_to_one
-    sql_on: ${coursekey} = ${dim_course.coursekey} ;;
-  }
-}
+# explore: full_student_course_metrics {
+#   label: "Data Science - Full Student Course Metrics"
+#   extends: [dim_course, dim_user]
+#
+#   join: dim_course {
+#     relationship: many_to_one
+#     sql_on: ${coursekey} = ${dim_course.coursekey} ;;
+#   }
+#
+#   join: dim_party {
+#     sql_on: ${full_student_course_metrics.user_guid} = ${dim_party.guid} ;;
+#     relationship: many_to_one
+#   }
+#
+#   join: dim_user {
+#     relationship: many_to_one
+#     sql_on: ${dim_user.mainpartyid} = ${dim_party.partyid} ;;
+#   }
+# }
+#
+# explore: duedates {
+#   label: "Upcoming due dates"
+#   extends: [dim_course]
+#
+#   join: dim_course {
+#     relationship: many_to_one
+#     sql_on: ${coursekey} = ${dim_course.coursekey} ;;
+#   }
+# }
