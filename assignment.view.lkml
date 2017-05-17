@@ -96,6 +96,7 @@ view: assignment {
   dimension: guid {
     type: string
     sql: ${TABLE}.GUID ;;
+    primary_key: yes
   }
 
   dimension: in_mindtap_learning_path_yn {
@@ -192,6 +193,7 @@ view: assignment {
   }
 
   measure: count {
+    label: "# Assigned Assignments"
     type: count
     drill_fields: []
   }

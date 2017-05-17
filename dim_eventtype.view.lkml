@@ -5,6 +5,7 @@ view: dim_eventtype {
 
 
   measure: removed_count {
+    label: "# Activities Removed"
     type: count
     filters: {
       field: eventtypename
@@ -13,6 +14,7 @@ view: dim_eventtype {
   }
 
   measure: removed_percent {
+    label: "% Activities Removed"
     type: number
     sql: ${removed_count} / ${dim_activity.count} ;;
     value_format_name: percent_2

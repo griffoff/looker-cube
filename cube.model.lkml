@@ -175,6 +175,7 @@ explore: fact_activity {
   }
 
   join: dim_user {
+    view_label: "Instructor"
     sql_on: ${fact_activity.userid} = ${dim_user.userid} ;;
     relationship: many_to_one
   }
