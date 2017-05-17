@@ -40,6 +40,7 @@ view: products {
 
   dimension_group: available_dt {
     label: "Available"
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -106,6 +107,7 @@ view: products {
   dimension: copyright_yr {
     label: "Copyright Year"
     type: number
+    group_label: "Product Details"
     sql: ${TABLE}.COPYRIGHT_YR ;;
     value_format: "0000"
   }
