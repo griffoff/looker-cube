@@ -41,6 +41,15 @@ explore: problem {
     relationship: many_to_one
   }
 
+  join: answer{
+    sql_on: ${answer.problem_guid} = ${problem.guid} ;;
+    relationship: one_to_many
+  }
+  join: assignment{
+    sql_on: ${assignment.guid} = ${apliacontent.assignment_guid} ;;
+    relationship: one_to_many
+  }
+
   join: apliacontext {
     sql_on: ${apliacontext.guid}=${course.guid} ;;
     relationship: one_to_many
@@ -48,6 +57,7 @@ explore: problem {
 
   join: dim_course {
     sql_on: ${apliacontext.context_id} = ${dim_course.coursekey};;
+    relationship: many_to_one
   }
 }
 
