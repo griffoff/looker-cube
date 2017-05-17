@@ -1,5 +1,5 @@
 view: dim_activity {
-  label: "Activity"
+  label: "Learning Path"
   sql_table_name: DW_GA.DIM_ACTIVITY_V ;;
 
   dimension: activitycategory {
