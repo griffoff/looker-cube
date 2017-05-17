@@ -143,7 +143,8 @@ view: problem {
   }
 
   measure: count {
+    label: "# Problems"
     type: count
-    drill_fields: [problem_id, problems_assigned.count, problem_product_family_year.count, problem_usage.count, productqnaproblemview.count]
+    drill_fields: [problem_id, problem_title, question_display_num, question]
   }
 }

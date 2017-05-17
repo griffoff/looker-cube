@@ -187,6 +187,7 @@ view: answer {
   }
 
   measure: count {
+    label: "# Answers"
     type: count
     drill_fields: [answer_id]
   }
