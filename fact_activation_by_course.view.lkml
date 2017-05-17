@@ -84,6 +84,7 @@ view: fact_activation_by_course {
         ,c.is_lms_integrated
         ,c.institutionid
         ,p.isbn13 || c.is_lms_integrated || c.date_granularity as by_product_fk
+        --,p.isbn13 || c.institutionid || c.is_lms_integrated || c.date_granularity as by_product_fk
         ,sum(NOOFACTIVATIONS) as NOOFACTIVATIONS
         ,sum(sum(NOOFACTIVATIONS)) over (partition by p.isbn13, c.institutionid, c.is_lms_integrated, c.date_granularity) as product_activations
     from ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION a
@@ -95,7 +96,7 @@ view: fact_activation_by_course {
   }
 
   set: ALL_FIELDS {
-    fields: [courseid,avg_noofactivations,course_count,institution_count,noofactivations_base,total_noofactivations]
+    fields: [courseid,avg_noofactivations,course_count,institution_count,noofactivations_base,total_noofactivations,institutionid]
   }
 
   set: course_detail {
@@ -108,6 +109,13 @@ view: fact_activation_by_course {
     primary_key: yes
     sql: ${TABLE}.COURSEID ;;
   }
+
+  dimension: institutionid {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.INSTITUTIONID ;;
+  }
+
 
   dimension: by_product_fk {
     hidden: yes
@@ -165,7 +173,7 @@ view: fact_activation_by_course {
 #   }
 
   measure: activations_for_isbn {
-    label: "Total activations for ISBN and Fiscal Year (Old)"
+    label: "Total activations for ISBN and Fiscal Year and Institution"
     description: "The total number of activations for all courses for the ISBN started in the same fiscal year related to the current context
     e.g.
     at item level it will represent the no. of activations
@@ -173,7 +181,7 @@ view: fact_activation_by_course {
     "
     type: sum_distinct
     sql: ${TABLE}.product_activations ;;
-    sql_distinct_key: ${by_product_fk}  ;;
+    sql_distinct_key: ${by_product_fk} || ${institutionid}  ;;
     drill_fields: [course_detail*]
   }
 }
