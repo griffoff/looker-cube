@@ -84,6 +84,11 @@ explore: dim_course {
     sql_on: ${dim_course.courseid} = ${fact_activation_by_course.courseid} ;;
     relationship: one_to_one
   }
+
+  join:  fact_activation_by_product {
+    sql_on: ${fact_activation_by_course.by_product_fk} = ${fact_activation_by_product.pk} ;;
+    relationship: many_to_one
+  }
 }
 
 explore: dim_date {

@@ -1,3 +1,71 @@
+view: fact_activation_by_product {
+  label: "Activations"
+  derived_table: {
+    sql: select
+              by_product_fk as pk
+              ,isbn13,is_lms_integrated,institutionid,date_granularity,max(product_activations) as product_activations
+          from ${fact_activation_by_course.SQL_TABLE_NAME}
+          group by 1, 2, 3, 4, 5
+          order by 1;;
+          sql_trigger_value: select count(*) from ${fact_activation_by_course.SQL_TABLE_NAME} ;;
+  }
+
+  set:  ALL_FIELDS {
+    fields: [isbn13, is_lms_integrated, date_granularity, institutionid, activations_for_isbn]
+  }
+
+  set:  details {
+    fields: [isbn13, dim_product.productname, dim_institution.institutionname, is_lms_integrated, date_granularity, activations_for_isbn]
+  }
+
+  dimension: pk {
+    primary_key: yes
+    type: string
+    hidden: yes
+    sql: ${TABLE}.pk ;;
+  }
+
+  dimension: institutionid {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.INSTITUTIONID ;;
+  }
+
+  dimension: isbn13 {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.isbn13 ;;
+  }
+
+  dimension: is_lms_integrated {
+    label: "LMS Integrated"
+    hidden: yes
+    type: string
+    sql: ${TABLE}.is_lms_integrated ;;
+  }
+
+  dimension: date_granularity {
+    label: "Time period"
+    hidden: yes
+    type: string
+    sql: ${TABLE}.date_granularity ;;
+  }
+
+  measure: activations_for_isbn {
+    label: "Total activations for ISBN and Fiscal Year"
+    description: "The total number of activations for all courses for the ISBN started in the same fiscal year related to the current context
+    e.g.
+    at item level it will represent the no. of activations
+    on all courses with the same CORE TEXT ISBN and start fiscal year as the course where this item appears
+    "
+    type: sum_distinct
+    sql: ${TABLE}.product_activations ;;
+    sql_distinct_key: ${pk} ;;
+    drill_fields: [details*]
+  }
+
+}
+
 view: fact_activation_by_course {
   view_label: "Activations"
   derived_table: {
@@ -17,6 +85,7 @@ view: fact_activation_by_course {
         ,d.fiscalyearvalue as date_granularity
         ,c.is_lms_integrated
         ,c.institutionid
+        ,p.isbn13 || c.is_lms_integrated || c.institutionid || d.fiscalyearvalue as by_product_fk
         ,sum(NOOFACTIVATIONS) as NOOFACTIVATIONS
         ,sum(sum(NOOFACTIVATIONS)) over (partition by p.isbn13, c.institutionid, c.is_lms_integrated, d.fiscalyearvalue) as product_activations
     from ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION a
@@ -25,15 +94,15 @@ view: fact_activation_by_course {
     inner join dw_ga.dim_date d on c.startdatekey = d.datekey
     group by 1, 2, 3, 4, 5
     order by 1;;
-    sql_trigger_value: select count(*) from ZPG_ACTIVATIONS.dw_ga.fact_activation ;;
+    sql_trigger_value: select count(*) from ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION;;
   }
 
   set: ALL_FIELDS {
-    fields: [courseid,avg_noofactivations,course_count,institution_count,noofactivations_base,total_noofactivations,activations_for_isbn, isbn13, is_lms_integrated, date_granularity,institutionid]
+    fields: [courseid,avg_noofactivations,course_count,institution_count,noofactivations_base,total_noofactivations]
   }
 
   set: course_detail {
-    fields: [dim_start_date.calendarmonthname, dim_course.coursekey, dim_product.isbn13, is_lms_integrated, total_noofactivations, activations_for_isbn]
+    fields: [dim_start_date.calendarmonthname, dim_course.coursekey, dim_product.isbn13, total_noofactivations, fact_activation_by_product.activations_for_isbn]
   }
 
   dimension: courseid {
@@ -43,28 +112,9 @@ view: fact_activation_by_course {
     sql: ${TABLE}.COURSEID ;;
   }
 
-  dimension: institutionid {
+  dimension: by_product_fk {
     hidden: yes
-    type: string
-    sql: ${TABLE}.INSTITUTIONID ;;
-  }
-
-  dimension: isbn13 {
-    hidden: yes
-    type: string
-    sql: ${TABLE}.isbn13 ;;
-  }
-
-  dimension: is_lms_integrated {
-    hidden: yes
-    type: string
-    sql: ${TABLE}.is_lms_integrated ;;
-  }
-
-  dimension: date_granularity {
-    hidden: yes
-    type: string
-    sql: ${TABLE}.date_granularity ;;
+    sql:  ${TABLE}.by_product_fk ;;
   }
 
   dimension: noofactivations_base {
@@ -104,8 +154,20 @@ view: fact_activation_by_course {
     sql: ${courseid} ;;
   }
 
+#   measure: activations_for_isbn {
+#     hidden: yes
+#     type: number
+#     sql: ${fact_activation_by_product.activations_for_isbn} ;;
+#     label: "Total activations for ISBN and Fiscal Year"
+#     description: "The total number of activations for all courses for the ISBN started in the same fiscal year related to the current context
+#     e.g.
+#     at item level it will represent the no. of activations
+#     on all courses with the same CORE TEXT ISBN and start fiscal year as the course where this item appears
+#     "
+#   }
+
   measure: activations_for_isbn {
-    label: "Total activations for ISBN and Fiscal Year"
+    label: "Total activations for ISBN and Fiscal Year (Old)"
     description: "The total number of activations for all courses for the ISBN started in the same fiscal year related to the current context
     e.g.
     at item level it will represent the no. of activations
@@ -113,7 +175,7 @@ view: fact_activation_by_course {
     "
     type: sum_distinct
     sql: ${TABLE}.product_activations ;;
-    sql_distinct_key: ${isbn13} || ${date_granularity} || ${institutionid} || ${is_lms_integrated}  ;;
+    sql_distinct_key: ${by_product_fk}  ;;
     drill_fields: [course_detail*]
   }
 }
