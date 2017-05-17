@@ -104,7 +104,8 @@ join: fact_activation_siteusage {
 }
 
 explore: fact_activityoutcome {
-  label: "Activity Outcomes"
+  label: "Learning Path Analysis"
+  description: "Details of learning path activities, assigned vs gradable, scores, etc."
   extends: [dim_user, dim_course, dim_learningpath]
 
 #   join: dim_completion_date {
