@@ -35,7 +35,11 @@ view: fact_activityoutcome {
 
   dimension: completed {
     type: string
-    sql: ${TABLE}.COMPLETED ;;
+    sql:  CASE
+              WHEN ${TABLE}.COMPLETED = 'true' THEN 'Completed'
+              WHEN ${TABLE}.COMPLETED = 'false' THEN 'Started (Not Completed)'
+          ELSE 'Not Attempted'
+          END;;
   }
 
   dimension: completeddatekey {

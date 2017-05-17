@@ -56,7 +56,7 @@ view: dim_activity {
 
   dimension: gradable {
     label: " Gradeable  (Current)"
-    description: "Denotes if an activity is currently assigned, not assigned, hidden, or removed."
+    description: "Denotes if the activity counts as part of a grade. Activities that are: (1) gradable & scorable count towards grade, (2) NOT gradable & scorable = Practice, (3) NOT scorable & NOT gradable are not assigned."
     type: string
     #sql: ${TABLE}.ASSIGNED ;;
     sql: decode(${TABLE}.ASSIGNED, 'Assigned', 'Graded', 'Unassigned', 'Not Graded', ${TABLE}.ASSIGNED);;
@@ -98,11 +98,12 @@ view: dim_activity {
 
   dimension: scorable {
     label: " Scorable  (Current)"
-    description: "Denotes the current scorable state of an assignment (assigned or unassigned). Unassigned activities marked scorable = Practice"
+    description: "Denotes the current scorable state of an activity (assigned or unassigned). Activities that are: (1) gradable & scorable count towards grade, (2) NOT gradable & scorable = Practice, (3) NOT scorable & NOT gradable are not assigned."
     type: string
     sql: ${TABLE}.SCORABLE ;;
   }
 
+  ### --------- ORIGINALSCORABLE does not exist in the DW_GA.DIM_ACTIVITY_V view table. It does exist in DIM_ACTIVITY ---------###
   dimension: originalscorable {
     label: " Scorable  (Original)"
     description: "The original scorable state of an activity upon creation of the course"
