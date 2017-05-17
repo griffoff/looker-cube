@@ -2,6 +2,7 @@ connection: "snowflake_prod"
 label:"Source Data on Snowflake"
 include: "*.view.lkml"         # include all views in this project
 include: "*.dashboard.lookml"  # include all dashboards in this project
+include: "dims.model.lkml"
 
 # # Select the views that should be a part of this model,
 # # and define the joins that connect them together.
@@ -29,7 +30,8 @@ explore: olr_courses {
 }
 
 explore: problem {
-  label: "Aplia  - problem"
+  extends: [dim_course]
+  label: "Aplia  - Problem"
   join: apliacontent{
     sql_on: ${problem.problem_set_guid} = ${apliacontent.guid} ;;
     relationship: many_to_one
@@ -39,14 +41,28 @@ explore: problem {
     relationship: many_to_one
   }
 
+  join: answer{
+    sql_on: ${answer.problem_guid} = ${problem.guid} ;;
+    relationship: one_to_many
+  }
+  join: assignment{
+    sql_on: ${assignment.guid} = ${apliacontent.assignment_guid} ;;
+    relationship: one_to_many
+  }
+
   join: apliacontext {
     sql_on: ${apliacontext.guid}=${course.guid} ;;
     relationship: one_to_many
   }
+
+  join: dim_course {
+    sql_on: ${apliacontext.context_id} = ${dim_course.coursekey};;
+    relationship: many_to_one
+  }
 }
 
 explore: snapshot {
-  label: "MindTap - snapshot"
+  label: "MindTap - Snapshot"
 
   join:  org {
     sql_on: ${snapshot.org_id} = ${org.id} ;;
