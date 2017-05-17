@@ -21,16 +21,17 @@ explore:  dim_product {
     relationship: many_to_one
   }
 
-  join: activations_dashboard_20170330 {
-    sql_on: ${dim_product.discipline} = ${activations_dashboard_20170330.discipline}   ;;
-    relationship: many_to_one
-    type: full_outer
-  }
+#   join: activations_dashboard_20170330 {
+#     sql_on: ${dim_product.discipline} = ${activations_dashboard_20170330.discipline}   ;;
+#     relationship: many_to_one
+#     type: full_outer
+#   }
+#
+#   join: activations_from_JW {
+#     sql_on: ${activations_dashboard_20170330.discipline} = ${activations_from_JW.discipline}   ;;
+#     relationship: many_to_one
+#   }
 
-  join: activations_from_JW {
-    sql_on: ${activations_dashboard_20170330.discipline} = ${activations_from_JW.discipline}   ;;
-    relationship: many_to_one
-  }
   join: products {
     view_label: "Product"
     sql_on: ${dim_product.isbn13} = ${products.isbn13};;

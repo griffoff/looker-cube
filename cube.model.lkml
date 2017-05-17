@@ -224,8 +224,11 @@ explore: fact_activity {
 
 explore:  fact_appusage_by_user {
   extends: [dim_course, dim_user, dim_learningpath]
-  label: "App usage"
-
+  label: "Usage of Mindtap apps from the app dock"
+  description: "
+  Usage metrics about mindapps accessed via the Mindtap app dock
+  Does not include usage of apps accessed via inline activities (from the learning path)
+  "
   join: dim_course {
     sql_on: ${fact_appusage_by_user.courseid} = ${dim_course.courseid} ;;
     relationship: one_to_one
@@ -353,6 +356,7 @@ explore: fact_appusage {
 explore: fact_enrollment {
   label: "Enrollments"
   extends: [dim_user, dim_course]
+  extension: required
 
 #   join: dim_date {
 #     sql_on: ${fact_enrollment.eventdatekey} = ${dim_date.datekey} ;;
@@ -434,7 +438,8 @@ explore: fact_session {
 }
 
 explore: fact_siteusage {
-  label: "Web - Site usage"
+  label: "Learning Path - Usage Data"
+  description: "Learning path usage information including application usage information collected via google analytics"
   extends: [dim_user, dim_course, dim_pagedomain]
 
   join: dim_date {
