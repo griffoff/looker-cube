@@ -1,4 +1,5 @@
 view: aplia_course_map {
+  view_label: "Aplia Course"
   derived_table: {
     sql: select distinct guid,course_id from stg_aplia.course;;
     sql_trigger_value: select count(*) from stg_aplia.course ;;
