@@ -1,5 +1,5 @@
 view: lp_node_map {
-  label: "Map to Mindtap Source"
+  label: "Learning Path"
   derived_table: {
     sql:
     select distinct dl.learningpathid, f.id as node_id, n.snapshot_id
@@ -16,6 +16,7 @@ view: lp_node_map {
   }
 
   dimension: nodeid {
+    group_label: "Source Links"
     type:  number
     sql: ${TABLE}.node_id ;;
     link: {
@@ -25,6 +26,7 @@ view: lp_node_map {
   }
 
   dimension: snapshotid {
+    group_label: "Source Links"
     type:  number
     sql: ${TABLE}.snapshot_id ;;
     link: {
@@ -104,7 +106,8 @@ view: dim_learningpath {
   }
 
   dimension: snapshot_status {
-    label: "Status"
+    label: "Status vs Master"
+    description: "Was this a core item or was it added to the snapshot"
     type: string
     sql: case when ${masternodeid} > -1 then 'Core item' else 'Added to snapshot' end ;;
   }
@@ -113,6 +116,7 @@ view: dim_learningpath {
     label: "Course Name"
     type: string
     sql: ${TABLE}.LEARNINGCOURSE ;;
+    hidden: yes
   }
 
   dimension: learningpathid {
@@ -125,6 +129,7 @@ view: dim_learningpath {
     label: "Type"
     type: string
     sql: ${TABLE}.LEARNINGTYPE ;;
+    hidden: yes
   }
 
   dimension: level1 {
