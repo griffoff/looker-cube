@@ -46,6 +46,7 @@ explore: productqnaproblemview {
 
 explore: problems_assigned {
   label: "Aplia Usage Data"
+  extension: required
   extends: [productqnaproblemview]
   join: productqnaproblemview {
     sql_on: ${problems_assigned.problem_id} = ${productqnaproblemview.problem_id};;
@@ -55,6 +56,7 @@ explore: problems_assigned {
 
 explore: problem_usage {
   label: "Aplia Usage Data actual and possible"
+  extension: required
   extends: [productqnaproblemview]
   join: productqnaproblemview {
     sql_on: ${problem_usage.problem_id} = ${productqnaproblemview.problem_id};;
