@@ -127,6 +127,7 @@ CASE
 
   dimension: techproductcode {
     type: string
+    hidden: yes
     label: "Tech Product Code"
     group_label: "Categories"
     sql: ${TABLE}.TECHPRODUCTCODE ;;
@@ -135,6 +136,7 @@ CASE
   dimension: techproductdescription {
     label: "Tech Product Description"
     group_label: "Categories"
+    hidden: yes
     type: string
     sql: ${TABLE}.TECHPRODUCTDESCRIPTION ;;
   }
