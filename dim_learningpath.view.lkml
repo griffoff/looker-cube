@@ -128,93 +128,108 @@ view: dim_learningpath {
   }
 
   dimension: level1 {
+    group_label: "Levels"
     type: string
     sql: ${TABLE}.LEVEL1 ;;
     order_by_field: level1_displayorder
   }
 
   dimension: level1_displayorder {
+    group_label: "Levels"
     type: string
     sql: ${TABLE}.LEVEL1_DISPLAYORDER ;;
     hidden: yes
   }
 
   dimension: level2 {
+    group_label: "Levels"
     type: string
     sql: ${TABLE}.LEVEL2 ;;
     order_by_field: level2_displayorder
   }
 
   dimension: level2_displayorder {
+    group_label: "Levels"
     type: string
     sql: ${TABLE}.LEVEL2_DISPLAYORDER ;;
     hidden: yes
   }
 
   dimension: level3 {
+    group_label: "Levels"
     type: string
     sql: ${TABLE}.LEVEL3 ;;
     order_by_field: level3_displayorder
   }
 
   dimension: level3_displayorder {
+    group_label: "Levels"
     type: string
     sql: ${TABLE}.LEVEL3_DISPLAYORDER ;;
     hidden: yes
   }
 
   dimension: level4 {
+    group_label: "Levels"
     type: string
     sql: ${TABLE}.LEVEL4 ;;
     order_by_field: level4_displayorder
   }
 
   dimension: level4_displayorder {
+    group_label: "Levels"
     type: string
     sql: ${TABLE}.LEVEL4_DISPLAYORDER ;;
     hidden: yes
   }
 
   dimension: level5 {
+    group_label: "Levels"
     type: string
     sql: ${TABLE}.LEVEL5 ;;
     order_by_field: level5_displayorder
   }
 
   dimension: level5_displayorder {
+    group_label: "Levels"
     type: string
     sql: ${TABLE}.LEVEL5_DISPLAYORDER ;;
     hidden: yes
   }
 
   dimension: level6 {
+    group_label: "Levels"
     type: string
     sql: ${TABLE}.LEVEL6 ;;
   }
 
   dimension: level7 {
+    group_label: "Levels"
     type: string
     sql: ${TABLE}.LEVEL7 ;;
   }
 
   dimension: level8 {
+    group_label: "Levels"
     type: string
     sql: ${TABLE}.LEVEL8 ;;
   }
 
   dimension: level9 {
+    group_label: "Levels"
     type: string
     sql: ${TABLE}.LEVEL9 ;;
   }
 
   dimension:  lowest_level_sort {
+    label: "Learning path sort order"
     type:  number
-    hidden: no
+    hidden: yes
     sql: (ifnull(${level1_displayorder}+1, 1) * 10000000) + (ifnull(${level2_displayorder}+1, 1) * 1000000) + (ifnull(${level3_displayorder}+1, 1) * 10000) + (ifnull(${level4_displayorder}+1, 1) * 100) + ifnull(${level5_displayorder}+1, 1) ;;
   }
 
   dimension: lowest_level {
-    label: "Lowest Level"
+    label: "Learning Path Activity Title"
     type: string
     #sql: COALESCE(${TABLE}.LEVEL9,${TABLE}.LEVEL8,${TABLE}.LEVEL7,${TABLE}.LEVEL6,${TABLE}.LEVEL5,${TABLE}.LEVEL4,${TABLE}.LEVEL3,${TABLE}.LEVEL2) ;;
     sql: ${TABLE}.lowest_level ;;
@@ -222,8 +237,8 @@ view: dim_learningpath {
   }
 
   dimension:  lowest_level_category {
-    label: "Lowest LP Level category"
-    description: "More useful categorization for awesomeness"
+    label: "Learning Path Activity Group"
+    description: "Categorization of learning path items into useful groups - groups are driven by product team requests"
     type: string
     sql: case when ${lowest_level} ilike '%Mastery Training%' then 'Mastery Training'
               when ${lowest_level} ilike '%Quiz%' then 'Quiz'
@@ -273,6 +288,7 @@ view: dim_learningpath {
     label: "# Gradable items"
     type: sum
     sql: ${dim_activity.count_gradable};;
+    hidden: yes
   }
 
   measure:  gradable_percent {
@@ -281,6 +297,7 @@ view: dim_learningpath {
     type: number
     sql:  ${count_gradable}/${count};;
     value_format_name: percent_1
+    hidden: yes
   }
 }
 
