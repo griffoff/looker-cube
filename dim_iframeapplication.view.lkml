@@ -21,14 +21,18 @@ view: dim_iframeapplication {
             )
             ,names as (
               SELECT
-                  DISTINCT b.id, InitCap(COALESCE(a.displayname, b.displayname, a.name, b.name)) AS displayname
+                  DISTINCT b.id, Replace(InitCap(COALESCE(a.displayname, b.displayname, a.name, b.name)), '_', ' ') AS displayname
               FROM apps b
               left JOIN ranks a ON a.matchname = b.matchname
                         AND a.RANK = 1
             )
-            select a.*, n.displayname as bestdisplayname
-                from DW_GA.DIM_IFRAMEAPPLICATION a
-                inner join names n on a.iframeapplicationid = n.id
+            select
+                max(iframeapplicationid) over (partition by n.displayname) as iframeapplicationid_group
+                ,a.*
+                ,n.displayname as bestdisplayname
+                ,REPLACE(REPLACE(REPLACE(REPLACE(a.IFRAMEAPPLICATIONNAME, '_', ' '), 'LAUNCH', ''), 'VIEW', ''), 'FLASH CARDS', 'FLASHCARDS') as CleanedApplicationName
+            from DW_GA.DIM_IFRAMEAPPLICATION a
+            inner join names n on a.iframeapplicationid = n.id
     ;;
 
     sql_trigger_value: select count(*) from DW_GA.dim_iframeapplication ;;
@@ -58,6 +62,12 @@ view: dim_iframeapplication {
     hidden: yes
   }
 
+  dimension: iframeapplicationid_group {
+    type: string
+    sql: ${TABLE}.IFRAMEAPPLICATIONID_GROUP ;;
+    hidden: yes
+  }
+
   dimension: iframeapplicationid {
     type: string
     sql: ${TABLE}.IFRAMEAPPLICATIONID ;;
@@ -68,7 +78,7 @@ view: dim_iframeapplication {
   dimension: iframeapplicationname {
     label: "Application Name"
     type: string
-    sql: REPLACE(REPLACE(REPLACE(REPLACE(${TABLE}.IFRAMEAPPLICATIONNAME, '_', ' '), 'LAUNCH', ''), 'VIEW', ''), 'FLASH CARDS', 'FLASHCARDS') ;;
+    sql: ${TABLE}.CleanedApplicationName ;;
     link: {
       label: "MindApp details on Inside"
       url: "http://inside/sites/DevOps/SitePages/{{ value }}.aspx"

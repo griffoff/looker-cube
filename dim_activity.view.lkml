@@ -127,6 +127,11 @@ view: dim_activity {
     sql:  ${count_gradable}/${count};;
     value_format_name:  percent_1
     hidden:  no
+    html:
+    <div style="width:100%;">
+    <div style="width: {{rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">{{rendered_value}}</div>
+    </div>
+    ;;
   }
 
   measure:  practice_percent {
@@ -136,14 +141,35 @@ view: dim_activity {
     sql:  ${count_practice}/${count};;
     value_format_name:  percent_1
     hidden:  no
+    html:
+    <div style="width:100%;">
+    <div style="width: {{rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">{{rendered_value}}</div>
+    </div>
+    ;;
+  }
+
+  measure:  gradable_vs_practice {
+    label: "% Gradable vs practice"
+    sql: ${gradable_percent} ;;
+    html:
+    <div style="position:absolute;height:100%;width:100%;border:thin solid darkgray;">
+      <div style="height:6px;width: {{gradable_percent._rendered_value}};background-color: rgba(17,160,17, 0.8);text-align:center; overflow:visible" title="gradable: {{gradable_percent._rendered_value}}">&nbsp;</div>
+      <div style="height:6px;width: {{practice_percent._rendered_value}};background-color: rgba(255,136,0, 0.8);text-align:center; overflow:visible" title="practice: {{practice_percent._rendered_value}}">&nbsp;</div>
+    </div>
+    ;;
   }
 
   measure:  not_practice_or_graded_percent {
-    label: "% not practice/gradable"
+    label: "% not practice or gradable"
     description: "proportion of times activity was neither practice or gradable"
     type: number
     sql:  ${count} - (${count_practice} + ${count_practice})/${count};;
     value_format_name:  percent_1
     hidden:  no
+    html:
+    <div style="width:100%;">
+    <div style="width: {{rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">{{rendered_value}}</div>
+    </div>
+    ;;
   }
 }

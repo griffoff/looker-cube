@@ -82,12 +82,13 @@ view: dim_user {
 
   dimension: mainpartyrole {
     label: "User Role - Raw"
+    hidden: yes
     type: string
     sql: ${TABLE}.MAINPARTYROLE ;;
   }
 
   dimension: user_role {
-    label: "User Role - Cleaned"
+    label: "User Role"
     type: string
     sql:
         CASE
@@ -96,7 +97,7 @@ view: dim_user {
           WHEN ${mainpartyrole} in ('TEACHING_ASSISTANT', 'TEACHING ASSISTANT') THEN 'TA'
           ELSE 'Other'
         END ;;
-    description: "Maps the raw Role field to Instructors, TA's, and Other. See Pete, for more questions."
+    #description: "Maps the raw Role field to Instructors, TA's, and Other. See Pete, for more questions."
   }
 
 

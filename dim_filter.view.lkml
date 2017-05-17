@@ -1,5 +1,5 @@
 view: dim_filter {
-  label: "Course Exclusions (filterflag)"
+  label: "Course"
   # # You can specify the table name if it's different from the view name:
   #   sql_table_name: my_schema_name.dim_filter
   #
@@ -46,5 +46,18 @@ view: dim_filter {
     type: string
     sql: ${TABLE}.filterdesc ;;
     order_by_field: filtersort
+  }
+
+  dimension: is_internal {
+    label: "Internal Course"
+    type: yesno
+    sql: ${TABLE}.filterflag not in (0, -1) ;;
+  }
+
+  dimension: is_external {
+    label: "Real Course"
+    description: "Flag to identify real courses, rather than test/demo/internal"
+    type: yesno
+    sql: ${TABLE}.filterflag in (0, -1) ;;
   }
 }

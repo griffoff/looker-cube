@@ -55,10 +55,10 @@ explore: dim_course {
     relationship: many_to_one
   }
 
-  join: dim_end_date {
-    sql_on: ${dim_course.enddatekey} = ${dim_end_date.datekey} ;;
-    relationship: many_to_one
-  }
+#   join: dim_end_date {
+#     sql_on: ${dim_course.enddatekey} = ${dim_end_date.datekey} ;;
+#     relationship: many_to_one
+#   }
 
   join: dim_product {
     relationship: many_to_one
@@ -181,7 +181,7 @@ explore: dim_pagedomain {
 
 #- explore: dim_party
 
-explore: dim_user {
+explore:  dim_user {
   extension: required
 
   join: dim_party {
@@ -192,5 +192,11 @@ explore: dim_user {
   join: user_facts {
     sql_on: ${dim_user.userid} = ${user_facts.userid} ;;
     relationship: one_to_one
+  }
+
+  join: fact_activation  {
+    sql_on: (${dim_course.courseid}, ${dim_user.userid}) = (${fact_activation.courseid}, ${fact_activation.userid}) ;;
+    relationship: one_to_one
+    fields: [-fact_activation.ALL_FIELDS*]
   }
 }

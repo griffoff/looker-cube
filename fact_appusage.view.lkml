@@ -22,6 +22,7 @@ view: fact_appusage {
       from dw_ga.fact_appusage f
       inner join r2 on f.iframeapplicationid = r2.iframeapplicationid
           ;;
+      sql_trigger_value: select count(*) from dw_ga.fact_appusage ;;
   }
   #sql_table_name: DW_GA.FACT_APPUSAGE ;;
 
@@ -139,6 +140,13 @@ view: fact_appusage {
     type: string
     sql: ${TABLE}.USERID ;;
     hidden: yes
+  }
+
+  dimension:click_per_user_buckets {
+    type: tier
+    tiers: [2,5,9]
+    style: relational
+    sql: ${TABLE}.clickcount ;;
   }
 
   measure: user_count {

@@ -25,6 +25,7 @@ view: dim_deviceplatform {
 
   dimension: devicecategory {
     label: "Device category"
+    description: "e.g. Desktop/Mobile/Tablet"
     group_label: "Device"
     type: string
     sql: ${TABLE}.DEVICECATEGORY ;;
@@ -32,6 +33,7 @@ view: dim_deviceplatform {
 
   dimension: deviceplatformgroup {
     label: "Device platform group"
+    description: "Operating system"
     group_label: "Device"
     type: string
     sql: ${TABLE}.DEVICEPLATFORMGROUP ;;
@@ -45,13 +47,15 @@ view: dim_deviceplatform {
 
   dimension: deviceplatformname {
     label: "Device platform"
+    description: "Operating system (version)"
     group_label: "Device"
     type: string
     sql: ${TABLE}.DEVICEPLATFORMNAME ;;
   }
 
   dimension: devicesystemname {
-    label: "Device system"
+    label: "Device brand"
+    description: "Apple/Lenovo/Dell/etc."
     group_label: "Device"
     type: string
     sql: ${TABLE}.DEVICESYSTEMNAME ;;
@@ -61,7 +65,7 @@ view: dim_deviceplatform {
     label: "Device system type"
     group_label: "Device"
     type: string
-    sql: ${TABLE}.DEVICESYSTEMTYPE ;;
+    sql: decode(${TABLE}.DEVICESYSTEMTYPE, 'Mobile/PDA', 'mobile', 'PC', 'desktop', ${TABLE}.DEVICESYSTEMTYPE) ;;
   }
 
   dimension: deviceuseragent {
@@ -69,6 +73,7 @@ view: dim_deviceplatform {
     group_label: "Device"
     type: string
     sql: ${TABLE}.DEVICEUSERAGENT ;;
+    hidden: yes
   }
 
   dimension: dw_ldid {

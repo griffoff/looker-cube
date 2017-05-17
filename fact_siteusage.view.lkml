@@ -18,12 +18,58 @@ view: fact_siteusage {
     label: "Clicks (avg)"
     type: average
     sql: ${TABLE}.CLICKCOUNT ;;
+    html:
+    <div style="width:100%;">
+      <div title="max: {{clickcount_avg_max._rendered_value}}" style="width: {{clickcount_avg_percent._rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">
+        {{rendered_value}}
+      </div>
+    </div>;;
+  }
+
+  measure: clickcount_max {
+    label: "Clicks (max)"
+    type: number
+    sql: max(${clickcount} ) over ();;
+  }
+
+  measure: clickcount_avg_max {
+    label: "Clicks (avg) (max)"
+    type: number
+    sql: max(${clickcount_avg} ) over ();;
+    hidden: yes
+  }
+
+  measure: clickcount_total_max {
+    label: "Clicks (max) (max)"
+    type: number
+    sql: max(${clickcount}) over ();;
+    hidden: yes
+  }
+
+  measure: clickcount_avg_percent {
+    type: number
+    sql: ${clickcount_avg_max}/${clickcount_avg_max} ;;
+    value_format_name: percent_1
+    hidden:  yes
+  }
+
+  measure: clickcount_percent {
+    type: number
+    sql: ${clickcount}/${clickcount_max} ;;
+    value_format_name: percent_1
+    hidden:  yes
   }
 
   measure: clickcount {
     label: "Clicks (total)"
     type: sum
     sql: ${TABLE}.CLICKCOUNT ;;
+    html:
+    <div style="width:100%;">
+      <div title="max: {{clickcount_max._rendered_value}}" style="width: {{clickcount_percent._rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">
+        {{rendered_value}}
+      </div>
+    </div>;;
   }
 
   dimension: courseenddatekey {
@@ -143,34 +189,54 @@ view: fact_siteusage {
   }
 
   measure: pageviewcount_avg {
-    label: "Page views (avg)"
+    label: "Views (avg)"
     type: average
     sql: ${pageviewcount} ;;
   }
 
   measure: pageviewcount_sum {
-    label: "Page views (total)"
+    label: "Views (total)"
     type: sum
     sql: ${pageviewcount} ;;
   }
 
   dimension: pageviewtime {
     type: number
-    sql: ${TABLE}.PAGEVIEWTIME/1000.0 ;;
+    sql: ${TABLE}.PAGEVIEWTIME/1000.0/86400.0 ;;
     hidden: yes
   }
 
+  measure: pageviewtime_max {
+    label: "Browser time (max)"
+    type: number
+    sql: max(${pageviewtime_avg}) over () ;;
+    value_format: "hh:mm:ss"
+  }
+
   measure: pageviewtime_avg {
-    label: "Page view time (avg)"
+    label: "Browser time (avg)"
     type: average
-    sql: NULLIF(${pageviewtime}, 0)/86400.0 ;;
+    sql: NULLIF(${pageviewtime}, 0) ;;
     value_format: "h:mm:ss"
+    html:
+    <div style="width:100%;">
+      <div title="max: {{pageviewtime_max._rendered_value}}" style="width: {{pageviewtime_percent._rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">
+        {{rendered_value}}
+      </div>
+    </div>;;
+  }
+
+  measure: pageviewtime_percent {
+    type: number
+    sql: ${pageviewtime_avg}/${pageviewtime_max} ;;
+    value_format_name: percent_1
+    hidden:  yes
   }
 
   measure: pageviewtime_sum {
-    label: "Page view time (total)"
+    label: "Browser time (total)"
     type: sum
-    sql: ${pageviewtime}/86400.0 ;;
+    sql: ${pageviewtime} ;;
     value_format: "hh:mm:ss"
   }
 
@@ -213,9 +279,19 @@ view: fact_siteusage {
 
   measure: percent_of_activations {
     label: "% of Activations"
+    description: "
+    No. of people / Total activations is this context
+    i.e.
+      no. of people who accessed vs no. of people who were exposed to this feature
+    "
     type: number
-    sql: ${dim_party.count} / NULLIF(${fact_activation_by_course.total_noofactivations}, 0) ;;
+    sql: COALESCE(${dim_party.count} / NULLIF(${fact_activation_by_course.total_noofactivations}, 0.0),0) ;;
     value_format_name: percent_1
+    html:
+      <div style="width:100%;">
+        <div style="width: {{rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">{{rendered_value}}</div>
+      </div>
+    ;;
   }
 }
 

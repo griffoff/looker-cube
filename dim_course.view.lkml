@@ -16,7 +16,7 @@ view: dim_course {
 
     link: {
       label:"View in Analytics Diagnostic Tool"
-      url: "https://analytics-tools.cengage.info/diagnostictool/analytics/production/course/course-key/{{value}}"
+      url: "https://analytics-tools.cengage.info/diagnostictool/#/course/view/production/course-key/{{value}}"
     }
 
     link: {
