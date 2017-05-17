@@ -1,4 +1,5 @@
 view: course {
+  view_label: "Aplia Course"
   sql_table_name: STG_APLIA.COURSE ;;
 
   dimension: course_id {
