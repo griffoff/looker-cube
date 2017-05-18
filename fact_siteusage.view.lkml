@@ -278,7 +278,7 @@ view: fact_siteusage {
   }
 
   measure: percent_of_activations {
-    label: "% of Activations"
+    label: "% of Activations (used / exposed)"
     description: "
     No. of people / Total activations is this context
     i.e.
@@ -293,8 +293,21 @@ view: fact_siteusage {
       </div>
     ;;
   }
-}
 
+  measure: percent_of_all_activations {
+    label: "% of Activations (used / all activations)"
+    description: "
+    No. of people who accessed vs. all activations/user possible whether they where exposed or whether the activity/item was hidden in their learning path"
+    type:  number
+    sql: COALESCE(${dim_party.count} / NULLIF(${fact_activation_by_product.activations_for_isbn}, 0.0),0) ;;
+    value_format_name: percent_1
+    html:
+      <div style="width:100%;">
+        <div style="width: {{rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">{{rendered_value}}</div>
+      </div>
+    ;;
+  }
+}
 #- measure: count
 #  label: 'No. of page view records'
 #  type: count
