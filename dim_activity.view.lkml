@@ -1,6 +1,57 @@
 view: dim_activity {
   label: "Learning Path"
-  sql_table_name: DW_GA.DIM_ACTIVITY_V ;;
+  #sql_table_name: DW_GA.DIM_ACTIVITY_V ;;
+  derived_table: {
+    sql:
+      SELECT
+        a.dw_ldid,
+        a.dw_ldts,
+        a.originalassigned,
+        a.activityid,
+        upper(( a.category )) AS category,
+        upper(( a.subcategory )) AS subcategory,
+        upper(( a.applicationname )) AS applicationname,
+        a.url,
+        a.maxtakes,
+        CASE
+          WHEN a.assigned = 1 THEN 'Assigned'
+          WHEN a.assigned = 2 THEN 'Deleted by Cengage Employee'
+          WHEN a.assigned = 3 THEN 'Marked as hidden by Instructor'
+          ELSE 'Unassigned'
+        END AS assigned,
+        CASE
+          WHEN a.scorable = 1 THEN 'Scorable'
+          ELSE 'Not Scorable'
+        END AS scorable,
+        CASE
+          WHEN a.originalassigned = 1 THEN 'Assigned'
+          ELSE 'Unassigned'
+        END AS originalassignedstate,
+        CASE
+          WHEN a.originalscorable = 1 THEN 'Scorable'
+          ELSE 'Not Scorable'
+        END AS originalscorablestate,
+        CASE
+          WHEN a.activitychangetypeid = 1 THEN 'Unassigned by Instructor'
+          WHEN a.activitychangetypeid = 2 THEN 'Assigned by Instructor'
+          WHEN a.activitychangetypeid = 3 THEN 'Unscorable by Instructor'
+          WHEN a.activitychangetypeid = 4 THEN 'Scorable by Instructor'
+          WHEN a.activitychangetypeid = 5 THEN 'Unassigned by Instructor'
+          WHEN a.activitychangetypeid = 6 THEN 'Assigned by Instructor'
+          WHEN a.activitychangetypeid = 7 THEN 'Unassigned by Instructor'
+          WHEN a.activitychangetypeid = 8 THEN 'Assigned by Instructor'
+          ELSE 'No Changes'
+        END AS activitychangetype,
+        a.subtype,
+        a.possiblepoints,
+        case when a.assigned = 1 then 'graded'
+            when a.scorable = 1 then 'practice'
+            else 'nonscorable'
+        end as status
+      FROM dw_ga.dim_activity a
+      ;;
+      sql_trigger_value: select count(*) from dw_ga.dim_activity ;;
+  }
 
   dimension: activitycategory {
     group_label: "Activity Category"
@@ -63,7 +114,7 @@ view: dim_activity {
     description: "Denotes if the activity counts as part of a grade. Activities that are: (1) gradable & scorable count towards grade, (2) NOT gradable & scorable = Practice, (3) NOT scorable & NOT gradable are not assigned."
     type: string
     #sql: ${TABLE}.ASSIGNED ;;
-    sql: decode(${TABLE}.ASSIGNED, 'Assigned', 'Graded', 'Unassigned', 'Not Graded', ${TABLE}.ASSIGNED);;
+    sql: decode(${TABLE}.ASSIGNED, 'Assigned', 'Graded', 'Unassigned', 'Not Graded', 'Marked as hidden by Instructor', 'Unassigned', ${TABLE}.ASSIGNED);;
   }
 
   dimension: originallygradable {
@@ -111,13 +162,12 @@ view: dim_activity {
     sql: ${TABLE}.SCORABLE ;;
   }
 
-  ### --------- ORIGINALSCORABLE does not exist in the DW_GA.DIM_ACTIVITY_V view table. It does exist in DIM_ACTIVITY ---------###
   dimension: originalscorable {
     group_label: "Scorable"
     label: "Scorable  (Original)"
     description: "The original scorable state of an activity upon creation of the course"
     type: string
-    sql: ${TABLE}.ORIGINALSCORABLE ;;
+    sql: ${TABLE}.ORIGINALSCORABLESTATE ;;
   }
 
   measure: count {
@@ -130,6 +180,7 @@ view: dim_activity {
 
   measure:  count_gradable {
     label: "# Gradable activities"
+    description: "No. of courses with this as a gradable activity"
     type: count_distinct
     sql: case when ${gradable} = 'Graded' then ${dim_course.courseid} end;;
     hidden:  yes
@@ -137,6 +188,7 @@ view: dim_activity {
 
   measure:  count_practice {
     label: "# Practice activities"
+    description: "No. of courses with this as a practice activity"
     type: count_distinct
     sql: case when ${gradable} != 'Graded' and ${scorable} = 'Scorable' then ${dim_course.courseid} end;;
     hidden:  yes
@@ -144,6 +196,7 @@ view: dim_activity {
 
   measure:  count_notscorable {
     label: "# Non-scorable activities"
+    description: "No. of courses with this as neither a practice or gradable activity"
     type: count_distinct
     sql: case when ${gradable} != 'Graded' and ${scorable} != 'Scorable' then ${dim_course.courseid} end;;
     hidden:  yes
@@ -217,4 +270,45 @@ view: dim_activity {
     </div>
     ;;
   }
+
+  dimension: status {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.status ;;
+  }
+
+  measure: gradable_course_user_count {
+    label: "# Activations for courses where activity is graded"
+    type: sum_distinct
+    sql: ${fact_activation_by_course.noofactivations_base} ;;
+    sql_distinct_key: ${fact_activation_by_course.courseid} ;;
+    filters: {
+      field: status
+      value: "graded"
+    }
+  }
+
+  measure: practice_course_user_count {
+    label: "# Activations for courses where activity is practice"
+    type: sum_distinct
+    sql: ${fact_activation_by_course.noofactivations_base} ;;
+    sql_distinct_key: ${fact_activation_by_course.courseid} ;;
+    filters: {
+      field: status
+      value: "practice"
+    }
+  }
+
+  measure: nonscorable_course_user_count {
+    label: "# Activations for courses where activity is not scored"
+    type: sum_distinct
+    type: sum_distinct
+    sql: ${fact_activation_by_course.noofactivations_base} ;;
+    sql_distinct_key: ${fact_activation_by_course.courseid} ;;
+    filters: {
+      field: status
+      value: "nonscorable"
+    }
+  }
+
 }

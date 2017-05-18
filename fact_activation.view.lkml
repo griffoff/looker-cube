@@ -165,7 +165,7 @@ view: fact_activation {
   }
 
   measure: course_count {
-    label: "# Courses with activations"
+    label: "# Course sections with activations"
     type: count_distinct
     sql: ${courseid} ;;
   }

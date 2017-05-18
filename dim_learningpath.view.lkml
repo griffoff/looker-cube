@@ -40,48 +40,61 @@ view: lp_node_map {
 view: dim_learningpath {
   label: "Learning Path"
   #sql_table_name: DW_GA.DIM_LEARNINGPATH ;;
+
   derived_table: {
     sql:
+    with lp as (
+      select
+          lp.learningpathid
+          ,lp.learningcourse
+          ,coalesce(m.level1, lp.level1) as level1
+          ,coalesce(m.level2, lp.level2) as level2
+          ,coalesce(m.level3, lp.level3) as level3
+          ,coalesce(m.level4, lp.level4) as level4
+          ,coalesce(m.level5, lp.level5) as level5
+          ,coalesce(m.level6, lp.level6) as level6
+          ,coalesce(m.level7, lp.level7) as level7
+          ,coalesce(m.level8, lp.level8) as level8
+          ,coalesce(m.level9, lp.level9) as level9
+          ,min(coalesce(m.level1_displayorder, lp.level1_displayorder)) over (partition by lp.masternodeid) as level1_displayorder
+          ,min(coalesce(m.level2_displayorder, lp.level2_displayorder)) over (partition by lp.masternodeid) as level2_displayorder
+          ,min(coalesce(m.level3_displayorder, lp.level3_displayorder)) over (partition by lp.masternodeid) as level3_displayorder
+          ,min(coalesce(m.level4_displayorder, lp.level4_displayorder)) over (partition by lp.masternodeid) as level4_displayorder
+          ,min(coalesce(m.level5_displayorder, lp.level5_displayorder)) over (partition by lp.masternodeid) as level5_displayorder
+          ,lp.learningtype
+          ,lp.eventtypeid
+          ,lp.origname
+          ,lp.origsequence
+          ,lp.parentlearningpathid
+          ,lp.masternodeid
+          ,f.firstdatekey
+          ,case when lp.masternodeid = -1 then -1 else min(f.firstdatekey) over (partition by lp.masternodeid) end as masterfirstdatekey
+          ,case when lp.masternodeid = -1
+            then
+                (ifnull(lp.level1_displayorder+1, 1) * 10000000) + (ifnull(lp.level2_displayorder+1, 1) * 1000000) + (ifnull(lp.level3_displayorder+1, 1) * 10000) + (ifnull(lp.level4_displayorder+1, 1) * 100) + ifnull(lp.level5_displayorder+1, 1)
+            else
+                (ifnull(m.level1_displayorder+1, 1) * 10000000) + (ifnull(m.level2_displayorder+1, 1) * 1000000) + (ifnull(m.level3_displayorder+1, 1) * 10000) + (ifnull(m.level4_displayorder+1, 1) * 100) + ifnull(m.level5_displayorder+1, 1)
+            end as lowest_level_sort_base
+          ,case when lp.masternodeid = -1
+            then
+                COALESCE(lp.LEVEL9,lp.LEVEL8,lp.LEVEL7,lp.LEVEL6,lp.LEVEL5,lp.LEVEL4,lp.LEVEL3,lp.LEVEL2, 'UNKNOWN')
+            else
+                COALESCE(m.LEVEL9,m.LEVEL8,m.LEVEL7,m.LEVEL6,m.LEVEL5,m.LEVEL4,m.LEVEL3,m.LEVEL2, 'UNKNOWN')
+            end as lowest_level
+      from DW_GA.DIM_LEARNINGPATH lp
+      LEFT JOIN DW_GA.DIM_MASTER_NODE m  ON lp.MASTERNODEID = m.MASTERNODEID and lp.masternodeid != -1
+      left join (
+          select
+              learningpathid, min(startdatekey) as firstdatekey
+          from dw_ga.fact_activityoutcome
+          group by 1
+          ) f on lp.learningpathid = f.learningpathid
+          --where lp.learningtype = 'Activity'
+    )
     select
-        lp.learningpathid
-        ,lp.learningcourse
-        ,coalesce(m.level1, lp.level1) as level1
-        ,coalesce(m.level2, lp.level2) as level2
-        ,coalesce(m.level3, lp.level3) as level3
-        ,coalesce(m.level4, lp.level4) as level4
-        ,coalesce(m.level5, lp.level5) as level5
-        ,coalesce(m.level6, lp.level6) as level6
-        ,coalesce(m.level7, lp.level7) as level7
-        ,coalesce(m.level8, lp.level8) as level8
-        ,coalesce(m.level9, lp.level9) as level9
-        ,min(coalesce(m.level1_displayorder, lp.level1_displayorder)) over (partition by lp.masternodeid) as level1_displayorder
-        ,min(coalesce(m.level2_displayorder, lp.level2_displayorder)) over (partition by lp.masternodeid) as level2_displayorder
-        ,min(coalesce(m.level3_displayorder, lp.level3_displayorder)) over (partition by lp.masternodeid) as level3_displayorder
-        ,min(coalesce(m.level4_displayorder, lp.level4_displayorder)) over (partition by lp.masternodeid) as level4_displayorder
-        ,min(coalesce(m.level5_displayorder, lp.level5_displayorder)) over (partition by lp.masternodeid) as level5_displayorder
-        ,lp.learningtype
-        ,lp.eventtypeid
-        ,lp.origname
-        ,lp.origsequence
-        ,lp.parentlearningpathid
-        ,lp.masternodeid
-        ,f.firstdatekey
-        ,case when lp.masternodeid = -1 then -1 else min(f.firstdatekey) over (partition by lp.masternodeid) end as masterfirstdatekey
-        ,case when lp.masternodeid = -1
-          then
-              COALESCE(lp.LEVEL9,lp.LEVEL8,lp.LEVEL7,lp.LEVEL6,lp.LEVEL5,lp.LEVEL4,lp.LEVEL3,lp.LEVEL2, 'UNKNOWN')
-          else
-              COALESCE(m.LEVEL9,m.LEVEL8,m.LEVEL7,m.LEVEL6,m.LEVEL5,m.LEVEL4,m.LEVEL3,m.LEVEL2, 'UNKNOWN')
-          end as lowest_level
-    from DW_GA.DIM_LEARNINGPATH lp
-    LEFT JOIN DW_GA.DIM_MASTER_NODE m  ON lp.MASTERNODEID = m.MASTERNODEID and lp.masternodeid != -1
-    left join (
-        select
-            learningpathid, min(startdatekey) as firstdatekey
-        from dw_ga.fact_activityoutcome
-        group by 1
-        ) f on lp.learningpathid = f.learningpathid
-        where lp.learningtype = 'Activity'
+        *
+        ,min(lowest_level_sort_base) over (partition by lowest_level) as lowest_level_sort
+    from lp
     ;;
 
     sql_trigger_value: select count(*) from dw_ga.dim_learningpath ;;
@@ -230,7 +243,7 @@ view: dim_learningpath {
     label: "Learning path sort order"
     type:  number
     hidden: yes
-    sql: (ifnull(${level1_displayorder}+1, 1) * 10000000) + (ifnull(${level2_displayorder}+1, 1) * 1000000) + (ifnull(${level3_displayorder}+1, 1) * 10000) + (ifnull(${level4_displayorder}+1, 1) * 100) + ifnull(${level5_displayorder}+1, 1) ;;
+    sql: ${TABLE}.lowest_level_sort ;;
   }
 
   dimension: lowest_level {

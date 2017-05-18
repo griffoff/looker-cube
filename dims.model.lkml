@@ -160,7 +160,6 @@ explore: dim_learningpath {
     relationship: many_to_one
   }
 
-
   join: lp_node_map {
     sql_on: ${dim_learningpath.learningpathid} = ${lp_node_map.learningpathid} ;;
     relationship: one_to_many
@@ -207,3 +206,15 @@ explore:  dim_user {
     fields: [-fact_activation.ALL_FIELDS*]
   }
 }
+
+# explore: dim_activity {
+#   extension: required
+#   join: fact_activity {
+#     sql_on: (${dim_course.courseid}, ${dim_activity.activityid}) = (${fact_activity.courseid}, ${fact_activity.activityid}) ;;
+#     relationship:  one_to_many
+#   }
+#   join: dim_eventtype {
+#     sql_on: ${fact_activity.eventtypeid} = ${dim_eventtype.eventtypeid} ;;
+#     relationship: many_to_one
+#   }
+# }

@@ -106,6 +106,57 @@ view: user {
     drill_fields: [detail*]
   }
 
+  measure: participation_percent_overall {
+    description: "
+    % of users who used an activity of the total population of people that should have been exposed to it
+    i.e. of all people who activated on courses where an activity was available in the master learning path, what proportion actually used it.
+    "
+  }
+
+  measure: gradable_exposure_percent_overall {
+    label: "% Gradable"
+    description: "
+    % of users who were exposed to an activity with it flagged as gradable
+    i.e. of all people who activated on courses where an activity was available in the master learning path, how many were on courses where it was gradable.
+    "
+    sql: NULL;; #case when ${dim_activity.gradable} = 'Gradable' then ${fact_activation_by_course.total_noofactivations}  ;;
+  }
+
+  measure: practice_exposure_percent_overall {
+    label: "% Practice"
+    description: "
+    % of users who were exposed to an activity with it flagged as practice
+    i.e. of all people who activated on courses where an activity was available in the master learning path, how many were on courses where it was practice only.
+    "
+  }
+
+  measure: notscorable_exposure_percent_overall {
+    label: "% Not scorable"
+    description: "
+    % of users who were exposed to an activity where it is neither practice or gradable
+    i.e. of all people who activated on courses where an activity was available in the master learning path, how many were on courses where it was neither practice or gradable.
+    "
+    type: number
+    sql:  case when ${dim_activity.gradable_count} = 1 then ${fact_activation_by_course.total_noofactivations} end;;
+    value_format_name: percent_1
+  }
+
+  measure: notexposed_percent {
+    label: "% Unassigned"
+    description: "
+    % of users who were on courses where a given activity was in the master learning path but was removed from the snapshot.
+    "
+    sql: (${fact_activation_by_product.product_activations} - ${fact_activation_by_course.total_noofactivations}) / ${fact_activation_by_product.product_activations}  ;;
+  }
+
+  measure: exposure_percent {
+    label: "% Exposure"
+    description: "
+    % of users who were on courses that had a given activity of all the users on courses where the activity was in the master learning path.
+    "
+    sql: (${fact_activation_by_course.total_noofactivations} / ${fact_activation_by_product.product_activations}  ;;
+  }
+
   dimension: is_internal {
     label: "Internal User"
     type: yesno

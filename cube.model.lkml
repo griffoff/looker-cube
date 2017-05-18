@@ -9,28 +9,6 @@ include: "*.view"
 # include all the dashboards
 include: "*.dashboard"
 
-# explore:  dim_learningpath_explore {
-#   # extends: [fact_activityoutcome, fact_siteusage]
-#   extends: [dim_course]
-#   view_name: dim_learningpath
-#   label: "Learning Path"
-#
-#   join:  fact_activityoutcome {
-#     relationship: one_to_many
-#     sql_on: ${dim_learningpath.learningpathid} = ${fact_activityoutcome.learningpathid} ;;
-#   }
-#
-#   join:  fact_siteusage {
-#     relationship: one_to_many
-#     sql_on: ${dim_learningpath.learningpathid} = ${fact_siteusage.learningpathid} ;;
-#   }
-#
-#   join: dim_course {
-#     relationship: many_to_one
-#     sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
-#   }
-#
-# }
 
 explore: fact_activation {
   label: "Activations"
@@ -123,8 +101,18 @@ explore: fact_activityoutcome {
     relationship: many_to_one
   }
 
+  join: fact_activity {
+    sql_on: ${dim_learningpath.learningpathid} = ${fact_activity.learningpathid} ;;
+    relationship:  one_to_many
+  }
+
   join: dim_activity {
     sql_on: ${fact_activityoutcome.activityid} = ${dim_activity.activityid} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_eventtype {
+    sql_on: ${fact_activity.eventtypeid} = ${dim_eventtype.eventtypeid} ;;
     relationship: many_to_one
   }
 
@@ -163,7 +151,13 @@ explore: fact_activityoutcome {
 
 explore: fact_activity {
   label: "Instructor Modifications"
-  extends: [dim_user, dim_course, dim_learningpath]
+  extends: [dim_course, dim_learningpath]
+  always_filter: {
+    filters: {
+      field: dim_learningpath.learningtype
+      value: "Activity"
+    }
+  }
 
   join: dim_eventtype {
     sql_on: ${fact_activity.eventtypeid} = ${dim_eventtype.eventtypeid} ;;
@@ -175,14 +169,18 @@ explore: fact_activity {
     relationship: many_to_one
   }
 
-  join: dim_user {
+  join: dim_instructor_user {
+    from: dim_user
     view_label: "User (Instructor)"
-    sql_on: ${fact_activity.userid} = ${dim_user.userid} ;;
+    sql_on: ${fact_activity.userid} = ${dim_instructor_user.userid} ;;
     relationship: many_to_one
   }
 
-  join: dim_party {
+  join: dim_instructor_party {
+    from: dim_party
     view_label: "User (Instructor)"
+    sql_on: ${dim_instructor_user.mainpartyid} = ${dim_instructor_party.partyid} ;;
+    relationship: many_to_one
   }
 
   join: dim_learningpath {
@@ -518,33 +516,3 @@ explore: fact_siteusage {
     relationship: many_to_many
   }
 }
-
-# explore: full_student_course_metrics {
-#   label: "Data Science - Full Student Course Metrics"
-#   extends: [dim_course, dim_user]
-#
-#   join: dim_course {
-#     relationship: many_to_one
-#     sql_on: ${coursekey} = ${dim_course.coursekey} ;;
-#   }
-#
-#   join: dim_party {
-#     sql_on: ${full_student_course_metrics.user_guid} = ${dim_party.guid} ;;
-#     relationship: many_to_one
-#   }
-#
-#   join: dim_user {
-#     relationship: many_to_one
-#     sql_on: ${dim_user.mainpartyid} = ${dim_party.partyid} ;;
-#   }
-# }
-#
-# explore: duedates {
-#   label: "Upcoming due dates"
-#   extends: [dim_course]
-#
-#   join: dim_course {
-#     relationship: many_to_one
-#     sql_on: ${coursekey} = ${dim_course.coursekey} ;;
-#   }
-# }
