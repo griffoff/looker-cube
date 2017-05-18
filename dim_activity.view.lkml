@@ -186,4 +186,13 @@ view: dim_activity {
     </div>
     ;;
   }
+
+  measure:  unassigned_activity_percent {
+    label: "% activity unassigned from Master LP"
+    description: "Percent of time a given activity was removed from the master learning path by an instructor."
+    type:  number
+    sql: (${fact_activation_by_product.activations_for_isbn}-${fact_activation_by_course.total_noofactivations}) / ${fact_activation_by_product.activations_for_isbn} ;;
+    value_format_name: percent_1
+    hidden: no
+  }
 }
