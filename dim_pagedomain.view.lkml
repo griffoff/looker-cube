@@ -17,6 +17,7 @@ view: dim_pagedomain {
   dimension: environment {
     type: string
     sql: ${TABLE}.ENVIRONMENT ;;
+    hidden: yes
   }
 
   dimension: loaddate {
@@ -29,6 +30,7 @@ view: dim_pagedomain {
     label: "Page Domain"
     type: string
     sql: ${TABLE}.PAGEDOMAIN ;;
+    hidden: yes
   }
 
   dimension: pagedomainid {
@@ -48,5 +50,6 @@ view: dim_pagedomain {
     label: "No. of product domains"
     type: count
     drill_fields: []
+    hidden: yes
   }
 }

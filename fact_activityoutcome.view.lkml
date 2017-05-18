@@ -1,5 +1,5 @@
 view: fact_activityoutcome {
-  label: "Activity Outcomes"
+  label: "Learning Path"
   sql_table_name: DW_GA.FACT_ACTIVITYOUTCOME ;;
 
   dimension: rowid {
@@ -30,12 +30,17 @@ view: fact_activityoutcome {
   dimension: autosubmitted {
     label: "Auto submitted"
     type: string
+    hidden: yes
     sql: ${TABLE}.AUTOSUBMITTED ;;
   }
 
   dimension: completed {
     type: string
-    sql: ${TABLE}.COMPLETED ;;
+    sql:  CASE
+              WHEN ${TABLE}.COMPLETED = 'true' THEN 'Completed'
+              WHEN ${TABLE}.COMPLETED = 'false' THEN 'In Progress'
+          ELSE 'Not Attempted'
+          END;;
   }
 
   dimension: completeddatekey {
@@ -152,12 +157,14 @@ view: fact_activityoutcome {
     type: tier
     tiers: [1, 2, 3, 5, 10]
     style: integer
+    hidden: yes
     sql: ${TABLE}.NOOFTAKES ;;
   }
 
   measure: nooftakes_avg {
     label: "Avg. no. of Takes"
     type: average
+    hidden: yes
     sql: ${TABLE}.nooftakes::float ;;
     value_format_name: decimal_1
   }
@@ -165,6 +172,7 @@ view: fact_activityoutcome {
   measure: nooftakes_sum {
     label: "# of Takes"
     type: sum
+    hidden: yes
     sql: ${TABLE}.nooftakes::int ;;
   }
 
@@ -236,6 +244,7 @@ view: fact_activityoutcome {
   measure: score_dev {
     label: "Score (std dev)"
     type: number
+    hidden: yes
     sql: STDDEV(${score}) ;;
     value_format_name: percent_1
   }
@@ -257,6 +266,7 @@ view: fact_activityoutcome {
   measure: score_max {
     label: "Score (max)"
     type: max
+    hidden: yes
     sql: ${score} ;;
     value_format_name: percent_1
   }
@@ -264,6 +274,7 @@ view: fact_activityoutcome {
   measure: score_min {
     label: "Score (min)"
     type: min
+    hidden: yes
     sql: ${score} ;;
     value_format_name: percent_1
   }
@@ -277,6 +288,7 @@ view: fact_activityoutcome {
   dimension_group: takeendtime {
     label: "Take End Time"
     type: time
+    hidden: yes
     timeframes: [time, date, week, month]
     sql: ${TABLE}.TAKEENDTIME ;;
   }
@@ -291,6 +303,7 @@ view: fact_activityoutcome {
   dimension_group: takestarttime {
     label: "Take Start Time"
     type: time
+    hidden: yes
     timeframes: [time, date, week, month]
     sql: ${TABLE}.TAKESTARTTIME ;;
   }
@@ -307,7 +320,7 @@ view: fact_activityoutcome {
     # sql: COALESCE(NULLIF(${TABLE}.TIMEDURATION, 0), ${TABLE}.TIMESPENT) /1000.0 ;;
     sql: NULLIF(${TABLE}.TIMEDURATION /1000.0, 0)/86400.0 ;;
     value_format: "h:mm:ss"
-    hidden: no
+    hidden: yes
   }
 
   measure: timespent {
@@ -315,12 +328,13 @@ view: fact_activityoutcome {
     type: average
     sql: NULLIF(${TABLE}.TIMESPENT /1000.0, 0)/86400.0 ;;
     value_format: "h:mm:ss"
-    hidden: no
+    hidden: yes
   }
 
   measure: timeduration_avg {
     label: "Avg. Duration"
     type: average
+    hidden: yes
     sql: ${timeduration}/86400.0 ;;
     value_format: "h:mm:ss"
   }
@@ -328,6 +342,7 @@ view: fact_activityoutcome {
   dimension: timeduration_bucket {
     label: "Duration Buckets"
     type: tier
+    hidden: yes
     tiers: [0, 5, 15, 30, 60]
     style: relational
     sql: ${TABLE}.TIMEDURATION/60.0 ;;

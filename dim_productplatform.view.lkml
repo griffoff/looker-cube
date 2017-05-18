@@ -1,5 +1,5 @@
 view: dim_productplatform {
-  label: "Product Platform"
+  label: "Product"
   sql_table_name: DW_GA.DIM_PRODUCTPLATFORM ;;
 
   dimension: dw_ldid {
@@ -38,5 +38,6 @@ view: dim_productplatform {
     label: "No. of product platforms"
     type: count
     drill_fields: []
+    hidden: yes
   }
 }

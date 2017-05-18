@@ -21,16 +21,17 @@ explore:  dim_product {
     relationship: many_to_one
   }
 
-  join: activations_dashboard_20170330 {
-    sql_on: ${dim_product.discipline} = ${activations_dashboard_20170330.discipline}   ;;
-    relationship: many_to_one
-    type: full_outer
-  }
+#   join: activations_dashboard_20170330 {
+#     sql_on: ${dim_product.discipline} = ${activations_dashboard_20170330.discipline}   ;;
+#     relationship: many_to_one
+#     type: full_outer
+#   }
+#
+#   join: activations_from_JW {
+#     sql_on: ${activations_dashboard_20170330.discipline} = ${activations_from_JW.discipline}   ;;
+#     relationship: many_to_one
+#   }
 
-  join: activations_from_JW {
-    sql_on: ${activations_dashboard_20170330.discipline} = ${activations_from_JW.discipline}   ;;
-    relationship: many_to_one
-  }
   join: products {
     view_label: "Product"
     sql_on: ${dim_product.isbn13} = ${products.isbn13};;
@@ -120,6 +121,7 @@ explore: dim_institution {
   extension: required
 
   join: dim_location {
+    view_label: "Institution"
     sql_on: ${dim_institution.locationid} = ${dim_location.locationid} ;;
     relationship: many_to_one
   }
@@ -144,15 +146,15 @@ explore: dim_learningpath {
   #  relationship: many_to_one
   #}
 
-  join: dim_first_used_date {
-    view_label: "First Used"
-    from:  dim_date
-    sql_on: ${dim_learningpath.first_used_datekey} = ${dim_first_used_date.datekey} ;;
-    relationship: many_to_one
-  }
+#   join: dim_first_used_date {
+#     view_label: "First Used"
+#     from:  dim_date
+#     sql_on: ${dim_learningpath.first_used_datekey} = ${dim_first_used_date.datekey} ;;
+#     relationship: many_to_one
+#   }
 
   join: dim_master_first_used_date {
-    view_label: "First Used (Master)"
+    view_label: "Date - Learning Path - Master First Use"
     from:  dim_date
     sql_on: ${dim_learningpath.master_first_used_datekey} = ${dim_master_first_used_date.datekey} ;;
     relationship: many_to_one

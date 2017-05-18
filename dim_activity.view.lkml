@@ -1,9 +1,10 @@
 view: dim_activity {
-  label: "Activity"
+  label: "Learning Path"
   sql_table_name: DW_GA.DIM_ACTIVITY_V ;;
 
   dimension: activitycategory {
-    label: " Category (Lvl 1)"
+    group_label: "Activity Category"
+    label: "Activity Category (Lvl 1)"
     description: "Broad activity categories. (ex: Aplia Assignment, LAMS Lesson, Reading, Media, YouSeeU, etc.)"
     type: string
     sql: ${TABLE}.Category ;;
@@ -11,14 +12,16 @@ view: dim_activity {
   }
 
   dimension: activitysubcategory {
-    label: " Category (Lvl 2)"
+    group_label: "Activity Category"
+    label: "Activity Category (Lvl 2)"
     description: "More specific activity subcategory (e.g Category is Assignment, subcategory is assessment and homework)"
     type: string
     sql: ${TABLE}.SubCategory ;;
   }
 
   dimension: activitysubtype {
-    label: " Category (Lvl 3)"
+    group_label: "Activity Category"
+    label: "Activity Category (Lvl 3)"
     description: "Most specific activity categories. Product/discipline specific. (ex: saa, csfi, virtuallab, etc.)"
     type: string
     sql: ${TABLE}.SubType ;;
@@ -48,29 +51,32 @@ view: dim_activity {
   }
 
   dimension: APPLICATIONNAME {
-    label: " Activity Application"
+    label: "Activity Application"
     description: "The name of the application where the activity is located or created from. (ex: CNOW, Aplia, Lams, etc.)"
     type: string
     sql: ${TABLE}.APPLICATIONNAME ;;
   }
 
   dimension: gradable {
-    label: " Gradeable  (Current)"
-    description: "Denotes if an activity is currently assigned, not assigned, hidden, or removed."
+    group_label: "Gradable"
+    label: "Gradable  (Current)"
+    description: "Denotes if the activity counts as part of a grade. Activities that are: (1) gradable & scorable count towards grade, (2) NOT gradable & scorable = Practice, (3) NOT scorable & NOT gradable are not assigned."
     type: string
     #sql: ${TABLE}.ASSIGNED ;;
     sql: decode(${TABLE}.ASSIGNED, 'Assigned', 'Graded', 'Unassigned', 'Not Graded', ${TABLE}.ASSIGNED);;
   }
 
   dimension: originallygradable {
-    label: " Gradeable  (Original)"
+    group_label: "Gradable"
+    label: "Gradable  (Original)"
     description: "The original graded (assigned) state of an activity upon creation of the course"
     type: string
     sql: decode(${TABLE}.ORIGINALASSIGNEDSTATE, 'Assigned', 'Graded', 'Unassigned', 'Not Graded', ${TABLE}.ORIGINALASSIGNEDSTATE) ;;
   }
 
   dimension: gradable_status {
-    label: " Gradeable (Change)"
+    group_label: "Gradable"
+    label: " Gradable (Change)"
     description: "Denotes if an activity's current graded (assigned) state differs from the original graded (assigned) state due to an instructor modification"
     type: string
     sql: CASE
@@ -84,6 +90,7 @@ view: dim_activity {
   }
 
   dimension: scorable_status {
+    group_label: "Scorable"
     label: " Scorable (Change)"
     description: "Denotes if an activity's current scorable state differs from the original scorable state"
     type: string
@@ -97,14 +104,17 @@ view: dim_activity {
   }
 
   dimension: scorable {
+    group_label: "Scorable"
     label: " Scorable  (Current)"
-    description: "Denotes the current scorable state of an assignment (assigned or unassigned). Unassigned activities marked scorable = Practice"
+    description: "Denotes the current scorable state of an activity (assigned or unassigned). Activities that are: (1) gradable & scorable count towards grade, (2) NOT gradable & scorable = Practice, (3) NOT scorable & NOT gradable are not assigned."
     type: string
     sql: ${TABLE}.SCORABLE ;;
   }
 
+  ### --------- ORIGINALSCORABLE does not exist in the DW_GA.DIM_ACTIVITY_V view table. It does exist in DIM_ACTIVITY ---------###
   dimension: originalscorable {
-    label: " Scorable  (Original)"
+    group_label: "Scorable"
+    label: "Scorable  (Original)"
     description: "The original scorable state of an activity upon creation of the course"
     type: string
     sql: ${TABLE}.ORIGINALSCORABLE ;;
@@ -132,6 +142,13 @@ view: dim_activity {
     hidden:  yes
   }
 
+  measure:  count_notscorable {
+    label: "# Non-scorable activities"
+    type: count_distinct
+    sql: case when ${gradable} != 'Graded' and ${scorable} != 'Scorable' then ${dim_course.courseid} end;;
+    hidden:  yes
+  }
+
   measure:  gradable_percent {
     label: "% Gradable"
     description: "proportion of times activity was gradable"
@@ -151,6 +168,20 @@ view: dim_activity {
     description: "proportion of times activity was practice"
     type: number
     sql:  ${count_practice}/${count};;
+    value_format_name:  percent_1
+    hidden:  no
+    html:
+    <div style="width:100%;">
+    <div style="width: {{rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">{{rendered_value}}</div>
+    </div>
+    ;;
+  }
+
+  measure:  notscorable_percent {
+    label: "% Non-scorable"
+    description: "proportion of times activity was not practice or gradable e.g. reading activity"
+    type: number
+    sql:  ${count_notscorable}/${count};;
     value_format_name:  percent_1
     hidden:  no
     html:

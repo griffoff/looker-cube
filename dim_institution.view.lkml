@@ -22,7 +22,7 @@ view: dim_institution {
   dimension: postalcode {
     group_label: "Location"
     label: "Postal/Zip code"
-    type: string
+    type: zipcode
     sql: ${TABLE}.POSTALCODE ;;
   }
 
@@ -54,6 +54,7 @@ view: dim_institution {
   dimension: enrollmentnumber {
     label: "Enrollment number (est)"
     type: string
+    hidden: yes
     sql: ${TABLE}.ENROLLMENTNUMBER ;;
   }
 
@@ -66,6 +67,7 @@ view: dim_institution {
   dimension: estimatedenrollmentlevel {
     label: "Enrollment level (est)"
     type: tier
+    hidden: yes
     tiers: [
       50,
       100,

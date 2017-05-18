@@ -1,5 +1,5 @@
 view: dim_course {
-  label: "Course"
+  label: "Course / Section Details"
   sql_table_name: DW_GA.DIM_COURSE ;;
 
   dimension: courseid {
@@ -128,7 +128,7 @@ view: dim_course {
   }
 
   measure: count {
-    label: "# Courses"
+    label: "# Course Sections"
     type: count
     drill_fields: [coursename]
   }

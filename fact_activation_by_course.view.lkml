@@ -145,6 +145,7 @@ view: fact_activation_by_course {
   measure: avg_noofactivations {
     label: "Avg. activations"
     type: average
+    hidden: yes
     sql: ${noofactivations_base} ;;
   }
 

@@ -1,4 +1,5 @@
 view: course_facts {
+  label: "Course / Section Details"
   derived_table: {
     sql: select course.courseid, instructor.instructor_first_date, instructor.instructor_first_date_key
       from
@@ -28,6 +29,7 @@ view: course_facts {
   dimension: instructor_first_date {
     label: "Instructor's first course start date"
     type: date
+    hidden: yes
     sql: ${TABLE}.INSTRUCTOR_FIRST_DATE ;;
   }
 

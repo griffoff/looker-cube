@@ -106,6 +106,7 @@ CASE
   dimension: mediatype {
     label: "Media Type"
     group_label: "Categories"
+    hidden: yes
     type: string
     sql: ${TABLE}.MEDIATYPE ;;
   }
@@ -126,6 +127,7 @@ CASE
 
   dimension: techproductcode {
     type: string
+    hidden: yes
     label: "Tech Product Code"
     group_label: "Categories"
     sql: ${TABLE}.TECHPRODUCTCODE ;;
@@ -134,6 +136,7 @@ CASE
   dimension: techproductdescription {
     label: "Tech Product Description"
     group_label: "Categories"
+    hidden: yes
     type: string
     sql: ${TABLE}.TECHPRODUCTDESCRIPTION ;;
   }
@@ -250,6 +253,7 @@ CASE
 
   dimension: discipline_old {
     type: string
+    hidden: yes
     label: "Discipline (Old)"
     group_label: "Categories"
     sql: ${TABLE}.DISCIPLINE ;;
@@ -262,6 +266,7 @@ CASE
 
   dimension: coursearea_pt {
     type: string
+    hidden: yes
     label: "Course Area (Pubtrack)"
     group_label: "Pubtrack Categories"
     sql: ${TABLE}.COURSEAREA_PT ;;
@@ -269,6 +274,7 @@ CASE
 
   dimension: discipline_pt {
     type: string
+    hidden: yes
     label: "Discipline (Pubtrack)"
     group_label: "Pubtrack Categories"
     sql: ${TABLE}.DISCIPLINE_PT ;;
@@ -346,6 +352,7 @@ CASE
   dimension: islatestedition {
     label: "Latest Edition?"
     type: string
+    group_label: "Product Details"
     sql: ${TABLE}.ISLATESTEDITION ;;
   }
 

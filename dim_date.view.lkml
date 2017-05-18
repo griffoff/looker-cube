@@ -99,7 +99,7 @@ view: dim_date {
     ]
     convert_tz: no
     sql: ${TABLE}.DATEVALUE ;;
-    label: "Date"
+    label: "Course Start"
   }
 
   dimension: dayofweekid {
@@ -110,6 +110,7 @@ view: dim_date {
 
   dimension: dayofweekname {
     type: string
+    hidden: yes
     sql: ${TABLE}.DAYOFWEEKNAME ;;
     label: "Day of Week"
     order_by_field: dayofweekid
@@ -117,6 +118,7 @@ view: dim_date {
 
   dimension: dayofweeknameshort {
     type: string
+    hidden: yes
     sql: ${TABLE}.DAYOFWEEKNAMESHORT ;;
     label: "Day of Week (short)"
     order_by_field: dayofweekid

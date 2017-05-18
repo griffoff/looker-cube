@@ -1,5 +1,5 @@
 view: fact_siteusage {
-  label: "Web Usage"
+  label: "Learning Path - Usage Data"
   sql_table_name: DW_GA.FACT_SITEUSAGE ;;
 
   dimension: pk {

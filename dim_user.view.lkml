@@ -171,5 +171,6 @@ view: dim_user {
     label: "No. of user accounts"
     type: count
     drill_fields: []
+    hidden: yes
   }
 }
