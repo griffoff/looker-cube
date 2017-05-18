@@ -32,6 +32,7 @@ view: dim_eventtype {
   }
 
   measure: removed_from_course_user_count {
+    hidden: yes
     view_label: "Learning Path"
     label: "# Activations for courses where activity is unassigned"
     type: sum_distinct

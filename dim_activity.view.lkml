@@ -45,6 +45,7 @@ view: dim_activity {
         a.subtype,
         a.possiblepoints,
         case when a.assigned = 1 then 'graded'
+            when a.assigned in (2, 3) then 'unassigned'
             when a.scorable = 1 then 'practice'
             else 'nonscorable'
         end as status
@@ -296,6 +297,17 @@ view: dim_activity {
     filters: {
       field: status
       value: "practice"
+    }
+  }
+
+  measure: unassigned_course_user_count {
+    label: "# Activations for courses where activity has been unassigned"
+    type: sum_distinct
+    sql: ${fact_activation_by_course.noofactivations_base} ;;
+    sql_distinct_key: ${fact_activation_by_course.courseid} ;;
+    filters: {
+      field: status
+      value: "unassigned"
     }
   }
 
