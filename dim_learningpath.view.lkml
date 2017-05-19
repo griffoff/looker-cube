@@ -244,6 +244,7 @@ view: dim_learningpath {
     type:  number
     hidden: yes
     sql: ${TABLE}.lowest_level_sort ;;
+    skip_drill_filter: yes
   }
 
   dimension: lowest_level {

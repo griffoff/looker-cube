@@ -245,18 +245,6 @@ view: dim_activity {
     ;;
   }
 
-  measure:  gradable_vs_practice {
-    label: "% Gradable vs Practice"
-    description: "Visual representation of the proportion of times an activity was gradable vs practice"
-    sql: ${gradable_percent} ;;
-    html:
-    <div style="position:absolute;height:100%;width:100%;border:thin solid darkgray;">
-      <div style="height:6px;width: {{gradable_percent._rendered_value}};background-color: rgba(17,160,17, 0.8);text-align:center; overflow:visible" title="gradable: {{gradable_percent._rendered_value}}">&nbsp;</div>
-      <div style="height:6px;width: {{practice_percent._rendered_value}};background-color: rgba(255,136,0, 0.8);text-align:center; overflow:visible" title="practice: {{practice_percent._rendered_value}}">&nbsp;</div>
-    </div>
-    ;;
-  }
-
   measure:  not_practice_or_graded_percent {
     label: "% not practice or gradable"
     description: "proportion of times activity was neither practice or gradable"
@@ -272,10 +260,40 @@ view: dim_activity {
     ;;
   }
 
+  measure:  unassigned_activity_percent {
+    label: "% activity unassigned from Master LP"
+    description: "Percent of time a given activity was removed from the master learning path by an instructor."
+    type:  number
+    sql: (${fact_activation_by_product.activations_for_isbn}-${fact_activation_by_course.total_noofactivations}) / nullif(${fact_activation_by_product.activations_for_isbn}, 0) ;;
+    value_format_name: percent_1
+    hidden: no
+  }
+
+  measure:  gradable_vs_practice {
+    label: "% Gradable vs Practice"
+    description: "Visual representation of the proportion of times an activity was gradable vs practice"
+    sql: ${gradable_percent} ;;
+    html:
+    <div style="position:absolute;height:100%;width:100%;border:thin solid darkgray;">
+      <div style="height:6px;width: {{gradable_percent._rendered_value}};background-color: rgba(17,160,17, 0.8);text-align:center; overflow:visible" title="gradable: {{gradable_percent._rendered_value}}">&nbsp;</div>
+      <div style="height:6px;width: {{practice_percent._rendered_value}};background-color: rgba(255,136,0, 0.8);text-align:center; overflow:visible" title="practice: {{practice_percent._rendered_value}}">&nbsp;</div>
+    </div>
+    ;;
+  }
+
   dimension: status {
     hidden: yes
     type: string
     sql: ${TABLE}.status ;;
+  }
+
+  dimension: activitychangetype {
+    label: "Status Change Description"
+    hidden: yes
+  }
+
+  set:  institutionDetails {
+    fields: [dim_institution.institutionname, dim_eventtype.eventtypename, status, originallygradable, gradable, originalscorable, scorable, dim_course.count, fact_activation_by_course.total_noofactivations]
   }
 
   measure: gradable_course_user_count {
@@ -287,6 +305,7 @@ view: dim_activity {
       field: status
       value: "graded"
     }
+    drill_fields: [institutionDetails*]
   }
 
   measure: practice_course_user_count {
@@ -298,6 +317,7 @@ view: dim_activity {
       field: status
       value: "practice"
     }
+    drill_fields: [institutionDetails*]
   }
 
   measure: unassigned_course_user_count {
@@ -309,6 +329,7 @@ view: dim_activity {
       field: status
       value: "unassigned"
     }
+    drill_fields: [institutionDetails*]
   }
 
   measure: nonscorable_course_user_count {
@@ -321,14 +342,7 @@ view: dim_activity {
       field: status
       value: "nonscorable"
     }
+    drill_fields: [institutionDetails*]
   }
 
-  measure:  unassigned_activity_percent {
-    label: "% activity unassigned from Master LP"
-    description: "Percent of time a given activity was removed from the master learning path by an instructor."
-    type:  number
-    sql: (${fact_activation_by_product.activations_for_isbn}-${fact_activation_by_course.total_noofactivations}) / ${fact_activation_by_product.activations_for_isbn} ;;
-    value_format_name: percent_1
-    hidden: no
-  }
 }
