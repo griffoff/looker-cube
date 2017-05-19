@@ -267,8 +267,10 @@ view: dim_learningpath {
               when ${lowest_level} ilike '%START Zoom%' then 'Start Zoom'
               --CJ
               when ${lowest_level} ilike '%Visual Summary%' then 'Visual Summary'
-              when ${lowest_level} ilike '%You Decide%' then 'You Decide'
+              when ${lowest_level} ilike '%You Decide%1%' then 'You Decide - pt. 1'
+              when ${lowest_level} ilike '%You Decide%2%' then 'You Decide - pt. 2'
               when ${lowest_level} ilike '%Skill Builder%' then 'Skill Builder'
+              when ${lowest_level} ilike '%Video Case%' then 'Video Cases'
               else 'Uncategorized'
               end;;
   }
