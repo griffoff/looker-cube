@@ -100,3 +100,16 @@ include: "*.view"
 #
 #
 # }
+
+explore: schema_comparison {
+  label: "Compare schemas: STG to PROD "
+  join: table_comparison {
+    sql_on: ${schema_comparison.schema_name} = ${table_comparison.schema_name};;
+    relationship: one_to_many
+  }
+  join: column_comparison {
+    sql_on: (${table_comparison.schema_name}, ${table_comparison.table_name}) = (${column_comparison.schema_name}, ${column_comparison.table_name}) ;;
+    relationship: one_to_many
+  }
+
+}
