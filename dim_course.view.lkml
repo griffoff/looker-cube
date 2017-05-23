@@ -41,6 +41,11 @@ view: dim_course {
     sql: ${TABLE}.COURSENAME ;;
 
     link: {
+      label:"View in Analytics Diagnostic Tool"
+      url: "https://analytics-tools.cengage.info/diagnostictool/#/course/view/production/course-key/{{dim_course.coursekey._value}}"
+    }
+
+    link: {
       label: "Engagement Toolkit Looker"
       url: "https://cengage.looker.com/dashboards/test::engagement_toolkit?filter_course={{dim_course.coursekey._value}}"
     }
@@ -130,6 +135,6 @@ view: dim_course {
   measure: count {
     label: "# Course Sections"
     type: count
-    drill_fields: [coursename]
+    drill_fields: [dim_institution.institutionname, coursekey, coursename, dim_start_date.calendarmonthname, fact_activation_by_course.total_noofactivations]
   }
 }
