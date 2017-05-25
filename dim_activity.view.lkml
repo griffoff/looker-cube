@@ -48,7 +48,8 @@ view: dim_activity {
             when a.assigned in (2, 3) then 'unassigned'
             when a.scorable = 1 then 'practice'
             else 'nonscorable'
-        end as status
+        end as status,
+        case when a.assigned not in (2, 3) then 1 else 0 end as available
       FROM dw_ga.dim_activity a
       ;;
       sql_trigger_value: select count(*) from dw_ga.dim_activity ;;
@@ -246,7 +247,7 @@ view: dim_activity {
   }
 
   measure:  not_practice_or_graded_percent {
-    label: "% not practice or gradable"
+    label: "% Not practice or gradable"
     description: "proportion of times activity was neither practice or gradable"
     type: number
     #sql:  ${count} - (${count_practice} + ${count_practice})/${count};; --- Calculation was not adding up this is the old calculation. Below is new. Please correct if I misunderstood (Chip)
@@ -261,12 +262,17 @@ view: dim_activity {
   }
 
   measure:  unassigned_activity_percent {
-    label: "% activity unassigned from Master LP"
+    label: "% Activity unassigned from Master LP"
     description: "Percent of time a given activity was removed from the master learning path by an instructor."
     type:  number
     sql: (${fact_activation_by_product.activations_for_isbn}-${fact_activation_by_course.total_noofactivations}) / nullif(${fact_activation_by_product.activations_for_isbn}, 0) ;;
     value_format_name: percent_1
     hidden: no
+    html:
+    <div style="width:100%;">
+    <div style="width: {{rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">{{rendered_value}}</div>
+    </div>
+    ;;
   }
 
   measure:  gradable_vs_practice {
@@ -285,6 +291,12 @@ view: dim_activity {
     hidden: yes
     type: string
     sql: ${TABLE}.status ;;
+  }
+
+  dimension: available {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.available ;;
   }
 
   dimension: activitychangetype {
@@ -335,7 +347,6 @@ view: dim_activity {
   measure: nonscorable_course_user_count {
     label: "# Activations for courses where activity is not scored"
     type: sum_distinct
-    type: sum_distinct
     sql: ${fact_activation_by_course.noofactivations_base} ;;
     sql_distinct_key: ${fact_activation_by_course.courseid} ;;
     filters: {
@@ -343,6 +354,44 @@ view: dim_activity {
       value: "nonscorable"
     }
     drill_fields: [institutionDetails*]
+  }
+
+  measure: available_course_user_count {
+    label: "# Activations for courses where activity is available"
+    type: sum_distinct
+    sql: ${fact_activation_by_course.noofactivations_base} ;;
+    sql_distinct_key: ${fact_activation_by_course.courseid} ;;
+    filters: {
+      field: available
+      value: "1"
+    }
+    drill_fields: [institutionDetails*]
+  }
+
+  measure: percent_usage {
+    label: "% Usage"
+    type: number
+    description: "% of students who did this, of all the students who where exposed to this"
+    sql: ${fact_siteusage.usercount} / nullif(${available_course_user_count}, 0) ;;
+    value_format_name: percent_1
+    html:
+    <div style="width:100%;">
+    <div style="width: {{rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">{{rendered_value}}</div>
+    </div>
+    ;;
+  }
+
+  measure: percent_usage_of_gradable {
+    label: "% Usage (of gradable)"
+    type: number
+    description: "% of students who did this, of all the students who where on courses where this was gradable"
+    sql: ${fact_siteusage.usercount} / nullif(${gradable_course_user_count}, 0) ;;
+    value_format_name: percent_1
+    html:
+    <div style="width:100%;">
+    <div style="width: {{rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">{{rendered_value}}</div>
+    </div>
+    ;;
   }
 
 }

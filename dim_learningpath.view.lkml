@@ -91,10 +91,30 @@ view: dim_learningpath {
           ) f on lp.learningpathid = f.learningpathid
           --where lp.learningtype = 'Activity'
     )
+    --derive the most popular day of activity, for sorting purposes (assuming the most popular day is when it is scheduled in the LP)
+   ,o as (
+      select
+        fsu.daysfromcoursestart
+        ,decode(dlp.masternodeid, -1, dlp.learningpathid, dlp.masternodeid) as lpid
+        ,dense_rank() over (partition by decode(dlp.masternodeid, -1, dlp.learningpathid, dlp.masternodeid) order by count(*) desc ) as r
+      from dw_ga.fact_siteusage fsu
+      inner join dw_ga.dim_learningpath dlp on fsu.learningpathid = dlp.learningpathid
+      where daysfromcoursestart > 0
+      group by 1, 2
+      order by 3, 2
+    )
+    ,lporder as
+    (
+      select daysfromcoursestart, lpid
+      from o
+      where r = 1
+    )
     select
-        *
-        ,min(lowest_level_sort_base) over (partition by lowest_level) as lowest_level_sort
+        lp.*
+        ,min(lowest_level_sort_base) over (partition by lowest_level) as lowest_level_sort_by_data
+        ,min(lporder.daysfromcoursestart) over (partition by lowest_level) as lowest_level_sort_by_usage
     from lp
+    left join lporder on decode(lp.masternodeid, -1, lp.learningpathid, lp.masternodeid) = lporder.lpid
     ;;
 
     sql_trigger_value: select count(*) from dw_ga.dim_learningpath ;;
@@ -239,20 +259,27 @@ view: dim_learningpath {
     sql: ${TABLE}.LEVEL9 ;;
   }
 
-  dimension:  lowest_level_sort {
-    label: "Learning path sort order"
+  dimension:  lowest_level_sort_by_usage {
+    label: "Learning path sort order (by relative usage date)"
     type:  number
     hidden: yes
-    sql: ${TABLE}.lowest_level_sort ;;
+    sql: ${TABLE}.lowest_level_sort_by_usage ;;
+    skip_drill_filter: yes
+  }
+
+  dimension:  lowest_level_sort_by_data {
+    label: "Learning path sort order (by data)"
+    type:  number
+    hidden: yes
+    sql: ${TABLE}.lowest_level_sort_by_data ;;
     skip_drill_filter: yes
   }
 
   dimension: lowest_level {
     label: "Learning Path Activity Title"
     type: string
-    #sql: COALESCE(${TABLE}.LEVEL9,${TABLE}.LEVEL8,${TABLE}.LEVEL7,${TABLE}.LEVEL6,${TABLE}.LEVEL5,${TABLE}.LEVEL4,${TABLE}.LEVEL3,${TABLE}.LEVEL2) ;;
     sql: ${TABLE}.lowest_level ;;
-    order_by_field: lowest_level_sort
+    order_by_field: lowest_level_sort_by_data
   }
 
   dimension:  lowest_level_category {

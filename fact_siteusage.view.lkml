@@ -241,7 +241,7 @@ view: fact_siteusage {
   }
 
   measure: session_count {
-    label: "No. of Sessions"
+    label: "# Sessions"
     type: count_distinct
     sql: ${TABLE}.sessionnumber ;;
     value_format: "#,##0"
@@ -277,15 +277,22 @@ view: fact_siteusage {
     sql: ${TABLE}.USERID ;;
   }
 
+  measure: usercount {
+    label: "# Users"
+    type: count_distinct
+    sql: ${partyid} ;;
+    hidden: no
+  }
+
   measure: percent_of_activations {
     label: "% of Activations (used / exposed)"
     description: "
-    No. of people / Total activations is this context
+    No. of people / Total activations in this context
     i.e.
       no. of people who accessed vs no. of people who were exposed to this feature
     "
     type: number
-    sql: COALESCE(${dim_party.count} / NULLIF(${fact_activation_by_course.total_noofactivations}, 0.0),0) ;;
+    sql: COALESCE(${usercount} / NULLIF(${fact_activation_by_course.total_noofactivations}, 0.0),0) ;;
     value_format_name: percent_1
     html:
       <div style="width:100%;">
@@ -299,7 +306,7 @@ view: fact_siteusage {
     description: "
     No. of people who accessed vs. all activations/user possible whether they where exposed or whether the activity/item was hidden in their learning path"
     type:  number
-    sql: COALESCE(${dim_party.count} / NULLIF(${fact_activation_by_product.activations_for_isbn}, 0.0),0) ;;
+    sql: COALESCE(${usercount} / NULLIF(${fact_activation_by_product.activations_for_isbn}, 0.0),0) ;;
     value_format_name: percent_1
     html:
       <div style="width:100%;">

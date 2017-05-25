@@ -197,7 +197,17 @@ explore: fact_activity {
     sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
     #sql_on: ${fact_activity.courseid} = ${dim_course.courseid} ;;
     relationship: many_to_one
-    type: full_outer
+    #type: full_outer
+  }
+
+  join:  fact_activityoutcome {
+    sql_on: (${dim_course.courseid}, ${dim_activity.activityid}) = (${fact_activityoutcome.courseid}, ${fact_activityoutcome.activityid}) ;;
+    relationship: one_to_many
+  }
+
+  join:  fact_siteusage {
+    sql_on: (${dim_course.courseid}, ${dim_activity.activityid}) = (${fact_siteusage.courseid}, ${fact_siteusage.activityid}) ;;
+    relationship: one_to_many
   }
 
   join: dim_relative_to_start_date {
