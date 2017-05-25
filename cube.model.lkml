@@ -200,10 +200,10 @@ explore: fact_activity {
     #type: full_outer
   }
 
-  join:  fact_activityoutcome {
-    sql_on: (${dim_course.courseid}, ${dim_activity.activityid}) = (${fact_activityoutcome.courseid}, ${fact_activityoutcome.activityid}) ;;
-    relationship: one_to_many
-  }
+#   join:  fact_activityoutcome {
+#     sql_on: (${dim_course.courseid}, ${dim_activity.activityid}) = (${fact_activityoutcome.courseid}, ${fact_activityoutcome.activityid}) ;;
+#     relationship: one_to_many
+#   }
 
   join:  fact_siteusage {
     sql_on: (${dim_course.courseid}, ${dim_activity.activityid}) = (${fact_siteusage.courseid}, ${fact_siteusage.activityid}) ;;

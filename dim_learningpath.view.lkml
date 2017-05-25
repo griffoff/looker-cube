@@ -68,6 +68,7 @@ view: dim_learningpath {
           ,lp.parentlearningpathid
           ,lp.masternodeid
           ,f.firstdatekey
+          ,f.global_avg_score
           ,case when lp.masternodeid = -1 then -1 else min(f.firstdatekey) over (partition by lp.masternodeid) end as masterfirstdatekey
           ,case when lp.masternodeid = -1
             then
@@ -85,7 +86,9 @@ view: dim_learningpath {
       LEFT JOIN DW_GA.DIM_MASTER_NODE m  ON lp.MASTERNODEID = m.MASTERNODEID and lp.masternodeid != -1
       left join (
           select
-              learningpathid, min(startdatekey) as firstdatekey
+              learningpathid
+              ,min(startdatekey) as firstdatekey
+              ,nullif(avg(case when SCORE > 100 then 100 when SCORE <0 then null else SCORE end / 100.0), 0) as global_avg_score
           from dw_ga.fact_activityoutcome
           group by 1
           ) f on lp.learningpathid = f.learningpathid
@@ -352,6 +355,12 @@ view: dim_learningpath {
     sql:  ${count_gradable}/${count};;
     value_format_name: percent_1
     hidden: yes
+  }
+
+  measure: global_avg_score {
+    label: "Global Avg. Score"
+    type: min
+    value_format_name: percent_1
   }
 }
 

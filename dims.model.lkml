@@ -16,11 +16,6 @@ explore:  dim_product {
   label: "Product"
   extension: required
 
-  join:  productfamilymap {
-    sql_on: ${dim_product.productfamily} = ${productfamilymap.prod_family_description} ;;
-    relationship: many_to_one
-  }
-
 #   join: activations_dashboard_20170330 {
 #     sql_on: ${dim_product.discipline} = ${activations_dashboard_20170330.discipline}   ;;
 #     relationship: many_to_one

@@ -1,23 +1,3 @@
-view: productfamilymap {
-  label: "Product"
-  sql_table_name:  dev.zpg.productfamilymap;;
-
-  dimension: prod_family_description {
-    type:  string
-    sql: ${TABLE}.prod_family_description ;;
-    primary_key: yes
-    hidden:  yes
-  }
-
-  dimension: discipline_description {
-    label: "Discipline Description (E1)"
-    group_label: "Categories"
-    type: string
-    sql: ${TABLE}.discipline_description ;;
-  }
-
-}
-
 view: dim_product {
   label: "Product"
   #sql_table_name: DW_GA.DIM_PRODUCT ;;
@@ -211,8 +191,8 @@ CASE
        - also History includes U.S. History
       "
     link: {
-      label: "Engagement Toolkit (Dev)"
-      url: "http://dashboard-dev.cengage.info/engtoolkit/discipline/{{value}}"
+      label: "Engagement Toolkit"
+      url: "http://dashboard.cengage.info/engtoolkit/discipline/{{value}}"
     }
 
     drill_fields: [productfamily]
@@ -258,9 +238,9 @@ CASE
     group_label: "Categories"
     sql: ${TABLE}.DISCIPLINE ;;
 
-    link: {
-      label: "Engagement Toolkit (Dev)"
-      url: "http://dashboard-dev.cengage.info/engtoolkit/discipline/{{value}}"
+   link: {
+      label: "Engagement Toolkit"
+      url: "http://dashboard.cengage.info/engtoolkit/discipline/{{hed_discipline._value}}"
     }
   }
 

@@ -25,13 +25,13 @@ view: dim_course {
     }
 
     link: {
-      label: "Engagement Toolkit (Dev)"
-      url: "http://dashboard-dev.cengage.info/engtoolkit/{{value}}"
+      label: "Engagement Toolkit"
+      url: "http://dashboard.cengage.info/engtoolkit/{{value}}"
     }
 
     link: {
-      label: "Engagement Toolkit - Discipline (Dev)"
-      url: "http://dashboard-dev.cengage.info/engtoolkit/discipline/{{dim_product.hed_discipline._value}}"
+      label: "Engagement Toolkit - Discipline"
+      url: "http://dashboard.cengage.info/engtoolkit/discipline/{{dim_product.hed_discipline._value}}"
     }
   }
 
@@ -51,13 +51,13 @@ view: dim_course {
     }
 
     link: {
-      label: "Engagement Toolkit - Discipline {{dim_product.discipline._value}} (Dev)"
-      url: "http://dashboard-dev.cengage.info/engtoolkit/discipline/{{dim_product.discipline._value}}"
+      label: "Engagement Toolkit"
+      url: "http://dashboard.cengage.info/engtoolkit/{{value}}"
     }
 
     link: {
-      label: "Engagement Toolkit (Live)"
-      url: "http://dashboard.cengage.info/engtoolkit/{{dim_course.coursekey._value}}"
+      label: "Engagement Toolkit - Discipline"
+      url: "http://dashboard.cengage.info/engtoolkit/discipline/{{dim_product.hed_discipline._value}}"
     }
   }
 

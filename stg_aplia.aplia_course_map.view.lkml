@@ -1,7 +1,7 @@
 view: aplia_course_map {
-  view_label: "Aplia Course"
+  view_label: "Course"
   derived_table: {
-    sql: select distinct guid,course_id from stg_aplia.course;;
+    sql: select distinct guid,course_id,nullif(mindtap_course_yn, '') as mindtap_course_yn from stg_aplia.course;;
     sql_trigger_value: select count(*) from stg_aplia.course ;;
     }
 
@@ -15,6 +15,10 @@ view: aplia_course_map {
     hidden: yes
     type: string
     sql: ${TABLE}.GUID ;;
+  }
+  dimension: mindtap_course_yn {
+    hidden: yes
+    type: number
   }
   measure: count {
     label: "# Courses"

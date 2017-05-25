@@ -31,7 +31,7 @@ explore: olr_courses {
 
 explore: problem {
   extends: [dim_course]
-  label: "Aplia  - Problem"
+  label: "Aplia - Problem"
   join: apliacontent{
     sql_on: ${problem.problem_set_guid} = ${apliacontent.guid} ;;
     relationship: many_to_one
@@ -60,9 +60,52 @@ explore: problem {
   }
 
   join: dim_course {
-    sql_on: ${apliacontext.context_id} = ${dim_course.coursekey};;
+    view_label: " Cube - Course/Section"
+    sql_on: case when ${aplia_course_map.mindtap_course_yn} > 0 then ${apliacontext.reg_key} else ${apliacontext.context_id} end = ${dim_course.coursekey};;
     relationship: many_to_one
   }
+
+  join: course_facts {
+    view_label: " Cube - Course/Section"
+  }
+
+  join: dim_filter {
+    view_label: " Cube - Course/Section"
+  }
+
+  join: dim_product {
+    view_label: " Cube - Product"
+  }
+
+  join: dim_productplatform {
+    view_label: " Cube - Product"
+  }
+
+  join: products {
+    view_label: " Cube - Product"
+  }
+
+  join: dim_institution {
+    view_label: " Cube - Institution"
+  }
+
+  join: dim_location {
+    view_label: " Cube - Institution"
+  }
+
+  join: dim_start_date {
+    view_label: " Cube - Course Start Date"
+  }
+
+  join: fact_activation_by_course {
+    view_label: " Cube - Activations"
+  }
+
+  join: fact_activation_by_product {
+    view_label: " Cube - Activations"
+  }
+
+
 }
 
 explore: snapshot {

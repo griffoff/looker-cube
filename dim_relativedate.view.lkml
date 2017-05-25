@@ -88,7 +88,7 @@ view: dim_relativedate {
 
 view: dim_relative_to_start_date {
   extends: [dim_relativedate]
-  label: "Date - Course Start"
+  label: "Date - Course Start Date"
 }
 
 view: dim_relative_to_end_date {
