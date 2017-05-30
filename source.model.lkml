@@ -66,15 +66,16 @@ explore: problem {
     sql_on: ${apliacontext.reg_key} = ${dim_course.olr_course_key} ;;
     relationship: many_to_one
   }
-
+   join:  membership {
+     sql_on: ${course.guid} = ${membership.context_guid} ;;
+   }
    join: instructor {
      from: membership
      view_label: "Instructors"
      sql_on: course.guid = instructor.context_guid and instructor.role_guid = 'ROLE041651A500E908EF3A1E80000000' ;;
    }
-
    join:  apliauser {
-     sql_on: ${membership.user_guid} = ${apliauser.user_guid}
+     sql_on: ${membership.user_guid} = ${apliauser.guid}
      AND user_id not like '%aplia.com'
      AND user_id not like  '%cengage.com';;
    }
