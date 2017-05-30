@@ -19,7 +19,9 @@ view: aplia_course_map {
   dimension: mindtap_course_yn {
     hidden: yes
     type: number
+    sql: ${TABLE}.mindtap_course_yn ;;
   }
+
   measure: count {
     label: "# Courses"
     type: count
