@@ -74,8 +74,9 @@ explore: problem {
    }
 
    join:  apliauser {
-     sql_on: membership.user_guid = apliauser.user_guid;;
-     #not like '%aplia.com'/cengage.com - filter internal data
+     sql_on: ${membership.user_guid} = ${apliauser.user_guid}
+     AND user_id not like '%aplia.com'
+     AND user_id not like  '%cengage.com';;
    }
 
    join: student {
