@@ -67,23 +67,23 @@ explore: problem {
     relationship: many_to_one
   }
 
-#   join: instructor {
-#     from: membership
-#     view_label: "Instructors"
-#     sql_on: course.guid = instructor.context_guid and instructor.role_guid = 'ROLE041651A500E908EF3A1E80000000' ;;
-#   }
-#
-#   join:  aplia_user {
-#     sql_on: membership.user_guid = aplia_user.user_guid;;
-#     #not like '%aplia.com'/cengage.com - filter internal data
-#   }
-#
-#   join: student {
-#     from: membership
-#     view_label: "Students"
-#     sql_on: course.guid = student.context_guid and student.role_guid = 'ROLE041651A500E908EE3FFE80000000' ;;
-#     # count(student) > 2 - filter internal data
-#   }
+   join: instructor {
+     from: membership
+     view_label: "Instructors"
+     sql_on: course.guid = instructor.context_guid and instructor.role_guid = 'ROLE041651A500E908EF3A1E80000000' ;;
+   }
+
+   join:  apliauser {
+     sql_on: membership.user_guid = apliauser.user_guid;;
+     #not like '%aplia.com'/cengage.com - filter internal data
+   }
+
+   join: student {
+     from: membership
+     view_label: "Students"
+     sql_on: course.guid = student.context_guid and student.role_guid = 'ROLE041651A500E908EE3FFE80000000' ;;
+     # count(student) > 2 - filter internal data
+   }
 
   join: course_facts {
     view_label: " Cube - Course/Section"
