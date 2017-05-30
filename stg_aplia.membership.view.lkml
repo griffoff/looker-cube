@@ -1,69 +1,159 @@
-view: stg_aplia_membership {
-  # # You can specify the table name if it's different from the view name:
-  # sql_table_name: my_schema_name.tester ;;
-  #
-  # # Define your dimensions and measures here, like this:
-  # dimension: user_id {
-  #   description: "Unique ID for each user that has ordered"
-  #   type: number
-  #   sql: ${TABLE}.user_id ;;
-  # }
-  #
-  # dimension: lifetime_orders {
-  #   description: "The total number of orders for each user"
-  #   type: number
-  #   sql: ${TABLE}.lifetime_orders ;;
-  # }
-  #
-  # dimension_group: most_recent_purchase {
-  #   description: "The date when each user last ordered"
-  #   type: time
-  #   timeframes: [date, week, month, year]
-  #   sql: ${TABLE}.most_recent_purchase_at ;;
-  # }
-  #
-  # measure: total_lifetime_orders {
-  #   description: "Use this for counting lifetime orders across many users"
-  #   type: sum
-  #   sql: ${lifetime_orders} ;;
-  # }
-}
+view: membership {
+  sql_table_name: STG_APLIA.MEMBERSHIP ;;
 
-# view: stg_aplia_membership {
-#   # Or, you could make this view a derived table, like this:
-#   derived_table: {
-#     sql: SELECT
-#         user_id as user_id
-#         , COUNT(*) as lifetime_orders
-#         , MAX(orders.created_at) as most_recent_purchase_at
-#       FROM orders
-#       GROUP BY user_id
-#       ;;
-#   }
-#
-#   # Define your dimensions and measures here, like this:
-#   dimension: user_id {
-#     description: "Unique ID for each user that has ordered"
-#     type: number
-#     sql: ${TABLE}.user_id ;;
-#   }
-#
-#   dimension: lifetime_orders {
-#     description: "The total number of orders for each user"
-#     type: number
-#     sql: ${TABLE}.lifetime_orders ;;
-#   }
-#
-#   dimension_group: most_recent_purchase {
-#     description: "The date when each user last ordered"
-#     type: time
-#     timeframes: [date, week, month, year]
-#     sql: ${TABLE}.most_recent_purchase_at ;;
-#   }
-#
-#   measure: total_lifetime_orders {
-#     description: "Use this for counting lifetime orders across many users"
-#     type: sum
-#     sql: ${lifetime_orders} ;;
-#   }
-# }
+  dimension: context_guid {
+    type: string
+    sql: ${TABLE}.CONTEXT_GUID ;;
+  }
+
+  dimension_group: enroll {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.ENROLL_DATE ;;
+  }
+
+  dimension: etextbook_purchased {
+    type: number
+    sql: ${TABLE}.ETEXTBOOK_PURCHASED ;;
+  }
+
+  dimension_group: grace_period_extension {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.GRACE_PERIOD_EXTENSION ;;
+  }
+
+  dimension: payment_status {
+    type: string
+    sql: ${TABLE}.PAYMENT_STATUS ;;
+  }
+
+  dimension: role_guid {
+    type: string
+    sql: ${TABLE}.ROLE_GUID ;;
+  }
+
+  dimension: rpt_alert_show_yn {
+    type: number
+    sql: ${TABLE}.RPT_ALERT_SHOW_YN ;;
+  }
+
+  dimension: second_term_credit_amount {
+    type: number
+    sql: ${TABLE}.SECOND_TERM_CREDIT_AMOUNT ;;
+  }
+
+  dimension_group: second_term_credit_applied {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.SECOND_TERM_CREDIT_APPLIED_DATE ;;
+  }
+
+  dimension: second_term_credit_applied_id {
+    type: number
+    sql: ${TABLE}.SECOND_TERM_CREDIT_APPLIED_ID ;;
+  }
+
+  dimension: second_term_credit_type {
+    type: number
+    sql: ${TABLE}.SECOND_TERM_CREDIT_TYPE ;;
+  }
+
+  dimension: section_guid {
+    type: string
+    sql: ${TABLE}.SECTION_GUID ;;
+  }
+
+  dimension: status {
+    type: string
+    sql: ${TABLE}.STATUS ;;
+  }
+
+  dimension: status_comment {
+    type: string
+    sql: ${TABLE}.STATUS_COMMENT ;;
+  }
+
+  dimension: student_id {
+    type: string
+    sql: ${TABLE}.STUDENT_ID ;;
+  }
+
+  dimension: student_status {
+    type: string
+    sql: ${TABLE}.STUDENT_STATUS ;;
+  }
+
+  dimension: textbook_purchased {
+    type: number
+    sql: ${TABLE}.TEXTBOOK_PURCHASED ;;
+  }
+
+  dimension: third_term_credit_amount {
+    type: number
+    sql: ${TABLE}.THIRD_TERM_CREDIT_AMOUNT ;;
+  }
+
+  dimension_group: third_term_credit_applied {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.THIRD_TERM_CREDIT_APPLIED_DATE ;;
+  }
+
+  dimension: third_term_credit_applied_id {
+    type: number
+    sql: ${TABLE}.THIRD_TERM_CREDIT_APPLIED_ID ;;
+  }
+
+  dimension: third_term_credit_type {
+    type: number
+    sql: ${TABLE}.THIRD_TERM_CREDIT_TYPE ;;
+  }
+
+  dimension: transfer_to_guid {
+    type: string
+    sql: ${TABLE}.TRANSFER_TO_GUID ;;
+  }
+
+  dimension: user_guid {
+    type: string
+    sql: ${TABLE}.USER_GUID ;;
+  }
+
+  measure: count {
+    type: count
+    drill_fields: []
+  }
+}

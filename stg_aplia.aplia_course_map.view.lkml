@@ -25,7 +25,9 @@ view: aplia_course_map {
   dimension: mindtap_course_yn {
     hidden: yes
     type: number
+    sql: ${TABLE}.mindtap_course_yn ;;
   }
+
   dimension_group: begin_date {
     type: time
     timeframes: [date, day_of_week, month_name, year]
