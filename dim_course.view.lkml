@@ -1,10 +1,26 @@
 view: dim_course {
   label: "Course / Section Details"
-  sql_table_name: DW_GA.DIM_COURSE ;;
+  #sql_table_name: DW_GA.DIM_COURSE ;;
+  derived_table: {
+    sql:
+    select dc.*, c.course_key as olr_course_key, c."#CONTEXT_ID" as olr_context_id
+    from dw_ga.dim_course dc
+    left join stg_clts.olr_courses c on dc.coursekey = c."#CONTEXT_ID";;
+
+    sql_trigger_value: select count(*) from dw_ga.dim_course ;;
+  }
 
   dimension: courseid {
     type: string
     sql: ${TABLE}.COURSEID ;;
+    hidden: yes
+  }
+
+  dimension: olr_course_key {
+    hidden: yes
+  }
+
+  dimension: olr_context_id {
     hidden: yes
   }
 

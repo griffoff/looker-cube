@@ -22,9 +22,11 @@ view: course {
     sql: ${TABLE}.ASSIGNMENT_SUBMISSION_YN ;;
   }
 
-  dimension: begin_date {
-    type: string
-    sql: ${TABLE}.BEGIN_DATE ;;
+  dimension_group: begin_date {
+    type: time
+    sql:to_timestamp(${TABLE}.begin_date,'MON DD YYYY HH12:MIAM');;
+    timeframes: [date,day_of_week,month_name,year]
+    hidden: yes
   }
 
   dimension: col_52 {
@@ -80,6 +82,7 @@ view: course {
   dimension: end_date {
     type: string
     sql: ${TABLE}.END_DATE ;;
+    hidden: yes
   }
 
   dimension: feedback_review_on_submit_yn {

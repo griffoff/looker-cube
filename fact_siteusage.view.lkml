@@ -110,7 +110,7 @@ view: fact_siteusage {
 
   dimension_group: eventdate {
     type: time
-    timeframes: [time, date, week, month]
+    timeframes: [time, hour, minute, date, week, month]
     sql: ${TABLE}.EVENTDATE ;;
   }
 
@@ -245,6 +245,7 @@ view: fact_siteusage {
     type: count_distinct
     sql: ${TABLE}.sessionnumber ;;
     value_format: "#,##0"
+    hidden: yes
   }
 
   dimension: partyid {

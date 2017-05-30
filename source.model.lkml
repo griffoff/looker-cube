@@ -61,9 +61,29 @@ explore: problem {
 
   join: dim_course {
     view_label: " Cube - Course/Section"
-    sql_on: case when ${aplia_course_map.mindtap_course_yn} > 0 then ${apliacontext.reg_key} else ${apliacontext.context_id} end = ${dim_course.coursekey};;
+    #use reg_key = coursekey
+    #sql_on: case when ${aplia_course_map.mindtap_course_yn} > 0 then ${apliacontext.reg_key} else ${apliacontext.context_id} end = ${dim_course.coursekey};;
+    sql_on: ${apliacontext.reg_key} = ${dim_course.olr_course_key} ;;
     relationship: many_to_one
   }
+
+#   join: instructor {
+#     from: membership
+#     view_label: "Instructors"
+#     sql_on: course.guid = instructor.context_guid and instructor.role_guid = 'ROLE041651A500E908EF3A1E80000000' ;;
+#   }
+#
+#   join:  aplia_user {
+#     sql_on: membership.user_guid = aplia_user.user_guid;;
+#     #not like '%aplia.com'/cengage.com - filter internal data
+#   }
+#
+#   join: student {
+#     from: membership
+#     view_label: "Students"
+#     sql_on: course.guid = student.context_guid and student.role_guid = 'ROLE041651A500E908EE3FFE80000000' ;;
+#     # count(student) > 2 - filter internal data
+#   }
 
   join: course_facts {
     view_label: " Cube - Course/Section"
