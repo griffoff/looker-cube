@@ -18,6 +18,8 @@ view: dim_course {
 
   dimension: olr_course_key {
     hidden: yes
+    type: string
+    sql: ${TABLE}.olr_course_key ;;
   }
 
   dimension: olr_context_id {
