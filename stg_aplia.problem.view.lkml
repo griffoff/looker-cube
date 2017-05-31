@@ -147,4 +147,11 @@ view: problem {
     type: count
     drill_fields: [problem_id, problem_title, question_display_num, question]
   }
+
+  dimension: used {
+    view_label: "problem - additional fields"
+    description: "whether this problem is linked to any courses"
+    sql: case when aplia_course_map.guid is null then 'never assigned' else 'assigned' end ;;
+    type: string
+  }
 }
