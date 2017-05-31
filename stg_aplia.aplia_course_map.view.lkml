@@ -2,22 +2,42 @@ view: aplia_course_map {
   view_label: "Course"
   derived_table: {
     sql:
-      select c.guid,course_id,nvl(nullif(mindtap_course_yn, ''),0) as mindtap_course_yn
+      with filter_instructors as (
+        --courses with instructors whose id ends with given endings
+        --or with "ademo" context-ids
+        select context_guid
+        from stg_aplia.membership m
+        inner join stg_aplia.apliauser au on m.user_guid= au.guid
+        where m.role_guid='ROLE041651A500E908EF3A1E80000000'
+        and (
+             user_id like '%aplia.com'
+          or user_id like  '%cengage.com'
+          )
+      )
+      ,filter_students as (
+        --courses with less than 3 students
+        select context_guid
+        from stg_aplia.membership m
+        where m.role_guid='ROLE041651A500E908EE3FFE80000000'
+        group by 1
+        having count(*) < 3
+      )
+      select c.guid,c.course_id,nvl(nullif(c.mindtap_course_yn, ''),0) as mindtap_course_yn
+              ,case
+                  when i.context_guid is null
+                      and s.context_guid is null
+                      and ac.context_id not like 'ademo%'
+                  then True else False
+               end as valid_course
               ,to_timestamp(max(begin_date), 'MON DD YYYY HH12:MIAM') as begin_date
               ,to_timestamp(max(end_date), 'MON DD YYYY HH12:MIAM') as end_date
-              ,case when user_id not like '%aplia.com' and user_id not like  '%cengage.com' then 'T' else 'F' end as valid_course
       from stg_aplia.course c
-      inner  join stg_aplia.membership m on m.context_guid = c.guid and m.role_guid = 'ROLE041651A500E908EF3A1E80000000'
-      inner join stg_aplia.apliauser au on m.user_guid= au.guid
-      group by 1, 2, 3,au.user_id;;
+      left join filter_instructors i on c.guid = i.context_guid
+      left join filter_students s on c.guid = s.context_guid
+      left join stg_aplia.apliacontext ac on c.guid = ac.guid
+      group by 1, 2, 3, 4;;
 
-    sql_trigger_value: select count(c.guid,course_id,nvl(nullif(mindtap_course_yn, ''),0) as mindtap_course_yn
-              ,to_timestamp(max(begin_date), 'MON DD YYYY HH12:MIAM') as begin_date
-              ,to_timestamp(max(end_date), 'MON DD YYYY HH12:MIAM') as end_date
-              ,case when user_id not like '%aplia.com' and user_id not like  '%cengage.com' then 'T' else 'F' end as valid_course)       from stg_aplia.course c
-      inner  join stg_aplia.membership m on m.context_guid = c.guid and m.role_guid = 'ROLE041651A500E908EF3A1E80000000'
-      inner join stg_aplia.apliauser au on m.user_guid= au.guid
-      group by 1, 2, 3,au.user_id ;;
+    sql_trigger_value: select count(*) from stg_aplia.course ;;
     }
 
   dimension: course_id {
@@ -35,6 +55,13 @@ view: aplia_course_map {
     hidden: yes
     type: number
     sql: ${TABLE}.mindtap_course_yn ;;
+  }
+
+  dimension: valid_course {
+    label: "Real Course"
+    description: "Flag to identify real courses, rather than test/demo/internal"
+    type: yesno
+    sql: ${TABLE}.valid_course ;;
   }
 
   dimension_group: begin_date {

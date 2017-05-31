@@ -7,6 +7,7 @@ include: "dims.model.lkml"
 # # Select the views that should be a part of this model,
 # # and define the joins that connect them together.
 #
+# CLTS
 explore: olr_courses {
   label: "CLTS - Courses"
   join: entities{
@@ -29,6 +30,7 @@ explore: olr_courses {
   }
 }
 
+# APLIA
 explore: problem {
   extends: [dim_course]
   label: "Aplia - Problem"
@@ -130,6 +132,7 @@ explore: problem {
 
 }
 
+# MindTap
 explore: snapshot {
   label: "MindTap - Snapshot"
 
