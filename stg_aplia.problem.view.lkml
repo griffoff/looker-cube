@@ -1,5 +1,19 @@
 view: problem {
-  sql_table_name: STG_APLIA.PROBLEM ;;
+  derived_table: {
+    sql: select p.* from stg_aplia.problem  AS p
+    inner JOIN prod.STG_APLIA.APLIACONTENT  AS ct ON p.PROBLEM_SET_GUID = ct.GUID
+    WHERE  length(p.guid) = 32
+    AND (p.guid like('%PL%')
+    or p.guid like('%QNA%'))
+    order by problem_id,problem_set_guid;;
+
+      sql_trigger_value: select count(*) from stg_aplia.problem  AS p
+    inner JOIN prod.STG_APLIA.APLIACONTENT  AS ct ON p.PROBLEM_SET_GUID = ct.GUID
+    WHERE  length(p.guid) = 32
+    AND (p.guid like('%PL%')
+    or p.guid like('%QNA%'));;
+    }
+ # sql_table_name: STG_APLIA.PROBLEM ;;
 
   dimension: problem_id {
     primary_key: yes
