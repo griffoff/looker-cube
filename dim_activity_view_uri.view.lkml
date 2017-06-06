@@ -87,6 +87,6 @@ view: dim_activity_view_uri {
   dimension: path {
     label: "Link"
     type: string
-    html: <a title="{{details_wrapped._value}}" href="{{value}}">{{value}}</a> ;;
+    html: <a title="{{details_wrapped._value}}" target="_blank" href="{{value}}">{{value}}</a> ;;
   }
 }
