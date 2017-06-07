@@ -73,13 +73,21 @@ view: dim_activity_view_uri {
   }
 
   dimension: details_inline {
+    group_label: "YouTube"
     label: "Details (YouTube)"
     sql: ${TABLE}.details_inline ;;
   }
 
+  dimension: path {
+    group_label: "YouTube"
+    label: "Link (YouTube)"
+    type: string
+    html: <a title="{{details_wrapped._value}}" target="_blank" href="{{value}}">{{value}}</a> ;;
+  }
+
   dimension: view_uri {
     label: "MindTap URI"
-    description: "The uri stored in mindtap for this content"
+    description: "The uri stored in mindtap for this content (VIEW_URI)"
   }
 
   dimension: details_wrapped {
@@ -87,9 +95,4 @@ view: dim_activity_view_uri {
     sql: ${TABLE}.details_wrapped ;;
   }
 
-  dimension: path {
-    label: "Link"
-    type: string
-    html: <a title="{{details_wrapped._value}}" target="_blank" href="{{value}}">{{value}}</a> ;;
-  }
 }
