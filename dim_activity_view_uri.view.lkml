@@ -29,8 +29,10 @@ view: dim_activity_view_uri {
             else parse_url(replace(trim(view_uri), 'https', 'http'), 1)
             end as parse
             ,view_uri
+            ,ref_id
       from stg_mindtap.activity
       where view_uri is not null
+      or ref_id is not null
     )
     ,urls as (
       select
@@ -44,6 +46,7 @@ view: dim_activity_view_uri {
           ,case when parse:scheme is null then parse end as details
           ,html_unescape(parse:src) as path
           ,view_uri
+          ,ref_id
       from a
     )
     select
@@ -54,6 +57,7 @@ view: dim_activity_view_uri {
             else parsed_url:scheme::string
             end as ContentSource
         ,path
+        ,ref_id
         ,view_uri
         ,case when view_uri ilike '%ilrn/integration/mindapp.do%' then 'CNOW asset'
               when view_uri ilike '%cnow.apps.ng.cengage.com%' then 'CNOW asset'
@@ -141,6 +145,11 @@ view: dim_activity_view_uri {
   dimension: view_uri {
     label: "MindTap URI"
     description: "The uri stored in mindtap for this content (VIEW_URI)"
+  }
+
+  dimension: ref_id {
+    label: "MindTap REF_ID"
+    description: "Used to link to detailed information in other systems like Aplia"
   }
 
   dimension: details_wrapped {
