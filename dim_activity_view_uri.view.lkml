@@ -97,8 +97,8 @@ view: dim_activity_view_uri {
               else 'Uncategorized'
               end as content_source_category
         ,replace(max(details:details) over (partition by path), 'ntt', '')::string as details_inline
-        ,replace(replace(max(details:details)  over (partition by path), '||', '\n'), 'ntt', '')::string as details_wrapped
-        ,split_part(max(details:details), 'By:', 2) as details_by
+        ,replace(replace(max(details:details) over (partition by path), '||', '\n'), 'ntt', '')::string as details_wrapped
+        ,split_part(max(details:details) over (partition by path), 'By:', 2) as details_by
     from urls;;
     sql_trigger_value: select count(*) from stg_mindtap.activity ;;
   }
@@ -123,6 +123,12 @@ view: dim_activity_view_uri {
     group_label: "YouTube"
     label: "Details (YouTube)"
     sql: ${TABLE}.details_inline ;;
+  }
+
+  dimension: details_by {
+    group_label: "YouTube"
+    label: "Channel (YouTube)"
+    sql: ${TABLE}.details_by ;;
   }
 
   dimension: path {
