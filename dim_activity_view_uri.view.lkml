@@ -80,6 +80,53 @@ view: dim_activity_view_uri {
     type: string
   }
 
+  dimension:content_source_category {
+    label: "Content Source Category"
+    description: "Primary app or asset utilized when adding activities to a learning path.  Note that a high percentage of 'uncategorized' LP additions appear to be recommended readings and could likely be considerd 'non-Mindtap activities'."
+    type:  string
+    sql: case when ${view_uri} ilike '%ilrn/integration/mindapp.do%' then 'CNOW asset'
+              when ${view_uri} ilike '%cnow.apps.ng.cengage.com%' then 'CNOW asset'
+              when ${view_uri} ilike '%/googledoc/%' then 'Google Docs (.docx, .pptx, .xlsx, .pdf, etc.)'
+              when ${view_uri} ilike '%static/iloveapps/weblink/weblink.html%' then 'WebLink (video, pdf, reading, etc.)'
+              when ${view_uri} ilike '%af/servlet/mindapp/entry%' then 'Aplia asset'
+              when ${view_uri} ilike '%aplia.apps.ng.cengage.com%' then 'Aplia asset'
+              when ${view_uri} ilike '%api.webassign.net/%' then 'WebAssign asset'
+              when ${view_uri} ilike '%/splash%' then 'WebAssign asset'
+              when ${view_uri} ilike '%/flashcard.html%' then 'MindApp - Flashcard'
+              when ${view_uri} ilike '%static/nbreader/ui/apps/nbreader/nbreader.html%' then 'MindApp - Reader'
+              when ${view_uri} ilike '%/static/nbapps/aa/%' then 'MindTap - Unknown APP (AA?)'
+              when ${view_uri} ilike '%/ui/index.html?aa.id%' then 'MindTap - Unknown APP (AA?)'
+              when ${view_uri} ilike '%/studycenter/%' then 'MindTap - Studycenter'
+              when ${view_uri} ilike '%/refId/%' then 'CONSTRUCT' -- Construct appears to be some special CXP asset, so needs to be above the CXP
+              when ${view_uri} ilike '%activityPath=CXP%' then 'CXP asset'
+              when ${view_uri} ilike '%/mindapp-cxp/take.html?%' then 'CXP asset'
+              when ${view_uri} ilike '%view.html%' then 'CAS-player'
+              when ${view_uri} ilike '%static/nbapps/media/activity.html%' then 'Media'
+              when ${view_uri} ilike '%youtube.com%' then 'YouTube'
+              when ${view_uri} ilike '%youseeu%' then 'YouSeeU'
+              when ${view_uri} ilike '%RSS%' then 'RSS Feed'
+              when ${view_uri} ilike '%DLMT/web/launch.aspx%' then 'Delmar'
+              when ${view_uri} ilike '%samapi/api/Appification/LaunchAssignment%' then 'SAM Asset'
+              when ${view_uri} ilike '%static/iloveapps/weblink/weblink.html%' then 'WebLink (video, pdf, reading, etc.)'
+              when ${view_uri} ilike '%static/iloveapps/kaltura/kaltura.html%' then 'Kaltura'
+              when ${view_uri} ilike '%lams/mindapp/learn.do%' then 'LAMS'
+              when ${view_uri} ilike '%static/iloveapps/enhancedinsite/enhancedinsite.html%' then 'InSite'
+              when ${view_uri} ilike '%insite2.cengage.com%' then 'InSite'
+              when ${view_uri} ilike '%we/mindtap/ssoauth%' then 'Vantage'
+              when ${view_uri} ilike '%Amazon%' then 'AWS file'
+              when ${view_uri} ilike '%activityPath=IMILAC%' then 'IMILAC'
+              when ${view_uri} ilike '%profileplus.cengage.com%' then 'ProfilePlus'
+              when ${view_uri} ilike '%college.cengage.com%' then 'college.cengage.com asset'
+              when ${view_uri} ilike '%questia%' then 'Questia'
+              when ${view_uri} ilike '%knewton%' then 'Knewton'
+              when ${view_uri} ilike '%/mindapp-non-mt-activity%' then 'non-MindTap activity'
+              when ${view_uri} ilike '%ng.cengage.com%' then 'ng.cengage.com'
+              when ${view_uri} ilike '%/static/iloveapps/onedrive/%' then 'ng.cengage.com'
+              when ${view_uri} ilike '%cerego%' then 'Cerego'
+              else 'Uncategorized'
+              end;;
+  }
+
   dimension: details_inline {
     label: "Details (YouTube)"
     sql: ${TABLE}.details_inline ;;
