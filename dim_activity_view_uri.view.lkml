@@ -42,7 +42,7 @@ view: dim_activity_view_uri {
               else parse
               end as parsed_url
           ,case when parse:scheme is null then parse end as details
-          ,coalesce(parse:path, html_unescape(parse:src), parse:host) path
+          ,html_unescape(parse:src) as path
           ,view_uri
       from a
     )
@@ -53,19 +53,11 @@ view: dim_activity_view_uri {
             then parsed_url:host::string
             else parsed_url:scheme::string
             end as ContentSource
-        ,case
-          when parse_url(path, 1):error is not null
-          then case when parse_url(view_uri, 1):error is null
-                      and view_uri like 'http%'
-                      and view_uri not like 'http://aplia.apps.ng.cengage.com%'
-                      and view_uri not like 'http://cnow.apps.ng.cengage.com%'
-                    then view_uri
-                    end
-          else path
-          end as path
+        ,path
         ,view_uri
         ,replace(max(details:details) over (partition by path), 'ntt', '')::string as details_inline
         ,replace(replace(max(details:details)  over (partition by path), '||', '\n'), 'ntt', '')::string as details_wrapped
+        ,split_part(max(details:details), 'By:', 2) as details_by
     from urls;;
     sql_trigger_value: select count(*) from stg_mindtap.activity ;;
   }
