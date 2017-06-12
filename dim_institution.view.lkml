@@ -3,8 +3,24 @@ view: dim_institution {
   sql_table_name: DW_GA.DIM_INSTITUTION ;;
 
   dimension: HED {
+    label: "HED flag"
+    description: "Flag to identify Higher-Ed data"
     type: string
     sql: CASE WHEN (select count(*) from looker_workshop.magellan_hed_entities h where h.entity_no = ${entity_no}) > 0 then 'HED' else 'Not HED' end ;;
+  }
+
+  dimension: HED_filter {
+    label: "HED filter"
+    description: "Flag to identify Higher-Ed data"
+    type:  yesno
+    sql: ${HED}.filterflag in (0, -1) ;;
+  }
+
+  dimension: is_external {
+    label: "Real Course"
+    description: "Flag to identify real courses, rather than test/demo/internal"
+    type: yesno
+    sql: ${TABLE}.filterflag in (0, -1) ;;
   }
 
   dimension: city {
@@ -117,4 +133,5 @@ view: dim_institution {
     type: count
     drill_fields: [institutionname]
   }
+
 }

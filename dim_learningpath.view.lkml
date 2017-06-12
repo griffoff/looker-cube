@@ -283,6 +283,11 @@ view: dim_learningpath {
     type: string
     sql: ${TABLE}.lowest_level ;;
     order_by_field: lowest_level_sort_by_data
+
+    link: {
+      label: "Explore Aplia question level data this activity"
+      url: "/explore/source/problem?fields=problem.problem_title,answer.avg_score,answer.count,assignment.count,course.count&f[assignment.mindlink_guid]={{ dim_activity_view_uri.ref_id._value }}"
+    }
   }
 
   dimension:  lowest_level_category {

@@ -33,6 +33,11 @@ view: dim_course {
     primary_key: yes
 
     link: {
+      label: "Explore Mindtap Learning Path for this Course/Section"
+      url: "/explore/cube/fact_activityoutcome?fields=dim_learningpath.lowest_level,dim_activity.activitysubcategory,fact_activityoutcome.score_avg,dim_user.count,&f[dim_course.coursekey]={{ value }}"
+    }
+
+    link: {
       label:"View in Analytics Diagnostic Tool"
       url: "https://analytics-tools.cengage.info/diagnostictool/#/course/view/production/course-key/{{value}}"
     }
