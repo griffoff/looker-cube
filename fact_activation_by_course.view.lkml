@@ -49,7 +49,7 @@ view: fact_activation_by_product {
   }
 
   measure: activations_for_isbn {
-    label: "Total activations for ISBN and Fiscal Year"
+    label: "Total activations for ISBN and Fiscal Year and whether it is LMS integrated"
     description: "The total number of activations for all courses for the ISBN started in the same fiscal year related to the current context
     e.g.
     at item level it will represent the no. of activations
