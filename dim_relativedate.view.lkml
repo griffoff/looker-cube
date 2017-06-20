@@ -84,6 +84,14 @@ view: dim_relativedate {
     sql: ${TABLE}.WEEKSNAME ;;
     order_by_field: weeks
   }
+
+  measure: max_weeks {
+    label: "Max Weeks"
+    description: "Latest week with activity"
+    type: number
+    sql: MAX(${TABLE}.WEEKS) ;;
+    type: number
+  }
 }
 
 view: dim_relative_to_start_date {

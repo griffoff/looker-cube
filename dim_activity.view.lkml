@@ -173,7 +173,7 @@ view: dim_activity {
   }
 
   measure: count {
-    label: "# Activities"
+    label: "# Courses with this Activity"
     description: "The count of courses containing an activity"
     type: count_distinct
     sql: ${dim_course.courseid} ;;
@@ -181,15 +181,25 @@ view: dim_activity {
   }
 
   measure:  count_gradable {
-    label: "# Gradable activities"
+    label: "# Gradable courses"
     description: "No. of courses with this as a gradable activity"
     type: count_distinct
     sql: case when ${gradable} = 'Graded' then ${dim_course.courseid} end;;
     hidden:  yes
   }
 
+  measure:  count_gradable_activity {
+    label: "# Gradable activities"
+    description: "No. of gradable activities"
+    type: count
+    filters: {
+      field: gradable
+      value: "Graded"
+    }
+  }
+
   measure:  count_practice {
-    label: "# Practice activities"
+    label: "# Practice courses"
     description: "No. of courses with this as a practice activity"
     type: count_distinct
     sql: case when ${gradable} != 'Graded' and ${scorable} = 'Scorable' then ${dim_course.courseid} end;;
@@ -197,7 +207,7 @@ view: dim_activity {
   }
 
   measure:  count_notscorable {
-    label: "# Non-scorable activities"
+    label: "# Non-scorable courses"
     description: "No. of courses with this as neither a practice or gradable activity"
     type: count_distinct
     sql: case when ${gradable} != 'Graded' and ${scorable} != 'Scorable' then ${dim_course.courseid} end;;
