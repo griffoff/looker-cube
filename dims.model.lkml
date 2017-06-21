@@ -159,6 +159,11 @@ explore: dim_learningpath {
     sql_on: ${dim_learningpath.learningpathid} = ${lp_node_map.learningpathid} ;;
     relationship: one_to_many
   }
+
+  join: dim_activity_view_uri {
+    sql_on: ${dim_learningpath.node_id} = ${dim_activity_view_uri.id} ;;
+    relationship: one_to_one
+  }
 }
 
 explore: dim_location {

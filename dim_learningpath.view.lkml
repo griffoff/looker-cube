@@ -7,6 +7,7 @@ view: lp_node_map {
       join dw_ga.dim_learningpath dl on f.learningpathid=dl.learningpathid
       join stg_mindtap.node n on f.id = n.id
       ;;
+      sql_trigger_value: select count(*) from dw_ga.fact_activity ;;
   }
 
   dimension: learningpathid {
@@ -112,15 +113,89 @@ view: dim_learningpath {
       from o
       where r = 1
     )
+    ,struct_choices as
+    (
+      select
+          lp.learningpathid
+          ,lp.lowest_level
+          ,plp.learninggroup
+          ,plp.learningunit
+          ,case when plp.learninggroup is null then 0 else count(*) over (partition by plp.learninggroup) end as similar_items
+      from lp
+      inner join dw_ga.parentlearningpath plp on lp.parentlearningpathid = plp.parentlearningpathid
+    )
+    ,struct as
+    (
+      select
+          learningpathid
+          ,first_value(learninggroup) over (partition by lowest_level order by similar_items desc) as folder
+          ,first_value(learningunit) over (partition by lowest_level order by similar_items desc) as chapter
+      from struct_choices
+    )
+    ,node_map as
+    (
+      select learningpathid, max(node_id) node_id
+      from ${lp_node_map.SQL_TABLE_NAME}
+      group by 1
+    )
     select
         lp.*
         ,min(lowest_level_sort_base) over (partition by lowest_level) as lowest_level_sort_by_data
         ,min(lporder.daysfromcoursestart) over (partition by lowest_level) as lowest_level_sort_by_usage
+        ,s.folder
+        ,s.chapter
+        ,case when count(distinct lp.lowest_level) over (partition by s.folder) < 10
+              then s.folder
+              else lp.lowest_level
+              end as compound_activity
+        ,case when count(distinct lp.lowest_level) over (partition by s.folder) < 10
+              then true
+              else false
+              end as is_compound_activity
+        ,node_map.node_id
     from lp
     left join lporder on decode(lp.masternodeid, -1, lp.learningpathid, lp.masternodeid) = lporder.lpid
+    left join struct s on lp.learningpathid = s.learningpathid
+    left join node_map on lp.learningpathid = node_map.learningpathid
+    order by lp.learningpathid
     ;;
 
     sql_trigger_value: select count(*) from dw_ga.dim_learningpath ;;
+  }
+
+  dimension: node_id {
+    hidden: yes
+  }
+
+  dimension:  lowest_level_group {
+    label: "Learning Path Activity Folder"
+    group_label: "NEW FIELDS"
+    description: "the text before ':' or blank if no colon exists in the text"
+    type: string
+    sql: case when array_size(split(${lowest_level}, ':')) = 2 then split_part(${lowest_level}, ':', 1) end ;;
+  }
+
+  dimension: folder {
+    group_label: "NEW FIELDS"
+    description: "based on existing 'parentlearningpath' - needs work to make it related to master"
+  }
+
+  dimension: chapter {
+    group_label: "NEW FIELDS"
+    description: "based on existing 'parentlearningpath' - needs work to make it related to master"
+
+  }
+
+  dimension: is_compound_activity {
+    group_label: "NEW FIELDS"
+    description: "'Yes' if activity is one of less than 10 activities in its parent folder"
+    type: yesno
+  }
+
+  dimension: compound_activity {
+    group_label: "NEW FIELDS"
+    description: "Activity name or Folder name if activity is one of less than 10 activities in its parent folder"
+
   }
 
   dimension: first_used_datekey {
@@ -294,12 +369,16 @@ view: dim_learningpath {
     label: "Learning Path Activity Group"
     description: "Categorization of learning path items into useful groups - groups are driven by product team requests"
     type: string
-    sql: case when ${lowest_level} ilike '%Mastery Training%' then 'Mastery Training'
+    sql: case
+              when ${dim_activity.APPLICATIONNAME} in ('CNOW.HW', 'APLIA') then 'Assessment'
+
+              when ${lowest_level} ilike '%Mastery Training%' then 'Mastery Training'
               when ${lowest_level} ilike '%Quiz%' then 'Quiz'
               when ${lowest_level} ilike '%Practice Test%' then 'Practice Test'
               when ${lowest_level} ilike '%COMPLETE Apply%' then 'Complete Apply'
               when ${lowest_level} ilike '%COMPLETE Research%' then 'Complete Research'
               when ${lowest_level} ilike '%START Zoom%' then 'Start Zoom'
+              when ${lowest_level} ilike '%Concept Check%' then 'Concept Check'
               --CJ
               when ${lowest_level} ilike '%Visual Summary%' then 'Visual Summary'
               when ${lowest_level} ilike '%Choose your path%' then 'You Decide - Part 1'
@@ -312,6 +391,12 @@ view: dim_learningpath {
               when ${lowest_level} ilike '%Post Test%' then 'Post Test'
               when ${lowest_level} ilike '%Real World Challenge%' then 'Real World Challenge'
               when ${lowest_level} ilike '%Exam%' then 'Exam'
+              --generic
+              when ${dim_activity.APPLICATIONNAME} = 'CENGAGE.READER' then 'Reading'
+              when ${dim_activity.APPLICATIONNAME} = 'CENGAGE.MEDIA' then 'Media'
+              when ${dim_activity.APPLICATIONNAME} = 'MINDAPP-GROVE' then 'Media Quiz'
+              --when ${dim_activity.APPLICATIONNAME} in ('CNOW.HW', 'APLIA') then 'Assessment'
+
               else 'Uncategorized'
               end;;
   }

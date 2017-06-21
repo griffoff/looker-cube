@@ -44,7 +44,9 @@ CASE
                WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Literature/Upper Level English' then 'Literature'
                ELSE dw_ga.dim_product.PUBLICATIONSERIES
         END
-    as discipline_rollup from dw_ga.dim_product;;
+    as discipline_rollup
+    from dw_ga.dim_product
+    order by productid;;
     sql_trigger_value: select count(*) from dw_ga.dim_product ;;
   }
 
