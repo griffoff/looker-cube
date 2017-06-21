@@ -38,6 +38,45 @@ view: lp_node_map {
 
 }
 
+view: lp_structure {
+  derived_table: {
+    sql:
+    with n as (
+      select
+          n.id, n.parent_id, split_part(n.node_type, '.', -1) as node_type, n.name, n.snapshot_id, n.created_date, n.origin_id
+          ,count(*) over (partition by n.parent_id) as siblings
+          ,coalesce(c.children, 0) as children
+          ,max(m.snapshot_id) over (partition by n.snapshot_id) as master_id
+      from stg_mindtap.node n
+      left join stg_mindtap.node m on n.origin_id = m.id
+      left join (select parent_id, count(*) as children from stg_mindtap.node group by 1) c on n.id = c.parent_id
+    )
+    select
+        n5.node_type as n5_type, n5.name as n5_name, n5.siblings as n5_siblings
+        ,n4.node_type as n4_type, n4.name as n4_name, n4.siblings as n4_siblings
+        ,n3.node_type as n3_type, n2.name as n3_name, n3.siblings as n3_siblings
+        ,n2.node_type as n2_type, n2.name as n2_name, n2.siblings as n2_siblings
+        ,n1.node_type as n1_type, n1.name as n1_name, n1.siblings as n1_siblings
+        ,n.node_type as node_type, n.name, n.siblings as siblings
+        ,n.snapshot_id
+        ,n0.id
+        ,n.children
+        ,count(*) as activities
+    from n n0
+    inner join n on n0.origin_id = n.id
+    inner join n n1 on n.parent_id = n1.id
+    left join n n2 on n1.parent_id = n2.id
+    left join n n3 on n2.parent_id = n3.id
+    left join n n4 on n3.parent_id = n4.id
+    left join n n5 on n4.parent_id = n5.id
+    where n.children = 0
+    group by 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21
+    order by n0.id
+    ;;
+    sql_trigger_value: select count(*) from stg_mindtap.node ;;
+  }
+}
+
 view: dim_learningpath {
   label: "Learning Path"
   #sql_table_name: DW_GA.DIM_LEARNINGPATH ;;
@@ -47,7 +86,7 @@ view: dim_learningpath {
     with lp as (
       select
           lp.learningpathid
-          ,lp.learningcourse
+          ,max(m.mastercoursename) over (partition by lp.learningcourse) as learningcourse
           ,coalesce(m.level1, lp.level1) as level1
           ,coalesce(m.level2, lp.level2) as level2
           ,coalesce(m.level3, lp.level3) as level3
@@ -118,6 +157,7 @@ view: dim_learningpath {
       select
           lp.learningpathid
           ,lp.lowest_level
+          ,lp.learningcourse
           ,plp.learninggroup
           ,plp.learningunit
           ,case when plp.learninggroup is null then 0 else count(*) over (partition by plp.learninggroup) end as similar_items
@@ -128,8 +168,8 @@ view: dim_learningpath {
     (
       select
           learningpathid
-          ,first_value(learninggroup) over (partition by lowest_level order by similar_items desc) as folder
-          ,first_value(learningunit) over (partition by lowest_level order by similar_items desc) as chapter
+          ,first_value(learninggroup) over (partition by learningcourse, lowest_level order by similar_items desc) as folder
+          ,first_value(learningunit) over (partition by learningcourse, lowest_level order by similar_items desc) as chapter
       from struct_choices
     )
     ,node_map as
@@ -143,7 +183,7 @@ view: dim_learningpath {
         ,min(lowest_level_sort_base) over (partition by lowest_level) as lowest_level_sort_by_data
         ,min(lporder.daysfromcoursestart) over (partition by lowest_level) as lowest_level_sort_by_usage
         ,s.folder
-        ,s.chapter
+        ,replace(replace(s.chapter, 'WEEK', 'CHAPTER'), 'MODULE', 'CHAPTER') as chapter
         ,case when count(distinct lp.lowest_level) over (partition by s.folder) < 10
               then s.folder
               else lp.lowest_level
@@ -153,10 +193,21 @@ view: dim_learningpath {
               else false
               end as is_compound_activity
         ,node_map.node_id
+        ,upper(case
+          when n1_type = 'LearningUnit' then n1_name
+          when n2_type = 'LearningUnit' then n2_name
+          when n3_type = 'LearningUnit' then n3_name
+          when n4_type = 'LearningUnit' then n4_name
+          when n5_type = 'LearningUnit' then n5_name
+          else replace(replace(s.chapter, 'WEEK', 'CHAPTER'), 'MODULE', 'CHAPTER')
+          end) as chapter_from_source
+        ,case when siblings < 10 and n1_type = 'Group' then n1_name else name end as compound_activity_from_source
+        ,case when siblings < 10 and n1_type = 'Group' then true else false end as is_compound_activity_from_source
     from lp
     left join lporder on decode(lp.masternodeid, -1, lp.learningpathid, lp.masternodeid) = lporder.lpid
     left join struct s on lp.learningpathid = s.learningpathid
     left join node_map on lp.learningpathid = node_map.learningpathid
+    left join ${lp_structure.SQL_TABLE_NAME} n on node_map.node_id = n.id
     order by lp.learningpathid
     ;;
 
@@ -183,7 +234,6 @@ view: dim_learningpath {
   dimension: chapter {
     group_label: "NEW FIELDS"
     description: "based on existing 'parentlearningpath' - needs work to make it related to master"
-
   }
 
   dimension: is_compound_activity {
@@ -195,6 +245,25 @@ view: dim_learningpath {
   dimension: compound_activity {
     group_label: "NEW FIELDS"
     description: "Activity name or Folder name if activity is one of less than 10 activities in its parent folder"
+
+  }
+
+  dimension: chapter_from_source {
+    group_label: "NEW FIELDS"
+    description: "(FROM mindtap source data)"
+  }
+
+  dimension: is_compound_activity_from_source {
+    group_label: "NEW FIELDS"
+    description: "'Yes' if activity is one of less than 10 activities in its parent folder
+    (FROM mindtap source data) "
+    type: yesno
+  }
+
+  dimension: compound_activity_from_source {
+    group_label: "NEW FIELDS"
+    description: "Activity name or Folder name if activity is one of less than 10 activities in its parent folder
+    (FROM mindtap source data) "
 
   }
 
