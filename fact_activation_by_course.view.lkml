@@ -3,7 +3,9 @@ view: fact_activation_by_product {
   derived_table: {
     sql: select
               by_product_fk as pk
-              ,isbn13,is_lms_integrated,date_granularity,sum(product_activations) as product_activations
+              ,isbn13,is_lms_integrated,date_granularity
+              ,sum(product_activations) as product_activations
+              ,count(distinct courseid) as activated_courses
           from (
             select distinct by_product_fk,isbn13,is_lms_integrated,date_granularity,institutionid,product_activations
             from ${fact_activation_by_course.SQL_TABLE_NAME}
@@ -68,7 +70,9 @@ view: fact_activation_by_product {
     at item level it will represent the no. of courses with activations
      with the same CORE TEXT ISBN and start fiscal year as the course where this item appears
     "
-    type: count_distinct
+    type: sum_distinct
+    sql: ${TABLE}.activated_courses ;;
+    sql_distinct_key: ${pk} ;;
     sql: ${pk} ;;
     drill_fields: [details*]
   }
