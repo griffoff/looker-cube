@@ -108,6 +108,15 @@ view: dim_activity {
     description: "The name of the application where the activity is located or created from. (ex: CNOW, Aplia, Lams, etc.)"
     type: string
     sql: ${TABLE}.APPLICATIONNAME ;;
+#     sql: Case
+#             WHEN ${TABLE}.APPLICATIONNAME = "CENGAGE.READER" then "Reader"
+#             WHEN ${TABLE}.APPLICATIONNAME = "MINDAPP-GROVE" and ${activitysubtype} = "media-quiz" then "Video Media/Quiz"
+#             WHEN ${TABLE}.APPLICATIONNAME = "MINDAPP-GROVE" and ${activitysubtype} = "branching" then "Branching"
+#           ELSE
+#             ${TABLE}.APPLICATIONNAME
+#           END
+#           ;;
+
   }
 
   dimension: gradable {
@@ -185,7 +194,7 @@ view: dim_activity {
     description: "No. of courses with this as a gradable activity"
     type: count_distinct
     sql: case when ${gradable} = 'Graded' then ${dim_course.courseid} end;;
-    hidden:  yes
+#     hidden:  yes
   }
 
   measure:  count_gradable_activity {
@@ -203,7 +212,7 @@ view: dim_activity {
     description: "No. of courses with this as a practice activity"
     type: count_distinct
     sql: case when ${gradable} != 'Graded' and ${scorable} = 'Scorable' then ${dim_course.courseid} end;;
-    hidden:  yes
+#     hidden:  yes
   }
 
   measure:  count_notscorable {
@@ -211,14 +220,15 @@ view: dim_activity {
     description: "No. of courses with this as neither a practice or gradable activity"
     type: count_distinct
     sql: case when ${gradable} != 'Graded' and ${scorable} != 'Scorable' then ${dim_course.courseid} end;;
-    hidden:  yes
+#     hidden:  yes
   }
 
   measure:  gradable_percent {
     label: "% Gradable"
     description: "proportion of times activity was gradable"
     type: number
-    sql:  ${count_gradable}/${count};;
+#     sql:  ${count_gradable}/${count};;
+    sql:  ${count_gradable}/nullif((${count_gradable}+${count_practice}+${count_notscorable}),0);;
     value_format_name:  percent_1
     hidden:  no
     html:
@@ -232,7 +242,8 @@ view: dim_activity {
     label: "% Practice"
     description: "proportion of times activity was practice"
     type: number
-    sql:  ${count_practice}/${count};;
+#     sql:  ${count_practice}/${count};;
+    sql:  ${count_practice}/nullif((${count_gradable}+${count_practice}+${count_notscorable}),0) ;;
     value_format_name:  percent_1
     hidden:  no
     html:
@@ -246,7 +257,8 @@ view: dim_activity {
     label: "% Non-scorable"
     description: "proportion of times activity was not practice or gradable e.g. reading activity"
     type: number
-    sql:  ${count_notscorable}/${count};;
+#     sql:  ${count_notscorable}/${count};;
+    sql:  ${count_notscorable}/nullif((${count_gradable}+${count_practice}+${count_notscorable}),0);;
     value_format_name:  percent_1
     hidden:  no
     html:
