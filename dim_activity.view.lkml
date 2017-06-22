@@ -417,7 +417,7 @@ view: dim_activity {
     label: "% Completed"
     type: number
     description: "% of students who completed this, of all the students who where exposed to this"
-    sql: ${fact_activityoutcome.usercount} / nullif(${available_course_user_count}, 0) ;;
+    sql: ${fact_activityoutcome.usercount_withscore} / nullif(${available_course_user_count}, 0) ;;
     value_format_name: percent_1
     html:
     <div style="width:100%;">

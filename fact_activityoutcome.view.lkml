@@ -374,6 +374,12 @@ view: fact_activityoutcome {
     label: "# of users completed"
   }
 
+  measure: usercount_withscore {
+    type: count_distinct
+    sql: case when ${score} > 0 then (${TABLE}.USERID) end ;;
+    label: "# of users completed with greater than 0 score"
+  }
+
   measure: count {
     type: count
     drill_fields: [id]
