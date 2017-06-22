@@ -1,19 +1,28 @@
 view: dim_institution {
   label: "Institution"
-  sql_table_name: DW_GA.DIM_INSTITUTION ;;
+  derived_table: {
+    sql:
+        select
+          i.*
+          ,case when h.entity_no is not null then 'HED' else 'Not HED' end as HED
+        from dw_ga.dim_institution i
+        left join (select distinct entity_no from looker_workshop.magellan_hed_entities) h on i.entity_no = h.entity_no
+        ;;
+        sql_trigger_value: select count(*) from dw_ga.dim_institution ;;
+  }
+#   sql_table_name: DW_GA.DIM_INSTITUTION ;;
 
   dimension: HED {
     label: "HED flag"
     description: "Flag to identify Higher-Ed data"
     type: string
-    sql: CASE WHEN (select count(*) from looker_workshop.magellan_hed_entities h where h.entity_no = ${entity_no}) > 0 then 'HED' else 'Not HED' end ;;
   }
 
   dimension: HED_filter {
     label: "HED filter"
     description: "Flag to identify Higher-Ed data"
     type:  yesno
-    sql: ${HED}.filterflag in (0, -1) ;;
+    sql: ${HED} = "HED" ;;
   }
 
   dimension: city {
