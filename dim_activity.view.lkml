@@ -221,14 +221,66 @@ view: dim_activity {
     type: count_distinct
     sql: case when ${gradable} != 'Graded' and ${scorable} != 'Scorable' then ${dim_course.courseid} end;;
 #     hidden:  yes
+#     type: count_distinct
+#     sql: ${dim_course.courseid} ;;
+#     filters: {
+#       field: status
+#       value: "nonscorable"
+#     }
+  }
+
+
+  measure:  gradable_exposure_percent {
+    label: "% Gradable - student level"
+    description: "Percent of student exposed to a given activity marked gradable by an instructor (counts towards student grade)"
+    type: number
+#     sql:  ${count_gradable}/${count};;
+    sql:  ${gradable_course_user_count}/${denominator_student_exposure_percent_calcs} ;;
+    value_format_name:  percent_1
+    hidden:  no
+    html:
+    <div style="width:100%;">
+    <div style="width: {{rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">{{rendered_value}}</div>
+    </div>
+    ;;
+  }
+
+  measure:  practice_exposure_percent {
+    label: "% Practice - student level"
+    description: "Percent of students exposed to a given activity marked as practice by an instructor (scoreable but does not count torwards student's grade)"
+    type: number
+#     sql:  ${count_practice}/${count};;
+    sql:  ${practice_course_user_count}/${denominator_student_exposure_percent_calcs} ;;
+    value_format_name:  percent_1
+    hidden:  no
+    html:
+    <div style="width:100%;">
+    <div style="width: {{rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">{{rendered_value}}</div>
+    </div>
+    ;;
+  }
+
+  measure:  notscorable_exposure_percent {
+    label: "% Non-scorable - student level"
+    description: "Percent of students exposed to a given activity that an instructor has deemed not scoreable (e.g. a reading activity)"
+    type: number
+#     sql:  ${count_notscorable}/${count};;
+    sql:  ${nonscorable_course_user_count}/${denominator_student_exposure_percent_calcs};;
+    value_format_name:  percent_1
+    hidden:  no
+    html:
+    <div style="width:100%;">
+    <div style="width: {{rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">{{rendered_value}}</div>
+    </div>
+    ;;
   }
 
   measure:  gradable_percent {
-    label: "% Gradable"
-    description: "proportion of times activity was gradable"
+    label: "% Gradable - course level"
+    description: "Percent of courses where a given activity was gradable"
     type: number
 #     sql:  ${count_gradable}/${count};;
-    sql:  ${count_gradable}/nullif((${count_gradable}+${count_practice}+${count_notscorable}),0);;
+    sql:  ${count_gradable}/${denominator_course_percent_calcs};;
     value_format_name:  percent_1
     hidden:  no
     html:
@@ -239,11 +291,11 @@ view: dim_activity {
   }
 
   measure:  practice_percent {
-    label: "% Practice"
-    description: "proportion of times activity was practice"
+    label: "% Practice - course level"
+    description: "Percent of courses where a given activity was scorable but did not count towards a student's grade"
     type: number
 #     sql:  ${count_practice}/${count};;
-    sql:  ${count_practice}/nullif((${count_gradable}+${count_practice}+${count_notscorable}),0) ;;
+    sql:  ${count_practice}/${denominator_course_percent_calcs};;
     value_format_name:  percent_1
     hidden:  no
     html:
@@ -254,11 +306,11 @@ view: dim_activity {
   }
 
   measure:  notscorable_percent {
-    label: "% Non-scorable"
-    description: "proportion of times activity was not practice or gradable e.g. reading activity"
+    label: "% Non-scorable - course level"
+    description: "Percent of courses where a given activity was not practice or gradable (e.g. reading activity)"
     type: number
 #     sql:  ${count_notscorable}/${count};;
-    sql:  ${count_notscorable}/nullif((${count_gradable}+${count_practice}+${count_notscorable}),0);;
+    sql:  ${count_notscorable}/${denominator_course_percent_calcs};;
     value_format_name:  percent_1
     hidden:  no
     html:
@@ -266,6 +318,16 @@ view: dim_activity {
     <div style="width: {{rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">{{rendered_value}}</div>
     </div>
     ;;
+  }
+
+  measure: denominator_course_percent_calcs {
+    sql: nullif((${count_gradable}+${count_practice}+${count_notscorable}),0) ;;
+    hidden: yes
+  }
+
+  measure: denominator_student_exposure_percent_calcs {
+    sql: nullif((coalesce(${gradable_course_user_count},0)+coalesce(${practice_course_user_count},0)+coalesce(${nonscorable_course_user_count},0)),0) ;;
+    hidden: yes
   }
 
   measure:  not_practice_or_graded_percent {
