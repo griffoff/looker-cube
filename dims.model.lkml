@@ -41,6 +41,11 @@ explore: dim_course {
   extension: required
   extends: [dim_institution, dim_product]
 
+  join: olr_courses {
+    sql_on: ${dim_course.coursekey} = ${olr_courses.context_id};;
+    relationship: one_to_one
+  }
+
   join: course_facts {
     sql_on: ${dim_course.courseid} = ${course_facts.courseid} ;;
     relationship: one_to_one
@@ -132,6 +137,14 @@ explore: dim_eventtype {
 
 explore: dim_learningpath {
   extension: required
+
+  always_filter: {
+    filters: {
+      field: dim_learningpath.learningtype
+      value: "Activity"
+    }
+  }
+
   #- join: parentlearningpath
   #  type: left_outer
   #  sql_on: ${dim_learningpath.parentlearningpathid} = ${parentlearningpath.parentlearningpathid}

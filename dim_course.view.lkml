@@ -3,11 +3,18 @@ view: dim_course {
   #sql_table_name: DW_GA.DIM_COURSE ;;
   derived_table: {
     sql:
-    select dc.*, c.course_key as olr_course_key, c."#CONTEXT_ID" as olr_context_id
+    select dc.*
+          ,c.course_key as olr_course_key
+          ,c."#CONTEXT_ID" as olr_context_id
+          ,c.mag_acct_id
     from dw_ga.dim_course dc
     left join stg_clts.olr_courses c on dc.coursekey = c."#CONTEXT_ID";;
 
     sql_trigger_value: select count(*) from dw_ga.dim_course ;;
+  }
+
+  dimension: mag_acct_id {
+    hidden: yes
   }
 
   dimension: courseid {
@@ -35,6 +42,11 @@ view: dim_course {
     link: {
       label: "Explore Mindtap Learning Path for this Course/Section"
       url: "/explore/cube/fact_activityoutcome?fields=dim_learningpath.lowest_level,dim_activity.activitysubcategory,fact_activityoutcome.score_avg,dim_user.count,&f[dim_course.coursekey]={{ value }}"
+    }
+
+    link: {
+      label: "View Account in Magellan"
+      url: "http://magellan.cengage.com/Magellan2/#/Contacts/{{ olr_courses.mag_acct_id._value }}"
     }
 
     link: {

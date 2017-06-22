@@ -160,12 +160,6 @@ explore: fact_activityoutcome {
 explore: fact_activity {
   label: "Instructor Modifications"
   extends: [dim_course, dim_learningpath]
-  always_filter: {
-    filters: {
-      field: dim_learningpath.learningtype
-      value: "Activity"
-    }
-  }
 
   join: dim_eventtype {
     sql_on: ${fact_activity.eventtypeid} = ${dim_eventtype.eventtypeid} ;;

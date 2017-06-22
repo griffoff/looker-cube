@@ -463,8 +463,6 @@ view: dim_learningpath {
       url: "/explore/cube/fact_activityoutcome?fields=dim_learningpath.chapter,dim_learningpath.lowest_level_category,dim_learningpath.lowest_level,dim_activity.APPLICATIONNAME,dim_activity.activitysubcategory,dim_learningpath.count,&f[dim_learningpath.lowest_level_category]={{ value }}"
     }
     sql: case
-              when ${dim_activity.APPLICATIONNAME} in ('CNOW.HW', 'APLIA')
-                    or trim(${dim_activity.activitysubcategory}) in ('HOMEWORK', 'ASSESSMENT') then 'Assessment'
 
               when ${lowest_level} ilike '%Mastery Training%' then 'Mastery Training'
               when ${lowest_level} ilike '%Quiz%' then 'Quiz'
@@ -486,6 +484,9 @@ view: dim_learningpath {
               when ${lowest_level} ilike '%Real World Challenge%' then 'Real World Challenge'
               when ${lowest_level} ilike '%Exam%' then 'Exam'
               --generic
+              when ${dim_activity.APPLICATIONNAME} in ('CNOW.HW', 'APLIA')
+                    or trim(${dim_activity.activitysubcategory}) in ('HOMEWORK', 'ASSESSMENT') then 'Assessment'
+
               when ${dim_activity.APPLICATIONNAME} = 'CENGAGE.READER' or ${dim_activity.activitysubcategory} = 'READING' then 'Reading'
               when ${dim_activity.APPLICATIONNAME} = 'CENGAGE.MEDIA' or ${dim_activity.activitysubcategory} = 'MEDIA' then 'Media'
               when ${dim_activity.APPLICATIONNAME} = 'MINDAPP-GROVE' then 'Media Quiz'
