@@ -283,6 +283,7 @@ view: dim_activity {
     <div style="width: {{rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">{{rendered_value}}</div>
     </div>
     ;;
+    drill_fields: [institutionDetails*]
   }
 
   measure:  gradable_vs_practice {
@@ -378,11 +379,45 @@ view: dim_activity {
     drill_fields: [institutionDetails*]
   }
 
+#   measure: course_user_count {
+#     label: "# Activations for courses where activity should have been available"
+#     type: number
+#     sql: ${fact_activation_by_course.noofactivations_base} ;;
+#     sql_distinct_key: ${fact_activation_by_course.courseid} ;;
+#     drill_fields: [institutionDetails*]
+#   }
+
+#   measure: percent_exposure {
+#     label: "% Exposed"
+#     type: number
+#     description: "% of students to whom this item was in the learning path, of all the students on courses where this item was in the master"
+#     sql: ${available_course_user_count} / nullif(${course_user_count}, 0) ;;
+#     value_format_name: percent_1
+#     html:
+#     <div style="width:100%;">
+#     <div style="width: {{rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">{{rendered_value}}</div>
+#     </div>
+#     ;;
+#   }
+
   measure: percent_usage {
     label: "% Usage"
     type: number
     description: "% of students who did this, of all the students who where exposed to this"
-    sql: ${fact_siteusage.usercount} / nullif(${available_course_user_count}, 0) ;;
+    sql: greatest(${fact_siteusage.usercount}, ${fact_activityoutcome.usercount}) / nullif(${available_course_user_count}, 0) ;;
+    value_format_name: percent_1
+    html:
+    <div style="width:100%;">
+    <div style="width: {{rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">{{rendered_value}}</div>
+    </div>
+    ;;
+  }
+
+  measure: percent_completed {
+    label: "% Completed"
+    type: number
+    description: "% of students who completed this, of all the students who where exposed to this"
+    sql: ${fact_activityoutcome.usercount} / nullif(${available_course_user_count}, 0) ;;
     value_format_name: percent_1
     html:
     <div style="width:100%;">

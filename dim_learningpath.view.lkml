@@ -201,13 +201,23 @@ view: dim_learningpath {
           when n5_type = 'LearningUnit' then n5_name
           else replace(replace(s.chapter, 'WEEK', 'CHAPTER'), 'MODULE', 'CHAPTER')
           end) as chapter_from_source
+        ,min(lowest_level_sort_base) over (partition by upper(case
+                                                              when n1_type = 'LearningUnit' then n1_name
+                                                              when n2_type = 'LearningUnit' then n2_name
+                                                              when n3_type = 'LearningUnit' then n3_name
+                                                              when n4_type = 'LearningUnit' then n4_name
+                                                              when n5_type = 'LearningUnit' then n5_name
+                                                              else replace(replace(s.chapter, 'WEEK', 'CHAPTER'), 'MODULE', 'CHAPTER')
+                                                              end)) as chapter_sort_by_data
         ,case when siblings < 10 and n1_type = 'Group' then n1_name else name end as compound_activity_from_source
         ,case when siblings < 10 and n1_type = 'Group' then true else false end as is_compound_activity_from_source
+        ,min(a.ref_id) over (partition by lp.lowest_level) as ref_id
     from lp
     left join lporder on decode(lp.masternodeid, -1, lp.learningpathid, lp.masternodeid) = lporder.lpid
     left join struct s on lp.learningpathid = s.learningpathid
     left join node_map on lp.learningpathid = node_map.learningpathid
     left join ${lp_structure.SQL_TABLE_NAME} n on node_map.node_id = n.id
+    left join ${dim_activity_view_uri.SQL_TABLE_NAME} a on node_map.node_id = a.id
     order by lp.learningpathid
     ;;
 
@@ -224,6 +234,10 @@ view: dim_learningpath {
     description: "the text before ':' or blank if no colon exists in the text"
     type: string
     sql: case when array_size(split(${lowest_level}, ':')) = 2 then split_part(${lowest_level}, ':', 1) end ;;
+  }
+
+  dimension: ref_id {
+    hidden: yes
   }
 
   dimension: folder {
@@ -245,12 +259,18 @@ view: dim_learningpath {
   dimension: compound_activity {
     group_label: "NEW FIELDS"
     description: "Activity name or Folder name if activity is one of less than 10 activities in its parent folder"
+    html: {{rendered_value}} ;;
 
+  }
+
+  dimension: chapter_sort_by_data {
+    hidden: yes
   }
 
   dimension: chapter_from_source {
     group_label: "NEW FIELDS"
     description: "(FROM mindtap source data)"
+    order_by_field: chapter_sort_by_data
   }
 
   dimension: is_compound_activity_from_source {
@@ -264,7 +284,7 @@ view: dim_learningpath {
     group_label: "NEW FIELDS"
     description: "Activity name or Folder name if activity is one of less than 10 activities in its parent folder
     (FROM mindtap source data) "
-
+    html: {{rendered_value}} ;;
   }
 
   dimension: first_used_datekey {
@@ -430,7 +450,7 @@ view: dim_learningpath {
 
     link: {
       label: "Explore Aplia question level data this activity"
-      url: "/explore/source/problem?fields=problem.problem_title,answer.avg_score,answer.count,assignment.count,course.count&f[assignment.mindlink_guid]={{ dim_activity_view_uri.ref_id._value }}"
+      url: "/explore/source/problem?fields=problem.problem_title,answer.avg_score,answer.count,assignment.count,course.count&f[assignment.mindlink_guid]={{ ref_id._value }}"
     }
   }
 
@@ -439,7 +459,8 @@ view: dim_learningpath {
     description: "Categorization of learning path items into useful groups - groups are driven by product team requests"
     type: string
     sql: case
-              when ${dim_activity.APPLICATIONNAME} in ('CNOW.HW', 'APLIA') then 'Assessment'
+              when ${dim_activity.APPLICATIONNAME} in ('CNOW.HW', 'APLIA')
+                    or trim(${dim_activity.activitysubcategory}) in ('HOMEWORK', 'ASSESSMENT') then 'Assessment'
 
               when ${lowest_level} ilike '%Mastery Training%' then 'Mastery Training'
               when ${lowest_level} ilike '%Quiz%' then 'Quiz'
@@ -461,8 +482,8 @@ view: dim_learningpath {
               when ${lowest_level} ilike '%Real World Challenge%' then 'Real World Challenge'
               when ${lowest_level} ilike '%Exam%' then 'Exam'
               --generic
-              when ${dim_activity.APPLICATIONNAME} = 'CENGAGE.READER' then 'Reading'
-              when ${dim_activity.APPLICATIONNAME} = 'CENGAGE.MEDIA' then 'Media'
+              when ${dim_activity.APPLICATIONNAME} = 'CENGAGE.READER' or ${dim_activity.activitysubcategory} = 'READING' then 'Reading'
+              when ${dim_activity.APPLICATIONNAME} = 'CENGAGE.MEDIA' or ${dim_activity.activitysubcategory} = 'MEDIA' then 'Media'
               when ${dim_activity.APPLICATIONNAME} = 'MINDAPP-GROVE' then 'Media Quiz'
               --when ${dim_activity.APPLICATIONNAME} in ('CNOW.HW', 'APLIA') then 'Assessment'
 

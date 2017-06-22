@@ -147,6 +147,14 @@ explore: fact_activityoutcome {
     relationship: many_to_one
   }
 
+  join: fact_siteusage {
+    sql_on: ${fact_siteusage.learningpathid} = ${fact_activityoutcome.learningpathid}
+          and ${fact_siteusage.userid} = ${fact_activityoutcome.userid}
+          and ${fact_siteusage.eventdatekey} = ${fact_activityoutcome.startdatekey}
+          ;;
+    relationship: many_to_many
+  }
+
 }
 
 explore: fact_activity {

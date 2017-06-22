@@ -80,9 +80,9 @@ view: dim_relativedate {
 
   dimension: weeksname {
     label: "Weeks Relative to Course Start Date"
-    type: string
-    sql: ${TABLE}.WEEKSNAME ;;
-    order_by_field: weeks
+    type: number
+    sql: ${TABLE}.WEEKS ;;
+    value_format: "\W\e\e\k 0"
   }
 
   measure: max_weeks {
