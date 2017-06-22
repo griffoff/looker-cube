@@ -249,6 +249,34 @@ explore: problem {
 
 
 # MindTap
+explore: master {
+  label: "MindTap - Master"
+  from:  snapshot
+
+  sql_always_where: ${is_master} = 1 ;;
+
+  join: master_node {
+    from: node
+    sql_on: ${master.id} = ${master_node.snapshot_id} ;;
+    relationship: one_to_many
+  }
+
+  join: snapshot {
+    sql_on: ${master.id} = ${snapshot.parent_id} ;;
+    relationship: one_to_many
+  }
+
+  join: org {
+    sql_on: ${snapshot.org_id} = ${org.id} ;;
+    relationship: many_to_one
+  }
+
+  join: node {
+    sql_on: (${snapshot.id},${master_node.id}) = (${node.snapshot_id},${node.origin_id}) ;;
+    relationship: one_to_many
+  }
+
+}
 explore: snapshot {
   label: "MindTap - Snapshot"
 

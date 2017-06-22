@@ -458,6 +458,10 @@ view: dim_learningpath {
     label: "Learning Path Activity Group"
     description: "Categorization of learning path items into useful groups - groups are driven by product team requests"
     type: string
+    link: {
+      label: "Show activities in this group"
+      url: "/explore/cube/fact_activityoutcome?fields=dim_learningpath.chapter,dim_learningpath.lowest_level_category,dim_learningpath.lowest_level,dim_activity.APPLICATIONNAME,dim_activity.activitysubcategory,dim_learningpath.count,&f[dim_learningpath.lowest_level_category]={{ value }}"
+    }
     sql: case
               when ${dim_activity.APPLICATIONNAME} in ('CNOW.HW', 'APLIA')
                     or trim(${dim_activity.activitysubcategory}) in ('HOMEWORK', 'ASSESSMENT') then 'Assessment'

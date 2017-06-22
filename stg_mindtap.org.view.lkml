@@ -87,6 +87,12 @@ view: org {
         ;;
   }
 
+  dimension: is_external {
+    label: "Exclude Internal Orgs"
+    type: yesno
+    sql: not ${is_internal};;
+  }
+
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
