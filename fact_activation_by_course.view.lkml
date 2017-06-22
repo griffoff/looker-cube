@@ -5,7 +5,7 @@ view: fact_activation_by_product {
               by_product_fk as pk
               ,isbn13,is_lms_integrated,date_granularity
               ,sum(product_activations) as product_activations
-              ,count(distinct courseid) as activated_courses
+              ,sum(activated_courses) as activated_courses
           from (
             select distinct by_product_fk,isbn13,is_lms_integrated,date_granularity,institutionid,product_activations
             from ${fact_activation_by_course.SQL_TABLE_NAME}
@@ -103,6 +103,7 @@ view: fact_activation_by_course {
         --,p.isbn13 || c.institutionid || c.is_lms_integrated || c.date_granularity as by_product_fk
         ,sum(NOOFACTIVATIONS) as NOOFACTIVATIONS
         ,sum(sum(NOOFACTIVATIONS)) over (partition by p.isbn13, c.institutionid, c.is_lms_integrated, c.date_granularity) as product_activations
+        ,sum(count(*)) over (partition by p.isbn13, c.institutionid, c.is_lms_integrated, c.date_granularity) as activated_courses
     from ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION a
     inner join c on a.courseid = c.courseid
     inner join dw_ga.dim_product p on c.productid = p.productid
