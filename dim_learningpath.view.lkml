@@ -326,10 +326,10 @@ view: dim_learningpath {
   }
 
   dimension: learningtype {
-    label: "Type"
+    label: "Learning path activity/plank type"
     type: string
     sql: ${TABLE}.LEARNINGTYPE ;;
-    hidden: yes
+   # hidden: yes
   }
 
   dimension: level1 {
