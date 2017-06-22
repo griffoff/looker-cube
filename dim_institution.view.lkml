@@ -16,13 +16,6 @@ view: dim_institution {
     sql: ${HED}.filterflag in (0, -1) ;;
   }
 
-  dimension: is_external {
-    label: "Real Course"
-    description: "Flag to identify real courses, rather than test/demo/internal"
-    type: yesno
-    sql: ${TABLE}.filterflag in (0, -1) ;;
-  }
-
   dimension: city {
     group_label: "Location"
     type: string
