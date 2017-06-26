@@ -3,11 +3,11 @@ view: fact_activation_by_product {
   derived_table: {
     sql: select
               by_product_fk as pk
-              ,isbn13,is_lms_integrated,date_granularity
+              ,productfamily,edition,is_lms_integrated,date_granularity
               ,sum(product_activations) as product_activations
               ,sum(activated_courses) as activated_courses
           from (
-            select distinct by_product_fk,isbn13,is_lms_integrated,date_granularity,institutionid,product_activations,activated_courses
+            select distinct by_product_fk,productfamily,edition,is_lms_integrated,date_granularity,institutionid,product_activations,activated_courses
             from ${fact_activation_by_course.SQL_TABLE_NAME}
             )
           group by 1, 2, 3, 4
@@ -16,11 +16,11 @@ view: fact_activation_by_product {
   }
 
   set:  ALL_FIELDS {
-    fields: [isbn13, is_lms_integrated, date_granularity, activations_for_isbn]
+    fields: [productfamily,edition, is_lms_integrated, date_granularity, activations_for_isbn]
   }
 
   set:  details {
-    fields: [isbn13, dim_product.productname, dim_institution.institutionname, is_lms_integrated, date_granularity, activations_for_isbn]
+    fields: [productfamily,edition, dim_product.productname, dim_institution.institutionname, is_lms_integrated, date_granularity, activations_for_isbn]
   }
 
   dimension: pk {
@@ -30,10 +30,14 @@ view: fact_activation_by_product {
     sql: ${TABLE}.pk ;;
   }
 
-  dimension: isbn13 {
+  dimension: productfamily {
     hidden: yes
     type: string
-    sql: ${TABLE}.isbn13 ;;
+  }
+
+  dimension: edition {
+    hidden: yes
+    type: string
   }
 
   dimension: is_lms_integrated {
@@ -94,15 +98,15 @@ view: fact_activation_by_course {
       )
     select
         a.courseid
-        ,p.isbn13
+        ,p.productfamily
+        ,p.edition
         ,c.date_granularity
         ,c.is_lms_integrated
         ,c.institutionid
-        ,p.isbn13 || c.is_lms_integrated || c.date_granularity as by_product_fk
-        --,p.isbn13 || c.institutionid || c.is_lms_integrated || c.date_granularity as by_product_fk
+        ,p.productfamily || p.edition || c.is_lms_integrated || c.date_granularity as by_product_fk
         ,sum(NOOFACTIVATIONS) as NOOFACTIVATIONS
-        ,sum(sum(NOOFACTIVATIONS)) over (partition by p.isbn13, c.institutionid, c.is_lms_integrated, c.date_granularity) as product_activations
-        ,sum(count(distinct a.courseid)) over (partition by p.isbn13, c.institutionid, c.is_lms_integrated, c.date_granularity) as activated_courses
+        ,sum(sum(NOOFACTIVATIONS)) over (partition by p.productfamily, p.edition, c.institutionid, c.is_lms_integrated, c.date_granularity) as product_activations
+        ,sum(count(distinct a.courseid)) over (partition by p.productfamily, p.edition, c.is_lms_integrated, c.date_granularity) as activated_courses
     from ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION a
     inner join c on a.courseid = c.courseid
     inner join dw_ga.dim_product p on c.productid = p.productid
