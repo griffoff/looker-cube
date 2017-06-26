@@ -10,7 +10,7 @@ view: fact_activation_by_product {
             select distinct by_product_fk,productfamily,edition,is_lms_integrated,date_granularity,institutionid,product_activations,activated_courses
             from ${fact_activation_by_course.SQL_TABLE_NAME}
             )
-          group by 1, 2, 3, 4
+          group by 1, 2, 3, 4, 5
           order by 1;;
           sql_trigger_value: select count(*) from ${fact_activation_by_course.SQL_TABLE_NAME} ;;
   }
@@ -55,11 +55,11 @@ view: fact_activation_by_product {
   }
 
   measure: activations_for_isbn {
-    label: "Total activations for ISBN and Fiscal Year and whether it is LMS integrated"
+    label: "Total activations for Product Family + Edition and Fiscal Year and whether it is LMS integrated"
     description: "The total number of activations for all courses for the ISBN started in the same fiscal year related to the current context
     e.g.
     at item level it will represent the no. of activations
-    on all courses with the same CORE TEXT ISBN and start fiscal year as the course where this item appears
+    on all courses with the same Product Family + Edition and start fiscal year as the course where this item appears
     "
     type: sum_distinct
     sql: ${TABLE}.product_activations ;;
@@ -68,11 +68,11 @@ view: fact_activation_by_product {
   }
 
   measure: activated_courses_for_isbn {
-    label: "Total courses with activations for ISBN and Fiscal Year and whether it is LMS integrated"
+    label: "Total courses with activations for Product Family + Edition and Fiscal Year and whether it is LMS integrated"
     description: "The total number of activations for all courses for the ISBN started in the same fiscal year related to the current context
     e.g.
     at item level it will represent the no. of courses with activations
-     with the same CORE TEXT ISBN and start fiscal year as the course where this item appears
+     with the same Product Family + Edition and start fiscal year as the course where this item appears
     "
     type: sum_distinct
     sql: ${TABLE}.activated_courses ;;
@@ -110,7 +110,7 @@ view: fact_activation_by_course {
     from ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION a
     inner join c on a.courseid = c.courseid
     inner join dw_ga.dim_product p on c.productid = p.productid
-    group by 1, 2, 3, 4, 5
+    group by 1, 2, 3, 4, 5, 6
     order by 1;;
     sql_trigger_value: select count(*) from ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION;;
   }
@@ -194,15 +194,16 @@ view: fact_activation_by_course {
 #   }
 
   measure: activations_for_isbn {
-    label: "Total activations for ISBN and Fiscal Year and Institution"
+    label: "Total activations for Product Family + Edition and Fiscal Year and Institution"
     description: "The total number of activations for all courses for the ISBN started in the same fiscal year related to the current context
     e.g.
     at item level it will represent the no. of activations
-    on all courses with the same CORE TEXT ISBN and start fiscal year as the course where this item appears
+    on all courses with the same Product Family + Edition and start fiscal year as the course where this item appears
     "
     type: sum_distinct
     sql: ${TABLE}.product_activations ;;
     sql_distinct_key: ${by_product_fk} || ${institutionid}  ;;
     drill_fields: [course_detail*]
+    hidden:  yes
   }
 }
