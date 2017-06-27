@@ -55,12 +55,14 @@ view: fact_activation_by_product {
   }
 
   measure: activations_for_isbn {
-    label: "Total activations for Product Family + Edition and Fiscal Year and whether it is LMS integrated"
-    description: "The total number of activations for all courses for the ISBN started in the same fiscal year related to the current context
-    e.g.
-    at item level it will represent the no. of activations
-    on all courses with the same Product Family + Edition and start fiscal year as the course where this item appears
-    "
+    label: "Product Activations"
+    description: "
+    Total paid activations for Product Family + Edition combination for a given Fiscal Year and whether it is LMS integrated
+
+    Measure represents all activations for all courses of 'this product'.
+    'This product' means all courses that share the same combination of (1) Product Family, (2) Edition, (3) Fiscal Year and (4) LMS status.
+
+    Measure is to be used as a denominator when normalizing data as a Percent of Activations."
     type: sum_distinct
     sql: ${TABLE}.product_activations ;;
     sql_distinct_key: ${pk} ;;
@@ -68,11 +70,10 @@ view: fact_activation_by_product {
   }
 
   measure: activated_courses_for_isbn {
-    label: "Total courses with activations for Product Family + Edition and Fiscal Year and whether it is LMS integrated"
-    description: "The total number of activations for all courses for the ISBN started in the same fiscal year related to the current context
-    e.g.
-    at item level it will represent the no. of courses with activations
-     with the same Product Family + Edition and start fiscal year as the course where this item appears
+    label: "Product Activations - Number of Courses"
+    description: "
+    Distinct count of courses with activations in 'this product'.
+    'This product' means all courses that share the same combination of (1) Product Family, (2) Edition, (3) Fiscal Year and (4) LMS status.
     "
     type: sum_distinct
     sql: ${TABLE}.activated_courses ;;

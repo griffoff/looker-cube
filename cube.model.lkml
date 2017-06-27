@@ -15,10 +15,11 @@ explore: fact_activation {
   extends: [fact_appusage, dim_course]
   fields: [ALL_FIELDS*, -fact_activation_by_course.ALL_FIELDS*]
 
-#   join: dim_date {
-#     sql_on: ${fact_activation.activationdatekey} = ${dim_date.datekey} ;;
-#     relationship: many_to_one
-#   }
+   join: dim_date {
+    #sql_on: ${fact_activation.activationdatekey} = ${dim_date.datekey} ;;
+    #relationship: many_to_one
+    view_label: "Date - Activation Date"
+   }
 
   join: dim_activationfilter {
     sql_on: ${fact_activation.activationfilterid} = ${dim_activationfilter.activationfilterid} ;;
