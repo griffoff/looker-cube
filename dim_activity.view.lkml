@@ -209,7 +209,7 @@ view: dim_activity {
     sql: ${dim_course.courseid} ;;
     filters: {
       field: status
-      value: "gradable"
+      value: "graded"
     }
   }
 
@@ -354,7 +354,7 @@ view: dim_activity {
     #sql: nullif((${count_gradable}+${count_practice}+${count_notscorable}),0) ;;
     type: count_distinct
     sql: ${dim_course.courseid} ;;
-    hidden: yes
+#     hidden: yes
   }
 
   measure:  gradable_exposure_percent {
@@ -507,7 +507,7 @@ view: dim_activity {
     type: sum_distinct
     sql: ${fact_activation_by_course.noofactivations_base} ;;
     sql_distinct_key: ${fact_activation_by_course.courseid} ;;
-    hidden: yes
+#     hidden: yes
   }
 
   measure: available_course_user_count {
