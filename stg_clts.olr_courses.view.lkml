@@ -1,5 +1,5 @@
 view: olr_courses {
-  label: "Courses"
+  label: "Course / Section Details"
   sql_table_name: STG_CLTS.OLR_COURSES ;;
 
   dimension_group: begin_date {

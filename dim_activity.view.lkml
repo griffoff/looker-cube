@@ -186,7 +186,6 @@ view: dim_activity {
     description: "The count of courses containing an activity"
     type: count_distinct
     sql: ${dim_course.courseid} ;;
-    drill_fields: []
   }
 
   measure:  count_gradable_activity {
@@ -202,7 +201,6 @@ view: dim_activity {
   measure:  count_gradable {
     label: "# Gradable courses"
     description: "No. of courses with this as a gradable activity"
-    type: count_distinct
 #    sql: case when ${gradable} = 'Graded' then ${dim_course.courseid} end;;
 #     hidden:  yes
     type: count_distinct
