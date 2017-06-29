@@ -94,12 +94,13 @@ view: dim_date {
       date,
       week,
       month,
+      month_name,
       year,
       day_of_week
     ]
     convert_tz: no
     sql: ${TABLE}.DATEVALUE ;;
-    label: "Course Start"
+    label: "Raw"
   }
 
   dimension: dayofweekid {
