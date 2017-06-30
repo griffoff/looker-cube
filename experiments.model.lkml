@@ -111,5 +111,14 @@ explore: schema_comparison {
     sql_on: (${table_comparison.schema_name}, ${table_comparison.table_name}) = (${column_comparison.schema_name}, ${column_comparison.table_name}) ;;
     relationship: one_to_many
   }
+}
 
+explore: activities_per_week {
+  extends: [dim_course]
+  label: "Student Assignment Completion"
+  description: "Data set used as base for trial period abuse investigation"
+  join: dim_course {
+    sql_on: ${activities_per_week.courseid} = ${dim_course.courseid};;
+    relationship: many_to_one
+  }
 }
