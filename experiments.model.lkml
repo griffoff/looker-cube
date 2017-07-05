@@ -1,5 +1,5 @@
 connection: "snowflake_prod"
-label:"Cube Data on Looker"
+label:"Experimental / Data Science"
 
 #include dims model
 include: "dims.model.lkml"
