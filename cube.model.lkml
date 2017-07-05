@@ -241,7 +241,7 @@ explore: fact_activity {
 
 explore:  fact_appusage_by_user {
   extends: [dim_course, dim_user, dim_learningpath]
-  label: "Usage of Mindtap apps from the app dock"
+  label: "Mindtap - app dock usage"
   description: "
   Usage metrics about mindapps accessed via the Mindtap app dock
   Does not include usage of apps accessed via inline activities (from the learning path)
