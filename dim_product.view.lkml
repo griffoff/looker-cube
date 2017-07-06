@@ -141,7 +141,7 @@ CASE
     label: "Discipline"
    group_label: "Categories"
    #sql: ${TABLE}.discipline_rollup;;
-    sql: ${TABLE}.pub_series_de;;
+    sql: ${publicationseries};;
 
     link: {
       label: "Engagement Toolkit"
