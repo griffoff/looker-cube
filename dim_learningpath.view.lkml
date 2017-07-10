@@ -471,6 +471,8 @@ view: dim_learningpath {
               when ${lowest_level} ilike '%COMPLETE Research%' then 'Complete Research'
               when ${lowest_level} ilike '%START Zoom%' then 'Start Zoom'
               when ${lowest_level} ilike '%Concept Check%' then 'Concept Check'
+              --English
+              when ${lowest_level} ilike 'Graded Assignment%' then 'Graded Assignment'
               --CJ
               when ${lowest_level} ilike '%Visual Summary%' then 'Visual Summary'
               when ${lowest_level} ilike '%Choose your path%' then 'You Decide - Part 1'
@@ -483,6 +485,7 @@ view: dim_learningpath {
               when ${lowest_level} ilike '%Post Test%' then 'Post Test'
               when ${lowest_level} ilike '%Real World Challenge%' then 'Real World Challenge'
               when ${lowest_level} ilike '%Exam%' then 'Exam'
+
               --generic
               when ${dim_activity.APPLICATIONNAME} in ('CNOW.HW', 'APLIA')
                     or trim(${dim_activity.activitysubcategory}) in ('HOMEWORK', 'ASSESSMENT') then 'Assessment'
