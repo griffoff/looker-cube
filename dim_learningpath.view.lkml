@@ -473,6 +473,8 @@ view: dim_learningpath {
               when ${lowest_level} ilike '%Concept Check%' then 'Concept Check'
               --English
               when ${lowest_level} ilike 'Graded Assignment%' then 'Graded Assignment'
+              when ${lowest_level} ilike 'Quick Review%' then 'Quick Review'
+              when ${lowest_level} ilike 'Video Tutorial%' then 'Video Tutorial'
               --CJ
               when ${lowest_level} ilike '%Visual Summary%' then 'Visual Summary'
               when ${lowest_level} ilike '%Choose your path%' then 'You Decide - Part 1'
