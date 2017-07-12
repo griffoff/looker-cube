@@ -209,7 +209,7 @@ view: fact_siteusage {
   measure: pageviewtime_max {
     label: "Browser time (max)"
     type: max
-    sql: ${pageviewtime_avg});;
+    sql: ${pageviewtime};;
     value_format: "hh:mm:ss"
   }
 
