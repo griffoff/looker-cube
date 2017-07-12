@@ -55,10 +55,10 @@ view: fact_activation_siteusage {
   measure: site_usage_percent_of_activations{
     label: "Site Usage: % of activations"
     description: "% of users who accessed a platform based on Google Analytics data as a % of product activations.
-      This indicates the number of actual users vs. potential users over the time frame specified in the filter section."
+      This indicates the number of actual users vs. potential users over the time frame specified in the filter section (denominator is 'Product Activations')."
     type: number
     value_format_name: percent_1
-    sql: ${user_count}/${fact_activation.user_count} ;;
+    sql: ${user_count}/${fact_activation_by_course.activations_for_isbn} ;;
   }
 
   measure: pageviewtime_total {
