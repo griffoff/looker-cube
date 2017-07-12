@@ -57,6 +57,7 @@ view: dim_filter {
   }
 
   dimension: is_external {
+    view_label: "** RECOMMENDED FILTERS **"
     label: "Real Course"
     description: "Flag to identify real courses, rather than test/demo/internal"
     type: yesno
