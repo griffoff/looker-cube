@@ -13,6 +13,7 @@ view: fact_activation {
   dimension: activationcode {
     type: string
     sql: ${TABLE}.ACTIVATIONCODE ;;
+    hidden: yes
   }
 
   dimension: activationcodeuser {
@@ -68,6 +69,7 @@ view: fact_activation {
   dimension: filterflag {
     type: string
     sql: ${TABLE}.FILTERFLAG ;;
+    hidden:  yes
   }
 
   dimension: institutionid {
@@ -98,6 +100,9 @@ view: fact_activation {
 
   measure: total_noofactivations {
     label: "Total Activations"
+    description: "Represents the total number of activations associated with the query structure set up by the user in Looker and the user-selected filtering criteria.
+      Example: if you set up Looker to look at completed learning path activities, the measure 'Total Activations' will indicated how many accounts completed a given activity
+      and NOT how many accounts 'saw' or could have completed a given activity.  Meaning, 'Total Activations' cannot be used as a denominator for any '% of activation' calculations."
     type: sum
     sql: ${noofactivations_base} ;;
     drill_fields: [coursedetails*]
@@ -108,6 +113,7 @@ view: fact_activation {
     type: average
     sql: ${noofactivations_base} ;;
     drill_fields: [coursedetails*]
+    hidden:  yes
   }
 
   dimension: partyid {
@@ -148,6 +154,9 @@ view: fact_activation {
 
   measure: user_count {
     label: "# Users Activated"
+    description: "Distinct count of users (GUIDs) with at least 1 activations based on user-selected filtering criteria.
+      This number should be less than or equal to the total activations measure as users may have more than one activation
+      for the user-selected filtering criteria (e.g. they use MindTap for multiple courses)"
     type: count_distinct
     sql:${userid} ;;
   }
@@ -156,16 +165,21 @@ view: fact_activation {
     label: "# Users % of total"
     type: percent_of_total
     sql: ${user_count} ;;
+    hidden: yes
   }
 
   measure: institution_count {
     label: "# Institutions with activations"
+    description: "Distinct count of institutions with at least 1 activation based on user-selected filtering criteria.
+      Useful as a high-level measure."
     type: count_distinct
     sql: case when ${TABLE}.NOOFACTIVATIONS > 0 then ${dim_institution.institutionid} end ;;
   }
 
   measure: course_count {
     label: "# Course sections with activations"
+    description: "Distinct count of course keys with at least 1 activation based on user-selected filtering criteria.
+      Useful as a high-level measure."
     type: count_distinct
     sql: ${courseid} ;;
   }
