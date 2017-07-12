@@ -32,20 +32,20 @@ explore: fact_activation {
     relationship: many_to_one
   }
 
-  join: dim_user {
-    sql_on: ${fact_activation.userid} = ${dim_user.userid} ;;
-    relationship: many_to_one
-  }
+#   join: dim_user {
+#     sql_on: ${fact_activation.userid} = ${dim_user.userid} ;;
+#     relationship: many_to_one
+#   }
 
-  join: dim_party {
-    sql_on: ${dim_user.mainpartyid} = ${dim_party.partyid} ;;
-    relationship: many_to_one
-  }
+# join: dim_party {
+#    sql_on: ${dim_user.mainpartyid} = ${dim_party.partyid} ;;
+#     relationship: many_to_one
+#   }
 
-  join: user_facts {
-    sql_on: ${dim_user.userid} = ${user_facts.userid} ;;
-    relationship: one_to_one
-  }
+#   join: user_facts {
+#     sql_on: ${dim_user.userid} = ${user_facts.userid} ;;
+#     relationship: one_to_one
+#   }
 
   join: dim_course {
     sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
@@ -63,10 +63,10 @@ explore: fact_activation {
 #     relationship: many_to_one
 #   }
 
-  join: fact_enrollment {
-    sql_on: ${fact_activation.courseid} = ${fact_enrollment.courseid} and ${fact_activation.partyid}) = ${fact_enrollment.partyid}) ;;
-    relationship: one_to_many
-  }
+#   join: fact_enrollment {
+#     sql_on: ${fact_activation.courseid} = ${fact_enrollment.courseid} and ${fact_activation.partyid}) = ${fact_enrollment.partyid}) ;;
+#     relationship: one_to_many
+#   }
 
 #   join: fact_appusage {
 #     sql_on: (${fact_activation.productplatformid}, ${fact_activation.productid}, ${fact_activation.courseid}, ${fact_activation.partyid}, ${fact_activation.userid}) =  (26, ${fact_appusage.productid}, ${fact_appusage.courseid}, ${fact_appusage.partyid}, ${fact_appusage.userid})

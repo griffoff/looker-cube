@@ -38,17 +38,20 @@ view: olr_courses {
   dimension: course_internal_flg {
     type: string
     sql: ${TABLE}.COURSE_INTERNAL_FLG ;;
+    hidden: yes
   }
 
   dimension: course_key {
     primary_key: yes
     type: string
     sql: ${TABLE}.COURSE_KEY ;;
+    hidden: yes
   }
 
   dimension: course_name {
     type: string
     sql: ${TABLE}.COURSE_NAME ;;
+    hidden: yes
   }
 
   dimension: created_on {
@@ -83,6 +86,7 @@ view: olr_courses {
     description: "Estimated enrollment figure.  These figures are input by LCs and have not been verified."
     type: string
     sql: ${TABLE}.ENROLLMENTS ;;
+    hidden: yes
   }
 
   dimension: entity_id_sub {
@@ -141,6 +145,7 @@ view: olr_courses {
   dimension: ldts {
     type: string
     sql: ${TABLE}.LDTS ;;
+    hidden: yes
   }
 
   dimension: mag_acct_id {
@@ -164,6 +169,7 @@ view: olr_courses {
   dimension: rsrc {
     type: string
     sql: ${TABLE}.RSRC ;;
+    hidden: yes
   }
 
   dimension: secondary_instructor_guid {
