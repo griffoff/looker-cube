@@ -161,7 +161,7 @@ explore: fact_activityoutcome {
 }
 
 explore: fact_activity {
-  label: "MindTap - Learning Path - Instructor Modifications"
+  label: "Learning Path - MT Instructor Modifications"
   description: "Starting point for learning path analysis from the instructor perspective (e.g. What has the instructor changed?  What has the instructor added?)"
   extends: [dim_course, dim_learningpath]
 
@@ -244,7 +244,7 @@ explore: fact_activity {
 
 explore:  fact_appusage_by_user {
   extends: [dim_course, dim_user, dim_learningpath]
-  label: "Mindtap - app dock usage"
+  label: "App dock usage - Mindtap"
   description: "
   Usage metrics about mindapps accessed via the Mindtap app dock
   Does not include usage of apps accessed via inline activities (from the learning path)
@@ -458,7 +458,7 @@ explore: fact_session {
 }
 
 explore: fact_siteusage {
-  label: "MindTap - Learning Path - Usage Data"
+  label: "Learning Path - MT Usage Data"
   description: "Start point for learning path usage from the student persepctive including application usage information collected via google analytics."
   extends: [dim_user, dim_course, dim_pagedomain]
 
