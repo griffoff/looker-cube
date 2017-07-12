@@ -157,6 +157,7 @@ CASE
     group_label: "Categories"
     type: string
     sql: row_number() over (order by SUM(noofactivations) desc) ;;
+    hidden: yes
   }
 #
 #   dimension: discipline_rank_tier  {
@@ -182,6 +183,7 @@ CASE
       END
 
       ;;
+    hidden: yes
   }
 
 
