@@ -100,9 +100,12 @@ view: fact_activation {
 
   measure: total_noofactivations {
     label: "Total Activations"
-    description: "Represents the total number of activations associated with the query structure set up by the user in Looker and the user-selected filtering criteria.
+    description: "Represents the total number of activations associated with the query structure set up in Looker and the selected filtering criteria.
+
       Example: if you set up Looker to look at completed learning path activities, the measure 'Total Activations' will indicated how many accounts completed a given activity
-      and NOT how many accounts 'saw' or could have completed a given activity.  Meaning, 'Total Activations' cannot be used as a denominator for any '% of activation' calculations."
+      and NOT how many accounts 'saw' or could have completed a given activity.
+
+      Meaning, 'Total Activations' cannot be used as a denominator for any '% of activation' calculations."
     type: sum
     sql: ${noofactivations_base} ;;
     drill_fields: [coursedetails*]

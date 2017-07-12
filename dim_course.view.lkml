@@ -169,6 +169,7 @@ view: dim_course {
 
   measure: count {
     label: "# Course Sections"
+    description: "Count of course sections."
     type: count
     drill_fields: [dim_institution.institutionname, coursekey, coursename, dim_start_date.calendarmonthname, fact_activation_by_course.total_noofactivations]
   }
