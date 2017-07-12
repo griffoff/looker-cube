@@ -44,7 +44,8 @@ CASE
                WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Literature/Upper Level English' then 'Literature'
                ELSE dw_ga.dim_product.PUBLICATIONSERIES
         END
-    as discipline_rollup
+        as discipline_rollup
+      ,dense_rank() over (partition by productfamily order by nullif(edition, '-')::int desc) as latest
     from dw_ga.dim_product
     order by productid;;
     sql_trigger_value: select count(*) from dw_ga.dim_product ;;
@@ -290,12 +291,25 @@ CASE
     sql: ${TABLE}.PUBLIC_CORETEXT_ISBN ;;
   }
 
-  dimension: islatestedition {
-    label: "Latest Edition?"
-    description: "Flag that can be used as a filter to only look at the latest edition of a given product."
-    type: string
+  dimension: editionrecency {
+    label: "Edition List"
+    description: "Relative edition index - latest edition is always 1, the previous edition 2, and so on.
+    e.g.
+    - Product Family X has editions 001, 002, 003
+    - Edition List will be 3, 2, 1
+    "
+    type: number
     group_label: "Product Details"
-    sql: ${TABLE}.ISLATESTEDITION ;;
+    sql: ${TABLE}.latest ;;
+  }
+
+  dimension: islatestedition {
+    label: "Current Edition"
+    description: "Flag that can be used as a filter to only look at the latest edition of a given product."
+    type: yesno
+    group_label: "Product Details"
+    #sql: ${TABLE}.ISLATESTEDITION ;;
+    sql: ${editionrecency} = 1 ;;
   }
 
   dimension_group: loaddate {
