@@ -241,6 +241,8 @@ CASE
   }
 
   dimension: iac_isbn {
+    description: "IAC ISBN is the core ISBN for a given product/title.  If you need ISBN for usage data, ideally use this value.
+      However, the raw data source has IAC ISBN data gaps for a small percentage of products; if this impacts your analysis, utilize ISBN13."
     type: string
     label: "IAC ISBN"
     group_label: "ISBN"
@@ -248,6 +250,7 @@ CASE
   }
 
   dimension: isbn10 {
+    description: "Do not use for analysis.  ISBN10 dimension is available to help confirm what the correct IAC ISBN or ISBN13 should be."
     type: string
     label: "ISBN10"
     group_label: "ISBN"
@@ -255,6 +258,8 @@ CASE
   }
 
   dimension: isbn13 {
+    description: "ISBN13 can be used for ISBN-level analysis if necessary.  IAC ISBN is preferred, but due to some limited gaps in IAC ISBN data,
+      ISBN13 may be required as a substitute.  No ISBN13 gaps have been found as of July 2017."
     type: string
     label: "ISBN13"
     group_label: "ISBN"
@@ -262,6 +267,7 @@ CASE
   }
 
   dimension: mindtap_isbn {
+    description: "Do not use for analysis.  Mindtap ISBN dimension is available to help confirm what the correct IAC ISBN or ISBN13 should be."
     type: string
     label: "Mindtap ISBN"
     group_label: "ISBN"
@@ -269,6 +275,7 @@ CASE
   }
 
   dimension: pac_isbn {
+    description: "Do not use for analysis.  PAC ISBN dimension is available to help confirm what the correct IAC ISBN or ISBN13 should be."
     type: string
     label: "PAC ISBN"
     group_label: "ISBN"
@@ -276,6 +283,7 @@ CASE
   }
 
   dimension: public_coretext_isbn {
+    description: "Do not use for analysis.  CoreText ISBN dimension is available to help confirm what the correct IAC ISBN or ISBN13 should be."
     type: string
     label: "Public CoreText ISBN"
     group_label: "ISBN"
@@ -284,6 +292,7 @@ CASE
 
   dimension: islatestedition {
     label: "Latest Edition?"
+    description: "Flag that can be used as a filter to only look at the latest edition of a given product."
     type: string
     group_label: "Product Details"
     sql: ${TABLE}.ISLATESTEDITION ;;
@@ -334,6 +343,8 @@ CASE
 
   measure: count {
     label: "No. of Products"
+    description: "Count of the number of products included in a given view.
+    This measure is only relevant at a high-level (e.g. for an institution).  At a low (e.g. course key) level, this measure has limited value."
     type: count
     drill_fields: []
   }
