@@ -20,6 +20,7 @@ view: dim_institution {
   }
 
   dimension: HED_filter {
+    view_label: "** RECOMMENDED FILTERS **"
     label: "HED filter"
     description: "Flag to identify Higher-Ed data"
     type:  yesno
