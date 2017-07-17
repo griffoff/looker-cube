@@ -463,7 +463,7 @@ view: dim_learningpath {
       url: "/explore/cube/fact_activityoutcome?fields=dim_learningpath.chapter,dim_learningpath.lowest_level_category,dim_learningpath.lowest_level,dim_activity.APPLICATIONNAME,dim_activity.activitysubcategory,dim_learningpath.count,&f[dim_learningpath.lowest_level_category]={{ value }}"
     }
     sql: case
-
+              --Psychology - added by John
               when ${lowest_level} ilike '%Mastery Training%' then 'Mastery Training'
               when ${lowest_level} ilike '%Quiz%' then 'Quiz'
               when ${lowest_level} ilike '%Practice Test%' then 'Practice Test'
@@ -471,11 +471,13 @@ view: dim_learningpath {
               when ${lowest_level} ilike '%COMPLETE Research%' then 'Complete Research'
               when ${lowest_level} ilike '%START Zoom%' then 'Start Zoom'
               when ${lowest_level} ilike '%Concept Check%' then 'Concept Check'
-              --English
+
+              --English added by Nalini
               when ${lowest_level} ilike 'Graded Assignment%' then 'Graded Assignment'
               when ${lowest_level} ilike 'Quick Review%' then 'Quick Review'
               when ${lowest_level} ilike 'VIDEO TUTORIAL%' then 'Video Tutorial'
-              --CJ
+
+              --CJ add by John
               when ${lowest_level} ilike '%Visual Summary%' then 'Visual Summary'
               when ${lowest_level} ilike '%Choose your path%' then 'You Decide - Part 1'
               when ${lowest_level} ilike '%Justify your choice%' then 'You Decide - Part 2'
