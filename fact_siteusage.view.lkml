@@ -202,7 +202,11 @@ view: fact_siteusage {
 
   dimension: pageviewtime {
     type: number
-    sql: ${TABLE}.PAGEVIEWTIME/1000.0/86400.0 ;;
+    sql: CASE
+              WHEN ${TABLE}.PAGEVIEWTIME>=1000
+                THEN ${TABLE}.PAGEVIEWTIME /1000.0/86400.0
+              ELSE NULL
+              END;;
     hidden: yes
   }
 
@@ -216,7 +220,7 @@ view: fact_siteusage {
   measure: pageviewtime_avg {
     label: "Browser time (avg)"
     type: average
-    sql: NULLIF(${pageviewtime}, 0) ;;
+    sql: ${pageviewtime};;
     value_format: "h:mm:ss"
     html:
     <div style="width:100%;">
