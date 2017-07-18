@@ -474,6 +474,7 @@ view: dim_learningpath {
 
               --English added by Nalini
               when ${lowest_level} ilike 'Graded Assignment%' then 'Graded Assignment'
+              when ${lowest_level} ilike 'Assignment%' then 'Graded Assignment'
               when ${lowest_level} ilike 'Quick Review%' then 'Quick Review'
               when ${lowest_level} ilike 'VIDEO TUTORIAL%' then 'Video Tutorial'
 
@@ -489,6 +490,13 @@ view: dim_learningpath {
               when ${lowest_level} ilike '%Post Test%' then 'Post Test'
               when ${lowest_level} ilike '%Real World Challenge%' then 'Real World Challenge'
               when ${lowest_level} ilike '%Exam%' then 'Exam'
+
+              --History added by John
+              when ${lowest_level} ilike '%Setting the Scene%' then 'Setting the Scene'
+              when ${lowest_level} ilike '%Audio Summary%' then 'Audio Summary'
+              when ${lowest_level} ilike '%Critical Thinking Activity%' then 'Critical Thinking'
+              when ${lowest_level} ilike '%Flashcards%' then 'Flashcards'
+              when ${lowest_level} ilike '%Reflection%' then 'Reflection'
 
               --generic
               when ${dim_activity.APPLICATIONNAME} in ('CNOW.HW', 'APLIA')
