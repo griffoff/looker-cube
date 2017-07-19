@@ -448,6 +448,7 @@ view: dim_learningpath {
     sql: ${TABLE}.lowest_level ;;
     order_by_field: lowest_level_sort_by_data
 
+
     link: {
       label: "Explore Aplia question level data this activity"
       url: "/explore/source/problem?fields=problem.problem_title,answer.avg_score,answer.count,assignment.count,course.count&f[assignment.mindlink_guid]={{ ref_id._value }}"
@@ -534,6 +535,7 @@ view: dim_learningpath {
     type: string
     hidden: yes
     sql: ${TABLE}.PARENTLEARNINGPATHID ;;
+    primary_key: yes
   }
 
   measure: count {
@@ -561,6 +563,14 @@ view: dim_learningpath {
     label: "Global Avg. Score"
     type: min
     value_format_name: percent_1
+  }
+
+  measure: lowest_level_count {
+    label: "# Activities"
+    description: "Count of all learning path items marked as an Activity"
+    type: count
+    sql: ${TABLE}.lowest_level;;
+    hidden: no
   }
 }
 

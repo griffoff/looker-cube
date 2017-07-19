@@ -43,6 +43,13 @@ view: fact_activityoutcome {
           END;;
   }
 
+  measure: completed_activities {
+    type: count
+    label: "# Completed Activities"
+    description: "Number of completed activities"
+    sql: ${completed} ;;
+  }
+
   dimension: completeddatekey {
     type: string
     sql: ${TABLE}.COMPLETEDDATEKEY ;;
