@@ -464,6 +464,19 @@ view: dim_learningpath {
     }
     sql: case
 
+            --Business(Paralegal) added by Nalini
+              when ${lowest_level} ilike '%Case Studies%' then 'Case Studies'
+              when ${lowest_level} ilike '%Additional Assignment%' then 'Additional Assignment'
+              when ${lowest_level} ilike '%Assignment%.%' then 'Assignment'
+              when ${lowest_level} ilike '%Test Yourself%' then 'Chapter Quizzes'
+              when ${lowest_level} ilike '%Outline%' then 'Chapter Outlines'
+              when ${lowest_level} ilike '%Helpful Websites%' then 'Helpful Websites'
+              when ${lowest_level} ilike '%Crossword Puzzle%' then 'Crossword Puzzles'
+              when ${lowest_level} ilike '%Lecture Notes%' then 'PowerPoints'
+              when ${lowest_level} ilike '%Hands-on%' then 'Hands-on Exercises'
+              when ${lowest_level} ilike '%Job Search%' then 'Learning Lab Assignment: Job Search'
+
+              --Psychology added by John
               when ${lowest_level} ilike '%Mastery Training%' then 'Mastery Training'
               when ${lowest_level} ilike '%Quiz%' then 'Quiz'
               when ${lowest_level} ilike '%Practice Test%' then 'Practice Test'
@@ -471,10 +484,12 @@ view: dim_learningpath {
               when ${lowest_level} ilike '%COMPLETE Research%' then 'Complete Research'
               when ${lowest_level} ilike '%START Zoom%' then 'Start Zoom'
               when ${lowest_level} ilike '%Concept Check%' then 'Concept Check'
-              --English
+
+              --English added by Nalini
               when ${lowest_level} ilike 'Graded Assignment%' then 'Graded Assignment'
               when ${lowest_level} ilike 'Quick Review%' then 'Quick Review'
               when ${lowest_level} ilike 'VIDEO TUTORIAL%' then 'Video Tutorial'
+
               --CJ
               when ${lowest_level} ilike '%Visual Summary%' then 'Visual Summary'
               when ${lowest_level} ilike '%Choose your path%' then 'You Decide - Part 1'
