@@ -66,6 +66,7 @@ view: dim_party {
   }
 
   dimension: is_external {
+    view_label: "** RECOMMENDED FILTERS **"
     label: "Real User"
     description: "Indicates a real user of the product, rather than a cengage employee"
     type: yesno

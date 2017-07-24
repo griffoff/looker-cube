@@ -47,15 +47,18 @@ view: fact_activation_siteusage {
 
   measure: user_count {
     label: "# Users"
+    description: "Count of distinct users who accessed a platform based on Google Analytics data"
     type:  count_distinct
     sql: ${userid} ;;
   }
 
   measure: site_usage_percent_of_activations{
-    label: "site usage % of activations"
+    label: "Site Usage: % of activations"
+    description: "% of users who accessed a platform based on Google Analytics data as a % of product activations.
+      This indicates the number of actual users vs. potential users over the time frame specified in the filter section (denominator is 'Product Activations')."
     type: number
     value_format_name: percent_1
-    sql: ${user_count}/${fact_activation.user_count} ;;
+    sql: ${user_count}/${fact_activation_by_course.activations_for_isbn} ;;
   }
 
   measure: pageviewtime_total {
@@ -73,6 +76,7 @@ view: fact_activation_siteusage {
   measure:test {
     type:  number
     sql: ${user_count} / ${fact_activation.user_count} ;;
+    hidden:  yes
   }
 
 }

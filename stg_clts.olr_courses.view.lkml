@@ -20,32 +20,38 @@ view: olr_courses {
   dimension: cgi {
     type: string
     sql: ${TABLE}.CGI ;;
+    hidden:  yes
   }
 
   dimension: cnow_institution_id {
     type: string
     sql: ${TABLE}.CNOW_INSTITUTION_ID ;;
+    hidden:  yes
   }
 
   dimension: context_id {
     type: string
     sql: ${TABLE}."#CONTEXT_ID" ;;
+    hidden:  yes
   }
 
   dimension: course_internal_flg {
     type: string
     sql: ${TABLE}.COURSE_INTERNAL_FLG ;;
+    hidden: yes
   }
 
   dimension: course_key {
     primary_key: yes
     type: string
     sql: ${TABLE}.COURSE_KEY ;;
+    hidden: yes
   }
 
   dimension: course_name {
     type: string
     sql: ${TABLE}.COURSE_NAME ;;
+    hidden: yes
   }
 
   dimension: created_on {
@@ -56,16 +62,19 @@ view: olr_courses {
   dimension: el_contract_id {
     type: string
     sql: ${TABLE}.EL_CONTRACT_ID ;;
+    hidden: yes
   }
 
   dimension: el_max_seats {
     type: string
     sql: ${TABLE}.EL_MAX_SEATS ;;
+    hidden: yes
   }
 
   dimension: el_type {
     type: string
     sql: ${TABLE}.EL_TYPE ;;
+    hidden:  yes
   }
 
   dimension: end_date {
@@ -74,16 +83,20 @@ view: olr_courses {
   }
 
   dimension: enrollments {
+    description: "Estimated enrollment figure.  These figures are input by LCs and have not been verified."
     type: string
     sql: ${TABLE}.ENROLLMENTS ;;
+    hidden: yes
   }
 
   dimension: entity_id_sub {
     type: string
     sql: ${TABLE}.ENTITY_ID_SUB ;;
+    hidden: yes
   }
 
   dimension: entity_name_course {
+    description: "Institution name"
     type: string
     sql: ${TABLE}.ENTITY_NAME_COURSE ;;
   }
@@ -91,24 +104,29 @@ view: olr_courses {
   dimension: entity_no {
     type: string
     sql: ${TABLE}.ENTITY_NO ;;
+    hidden: yes
   }
 
   dimension: from_cgi {
     type: string
     sql: ${TABLE}.FROM_CGI ;;
+    hidden: yes
   }
 
   dimension: instructor_guid {
+    description: "Instructor user ID.  ID may represent a coordinator based on how the course was set up."
     type: string
     sql: ${TABLE}.INSTRUCTOR_GUID ;;
   }
 
   dimension: instructor_name {
+    description: "Instructor name may not always be available, and when available, may represent a coordinator based on how the course was set up."
     type: string
     sql: ${TABLE}.INSTRUCTOR_NAME ;;
   }
 
   dimension: isbn {
+    description: "IAC ISBN associated with a given course/section."
     type: string
     sql: ${TABLE}.ISBN ;;
   }
@@ -121,24 +139,29 @@ view: olr_courses {
   dimension: ldap_instr_contact_id {
     type: string
     sql: ${TABLE}.LDAP_INSTR_CONTACT_ID ;;
+    hidden:  yes
   }
 
   dimension: ldts {
     type: string
     sql: ${TABLE}.LDTS ;;
+    hidden: yes
   }
 
   dimension: mag_acct_id {
     type: string
     sql: ${TABLE}.MAG_ACCT_ID ;;
+    hidden: yes
   }
 
   dimension: product_skey {
     type: string
     sql: ${TABLE}.PRODUCT_SKEY ;;
+    hidden: yes
   }
 
   dimension: product_type {
+    description: "Product/platform (e.g. MTC = MindTap Classic)"
     type: string
     sql: ${TABLE}.PRODUCT_TYPE ;;
   }
@@ -146,14 +169,18 @@ view: olr_courses {
   dimension: rsrc {
     type: string
     sql: ${TABLE}.RSRC ;;
+    hidden: yes
   }
 
   dimension: secondary_instructor_guid {
+    description: "User ID of an additional instructor associated with a given course key.  If used, a department head likely is listed as the primary instructor
+      as he/she set up a course for all professors."
     type: string
     sql: ${TABLE}.SECONDARY_INSTRUCTOR_GUID ;;
   }
 
   dimension: territory_id {
+    description: "Internal cengage territory code."
     type: string
     sql: ${TABLE}.TERRITORY_ID ;;
   }
@@ -161,5 +188,6 @@ view: olr_courses {
   measure: count {
     type: count
     drill_fields: [course_name, instructor_name]
+    hidden: yes
   }
 }

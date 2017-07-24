@@ -464,7 +464,7 @@ view: dim_learningpath {
     }
     sql: case
 
-            --Business(Paralegal) added by Nalini
+            --Business(Paralegal) added by Nalini Pillay
               when ${lowest_level} ilike '%Case Studies%' then 'Case Studies'
               when ${lowest_level} ilike '%Additional Assignment%' then 'Additional Assignment'
               when ${lowest_level} ilike '%Assignment%.%' then 'Assignment'
@@ -476,7 +476,7 @@ view: dim_learningpath {
               when ${lowest_level} ilike '%Hands-on%' then 'Hands-on Exercises'
               when ${lowest_level} ilike '%Job Search%' then 'Learning Lab Assignment: Job Search'
 
-              --Psychology added by John
+              --Psychology - added by John B.
               when ${lowest_level} ilike '%Mastery Training%' then 'Mastery Training'
               when ${lowest_level} ilike '%Quiz%' then 'Quiz'
               when ${lowest_level} ilike '%Practice Test%' then 'Practice Test'
@@ -485,12 +485,13 @@ view: dim_learningpath {
               when ${lowest_level} ilike '%START Zoom%' then 'Start Zoom'
               when ${lowest_level} ilike '%Concept Check%' then 'Concept Check'
 
-              --English added by Nalini
+              --English added by Nalini Pillay
               when ${lowest_level} ilike 'Graded Assignment%' then 'Graded Assignment'
+              when ${lowest_level} ilike 'Assignment%' then 'Graded Assignment'
               when ${lowest_level} ilike 'Quick Review%' then 'Quick Review'
               when ${lowest_level} ilike 'VIDEO TUTORIAL%' then 'Video Tutorial'
 
-              --CJ
+              --CJ added by John B.
               when ${lowest_level} ilike '%Visual Summary%' then 'Visual Summary'
               when ${lowest_level} ilike '%Choose your path%' then 'You Decide - Part 1'
               when ${lowest_level} ilike '%Justify your choice%' then 'You Decide - Part 2'
@@ -502,6 +503,13 @@ view: dim_learningpath {
               when ${lowest_level} ilike '%Post Test%' then 'Post Test'
               when ${lowest_level} ilike '%Real World Challenge%' then 'Real World Challenge'
               when ${lowest_level} ilike '%Exam%' then 'Exam'
+
+              --History added by John
+              when ${lowest_level} ilike '%Setting the Scene%' then 'Setting the Scene'
+              when ${lowest_level} ilike '%Audio Summary%' then 'Audio Summary'
+              when ${lowest_level} ilike '%Critical Thinking Activity%' then 'Critical Thinking'
+              when ${lowest_level} ilike '%Flashcards%' then 'Flashcards'
+              when ${lowest_level} ilike '%Reflection%' then 'Reflection'
 
               --generic
               when ${dim_activity.APPLICATIONNAME} in ('CNOW.HW', 'APLIA')

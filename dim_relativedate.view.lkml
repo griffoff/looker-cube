@@ -91,6 +91,7 @@ view: dim_relativedate {
     type: number
     sql: MAX(${TABLE}.WEEKS) ;;
     type: number
+    hidden: yes
   }
 }
 

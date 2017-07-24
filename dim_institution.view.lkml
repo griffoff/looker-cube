@@ -16,13 +16,15 @@ view: dim_institution {
     label: "HED flag"
     description: "Flag to identify Higher-Ed data"
     type: string
+    hidden: yes
   }
 
   dimension: HED_filter {
+    view_label: "** RECOMMENDED FILTERS **"
     label: "HED filter"
     description: "Flag to identify Higher-Ed data"
     type:  yesno
-    sql: ${HED} = "HED" ;;
+    sql: ${HED} = 'HED' ;;
   }
 
   dimension: city {

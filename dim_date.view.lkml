@@ -11,6 +11,7 @@ view: dim_date {
 
   dimension: fiscalyear {
     label: "Fiscal Year"
+    description: "April 1st to March 31st"
     type: string
     sql: ${TABLE}.fiscalyearvalue ;;
   }
@@ -27,6 +28,7 @@ view: dim_date {
     label: "Calendar Month"
     group_label: "Calendar - Gregorian Calendar"
     order_by_field: calendarmonthid
+    hidden:  yes
   }
 
   dimension: calendarmonthofyearid {
@@ -41,6 +43,7 @@ view: dim_date {
     label: "Calendar Month of Year"
     group_label: "Calendar - Gregorian Calendar"
     order_by_field: calendarmonthofyearid
+    hidden:  yes
   }
 
   dimension: calendarmonthofyearnameshort {
@@ -49,6 +52,7 @@ view: dim_date {
     order_by_field: calendarmonthofyearid
     type: string
     sql: ${TABLE}.CALENDARMONTHOFYEARNAMESHORT ;;
+    hidden:  yes
   }
 
   dimension: calendaryearvalue {
@@ -57,6 +61,7 @@ view: dim_date {
     label: "Calendar Year"
     group_label: "Calendar - Gregorian Calendar"
     value_format: "0000"
+    hidden:  yes
   }
 
   dimension: cengageacademicterm {
@@ -65,6 +70,7 @@ view: dim_date {
     label: "Cengage Academic Term"
     group_label: "Calendar - Cengage Academic Calendar"
     order_by_field: cengageacademictermid
+    hidden:  yes
   }
 
   dimension: cengageacademictermid {
@@ -79,6 +85,7 @@ view: dim_date {
     label: "Cengage Academic Year"
     group_label: "Calendar - Cengage Academic Calendar"
     value_format: "0000"
+    hidden:  yes
   }
 
   dimension: datekey {
@@ -100,7 +107,8 @@ view: dim_date {
     ]
     convert_tz: no
     sql: ${TABLE}.DATEVALUE ;;
-    label: "Raw"
+    label: "Calendar - "
+    description: "Standard calendar"
   }
 
   dimension: dayofweekid {
@@ -127,6 +135,7 @@ view: dim_date {
 
   dimension: governmentdefinedacademicterm {
     type: string
+    description: "Fall = August (8/1) - December (12/31).  Spring = January (1/1) - June (6/30).  Summer = July (7/1-7/31)"
     sql: ${TABLE}.GOVERNMENTDEFINEDACADEMICTERM ;;
     label: "Government Academic Term"
     group_label: "Calendar - Government Defined Academic Calendar"
@@ -158,6 +167,7 @@ view: dim_date {
     label: "HED Academic Term"
     group_label: "Calendar - HED Academic Calendar"
     order_by_field: hed_academictermid
+    hidden:  yes
   }
 
   dimension: hed_academictermid {
@@ -172,6 +182,7 @@ view: dim_date {
     label: "HED Academic Term of Year"
     group_label: "Calendar - HED Academic Calendar"
     order_by_field: hed_academictermofyearid
+    hidden:  yes
   }
 
   dimension: hed_academictermofyearid {
@@ -186,6 +197,7 @@ view: dim_date {
     label: "HED Academic Year"
     group_label: "Calendar - HED Academic Calendar"
     value_format: "0000"
+    hidden:  yes
   }
 
   dimension: isoweekid {
@@ -200,6 +212,7 @@ view: dim_date {
     label: "ISO Week"
     group_label: "Calendar - ISO Calendar"
     order_by_field: isoweekid
+    hidden:  yes
   }
 
   dimension: isoweekofyearid {
@@ -214,6 +227,7 @@ view: dim_date {
     label: "ISO Week of Year"
     group_label: "Calendar - ISO Calendar"
     order_by_field: isoweekofyearid
+    hidden:  yes
   }
 
   dimension: isoyearvalue {
@@ -221,6 +235,7 @@ view: dim_date {
     sql: ${TABLE}.ISOYEARVALUE ;;
     label: "ISO Year"
     group_label: "Calendar - ISO Calendar"
+    hidden:  yes
   }
 
   dimension: isweekend {
@@ -242,6 +257,7 @@ view: dim_date {
     label: "Liberty Academic Term"
     group_label: "Calendar - Liberty Calendar"
     order_by_field: libertyacademictermid
+    hidden:  yes
   }
 
   dimension: libertyacademictermid {
@@ -256,6 +272,7 @@ view: dim_date {
     label: "Liberty Academic Term of Year"
     group_label: "Calendar - Liberty Calendar"
     order_by_field: libertyacademictermofyearid
+    hidden:  yes
   }
 
   dimension: libertyacademictermofyearid {

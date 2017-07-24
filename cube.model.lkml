@@ -12,6 +12,7 @@ include: "*.dashboard"
 
 explore: fact_activation {
   label: "Activations"
+  description: "Starting point for specific activations-related questions (e.g. how many activations do we have per product by institution?)."
   extends: [dim_course]
   fields: [ALL_FIELDS*, -fact_activation_by_course.ALL_FIELDS*]
 
@@ -31,20 +32,20 @@ explore: fact_activation {
     relationship: many_to_one
   }
 
-  join: dim_user {
-    sql_on: ${fact_activation.userid} = ${dim_user.userid} ;;
-    relationship: many_to_one
-  }
+#   join: dim_user {
+#     sql_on: ${fact_activation.userid} = ${dim_user.userid} ;;
+#     relationship: many_to_one
+#   }
 
-  join: dim_party {
-    sql_on: ${dim_user.mainpartyid} = ${dim_party.partyid} ;;
-    relationship: many_to_one
-  }
+# join: dim_party {
+#    sql_on: ${dim_user.mainpartyid} = ${dim_party.partyid} ;;
+#     relationship: many_to_one
+#   }
 
-  join: user_facts {
-    sql_on: ${dim_user.userid} = ${user_facts.userid} ;;
-    relationship: one_to_one
-  }
+#   join: user_facts {
+#     sql_on: ${dim_user.userid} = ${user_facts.userid} ;;
+#     relationship: one_to_one
+#   }
 
   join: dim_course {
     sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
@@ -62,10 +63,10 @@ explore: fact_activation {
 #     relationship: many_to_one
 #   }
 
-  join: fact_enrollment {
-    sql_on: ${fact_activation.courseid} = ${fact_enrollment.courseid} and ${fact_activation.partyid}) = ${fact_enrollment.partyid}) ;;
-    relationship: one_to_many
-  }
+#   join: fact_enrollment {
+#     sql_on: ${fact_activation.courseid} = ${fact_enrollment.courseid} and ${fact_activation.partyid}) = ${fact_enrollment.partyid}) ;;
+#     relationship: one_to_many
+#   }
 
 #   join: fact_appusage {
 #     sql_on: (${fact_activation.productplatformid}, ${fact_activation.productid}, ${fact_activation.courseid}, ${fact_activation.partyid}, ${fact_activation.userid}) =  (26, ${fact_appusage.productid}, ${fact_appusage.courseid}, ${fact_appusage.partyid}, ${fact_appusage.userid})
@@ -84,8 +85,9 @@ join: fact_activation_siteusage {
 
 explore: fact_activityoutcome {
   label: "Learning Path Analysis"
-  description: "Details of learning path activities, assigned vs gradable, scores, etc."
+  description: "Starting point for learning path activities, assigned vs gradable, scores, etc."
   extends: [dim_user, dim_course, dim_learningpath]
+  extension: required
 
 #   join: dim_completion_date {
 #     sql_on: ${fact_activityoutcome.completeddatekey} = ${dim_completion_date.datekey} ;;
@@ -159,7 +161,8 @@ explore: fact_activityoutcome {
 }
 
 explore: fact_activity {
-  label: "Instructor Modifications"
+  label: "Learning Path - MT Instructor Modifications"
+  description: "Starting point for learning path analysis from the instructor perspective (e.g. What has the instructor changed?  What has the instructor added?)"
   extends: [dim_course, dim_learningpath]
 
   join: dim_eventtype {
@@ -241,7 +244,7 @@ explore: fact_activity {
 
 explore:  fact_appusage_by_user {
   extends: [dim_course, dim_user, dim_learningpath]
-  label: "Mindtap - app dock usage"
+  label: "App dock usage - Mindtap"
   description: "
   Usage metrics about mindapps accessed via the Mindtap app dock
   Does not include usage of apps accessed via inline activities (from the learning path)
@@ -455,8 +458,8 @@ explore: fact_session {
 }
 
 explore: fact_siteusage {
-  label: "Learning Path - Usage Data"
-  description: "Learning path usage information including application usage information collected via google analytics"
+  label: "Learning Path - MT Usage Data"
+  description: "Start point for learning path usage from the student persepctive including application usage information collected via google analytics."
   extends: [dim_user, dim_course, dim_pagedomain]
 
   join: dim_date {
