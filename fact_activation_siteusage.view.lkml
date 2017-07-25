@@ -2,17 +2,13 @@ view: fact_activation_siteusage {
   label: "Activations - Site Usage"
   derived_table: {
     sql:
-      select CourseId, PartyId, ProductId, ProductPlatformId,UserId
-        ,sum(ClickCount) as Clicks
-        ,sum(PageViewTime) / 1000.0 as PageViewTime_secs
+      select CourseId
         ,avg(PageViewTime) / 1000.0 as Avg_PageViewTime_secs
+        ,count(distinct userid) as user_count
       from dw_ga.fact_siteusage
       group by 1, 2, 3, 4, 5;;
-  }
 
-  measure: clicks {
-    type: sum
-    sql: ${TABLE}.CLICKS ;;
+      sql_trigger_value: select count(*) from dw_ga.fact_siteusage ;;
   }
 
   dimension: courseid {
@@ -21,35 +17,10 @@ view: fact_activation_siteusage {
     hidden:  yes
   }
 
-  dimension: partyid {
-    type: string
-    sql: ${TABLE}.PARTYID ;;
-    hidden:  yes
-  }
-
-  dimension: productid {
-    type: string
-    sql: ${TABLE}.PRODUCTID ;;
-    hidden:  yes
-  }
-
-  dimension: productplatformid {
-    type: string
-    sql: ${TABLE}.PRODUCTPLATFORMID ;;
-    hidden:  yes
-  }
-
-  dimension: userid {
-    type: string
-    sql: ${TABLE}.USERID ;;
-    hidden:  yes
-  }
-
   measure: user_count {
     label: "# Users"
     description: "Count of distinct users who accessed a platform based on Google Analytics data"
-    type:  count_distinct
-    sql: ${userid} ;;
+    type:  sum
   }
 
   measure: site_usage_percent_of_activations{
@@ -61,22 +32,11 @@ view: fact_activation_siteusage {
     sql: ${user_count}/${fact_activation_by_course.activations_for_isbn} ;;
   }
 
-  measure: pageviewtime_total {
-    label: "Page view Time (secs)"
-    type: sum
-    sql: ${TABLE}.PageViewTime_secs ;;
-  }
-
   measure: pageviewtime_avg {
     label: "Avg Page view Time (secs)"
     type: average
     sql: ${TABLE}.Avg_PageViewTime_secs ;;
   }
 
-  measure:test {
-    type:  number
-    sql: ${user_count} / ${fact_activation.user_count} ;;
-    hidden:  yes
-  }
 
 }

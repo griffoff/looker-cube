@@ -1,6 +1,7 @@
 view: fact_activation {
   view_label: "Activations"
   sql_table_name: ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION ;;
+  #sql_table_name: DW_GA.FACT_ACTIVATION ;;
 
   set: coursedetails {
     fields: [dim_course.coursekey, activationcode]
