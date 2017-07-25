@@ -536,4 +536,10 @@ explore: fact_siteusage {
           ;;
     relationship: many_to_many
   }
+
+  join: paid_users {
+    view_label: "User"
+    sql_on: (${fact_siteusage.courseid}, ${fact_siteusage.userid}) = (${paid_users.courseid}, ${paid_users.userid}) ;;
+    relationship: many_to_one
+  }
 }

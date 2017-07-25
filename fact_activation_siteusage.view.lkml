@@ -15,6 +15,7 @@ view: fact_activation_siteusage {
     type: string
     sql: ${TABLE}.COURSEID ;;
     hidden:  yes
+    primary_key: yes
   }
 
   measure: user_count {

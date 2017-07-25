@@ -1,3 +1,25 @@
+view: paid_users {
+derived_table: {
+  sql:
+    select distinct courseid, userid
+    from dw_ga.fact_activation;;
+  sql_trigger_value: select count(*) from dw_ga.fact_activation ;;
+  }
+
+  dimension: courseid {hidden:yes}
+  dimension: userid {hidden:yes}
+  dimension: paid {
+    type: yesno
+    sql: ${userid} is not null;;
+  }
+
+  dimension: paidcategory {
+    label: "Paid (Paid/Unpaid)"
+    type: string
+    sql: case when ${userid} is not null then 'Paid' else 'Unpaid' end;;
+  }
+}
+
 view: fact_siteusage {
   label: "Learning Path - Usage Data"
   sql_table_name: DW_GA.FACT_SITEUSAGE ;;
