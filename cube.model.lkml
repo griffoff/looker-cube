@@ -78,8 +78,8 @@ explore: fact_activation {
 #   }
 
 join: fact_activation_siteusage {
-    sql_on: (${fact_activation.productplatformid}, ${fact_activation.productid}, ${fact_activation.courseid}, ${fact_activation.partyid}, ${fact_activation.userid}) =  (${fact_activation_siteusage.productplatformid}, ${fact_activation_siteusage.productid}, ${fact_activation_siteusage.courseid}, ${fact_activation_siteusage.partyid}, ${fact_activation_siteusage.userid});;
-    relationship: one_to_many
+    sql_on: ${fact_activation.courseid} = ${fact_activation_siteusage.courseid};;
+    relationship: many_to_one
   }
 }
 

@@ -141,8 +141,8 @@ CASE
     type: string
     label: "Discipline"
    group_label: "Categories"
-   #sql: ${TABLE}.discipline_rollup;;
-    sql: ${publicationseries};;
+   sql: ${TABLE}.discipline_rollup;;
+    #sql: ${publicationseries};;
 
     link: {
       label: "Engagement Toolkit"

@@ -464,6 +464,19 @@ view: dim_learningpath {
       url: "/explore/cube/fact_activityoutcome?fields=dim_learningpath.chapter,dim_learningpath.lowest_level_category,dim_learningpath.lowest_level,dim_activity.APPLICATIONNAME,dim_activity.activitysubcategory,dim_learningpath.count,&f[dim_learningpath.lowest_level_category]={{ value }}"
     }
     sql: case
+
+            --Business(Paralegal) added by Nalini Pillay
+              when ${lowest_level} ilike '%Case Studies%' then 'Case Studies'
+              when ${lowest_level} ilike '%Additional Assignment%' then 'Additional Assignment'
+              when ${lowest_level} ilike '%Assignment%.%' then 'Assignment'
+              when ${lowest_level} ilike '%Test Yourself%' then 'Chapter Quizzes'
+              when ${lowest_level} ilike '%Outline%' then 'Chapter Outlines'
+              when ${lowest_level} ilike '%Helpful Websites%' then 'Helpful Websites'
+              when ${lowest_level} ilike '%Crossword Puzzle%' then 'Crossword Puzzles'
+              when ${lowest_level} ilike '%Lecture Notes%' then 'PowerPoints'
+              when ${lowest_level} ilike '%Hands-on%' then 'Hands-on Exercises'
+              when ${lowest_level} ilike '%Job Search%' then 'Learning Lab Assignment: Job Search'
+
               --Psychology - added by John B.
               when ${lowest_level} ilike '%Mastery Training%' then 'Mastery Training'
               when ${lowest_level} ilike '%Quiz%' then 'Quiz'
@@ -473,7 +486,7 @@ view: dim_learningpath {
               when ${lowest_level} ilike '%START Zoom%' then 'Start Zoom'
               when ${lowest_level} ilike '%Concept Check%' then 'Concept Check'
 
-              --English added by Nalini
+              --English added by Nalini Pillay
               when ${lowest_level} ilike 'Graded Assignment%' then 'Graded Assignment'
               when ${lowest_level} ilike 'Assignment%' then 'Graded Assignment'
               when ${lowest_level} ilike 'Quick Review%' then 'Quick Review'
