@@ -1,5 +1,5 @@
 view: fact_activityoutcome {
-  label: "Learning Path"
+  label: "Learning Path - Activity Takes"
   sql_table_name: DW_GA.FACT_ACTIVITYOUTCOME ;;
 
   dimension: rowid {

@@ -1,8 +1,8 @@
 view: fact_activityoutcomesummary {
+  view_label: "Learning Path - Activity Final Outcomes"
   sql_table_name: DW_GA.FACT_ACTIVITYOUTCOMESUMMARY ;;
 
   dimension: id {
-    primary_key: yes
     type: number
     sql: ${TABLE}.ID ;;
   }
@@ -11,6 +11,7 @@ view: fact_activityoutcomesummary {
     type: number
     value_format_name: id
     sql: ${TABLE}.ACTIVITYID ;;
+    hidden: yes
   }
 
   dimension: attempts {

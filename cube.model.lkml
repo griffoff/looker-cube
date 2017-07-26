@@ -14,7 +14,7 @@ explore: fact_activation {
   label: "Activations"
   description: "Starting point for specific activations-related questions (e.g. how many activations do we have per product by institution?)."
   extends: [dim_course]
-  fields: [ALL_FIELDS*, -fact_activation_by_course.ALL_FIELDS*]
+  fields: [ALL_FIELDS*, -course_section_facts.ALL_FIELDS*]
 
    join: dim_date {
     sql_on: ${fact_activation.activationdatekey} = ${dim_date.datekey} ;;

@@ -133,11 +133,11 @@ explore: aplia_course_map {
     view_label: " Cube - Course Start Date"
   }
 
-  join: fact_activation_by_course {
+  join: course_section_facts {
     view_label: " Cube - Activations"
   }
 
-  join: fact_activation_by_product {
+  join: product_facts {
     view_label: " Cube - Activations"
   }
 
@@ -236,11 +236,11 @@ explore: problem {
     view_label: " Cube - Course Start Date"
   }
 
-  join: fact_activation_by_course {
+  join: course_section_facts {
     view_label: " Cube - Activations"
   }
 
-  join: fact_activation_by_product {
+  join: product_facts {
     view_label: " Cube - Activations"
   }
 

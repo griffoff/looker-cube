@@ -30,7 +30,7 @@ view: fact_activation_siteusage {
       This indicates the number of actual users vs. potential users over the time frame specified in the filter section (denominator is 'Product Activations')."
     type: number
     value_format_name: percent_1
-    sql: ${user_count}/${fact_activation_by_course.activations_for_isbn} ;;
+    sql: ${user_count}/${course_section_facts.activations_for_isbn} ;;
   }
 
   measure: pageviewtime_avg {
