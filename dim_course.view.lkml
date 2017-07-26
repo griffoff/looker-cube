@@ -170,8 +170,8 @@ view: dim_course {
   dimension: is_lms_integrated {
     label: "LMS Integrated"
     type: yesno
-    sql: length(split_part(${coursekey}, '-', 1)) > 15
-        and array_size(split(${coursekey}, '-')) >= 2
+    sql: length(split_part(dim_course.coursekey, '-', 1)) > 15
+        and array_size(split(dim_course.coursekey, '-')) >= 2
         and ${productplatformid}= 26 ;;
   }
 

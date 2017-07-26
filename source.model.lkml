@@ -204,7 +204,7 @@ explore: problem {
     relationship: many_to_one
   }
 
-  join: course_facts {
+  join: course_section_facts {
     view_label: " Cube - Course/Section"
   }
 
