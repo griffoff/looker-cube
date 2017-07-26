@@ -311,7 +311,7 @@ explore: snapshot {
  }
 
  join: created_by_user {
-    view_label: "Created By"
+    view_label: "User - Created By"
     from: user
     sql_on:  ${node.created_by} = ${created_by_user.id};;
     relationship: many_to_one
@@ -337,6 +337,23 @@ explore: snapshot {
   join: app {
     sql_on: ${app_activity.app_id} = ${app.id} ;;
     relationship: many_to_one
+  }
+
+  join: activity_outcome {
+    sql_on: ${node.id} = ${activity_outcome.activity_id} ;;
+    relationship: one_to_many
+  }
+
+  join: activity_outcome_detail {
+    sql_on: ${activity_outcome.id} = ${activity_outcome_detail.activity_outcome_id} ;;
+    relationship: one_to_many
+  }
+
+  join: student {
+    view_label: "User - Student"
+    from: user
+    sql_on:  ${activity_outcome.user_id} = ${student.id};;
+    relationship: many_to_many
   }
 
 }
