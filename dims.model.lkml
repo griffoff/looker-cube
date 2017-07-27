@@ -46,11 +46,6 @@ explore: dim_course {
     relationship: one_to_one
   }
 
-  join: course_facts {
-    sql_on: ${dim_course.courseid} = ${course_facts.courseid} ;;
-    relationship: one_to_one
-  }
-
   join: dim_start_date {
     sql_on: ${dim_course.startdatekey} = ${dim_start_date.datekey} ;;
     relationship: many_to_one
@@ -81,13 +76,13 @@ explore: dim_course {
     sql_on: ${dim_course.filterflag} = ${dim_filter.filterflag} ;;
   }
 
-  join:  fact_activation_by_course {
-    sql_on: ${dim_course.courseid} = ${fact_activation_by_course.courseid} ;;
+  join:  course_section_facts {
+    sql_on: ${dim_course.courseid} = ${course_section_facts.courseid} ;;
     relationship: one_to_one
   }
 
-  join:  fact_activation_by_product {
-    sql_on: ${fact_activation_by_course.by_product_fk} = ${fact_activation_by_product.pk} ;;
+  join:  product_facts {
+    sql_on: ${course_section_facts.by_product_fk} = ${product_facts.by_product_fk} ;;
     relationship: many_to_one
   }
 }

@@ -1,5 +1,5 @@
 view: fact_activityoutcome {
-  label: "Learning Path"
+  label: "Learning Path - Activity Takes"
   sql_table_name: DW_GA.FACT_ACTIVITYOUTCOME ;;
 
   dimension: rowid {
@@ -35,6 +35,7 @@ view: fact_activityoutcome {
   }
 
   dimension: completed {
+    label: "Take Completed"
     type: string
     sql:  CASE
               WHEN ${TABLE}.COMPLETED = 'true' THEN 'Completed'
@@ -44,10 +45,10 @@ view: fact_activityoutcome {
   }
 
   measure: completed_activities {
-    type: count
+    type: count_distinct
     label: "# Completed Activities"
     description: "Number of completed activities"
-    sql: ${completed} ;;
+    sql: case when ${TABLE}.completed then ${id} end ;;
   }
 
   dimension: completeddatekey {

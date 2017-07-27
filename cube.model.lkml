@@ -14,7 +14,7 @@ explore: fact_activation {
   label: "Activations"
   description: "Starting point for specific activations-related questions (e.g. how many activations do we have per product by institution?)."
   extends: [dim_course]
-  fields: [ALL_FIELDS*, -fact_activation_by_course.ALL_FIELDS*]
+  fields: [ALL_FIELDS*, -course_section_facts.ALL_FIELDS*]
 
    join: dim_date {
     sql_on: ${fact_activation.activationdatekey} = ${dim_date.datekey} ;;
@@ -535,5 +535,11 @@ explore: fact_siteusage {
           and ${fact_siteusage.eventdatekey} = ${fact_activityoutcome.startdatekey}
           ;;
     relationship: many_to_many
+  }
+
+  join: paid_users {
+    view_label: "User"
+    sql_on: (${fact_siteusage.courseid}, ${fact_siteusage.userid}) = (${paid_users.courseid}, ${paid_users.userid}) ;;
+    relationship: many_to_one
   }
 }

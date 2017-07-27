@@ -43,7 +43,7 @@ view: dim_party {
   }
 
   set: personDetails {
-    fields: [dim_course.coursekey, dim_course.coursename, guid, mainpartyemail, firstname, lastname, fact_activation.total_noofactivations, is_external, dim_user.productsactivated, fact_activation_by_course.total_noofactivations]
+    fields: [dim_course.coursekey, dim_course.coursename, guid, mainpartyemail, firstname, lastname, fact_activation.total_noofactivations, is_external, dim_user.productsactivated, course_section_facts.total_noofactivations]
   }
 
   dimension: dw_ldid {

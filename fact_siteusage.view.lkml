@@ -1,3 +1,25 @@
+view: paid_users {
+derived_table: {
+  sql:
+    select distinct courseid, userid
+    from dw_ga.fact_activation;;
+  sql_trigger_value: select count(*) from dw_ga.fact_activation ;;
+  }
+
+  dimension: courseid {hidden:yes}
+  dimension: userid {hidden:yes}
+  dimension: paid {
+    type: yesno
+    sql: ${userid} is not null;;
+  }
+
+  dimension: paidcategory {
+    label: "Paid (Paid/Unpaid)"
+    type: string
+    sql: case when ${userid} is not null then 'Paid' else 'Unpaid' end;;
+  }
+}
+
 view: fact_siteusage {
   label: "Learning Path - Usage Data"
   sql_table_name: DW_GA.FACT_SITEUSAGE ;;
@@ -293,7 +315,7 @@ view: fact_siteusage {
       no. of people who accessed vs no. of people who were exposed to this feature
     "
     type: number
-    sql: COALESCE(${usercount} / NULLIF(${fact_activation_by_course.total_noofactivations}, 0.0),0) ;;
+    sql: COALESCE(${usercount} / NULLIF(${course_section_facts.total_noofactivations}, 0.0),0) ;;
     value_format_name: percent_1
     html:
       <div style="width:100%;">
@@ -307,7 +329,7 @@ view: fact_siteusage {
     description: "
     No. of people who accessed vs. all activations/user possible whether they where exposed or whether the activity/item was hidden in their learning path"
     type:  number
-    sql: COALESCE(${usercount} / NULLIF(${fact_activation_by_product.activations_for_isbn}, 0.0),0) ;;
+    sql: COALESCE(${usercount} / NULLIF(${product_facts.activations_for_isbn}, 0.0),0) ;;
     value_format_name: percent_1
     html:
       <div style="width:100%;">

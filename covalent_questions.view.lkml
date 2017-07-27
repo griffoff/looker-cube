@@ -539,7 +539,7 @@ view: all_questions {
     label: "% Item Usage"
     type: number
     description: "% of users who did this item of the total activated users on courses with this item"
-    sql: ${user_count} / nullif(${fact_activation_by_course.total_noofactivations}, 0) ;;
+    sql: ${user_count} / nullif(${course_section_facts.total_noofactivations}, 0) ;;
     value_format_name: percent_1
   }
 

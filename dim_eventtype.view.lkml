@@ -28,7 +28,7 @@ view: dim_eventtype {
     view_label: "Learning Path"
     label: "# Courses with activations where activity is unassigned"
     type: number
-    sql: count( distinct case when ${eventtypename} = 'Item Removed' and ${fact_activation_by_course.noofactivations_base} > 0 then ${dim_course.courseid} end);;
+    sql: count( distinct case when ${eventtypename} = 'Item Removed' and ${course_section_facts.noofactivations_base} > 0 then ${dim_course.courseid} end);;
   }
 
   measure: removed_from_course_user_count {
@@ -36,9 +36,9 @@ view: dim_eventtype {
     view_label: "Learning Path"
     label: "# Activations for courses where activity is unassigned"
     type: sum_distinct
-    #sql: case when ${eventtypename} = 'Item Removed' then ${fact_activation_by_course.noofactivations_base} end ;;
-    sql: ${fact_activation_by_course.noofactivations_base} ;;
-    sql_distinct_key: ${fact_activation_by_course.courseid} ;;
+    #sql: case when ${eventtypename} = 'Item Removed' then ${course_section_facts.noofactivations_base} end ;;
+    sql: ${course_section_facts.noofactivations_base} ;;
+    sql_distinct_key: ${course_section_facts.courseid} ;;
     filters:  {
       field: eventtypename
       value: "Item Removed"

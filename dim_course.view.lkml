@@ -1,5 +1,5 @@
 view: dim_course {
-  label: "Course / Section Details"
+  view_label: "Course / Section Details"
   #sql_table_name: DW_GA.DIM_COURSE ;;
   derived_table: {
     sql:
@@ -21,6 +21,7 @@ view: dim_course {
     type: string
     sql: ${TABLE}.COURSEID ;;
     hidden: yes
+    primary_key: yes
   }
 
   dimension: olr_course_key {
@@ -33,11 +34,18 @@ view: dim_course {
     hidden: yes
   }
 
+  dimension: context_id {
+    label: "Context ID"
+    type: string
+    sql: ${TABLE}.olr_context_id ;;
+    #sql: ${TABLE}.coursekey ;;
+  }
+
   dimension: coursekey {
     label: "Course Key"
     type: string
-    sql: ${TABLE}.COURSEKEY ;;
-    primary_key: yes
+    sql: ${TABLE}.olr_course_key ;;
+    #primary_key: yes
 
     link: {
       label: "Explore Mindtap Learning Path for this Course/Section"
@@ -162,8 +170,8 @@ view: dim_course {
   dimension: is_lms_integrated {
     label: "LMS Integrated"
     type: yesno
-    sql: length(split_part(${coursekey}, '-', 1)) > 15
-        and array_size(split(${coursekey}, '-')) >= 2
+    sql: length(split_part(dim_course.coursekey, '-', 1)) > 15
+        and array_size(split(dim_course.coursekey, '-')) >= 2
         and ${productplatformid}= 26 ;;
   }
 
@@ -171,6 +179,6 @@ view: dim_course {
     label: "# Course Sections"
     description: "Count of course sections."
     type: count
-    drill_fields: [dim_institution.institutionname, coursekey, coursename, dim_start_date.calendarmonthname, fact_activation_by_course.total_noofactivations]
+    drill_fields: [dim_institution.institutionname, coursekey, coursename, dim_start_date.calendarmonthname, course_section_facts.total_noofactivations]
   }
 }

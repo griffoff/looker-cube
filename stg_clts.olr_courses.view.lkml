@@ -45,7 +45,7 @@ view: olr_courses {
     primary_key: yes
     type: string
     sql: ${TABLE}.COURSE_KEY ;;
-    hidden: yes
+    hidden: no
   }
 
   dimension: course_name {

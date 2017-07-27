@@ -337,7 +337,7 @@ view: dim_activity {
     label: "% Activity unassigned from Master LP"
     description: "Percent of time a given activity was removed from the master learning path by an instructor."
     type:  number
-    sql: (${fact_activation_by_product.activations_for_isbn}-${fact_activation_by_course.total_noofactivations}) / nullif(${fact_activation_by_product.activations_for_isbn}, 0) ;;
+    sql: (${product_facts.activations_for_isbn}-${course_section_facts.total_noofactivations}) / nullif(${product_facts.activations_for_isbn}, 0) ;;
     value_format_name: percent_1
     hidden: yes
     html:
@@ -449,14 +449,14 @@ view: dim_activity {
   }
 
   set:  institutionDetails {
-    fields: [dim_institution.institutionname, dim_eventtype.eventtypename, status, originallygradable, gradable, originalscorable, scorable, dim_course.count, fact_activation_by_course.total_noofactivations]
+    fields: [dim_institution.institutionname, dim_eventtype.eventtypename, status, originallygradable, gradable, originalscorable, scorable, dim_course.count, course_section_facts.total_noofactivations]
   }
 
   measure: gradable_course_user_count {
     label: "# Activations for courses where activity is graded"
     type: sum_distinct
-    sql: ${fact_activation_by_course.noofactivations_base} ;;
-    sql_distinct_key: ${fact_activation_by_course.courseid} ;;
+    sql: ${course_section_facts.noofactivations_base} ;;
+    sql_distinct_key: ${course_section_facts.courseid} ;;
     filters: {
       field: status
       value: "graded"
@@ -467,8 +467,8 @@ view: dim_activity {
   measure: practice_course_user_count {
     label: "# Activations for courses where activity is practice"
     type: sum_distinct
-    sql: ${fact_activation_by_course.noofactivations_base} ;;
-    sql_distinct_key: ${fact_activation_by_course.courseid} ;;
+    sql: ${course_section_facts.noofactivations_base} ;;
+    sql_distinct_key: ${course_section_facts.courseid} ;;
     filters: {
       field: status
       value: "practice"
@@ -479,8 +479,8 @@ view: dim_activity {
   measure: nonscorable_course_user_count {
     label: "# Activations for courses where activity is not scored"
     type: sum_distinct
-    sql: ${fact_activation_by_course.noofactivations_base} ;;
-    sql_distinct_key: ${fact_activation_by_course.courseid} ;;
+    sql: ${course_section_facts.noofactivations_base} ;;
+    sql_distinct_key: ${course_section_facts.courseid} ;;
     filters: {
       field: status
       value: "nonscorable"
@@ -491,8 +491,8 @@ view: dim_activity {
   measure: unassigned_course_user_count {
     label: "# Activations for courses where activity has been unassigned"
     type: sum_distinct
-    sql: ${fact_activation_by_course.noofactivations_base} ;;
-    sql_distinct_key: ${fact_activation_by_course.courseid} ;;
+    sql: ${course_section_facts.noofactivations_base} ;;
+    sql_distinct_key: ${course_section_facts.courseid} ;;
     filters: {
       field: status
       value: "unassigned"
@@ -503,16 +503,16 @@ view: dim_activity {
   measure: denominator_student_exposure_percent_calcs {
     #sql: nullif((coalesce(${gradable_course_user_count},0)+coalesce(${practice_course_user_count},0)+coalesce(${nonscorable_course_user_count},0)),0) ;;
     type: sum_distinct
-    sql: ${fact_activation_by_course.noofactivations_base} ;;
-    sql_distinct_key: ${fact_activation_by_course.courseid} ;;
+    sql: ${course_section_facts.noofactivations_base} ;;
+    sql_distinct_key: ${course_section_facts.courseid} ;;
 #     hidden: yes
   }
 
   measure: available_course_user_count {
     label: "# Activations for courses where activity is available"
     type: sum_distinct
-    sql: ${fact_activation_by_course.noofactivations_base} ;;
-    sql_distinct_key: ${fact_activation_by_course.courseid} ;;
+    sql: ${course_section_facts.noofactivations_base} ;;
+    sql_distinct_key: ${course_section_facts.courseid} ;;
     filters: {
       field: available
       value: "1"
@@ -523,8 +523,8 @@ view: dim_activity {
 #   measure: course_user_count {
 #     label: "# Activations for courses where activity should have been available"
 #     type: number
-#     sql: ${fact_activation_by_course.noofactivations_base} ;;
-#     sql_distinct_key: ${fact_activation_by_course.courseid} ;;
+#     sql: ${course_section_facts.noofactivations_base} ;;
+#     sql_distinct_key: ${course_section_facts.courseid} ;;
 #     drill_fields: [institutionDetails*]
 #   }
 
