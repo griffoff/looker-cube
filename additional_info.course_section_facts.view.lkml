@@ -7,14 +7,16 @@ view: course_section_facts {
         c.courseid
         ,c.productid
         ,c.institutionid
+        ,i.HED
         ,case when length(split_part(c.coursekey, '-', 1)) > 15 and array_size(split(c.coursekey, '-')) >= 2 and c.productplatformid= 26 then 'yes' else 'no' end as is_lms_integrated
         ,COALESCE(d.fiscalyearvalue, 'UNKNOWN') as date_granularity
       from dw_ga.dim_course c
       --left join dw_ga.dim_date d on case when c.startdatekey = -1 then c.enddatekey else c.startdatekey end = d.datekey
       left join dw_ga.dim_date d on c.startdatekey = d.datekey
+      left join ${dim_institution.SQL_TABLE_NAME} i on c.institutionid = i.institutionid
       )
     ,i as (
-      select course.courseid, instructor.instructor_first_date, instructor.instructor_first_date_key
+      select course.courseid, min(instructor.instructor_first_date) as instructor_first_date, min(instructor.instructor_first_date_key) as instructor_first_date_key
       from
       (SELECT b.userid as instructorid
             , min(datevalue) as instructor_first_date
@@ -29,6 +31,7 @@ view: course_section_facts {
       on instructor.instructorid = map.userid
       join dw_ga.dim_course course
       on map.courseid = course.courseid
+      group by 1
     )
     ,u as (
       select courseid, count(distinct userid) as users
@@ -43,16 +46,17 @@ view: course_section_facts {
           ,c.date_granularity
           ,c.is_lms_integrated
           ,c.institutionid
-          ,p.productfamily || p.edition || c.is_lms_integrated || c.date_granularity as by_product_fk
+          ,c.HED
+          ,p.productfamily || p.edition || c.is_lms_integrated || c.HED || c.date_granularity as by_product_fk
           ,sum(NOOFACTIVATIONS) as NOOFACTIVATIONS
           --,sum(sum(NOOFACTIVATIONS)) over (partition by p.productfamily, p.edition, c.institutionid, c.is_lms_integrated, c.date_granularity) as product_activations
           --,sum(count(distinct a.courseid)) over (partition by p.productfamily, p.edition, c.is_lms_integrated, c.date_granularity) as activated_courses
       from ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION a
       inner join c on a.courseid = c.courseid
       inner join dw_ga.dim_product p on c.productid = p.productid
-    group by 1, 2, 3, 4, 5, 6
+    group by 1, 2, 3, 4, 5, 6, 7
     )
-    select
+    select distinct
       a.*
       ,greatest(ifnull(u.users, 0), ifnull(a.NOOFACTIVATIONS, 0)) as users
       ,i.instructor_first_date
