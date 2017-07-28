@@ -267,7 +267,7 @@ view: fact_siteusage {
     type: count_distinct
     sql: ${TABLE}.sessionnumber ;;
     value_format: "#,##0"
-    hidden: yes
+    hidden: no
   }
 
   dimension: partyid {
