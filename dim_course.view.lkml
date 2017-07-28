@@ -30,22 +30,19 @@ view: dim_course {
     sql: ${TABLE}.olr_course_key ;;
   }
 
-  dimension: olr_context_id {
-    hidden: yes
-  }
-
   dimension: context_id {
     label: "Context ID"
     type: string
     sql: ${TABLE}.olr_context_id ;;
     #sql: ${TABLE}.coursekey ;;
+    hidden:  yes
   }
 
   dimension: coursekey {
-    label: "Course Key"
+    label: "Context ID"
     type: string
-    sql: ${TABLE}.olr_course_key ;;
-    #primary_key: yes
+    sql: ${TABLE}.coursekey ;;
+    description: "OLR Context ID"
 
     link: {
       label: "Explore Mindtap Learning Path for this Course/Section"
