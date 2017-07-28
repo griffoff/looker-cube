@@ -543,8 +543,8 @@ explore: fact_siteusage {
     relationship: many_to_one
   }
 
-  join: UPLOADS_lp_activity_details_tagging_test {
-    sql_on: ${dim_learningpath.lowest_level}=${UPLOADS_lp_activity_details_tagging_test.activity_title};;
+  join: lp_activity_details_tagging_test {
+    sql_on: ${dim_learningpath.lowest_level}=${lp_activity_details_tagging_test.activity_title};;
     relationship: one_to_one
   }
 }

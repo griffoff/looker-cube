@@ -1,6 +1,6 @@
-view: UPLOADS_lp_activity_details_tagging_test {
+view: lp_activity_details_tagging_test {
   view_label: "Learning Path - Activity Tagging TEST"
-  sql_table_name: ZJB.LP_ACTIVITY_DETAILS_TAGGING_TEST ;;
+  sql_table_name: UPLOADS.ZJB.LP_ACTIVITY_DETAILS_TAGGING_TEST ;;
 
   dimension: activity_cluster {
     type: string
