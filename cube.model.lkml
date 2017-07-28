@@ -542,4 +542,9 @@ explore: fact_siteusage {
     sql_on: (${fact_siteusage.courseid}, ${fact_siteusage.userid}) = (${paid_users.courseid}, ${paid_users.userid}) ;;
     relationship: many_to_one
   }
+
+  join: lp_activity_details_tagging_test {
+    sql_on: ${dim_learningpath.lowest_level}=${lp_activity_details_tagging_test.activity_title};;
+    relationship: one_to_one
+  }
 }
