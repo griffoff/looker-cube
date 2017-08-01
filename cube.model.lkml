@@ -58,28 +58,14 @@ explore: fact_activation {
     relationship: many_to_one
   }
 
-#   join: dim_relative_to_end_date {
-#     sql_on: ${fact_activation.daysbeforecourseend} = ${dim_relative_to_end_date.days} ;;
-#     relationship: many_to_one
-#   }
-
-#   join: fact_enrollment {
-#     sql_on: ${fact_activation.courseid} = ${fact_enrollment.courseid} and ${fact_activation.partyid}) = ${fact_enrollment.partyid}) ;;
-#     relationship: one_to_many
-#   }
-
-#   join: fact_appusage {
-#     sql_on: (${fact_activation.productplatformid}, ${fact_activation.productid}, ${fact_activation.courseid}, ${fact_activation.partyid}, ${fact_activation.userid}) =  (26, ${fact_appusage.productid}, ${fact_appusage.courseid}, ${fact_appusage.partyid}, ${fact_appusage.userid})
-#           and {% condition fact_appusage.filter_appusage_rank %} ${fact_appusage.app_rank} {% endcondition %}
-#           and {% condition fact_appusage.filter_appusage_rank_user %} ${fact_appusage.app_rank_user} {% endcondition %}
-#           ;;
-#
-#     relationship: one_to_many
-#   }
-
 join: fact_activation_siteusage {
     sql_on: ${fact_activation.courseid} = ${fact_activation_siteusage.courseid};;
     relationship: many_to_one
+  }
+
+join: lifespan {
+  sql_on: (${dim_institution.entity_no}, ${products.prod_family_cd}) = (${lifespan.entity_no}, ${lifespan.prod_family_cd}) ;;
+  relationship: many_to_one
   }
 }
 
