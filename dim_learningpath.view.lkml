@@ -259,6 +259,9 @@ view: dim_learningpath {
               when lp.lowest_level ilike '%Critical Thinking Activity%' then 'Critical Thinking'
               when lp.lowest_level ilike '%Flashcards%' then 'Flashcards'
               when lp.lowest_level ilike '%Reflection%' then 'Reflection'
+
+              -- GENERIC added by John
+              when lp.lowest_level ilike '%Investigate Development%' then 'Investigate Development'
               end as lowest_level_category
     from lp
     left join lporder on decode(lp.masternodeid, -1, lp.learningpathid, lp.masternodeid) = lporder.lpid
