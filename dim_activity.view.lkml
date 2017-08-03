@@ -212,7 +212,7 @@ view: dim_activity {
   }
 
   measure:  count_unassigned {
-    label: "# Unnassigned courses"
+    label: "# Unassigned courses"
     description: "No. of courses where this activity is unavailable"
     type: count_distinct
 #    sql: case when ${gradable} = 'Graded' then ${dim_course.courseid} end;;
