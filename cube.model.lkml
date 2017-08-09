@@ -538,8 +538,8 @@ explore: fact_siteusage {
     relationship: many_to_one
   }
 
-  join: lp_activity_details_tagging_test {
-    sql_on: ${dim_learningpath.lowest_level}=${lp_activity_details_tagging_test.activity_title};;
-    relationship: one_to_one
+  join: lp_activity_tags_test {
+    sql_on: (${dim_product.productfamily},${dim_learningpath.lowest_level})=(${lp_activity_tags_test.product_family},${lp_activity_tags_test.learning_path_activity_title});;
+    relationship: one_to_many
   }
 }

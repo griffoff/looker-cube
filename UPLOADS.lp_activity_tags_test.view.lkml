@@ -1,6 +1,5 @@
-view: lp_activity_details_tagging_test {
-  view_label: "Learning Path - Activity Tagging TEST"
-  sql_table_name: UPLOADS.ZJB.LP_ACTIVITY_DETAILS_TAGGING_TEST ;;
+view: lp_activity_tags_test {
+  sql_table_name: UPLOADS.ZJB.LP_ACTIVITY_TAGS_TEST ;;
 
   dimension: activity_cluster {
     type: string
@@ -10,11 +9,6 @@ view: lp_activity_details_tagging_test {
   dimension: activity_sub_cluster {
     type: string
     sql: ${TABLE}.ACTIVITY_SUB_CLUSTER ;;
-  }
-
-  dimension: activity_title {
-    type: string
-    sql: ${TABLE}.ACTIVITY_TITLE ;;
   }
 
   dimension: activty_subtype {
@@ -37,14 +31,15 @@ view: lp_activity_details_tagging_test {
     sql: ${TABLE}.CHAPTER_TOPIC ;;
   }
 
-  dimension: edition {
-    type: number
-    sql: ${TABLE}.EDITION ;;
+  dimension: learning_path_activity_title {
+    type: string
+    sql: ${TABLE}.LEARNING_PATH_ACTIVITY_TITLE ;;
   }
 
   dimension: primary_key {
     type: number
     sql: ${TABLE}.PRIMARY_KEY ;;
+    primary_key: yes
   }
 
   dimension: product_family {
@@ -52,18 +47,23 @@ view: lp_activity_details_tagging_test {
     sql: ${TABLE}.PRODUCT_FAMILY ;;
   }
 
-  dimension: section {
-    type: string
-    sql: ${TABLE}.SECTION ;;
+  dimension: product_family_edition {
+    type: number
+    sql: ${TABLE}.PRODUCT_FAMILY_EDITION ;;
   }
 
-  dimension: unit {
+  dimension: section_name {
     type: string
-    sql: ${TABLE}.UNIT ;;
+    sql: ${TABLE}.SECTION_NAME ;;
+  }
+
+  dimension: section_number {
+    type: string
+    sql: ${TABLE}.SECTION_NUMBER ;;
   }
 
   measure: count {
     type: count
-    drill_fields: []
+    drill_fields: [section_name]
   }
 }
