@@ -212,6 +212,57 @@ view: dim_learningpath {
         ,case when siblings < 10 and n1_type = 'Group' then n1_name else name end as compound_activity_from_source
         ,case when siblings < 10 and n1_type = 'Group' then true else false end as is_compound_activity_from_source
         ,min(a.ref_id) over (partition by lp.lowest_level) as ref_id
+        ,case
+              --Business(Paralegal) added by Nalini Pillay
+              when lp.lowest_level ilike '%Case Studies%' then 'Case Studies'
+              when lp.lowest_level ilike '%Additional Assignment%' then 'Additional Assignment'
+              when lp.lowest_level ilike '%Assignment%.%' then 'Assignment'
+              when lp.lowest_level ilike '%Test Yourself%' then 'Chapter Quizzes'
+              when lp.lowest_level ilike '%Outline%' then 'Chapter Outlines'
+              when lp.lowest_level ilike '%Helpful Websites%' then 'Helpful Websites'
+              when lp.lowest_level ilike '%Crossword Puzzle%' then 'Crossword Puzzles'
+              when lp.lowest_level ilike '%Lecture Notes%' then 'PowerPoints'
+              when lp.lowest_level ilike '%Hands-on%' then 'Hands-on Exercises'
+              when lp.lowest_level ilike '%Job Search%' then 'Learning Lab Assignment: Job Search'
+
+              --Psychology - added by John B.
+              when lp.lowest_level ilike '%Mastery Training%' then 'Mastery Training'
+              when lp.lowest_level ilike '%Quiz%' then 'Quiz'
+              when lp.lowest_level ilike '%Practice Test%' then 'Practice Test'
+              when lp.lowest_level ilike '%COMPLETE Apply%' then 'Complete Apply'
+              when lp.lowest_level ilike '%COMPLETE Research%' then 'Complete Research'
+              when lp.lowest_level ilike '%START Zoom%' then 'Start Zoom'
+              when lp.lowest_level ilike '%Concept Check%' then 'Concept Check'
+
+              --English added by Nalini Pillay
+              when lp.lowest_level ilike 'Graded Assignment%' then 'Graded Assignment'
+              when lp.lowest_level ilike 'Assignment%' then 'Graded Assignment'
+              when lp.lowest_level ilike 'Quick Review%' then 'Quick Review'
+              when lp.lowest_level ilike 'VIDEO TUTORIAL%' then 'Video Tutorial'
+
+              --CJ added by John B.
+              when lp.lowest_level ilike '%Visual Summary%' then 'Visual Summary'
+              when lp.lowest_level ilike '%Choose your path%' then 'You Decide - Part 1'
+              when lp.lowest_level ilike '%Justify your choice%' then 'You Decide - Part 2'
+              when lp.lowest_level ilike '%Skill Builder%' then 'Skill Builder'
+              when lp.lowest_level ilike '%Video Case%' then 'Video Cases'
+              when lp.lowest_level ilike '%Case Study%' then 'Case Study'
+              when lp.lowest_level ilike '%Essay%' then 'Essay'
+              when lp.lowest_level ilike '%Reading%' then 'Reading'
+              when lp.lowest_level ilike '%Post Test%' then 'Post Test'
+              when lp.lowest_level ilike '%Real World Challenge%' then 'Real World Challenge'
+              when lp.lowest_level ilike '%Exam%' then 'Exam'
+
+              --History added by John
+              when lp.lowest_level ilike '%Setting the Scene%' then 'Setting the Scene'
+              when lp.lowest_level ilike '%Audio Summary%' then 'Audio Summary'
+              when lp.lowest_level ilike '%Critical Thinking Activity%' then 'Critical Thinking'
+              when lp.lowest_level ilike '%Flashcards%' then 'Flashcards'
+              when lp.lowest_level ilike '%Reflection%' then 'Reflection'
+
+              -- GENERIC added by John
+              when lp.lowest_level ilike '%Investigate Development%' then 'Investigate Development'
+              end as lowest_level_category
     from lp
     left join lporder on decode(lp.masternodeid, -1, lp.learningpathid, lp.masternodeid) = lporder.lpid
     left join struct s on lp.learningpathid = s.learningpathid
@@ -448,6 +499,7 @@ view: dim_learningpath {
     sql: ${TABLE}.lowest_level ;;
     order_by_field: lowest_level_sort_by_data
 
+
     link: {
       label: "Explore Aplia question level data this activity"
       url: "/explore/source/problem?fields=problem.problem_title,answer.avg_score,answer.count,assignment.count,course.count&f[assignment.mindlink_guid]={{ ref_id._value }}"
@@ -462,34 +514,69 @@ view: dim_learningpath {
       label: "Show activities in this group"
       url: "/explore/cube/fact_activityoutcome?fields=dim_learningpath.chapter,dim_learningpath.lowest_level_category,dim_learningpath.lowest_level,dim_activity.APPLICATIONNAME,dim_activity.activitysubcategory,dim_learningpath.count,&f[dim_learningpath.lowest_level_category]={{ value }}"
     }
-    sql: case
-              --Psychology - added by John B.
-              when ${lowest_level} ilike '%Mastery Training%' then 'Mastery Training'
-              when ${lowest_level} ilike '%Quiz%' then 'Quiz'
-              when ${lowest_level} ilike '%Practice Test%' then 'Practice Test'
-              when ${lowest_level} ilike '%COMPLETE Apply%' then 'Complete Apply'
-              when ${lowest_level} ilike '%COMPLETE Research%' then 'Complete Research'
-              when ${lowest_level} ilike '%START Zoom%' then 'Start Zoom'
-              when ${lowest_level} ilike '%Concept Check%' then 'Concept Check'
+#     sql: case
+#
+#             --Business(Paralegal) added by Nalini Pillay
+#               when ${lowest_level} ilike '%Case Studies%' then 'Case Studies'
+#               when ${lowest_level} ilike '%Additional Assignment%' then 'Additional Assignment'
+#               when ${lowest_level} ilike '%Assignment%.%' then 'Assignment'
+#               when ${lowest_level} ilike '%Test Yourself%' then 'Chapter Quizzes'
+#               when ${lowest_level} ilike '%Outline%' then 'Chapter Outlines'
+#               when ${lowest_level} ilike '%Helpful Websites%' then 'Helpful Websites'
+#               when ${lowest_level} ilike '%Crossword Puzzle%' then 'Crossword Puzzles'
+#               when ${lowest_level} ilike '%Lecture Notes%' then 'PowerPoints'
+#               when ${lowest_level} ilike '%Hands-on%' then 'Hands-on Exercises'
+#               when ${lowest_level} ilike '%Job Search%' then 'Learning Lab Assignment: Job Search'
+#
+#               --Psychology - added by John B.
+#               when ${lowest_level} ilike '%Mastery Training%' then 'Mastery Training'
+#               when ${lowest_level} ilike '%Quiz%' then 'Quiz'
+#               when ${lowest_level} ilike '%Practice Test%' then 'Practice Test'
+#               when ${lowest_level} ilike '%COMPLETE Apply%' then 'Complete Apply'
+#               when ${lowest_level} ilike '%COMPLETE Research%' then 'Complete Research'
+#               when ${lowest_level} ilike '%START Zoom%' then 'Start Zoom'
+#               when ${lowest_level} ilike '%Concept Check%' then 'Concept Check'
+#
+#               --English added by Nalini Pillay
+#               when ${lowest_level} ilike 'Graded Assignment%' then 'Graded Assignment'
+#               when ${lowest_level} ilike 'Assignment%' then 'Graded Assignment'
+#               when ${lowest_level} ilike 'Quick Review%' then 'Quick Review'
+#               when ${lowest_level} ilike 'VIDEO TUTORIAL%' then 'Video Tutorial'
+#
+#               --CJ added by John B.
+#               when ${lowest_level} ilike '%Visual Summary%' then 'Visual Summary'
+#               when ${lowest_level} ilike '%Choose your path%' then 'You Decide - Part 1'
+#               when ${lowest_level} ilike '%Justify your choice%' then 'You Decide - Part 2'
+#               when ${lowest_level} ilike '%Skill Builder%' then 'Skill Builder'
+#               when ${lowest_level} ilike '%Video Case%' then 'Video Cases'
+#               when ${lowest_level} ilike '%Case Study%' then 'Case Study'
+#               when ${lowest_level} ilike '%Essay%' then 'Essay'
+#               when ${lowest_level} ilike '%Reading%' then 'Reading'
+#               when ${lowest_level} ilike '%Post Test%' then 'Post Test'
+#               when ${lowest_level} ilike '%Real World Challenge%' then 'Real World Challenge'
+#               when ${lowest_level} ilike '%Exam%' then 'Exam'
+#
+#               --History added by John
+#               when ${lowest_level} ilike '%Setting the Scene%' then 'Setting the Scene'
+#               when ${lowest_level} ilike '%Audio Summary%' then 'Audio Summary'
+#               when ${lowest_level} ilike '%Critical Thinking Activity%' then 'Critical Thinking'
+#               when ${lowest_level} ilike '%Flashcards%' then 'Flashcards'
+#               when ${lowest_level} ilike '%Reflection%' then 'Reflection'
+#
+#               --generic
+#               when ${dim_activity.APPLICATIONNAME} in ('CNOW.HW', 'APLIA')
+#                     or trim(${dim_activity.activitysubcategory}) in ('HOMEWORK', 'ASSESSMENT') then 'Assessment'
+#
+#               when ${dim_activity.APPLICATIONNAME} = 'CENGAGE.READER' or ${dim_activity.activitysubcategory} = 'READING' then 'Reading'
+#               when ${dim_activity.APPLICATIONNAME} = 'CENGAGE.MEDIA' or ${dim_activity.activitysubcategory} = 'MEDIA' then 'Media'
+#               when ${dim_activity.APPLICATIONNAME} = 'MINDAPP-GROVE' then 'Media Quiz'
+#               --when ${dim_activity.APPLICATIONNAME} in ('CNOW.HW', 'APLIA') then 'Assessment'
+#
+#               else 'Uncategorized'
+#               end;;
 
-              --English added by Nalini
-              when ${lowest_level} ilike 'Graded Assignment%' then 'Graded Assignment'
-              when ${lowest_level} ilike 'Quick Review%' then 'Quick Review'
-              when ${lowest_level} ilike 'VIDEO TUTORIAL%' then 'Video Tutorial'
-
-              --CJ added by John B.
-              when ${lowest_level} ilike '%Visual Summary%' then 'Visual Summary'
-              when ${lowest_level} ilike '%Choose your path%' then 'You Decide - Part 1'
-              when ${lowest_level} ilike '%Justify your choice%' then 'You Decide - Part 2'
-              when ${lowest_level} ilike '%Skill Builder%' then 'Skill Builder'
-              when ${lowest_level} ilike '%Video Case%' then 'Video Cases'
-              when ${lowest_level} ilike '%Case Study%' then 'Case Study'
-              when ${lowest_level} ilike '%Essay%' then 'Essay'
-              when ${lowest_level} ilike '%Reading%' then 'Reading'
-              when ${lowest_level} ilike '%Post Test%' then 'Post Test'
-              when ${lowest_level} ilike '%Real World Challenge%' then 'Real World Challenge'
-              when ${lowest_level} ilike '%Exam%' then 'Exam'
-
+    sql: coalesce(${TABLE}.lowest_level_category,
+              case
               --generic
               when ${dim_activity.APPLICATIONNAME} in ('CNOW.HW', 'APLIA')
                     or trim(${dim_activity.activitysubcategory}) in ('HOMEWORK', 'ASSESSMENT') then 'Assessment'
@@ -498,9 +585,9 @@ view: dim_learningpath {
               when ${dim_activity.APPLICATIONNAME} = 'CENGAGE.MEDIA' or ${dim_activity.activitysubcategory} = 'MEDIA' then 'Media'
               when ${dim_activity.APPLICATIONNAME} = 'MINDAPP-GROVE' then 'Media Quiz'
               --when ${dim_activity.APPLICATIONNAME} in ('CNOW.HW', 'APLIA') then 'Assessment'
-
               else 'Uncategorized'
-              end;;
+              end
+            );;
   }
 
   dimension: masternodeid {
@@ -526,6 +613,7 @@ view: dim_learningpath {
     type: string
     hidden: yes
     sql: ${TABLE}.PARENTLEARNINGPATHID ;;
+    primary_key: yes
   }
 
   measure: count {
@@ -553,6 +641,14 @@ view: dim_learningpath {
     label: "Global Avg. Score"
     type: min
     value_format_name: percent_1
+  }
+
+  measure: lowest_level_count {
+    label: "# Activities"
+    description: "Count of all learning path items marked as an Activity"
+    type: count
+    sql: ${TABLE}.lowest_level;;
+    hidden: no
   }
 }
 

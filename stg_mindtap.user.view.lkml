@@ -119,7 +119,7 @@ view: user {
     % of users who were exposed to an activity with it flagged as gradable
     i.e. of all people who activated on courses where an activity was available in the master learning path, how many were on courses where it was gradable.
     "
-    sql: NULL;; #case when ${dim_activity.gradable} = 'Gradable' then ${fact_activation_by_course.total_noofactivations}  ;;
+    sql: NULL;; #case when ${dim_activity.gradable} = 'Gradable' then ${course_section_facts.total_noofactivations}  ;;
   }
 
   measure: practice_exposure_percent_overall {
@@ -137,7 +137,7 @@ view: user {
     i.e. of all people who activated on courses where an activity was available in the master learning path, how many were on courses where it was neither practice or gradable.
     "
     type: number
-    sql:  case when ${dim_activity.gradable_count} = 1 then ${fact_activation_by_course.total_noofactivations} end;;
+    sql:  case when ${dim_activity.gradable_count} = 1 then ${course_section_facts.total_noofactivations} end;;
     value_format_name: percent_1
   }
 
@@ -146,7 +146,7 @@ view: user {
     description: "
     % of users who were on courses where a given activity was in the master learning path but was removed from the snapshot.
     "
-    sql: (${fact_activation_by_product.product_activations} - ${fact_activation_by_course.total_noofactivations}) / ${fact_activation_by_product.product_activations}  ;;
+    sql: (${product_facts.product_activations} - ${course_section_facts.total_noofactivations}) / ${product_facts.product_activations}  ;;
   }
 
   measure: exposure_percent {
@@ -154,7 +154,7 @@ view: user {
     description: "
     % of users who were on courses that had a given activity of all the users on courses where the activity was in the master learning path.
     "
-    sql: (${fact_activation_by_course.total_noofactivations} / ${fact_activation_by_product.product_activations}  ;;
+    sql: (${course_section_facts.total_noofactivations} / ${product_facts.product_activations}  ;;
   }
 
   dimension: is_internal {

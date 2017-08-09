@@ -1,6 +1,6 @@
 view: ipeds_map {
 
-  sql_table_name: LOOKER_SCRATCH.IPEDS_MAP ;;
+  sql_table_name: UPLOADS.ZPG.IPEDS_MAP ;;
 
   dimension: city_nm {
     type: string

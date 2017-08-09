@@ -14,13 +14,16 @@ explore: fact_activation {
   label: "Activations"
   description: "Starting point for specific activations-related questions (e.g. how many activations do we have per product by institution?)."
   extends: [dim_course]
-  fields: [ALL_FIELDS*, -fact_activation_by_course.ALL_FIELDS*]
 
-   join: dim_date {
+  join: course_section_facts {
+    fields: []
+  }
+
+  join: dim_date {
     sql_on: ${fact_activation.activationdatekey} = ${dim_date.datekey} ;;
     relationship: many_to_one
     view_label: "Date - Activation Date"
-   }
+  }
 
   join: dim_activationfilter {
     sql_on: ${fact_activation.activationfilterid} = ${dim_activationfilter.activationfilterid} ;;
@@ -48,8 +51,9 @@ explore: fact_activation {
 #   }
 
   join: dim_course {
-    sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
-#     sql_on: ${fact_activation.courseid} = ${dim_course.courseid} ;;
+    #sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
+    sql_on: ${fact_activation.courseid} = ${dim_course.courseid} ;;
+    type: full_outer
     relationship: many_to_one
   }
 
@@ -58,28 +62,14 @@ explore: fact_activation {
     relationship: many_to_one
   }
 
-#   join: dim_relative_to_end_date {
-#     sql_on: ${fact_activation.daysbeforecourseend} = ${dim_relative_to_end_date.days} ;;
-#     relationship: many_to_one
-#   }
-
-#   join: fact_enrollment {
-#     sql_on: ${fact_activation.courseid} = ${fact_enrollment.courseid} and ${fact_activation.partyid}) = ${fact_enrollment.partyid}) ;;
-#     relationship: one_to_many
-#   }
-
-#   join: fact_appusage {
-#     sql_on: (${fact_activation.productplatformid}, ${fact_activation.productid}, ${fact_activation.courseid}, ${fact_activation.partyid}, ${fact_activation.userid}) =  (26, ${fact_appusage.productid}, ${fact_appusage.courseid}, ${fact_appusage.partyid}, ${fact_appusage.userid})
-#           and {% condition fact_appusage.filter_appusage_rank %} ${fact_appusage.app_rank} {% endcondition %}
-#           and {% condition fact_appusage.filter_appusage_rank_user %} ${fact_appusage.app_rank_user} {% endcondition %}
-#           ;;
-#
-#     relationship: one_to_many
-#   }
-
 join: fact_activation_siteusage {
-    sql_on: (${fact_activation.productplatformid}, ${fact_activation.productid}, ${fact_activation.courseid}, ${fact_activation.partyid}, ${fact_activation.userid}) =  (${fact_activation_siteusage.productplatformid}, ${fact_activation_siteusage.productid}, ${fact_activation_siteusage.courseid}, ${fact_activation_siteusage.partyid}, ${fact_activation_siteusage.userid});;
-    relationship: one_to_many
+    sql_on: ${fact_activation.courseid} = ${fact_activation_siteusage.courseid};;
+    relationship: many_to_one
+  }
+
+join: lifespan {
+  sql_on: (${dim_institution.entity_no}, ${products.prod_family_cd}) = (${lifespan.entity_no}, ${lifespan.prod_family_cd}) ;;
+  relationship: many_to_one
   }
 }
 
@@ -121,8 +111,10 @@ explore: fact_activityoutcome {
 
   join: dim_course {
 #     sql_on: ${fact_activityoutcome.courseid} = ${dim_course.courseid} ;;
-    sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
+#    sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
+    sql_on: ${fact_activation.courseid} = ${dim_course.courseid} ;;
     relationship: many_to_one
+    type: full_outer
   }
 
   join: dim_relative_to_start_date {
@@ -200,10 +192,10 @@ explore: fact_activity {
   }
 
   join: dim_course {
-    sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
-    #sql_on: ${fact_activity.courseid} = ${dim_course.courseid} ;;
+    #sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
+    sql_on: ${fact_activity.courseid} = ${dim_course.courseid} ;;
     relationship: many_to_one
-    #type: full_outer
+    type: full_outer
   }
 
 #   join:  fact_activityoutcome {
@@ -252,6 +244,7 @@ explore:  fact_appusage_by_user {
   join: dim_course {
     sql_on: ${fact_appusage_by_user.courseid} = ${dim_course.courseid} ;;
     relationship: one_to_one
+    type: full_outer
   }
 
   join: dim_iframeapplication {
@@ -340,9 +333,10 @@ explore: fact_appusage {
   }
 
   join: dim_course {
-    sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
-    #sql_on: ${fact_appusage.courseid} = ${dim_course.courseid} ;;
+    #sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
+    sql_on: ${fact_appusage.courseid} = ${dim_course.courseid} ;;
     relationship: many_to_one
+    type: full_outer
   }
 
   join: dim_deviceplatform {
@@ -399,9 +393,10 @@ explore: fact_enrollment {
 #   }
 
   join: dim_course {
-#     sql_on: ${fact_enrollment.courseid} = ${dim_course.courseid} ;;
-    sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
+    #sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
+    sql_on: ${fact_enrollment.courseid} = ${dim_course.courseid} ;;
     relationship: many_to_one
+    type: full_outer
   }
 
   join: dim_relative_to_start_date {
@@ -469,9 +464,9 @@ explore: fact_siteusage {
   }
 
   join: dim_course {
-#     sql_on: ${fact_siteusage.courseid} = ${dim_course.courseid} ;;
-    sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
+    sql_on: ${fact_siteusage.courseid} = ${dim_course.courseid} ;;
     relationship: many_to_one
+    type: full_outer
   }
 
   join: dim_location {
@@ -535,5 +530,16 @@ explore: fact_siteusage {
           and ${fact_siteusage.eventdatekey} = ${fact_activityoutcome.startdatekey}
           ;;
     relationship: many_to_many
+  }
+
+  join: paid_users {
+    view_label: "User"
+    sql_on: (${fact_siteusage.courseid}, ${fact_siteusage.userid}) = (${paid_users.courseid}, ${paid_users.userid}) ;;
+    relationship: many_to_one
+  }
+
+  join: lp_activity_tags_test {
+    sql_on: (${dim_product.productfamily},${dim_learningpath.lowest_level})=(${lp_activity_tags_test.product_family},${lp_activity_tags_test.learning_path_activity_title});;
+    relationship: one_to_many
   }
 }

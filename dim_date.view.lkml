@@ -135,6 +135,7 @@ view: dim_date {
 
   dimension: governmentdefinedacademicterm {
     type: string
+    description: "Fall = August (8/1) - December (12/31).  Spring = January (1/1) - June (6/30).  Summer = July (7/1-7/31)"
     sql: ${TABLE}.GOVERNMENTDEFINEDACADEMICTERM ;;
     label: "Government Academic Term"
     group_label: "Calendar - Government Defined Academic Calendar"
