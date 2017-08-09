@@ -56,6 +56,7 @@ view: fact_appusage_by_user {
       inner join app on act.courseid = app.courseid
       left join usage a on (app.courseid, app.iframeapplicationid, u.userid) = (a.courseid, a.iframeapplicationid, a.userid)
       group by 2,3,4
+      order by act.courseid, u.userid
 ;;
 
       sql_trigger_value: select count(*) from dw_ga.fact_appusage ;;

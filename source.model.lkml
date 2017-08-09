@@ -101,10 +101,6 @@ explore: aplia_course_map {
     relationship: many_to_one
   }
 
-  join: course_facts {
-    view_label: " Cube - Course/Section"
-  }
-
   join: dim_filter {
     view_label: " Cube - Course/Section"
   }
@@ -204,10 +200,6 @@ explore: problem {
     relationship: many_to_one
   }
 
-  join: course_section_facts {
-    view_label: " Cube - Course/Section"
-  }
-
   join: dim_filter {
     view_label: " Cube - Course/Section"
   }
@@ -262,7 +254,7 @@ explore: master {
   }
 
   join: snapshot {
-    sql_on: ${master.id} = ${snapshot.parent_id} ;;
+    sql_on: ${master.id} = ${snapshot.source_id} ;;
     relationship: one_to_many
   }
 

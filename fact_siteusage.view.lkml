@@ -309,6 +309,7 @@ view: fact_siteusage {
     type: count_distinct
     sql: ${partyid} ;;
     hidden: no
+    drill_fields: [dim_product.productfamily, dim_institution.institutionname, dim_learningpath.lowest_level, usercount]
   }
 
   measure: percent_of_activations {
