@@ -6,7 +6,7 @@ view: fact_activation_siteusage {
         ,avg(PageViewTime) / 1000.0 as Avg_PageViewTime_secs
         ,count(distinct userid) as user_count
       from dw_ga.fact_siteusage
-      group by 1, 2, 3, 4, 5;;
+      group by 1;;
 
       sql_trigger_value: select count(*) from dw_ga.fact_siteusage ;;
   }
@@ -30,13 +30,14 @@ view: fact_activation_siteusage {
       This indicates the number of actual users vs. potential users over the time frame specified in the filter section (denominator is 'Product Activations')."
     type: number
     value_format_name: percent_1
-    sql: ${user_count}/${course_section_facts.activations_for_isbn} ;;
+    sql: ${user_count}/${product_facts.activations_for_isbn} ;;
   }
 
   measure: pageviewtime_avg {
-    label: "Avg Page view Time (secs)"
+    label: "Avg Page view time"
     type: average
-    sql: ${TABLE}.Avg_PageViewTime_secs ;;
+    sql: ${TABLE}.Avg_PageViewTime_secs/86400.0 ;;
+    value_format: "hh:mm:ss"
   }
 
 
