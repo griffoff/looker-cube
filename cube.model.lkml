@@ -79,6 +79,13 @@ explore: fact_activityoutcome {
   extends: [dim_user, dim_course, dim_learningpath]
   extension: required
 
+  always_filter: {
+    filters: {
+      field: dim_learningpath.learningtype
+      value: "Activity"
+    }
+  }
+
 #   join: dim_completion_date {
 #     sql_on: ${fact_activityoutcome.completeddatekey} = ${dim_completion_date.datekey} ;;
 #     relationship: many_to_one
@@ -280,72 +287,13 @@ explore:  fact_appusage_by_user {
     relationship: many_to_one
   }
 
-#   join: dim_date {
-#     sql_on: ${fact_appusage.eventdatekey} = ${dim_date.datekey} ;;
-#     relationship: many_to_one
-#   }
-
-  join: dim_deviceplatform {
-    sql_on: ${fact_appusage.deviceplatformid} = ${dim_deviceplatform.deviceplatformid} ;;
-    relationship: many_to_one
-  }
-
-  join: dim_time {
-    sql_on: ${fact_appusage.timekey} = ${dim_time.timekey} ;;
-    relationship: many_to_one
-  }
-
-  join: dim_relative_to_start_date {
-    sql_on: datediff(day, to_date(nullif(${dim_course.startdatekey}, -1)::string, 'YYYYMMDD'), to_date(nullif(${fact_appusage.eventdatekey}, -1)::string, 'YYYYMMDD')) = ${dim_relative_to_start_date.days} ;;
-    relationship: many_to_one
-  }
-}
-
-explore: fact_appusage {
-  label: "App usage - old"
-  extends: [dim_course, dim_learningpath]
-  extension:  required
-
-  join: dim_learningpath {
-    sql_on: ${fact_appusage.learningpathid} = ${dim_learningpath.learningpathid} ;;
-    relationship: many_to_one
-  }
-
-  join: dim_location {
-    type: left_outer
-    sql_on: ${fact_appusage.locationid} = ${dim_location.locationid} ;;
-    relationship: many_to_one
-  }
-
    join: dim_date {
      sql_on: ${fact_appusage.eventdatekey} = ${dim_date.datekey} ;;
      relationship: many_to_one
    }
 
-  join: dim_user {
-    sql_on: ${fact_appusage.userid} = ${dim_user.userid} ;;
-    relationship: many_to_one
-  }
-
-  join: dim_party {
-    sql_on: ${fact_appusage.partyid} = ${dim_party.partyid} ;;
-    relationship: many_to_one
-  }
-
-  join: dim_course {
-    #sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
-    sql_on: ${fact_appusage.courseid} = ${dim_course.courseid} ;;
-    relationship: many_to_one
-    type: full_outer
-  }
-
   join: dim_deviceplatform {
     sql_on: ${fact_appusage.deviceplatformid} = ${dim_deviceplatform.deviceplatformid} ;;
-    relationship: many_to_one
-  }
-
-  join: dim_iframeapplication {
-    sql_on: ${fact_appusage.iframeapplicationid} = ${dim_iframeapplication.iframeapplicationid} ;;
     relationship: many_to_one
   }
 
@@ -358,57 +306,8 @@ explore: fact_appusage {
     sql_on: datediff(day, to_date(nullif(${dim_course.startdatekey}, -1)::string, 'YYYYMMDD'), to_date(nullif(${fact_appusage.eventdatekey}, -1)::string, 'YYYYMMDD')) = ${dim_relative_to_start_date.days} ;;
     relationship: many_to_one
   }
-
-  join: fact_appusage_by_user {
-    sql_on: (${fact_appusage.courseid}, ${fact_appusage.userid}) = (${fact_appusage_by_user.courseid}, ${fact_appusage_by_user.userid})
-            and (${fact_appusage.iframeapplicationid} = ${fact_appusage_by_user.iframeapplicationid} or ${fact_appusage_by_user.iframeapplicationid} is null);;
-    relationship: many_to_one
-  }
 }
 
-
-explore: fact_enrollment {
-  label: "Enrollments"
-  extends: [dim_user, dim_course]
-  extension: required
-
-#   join: dim_date {
-#     sql_on: ${fact_enrollment.eventdatekey} = ${dim_date.datekey} ;;
-#     relationship: many_to_one
-#   }
-
-  join: dim_user {
-    sql_on: ${fact_enrollment.userid} = ${dim_user.userid} ;;
-    relationship: many_to_one
-  }
-
-#   join: dim_product {
-#     sql_on: ${fact_enrollment.productid} = ${dim_product.productid} ;;
-#     relationship: many_to_one
-#   }
-#
-#   join: dim_institution {
-#     sql_on: ${fact_enrollment.institutionid} = ${dim_institution.institutionid} ;;
-#     relationship: many_to_one
-#   }
-
-  join: dim_course {
-    #sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
-    sql_on: ${fact_enrollment.courseid} = ${dim_course.courseid} ;;
-    relationship: many_to_one
-    type: full_outer
-  }
-
-  join: dim_relative_to_start_date {
-    sql_on: ${fact_enrollment.daysfromcoursestart} = ${dim_relative_to_start_date.days} ;;
-    relationship: many_to_one
-  }
-
-  join: dim_relative_to_end_date {
-    sql_on: ${fact_enrollment.daysbeforecourseend} = ${dim_relative_to_end_date.days} ;;
-    relationship: many_to_one
-  }
-}
 
 explore: fact_session {
   label: "Web - Sessions"

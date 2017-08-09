@@ -143,29 +143,6 @@ explore: dim_eventtype {
 explore: dim_learningpath {
   extension: required
 
-  always_filter: {
-    filters: {
-      field: dim_learningpath.learningtype
-      value: "Activity"
-    }
-  }
-
-  #- join: parentlearningpath
-  #  type: left_outer
-  #  sql_on: ${dim_learningpath.parentlearningpathid} = ${parentlearningpath.parentlearningpathid}
-  #  relationship: many_to_one
-  #join: dim_master_node {
-  #  sql_on: ${dim_learningpath.masternodeid} = ${dim_master_node.masternodeid} ;;
-  #  relationship: many_to_one
-  #}
-
-#   join: dim_first_used_date {
-#     view_label: "First Used"
-#     from:  dim_date
-#     sql_on: ${dim_learningpath.first_used_datekey} = ${dim_first_used_date.datekey} ;;
-#     relationship: many_to_one
-#   }
-
   join: dim_master_first_used_date {
     view_label: "Date - Learning Path - Master First Use"
     from:  dim_date
