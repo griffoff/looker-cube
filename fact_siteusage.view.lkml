@@ -270,9 +270,9 @@ view: fact_siteusage {
     label: "Browser time (total hours)"
     description: "Total browser time in hours"
     type: sum
-    hidden:  no
+    hidden:  yes
     sql: ${pageviewtime}*24 ;;
-# Note: I changed this measure by removing the format and making it represent the # of hours. Because the measure produces a number, there was trouble with converting it to a value format associated with type: time. -CM
+# Note: I created this measure to report the number of hours. The formatting for the original measure caused errors as it does not format for time duration and tries to format it like time on a clock. -CM
   }
 
   measure: session_count {
