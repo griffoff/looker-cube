@@ -132,7 +132,7 @@ view: fact_siteusage {
 
   dimension_group: eventdate {
     type: time
-    timeframes: [time, hour, minute, date, week, month]
+    timeframes: [time, hour, minute, date, week, month, raw]
     sql: ${TABLE}.EVENTDATE ;;
   }
 

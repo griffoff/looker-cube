@@ -432,7 +432,8 @@ view: dim_activity {
   }
 
   dimension: status {
-    hidden: yes
+    label: "Status - Used for filtering modification types - should be hidden"
+    hidden: no
     type: string
     sql: ${TABLE}.status ;;
   }
