@@ -35,6 +35,11 @@ explore: fact_activation {
     relationship: many_to_one
   }
 
+  #override product platform from course (the activation might be counted under a different platform)
+  join: dim_productplatform {
+    sql_on: ${fact_activation.productplatformid} = ${dim_productplatform.productplatformid} ;;
+  }
+
 #   join: dim_user {
 #     sql_on: ${fact_activation.userid} = ${dim_user.userid} ;;
 #     relationship: many_to_one
