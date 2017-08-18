@@ -1,16 +1,29 @@
 view: load_history {
   derived_table: {
     sql:
-      select 'PROD' as table_catalog, * from prod.INFORMATION_SCHEMA.LOAD_HISTORY
-      union all
-      select 'STG' as table_catalog, * from stg.INFORMATION_SCHEMA.LOAD_HISTORY
-      union all
-      select 'DEV' as table_catalog, * from dev.INFORMATION_SCHEMA.LOAD_HISTORY ;;
+      select
+        'PROD' as table_catalog
+        , *
+        , row_number() over (partition by schema_name, table_name order by last_load_time desc) as latest
+      from INFORMATION_SCHEMA.LOAD_HISTORY;;
+    }
+#   derived_table: {
+#     sql:
+#       select 'PROD' as table_catalog, * from prod.INFORMATION_SCHEMA.LOAD_HISTORY
+#       union all
+#       select 'STG' as table_catalog, * from stg.INFORMATION_SCHEMA.LOAD_HISTORY
+#       union all
+#       select 'DEV' as table_catalog, * from dev.INFORMATION_SCHEMA.LOAD_HISTORY ;;
+#
+#       sql_trigger_value:
+#         (select count(*) from prod.information_schema.load_history)
+#         +(select count(*) from stg.information_schema.load_history)
+#         +(select count(*) from dev.information_schema.load_history);;
+#   }
 
-      sql_trigger_value:
-        (select count(*) from prod.information_schema.load_history)
-        +(select count(*) from stg.information_schema.load_history)
-        +(select count(*) from dev.information_schema.load_history);;
+  dimension: latest {
+    type:  number
+    description: "reverse version number, filter to value '1' to include only the latest load"
   }
 
   dimension: table_catalog {}

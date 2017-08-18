@@ -252,6 +252,28 @@ view: fact_siteusage {
     </div>;;
   }
 
+  measure: pageviewtime_dailyaverage {
+    group_label: "Time in product"
+    label: "Time in product (daily avg per student)"
+    type: number
+    sql: ${pageviewtime_sum} / ${usercount} / ${daycount};;
+    value_format: "h:mm:ss"
+  }
+
+  measure: pageviewtime_useraverage {
+    group_label: "Time in product"
+    label: "Time in product (avg per student)"
+    type: number
+    sql: ${pageviewtime_sum} / ${usercount};;
+    value_format: "h:mm:ss"
+  }
+
+  measure: daycount {
+    hidden: yes
+    type: count_distinct
+    sql: ${eventdate_date} ;;
+  }
+
   measure: pageviewtime_percent {
     type: number
     sql: ${pageviewtime_avg}/${pageviewtime_max} ;;
