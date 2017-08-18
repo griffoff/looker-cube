@@ -1,7 +1,7 @@
 view: fact_activation {
   view_label: "Activations"
-  sql_table_name: ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION ;;
-  #sql_table_name: DW_GA.FACT_ACTIVATION ;;
+  #sql_table_name: ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION ;;
+  sql_table_name: DW_GA.FACT_ACTIVATION ;;
 
   set: coursedetails {
     fields: [dim_course.coursekey, activationcode]
@@ -180,11 +180,33 @@ view: fact_activation {
     sql: case when ${TABLE}.NOOFACTIVATIONS > 0 then ${dim_institution.institutionid} end ;;
   }
 
+  measure: course_count_including_no_activations {
+    label: "# Course sections"
+    description: "Distinct count of course keys regardless of number of activations based on user-selected filtering criteria.
+    Useful as a high-level measure."
+    type: count_distinct
+    sql: ${courseid} ;;
+  }
+
+  dimension: activations_per_course {
+    hidden:  yes
+    type: number
+    sql:  ${course_section_facts.noofactivations_base} ;;
+  }
+
   measure: course_count {
     label: "# Course sections with activations"
     description: "Distinct count of course keys with at least 1 activation based on user-selected filtering criteria.
       Useful as a high-level measure."
     type: count_distinct
     sql: ${courseid} ;;
+  }
+
+  measure: course_count_minimum_activations {
+    label: "# Course sections with at least 5 activations"
+    description: "Distinct count of course keys with at least 5 activation based on user-selected filtering criteria.
+    Useful as a high-level measure."
+    type: count_distinct
+    sql: case when ${activations_per_course} >= 5 then ${courseid} end ;;
   }
 }

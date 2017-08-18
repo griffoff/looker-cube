@@ -159,8 +159,8 @@ view: dim_course {
   }
 
   dimension: startdatekey {
-    type: string
-    sql: ${TABLE}.STARTDATEKEY ;;
+    type: number
+    sql: to_char(${TABLE}.STARTDATE, 'YYYYMMDD')::int ;;
     hidden: yes
   }
 
