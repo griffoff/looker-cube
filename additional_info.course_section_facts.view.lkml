@@ -7,13 +7,13 @@ view: course_section_facts {
         c.courseid
         ,c.productid
         ,c.institutionid
-        ,i.HED
+        ,c.HED
         ,case when length(split_part(c.coursekey, '-', 1)) > 15 and array_size(split(c.coursekey, '-')) >= 2 and c.productplatformid= 26 then 'yes' else 'no' end as is_lms_integrated
         ,COALESCE(d.fiscalyearvalue, 'UNKNOWN') as date_granularity
-      from dw_ga.dim_course c
+      from ${dim_course.SQL_TABLE_NAME} c
       --left join dw_ga.dim_date d on case when c.startdatekey = -1 then c.enddatekey else c.startdatekey end = d.datekey
       left join dw_ga.dim_date d on c.startdatekey = d.datekey
-      left join ${dim_institution.SQL_TABLE_NAME} i on c.institutionid = i.institutionid
+      left join dw_ga.dim_institution i on c.institutionid = i.institutionid
       )
     ,i as (
       select course.courseid, min(instructor.instructor_first_date) as instructor_first_date, min(instructor.instructor_first_date_key) as instructor_first_date_key
@@ -29,7 +29,7 @@ view: course_section_facts {
             group by 1) instructor
       join dw_ga.coursetoinstructor map
       on instructor.instructorid = map.userid
-      join dw_ga.dim_course course
+      join ${dim_course.SQL_TABLE_NAME} course
       on map.courseid = course.courseid
       group by 1
     )
@@ -51,7 +51,7 @@ view: course_section_facts {
           ,sum(NOOFACTIVATIONS) as NOOFACTIVATIONS
           --,sum(sum(NOOFACTIVATIONS)) over (partition by p.productfamily, p.edition, c.institutionid, c.is_lms_integrated, c.date_granularity) as product_activations
           --,sum(count(distinct a.courseid)) over (partition by p.productfamily, p.edition, c.is_lms_integrated, c.date_granularity) as activated_courses
-      from ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION a
+      from dw_ga.fact_activation a
       inner join c on a.courseid = c.courseid
       inner join dw_ga.dim_product p on c.productid = p.productid
     group by 1, 2, 3, 4, 5, 6, 7
@@ -66,7 +66,7 @@ view: course_section_facts {
     left join u on a.courseid = u.courseid
     order by 1;;
 
-    sql_trigger_value: select count(*) from ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION;;
+    sql_trigger_value: select count(*) from dw_ga.fact_activation;;
   }
 
   set: ALL_FIELDS {

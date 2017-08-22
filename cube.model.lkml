@@ -1,5 +1,5 @@
 connection: "snowflake_prod"
-week_start_day: tuesday
+week_start_day: monday
 label:"Cube Data on Looker"
 
 #include dims model

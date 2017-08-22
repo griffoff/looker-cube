@@ -1,7 +1,34 @@
 view: fact_activation {
   view_label: "Activations"
   #sql_table_name: ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION ;;
-  sql_table_name: DW_GA.FACT_ACTIVATION ;;
+  derived_table: {
+    sql:
+      with activation_orgs as (
+        select
+            actv_code
+            ,organization
+            ,count(*) as cnt
+        from stg_clts.activations_olr
+        where organization is not null
+        and in_actv_flg = 1
+        group by 1, 2
+      )
+      ,orgs as (
+        select
+           actv_code
+           ,organization
+           ,row_number() over (partition by actv_code order by cnt desc) as r
+        from activation_orgs
+      )
+      select a.*, orgs.organization
+      from DW_GA.FACT_ACTIVATION a
+      left join orgs on a.activationcode = orgs.actv_code
+                    and orgs.r = 1
+      order by courseid, activationdatekey, activationregionid;;
+
+      sql_trigger_value: select count(*) from DW_GA.FACT_ACTIVATION ;;
+  }
+
 
   set: coursedetails {
     fields: [dim_course.coursekey, activationcode]
@@ -9,6 +36,18 @@ view: fact_activation {
 
   set: ALL_FIELDS {
     fields: [courseid,avg_noofactivations,course_count,institution_count,noofactivations_base,total_noofactivations,institutionid]
+  }
+
+  dimension: organization {
+    label: "Organization"
+  }
+
+  dimension: HED_filter {
+    view_label: "** RECOMMENDED FILTERS **"
+    label: "HED filter (from activation)"
+    description: "Flag to identify Higher-Ed data - based on data in activations feed"
+    type:  yesno
+    sql: ${organization} = 'Higher Ed' ;;
   }
 
   dimension: activationcode {
