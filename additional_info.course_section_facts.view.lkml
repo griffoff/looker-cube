@@ -45,7 +45,7 @@ view: course_section_facts {
           ,c.date_granularity
           ,c.is_lms_integrated
           ,c.institutionid
-          ,case when a.organization = 'Higher Ed' then 'HED' else 'Not HED' end as HED
+          ,min(case when a.organization = 'Higher Ed' then 'HED' else 'Not HED' end) as HED
           ,p.productfamily || p.edition || c.is_lms_integrated || HED || c.date_granularity as by_product_fk
           ,sum(NOOFACTIVATIONS) as NOOFACTIVATIONS
           --,sum(sum(NOOFACTIVATIONS)) over (partition by p.productfamily, p.edition, c.institutionid, c.is_lms_integrated, c.date_granularity) as product_activations
@@ -53,7 +53,7 @@ view: course_section_facts {
       from ${fact_activation.SQL_TABLE_NAME} a
       inner join c on a.courseid = c.courseid
       inner join dw_ga.dim_product p on c.productid = p.productid
-    group by 1, 2, 3, 4, 5, 6, 7
+    group by 1, 2, 3, 4, 5, 6
     )
     select distinct
       a.*

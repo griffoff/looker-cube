@@ -25,14 +25,16 @@ view: fact_siteusage {
   #sql_table_name: DW_GA.FACT_SITEUSAGE ;;
   derived_table: {
     sql:
-        select
-            datediff(day, v.start_date, fsu.eventdate) as new_relative_days_from_start
+      select
+            coalesce(datediff(day, v.start_date, fsu.eventdate), daysfromcoursestart) as new_relative_days_from_start
             ,fsu.*
-        from ${map_course_versions.SQL_TABLE_NAME} v
-        inner join dw_ga.dim_course c on v.context_id = c.coursekey
-        inner join dw_ga.fact_siteusage fsu on c.courseid = fsu.courseid
-                                                  and fsu.eventdate between v.effective_from and v.effective_to
-        order by courseid, eventdatekey;;
+      from dw_ga.fact_siteusage fsu
+      inner join dw_ga.dim_course c on fsu.courseid = c.courseid
+      left join looker_scratch.LR$JJ5M7TW9EU48VE836D97C_map_course_versions v on c.coursekey = v.context_id
+                                                                  and fsu.eventdate between v.effective_from and v.effective_to
+      order by courseid, new_relative_days_from_start, userid;;
+
+      sql_trigger_value: select count(*) from dw_ga.fact_siteusage ;;
   }
 
   dimension: pk {
