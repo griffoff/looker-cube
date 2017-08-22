@@ -7,7 +7,7 @@ view: course_section_facts {
         c.courseid
         ,c.productid
         ,c.institutionid
-        ,c.HED
+        ,case when c.organization = 'Higher Ed' then 'HED' else 'Not HED' end as HED
         ,case when length(split_part(c.coursekey, '-', 1)) > 15 and array_size(split(c.coursekey, '-')) >= 2 and c.productplatformid= 26 then 'yes' else 'no' end as is_lms_integrated
         ,COALESCE(d.fiscalyearvalue, 'UNKNOWN') as date_granularity
       from ${dim_course.SQL_TABLE_NAME} c
