@@ -22,7 +22,18 @@ derived_table: {
 
 view: fact_siteusage {
   label: "Learning Path - Usage Data"
-  sql_table_name: DW_GA.FACT_SITEUSAGE ;;
+  #sql_table_name: DW_GA.FACT_SITEUSAGE ;;
+  derived_table: {
+    sql:
+        select
+            datediff(day, v.start_date, fsu.eventdate) as new_relative_days_from_start
+            ,fsu.*
+        from ${map_course_versions.SQL_TABLE_NAME} v
+        inner join dw_ga.dim_course c on v.context_id = c.coursekey
+        inner join dw_ga.fact_siteusage fsu on c.courseid = fsu.courseid
+                                                  and fsu.eventdate between v.effective_from and v.effective_to
+        order by courseid, eventdatekey;;
+  }
 
   dimension: pk {
     sql: ${TABLE}.pageinstanceid || ${TABLE}.userid || ${TABLE}.learningpathid || ${TABLE}.eventdate || ${TABLE}.daysfromcoursestart ;;
@@ -121,7 +132,8 @@ view: fact_siteusage {
   dimension: daysfromcoursestart {
     hidden: yes
     type: string
-    sql: ${TABLE}.DAYSFROMCOURSESTART ;;
+    sql:${TABLE}.new_relative_days_from_start ;;
+    #sql: ${TABLE}.DAYSFROMCOURSESTART ;;
   }
 
   dimension: deviceplatformid {

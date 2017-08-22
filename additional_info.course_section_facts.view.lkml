@@ -7,7 +7,6 @@ view: course_section_facts {
         c.courseid
         ,c.productid
         ,c.institutionid
-        ,case when c.organization = 'Higher Ed' then 'HED' else 'Not HED' end as HED
         ,case when length(split_part(c.coursekey, '-', 1)) > 15 and array_size(split(c.coursekey, '-')) >= 2 and c.productplatformid= 26 then 'yes' else 'no' end as is_lms_integrated
         ,COALESCE(d.fiscalyearvalue, 'UNKNOWN') as date_granularity
       from ${dim_course.SQL_TABLE_NAME} c
@@ -46,12 +45,12 @@ view: course_section_facts {
           ,c.date_granularity
           ,c.is_lms_integrated
           ,c.institutionid
-          ,c.HED
-          ,p.productfamily || p.edition || c.is_lms_integrated || c.HED || c.date_granularity as by_product_fk
+          ,case when a.organization = 'Higher Ed' then 'HED' else 'Not HED' end as HED
+          ,p.productfamily || p.edition || c.is_lms_integrated || HED || c.date_granularity as by_product_fk
           ,sum(NOOFACTIVATIONS) as NOOFACTIVATIONS
           --,sum(sum(NOOFACTIVATIONS)) over (partition by p.productfamily, p.edition, c.institutionid, c.is_lms_integrated, c.date_granularity) as product_activations
           --,sum(count(distinct a.courseid)) over (partition by p.productfamily, p.edition, c.is_lms_integrated, c.date_granularity) as activated_courses
-      from dw_ga.fact_activation a
+      from ${fact_activation.SQL_TABLE_NAME} a
       inner join c on a.courseid = c.courseid
       inner join dw_ga.dim_product p on c.productid = p.productid
     group by 1, 2, 3, 4, 5, 6, 7
