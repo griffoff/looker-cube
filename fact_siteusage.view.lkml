@@ -23,9 +23,24 @@ derived_table: {
 
 view: fact_siteusage {
   label: "Learning Path - Usage Data"
-  sql_table_name: DW_GA.FACT_SITEUSAGE ;;
+  #sql_table_name: DW_GA.FACT_SITEUSAGE ;;
   set:  curated_fields {
     fields: [percent_of_activations,percent_of_all_activations,session_count,usercount]
+    }
+  #sql_table_name: DW_GA.FACT_SITEUSAGE ;;
+  derived_table: {
+    sql:
+      select
+            coalesce(datediff(day, v.start_date, fsu.eventdate), daysfromcoursestart) as new_relative_days_from_start
+            ,fsu.*
+      from dw_ga.fact_siteusage fsu
+      inner join dw_ga.dim_course c on fsu.courseid = c.courseid
+      left join looker_scratch.LR$JJ5M7TW9EU48VE836D97C_map_course_versions v on c.coursekey = v.context_id
+                                                                  and fsu.eventdate between v.effective_from and v.effective_to
+      order by courseid, new_relative_days_from_start, userid;;
+
+      sql_trigger_value: select count(*) from dw_ga.fact_siteusage ;;
+#>>>>>>> branch 'master' of git@lkrgit_github_050fc477331387631c224b6276ad0eb279f1ba4b:griffoff/looker-cube.git
   }
 
   dimension: pk {
@@ -125,7 +140,8 @@ view: fact_siteusage {
   dimension: daysfromcoursestart {
     hidden: yes
     type: string
-    sql: ${TABLE}.DAYSFROMCOURSESTART ;;
+    sql:${TABLE}.new_relative_days_from_start ;;
+    #sql: ${TABLE}.DAYSFROMCOURSESTART ;;
   }
 
   dimension: deviceplatformid {
@@ -254,6 +270,28 @@ view: fact_siteusage {
         {{rendered_value}}
       </div>
     </div>;;
+  }
+
+  measure: pageviewtime_dailyaverage {
+    group_label: "Time in product"
+    label: "Time in product (daily avg per student)"
+    type: number
+    sql: ${pageviewtime_sum} / ${usercount} / ${daycount};;
+    value_format: "h:mm:ss"
+  }
+
+  measure: pageviewtime_useraverage {
+    group_label: "Time in product"
+    label: "Time in product (avg per student)"
+    type: number
+    sql: ${pageviewtime_sum} / ${usercount};;
+    value_format: "h:mm:ss"
+  }
+
+  measure: daycount {
+    hidden: yes
+    type: count_distinct
+    sql: ${eventdate_date} ;;
   }
 
   measure: pageviewtime_percent {

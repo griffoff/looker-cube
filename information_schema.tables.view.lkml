@@ -1,17 +1,17 @@
 view: tables {
-  #sql_table_name: INFORMATION_SCHEMA.TABLES ;;
-  derived_table: {
-    sql:
-      select * from prod.information_schema.tables
-      union all
-      select * from stg.information_schema.tables
-      union all
-      select * from dev.information_schema.tables;;
-
-      sql_trigger_value: (select count(*) from prod.information_schema.tables)
-                        + (select count(*) from stg.information_schema.tables)
-                        + (select count(*) from dev.information_schema.tables);;
-  }
+  sql_table_name: INFORMATION_SCHEMA.TABLES ;;
+#   derived_table: {
+#     sql:
+#       select * from prod.information_schema.tables
+#       union all
+#       select * from stg.information_schema.tables
+#       union all
+#       select * from dev.information_schema.tables;;
+#
+#       sql_trigger_value: (select count(*) from prod.information_schema.tables)
+#                         + (select count(*) from stg.information_schema.tables)
+#                         + (select count(*) from dev.information_schema.tables);;
+#   }
 
   dimension: bytes {
     type: number
