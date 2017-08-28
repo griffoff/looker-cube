@@ -13,6 +13,9 @@ view: dim_course {
     sql_trigger_value: select count(*) from dw_ga.dim_course ;;
   }
 
+  set: curated_fields {fields: [courseid, coursename, is_lms_integrated, count]}
+
+
   dimension: mag_acct_id {
     hidden: yes
   }
@@ -129,7 +132,7 @@ view: dim_course {
   dimension: institutionid {
     type: string
     sql: ${TABLE}.INSTITUTIONID ;;
-    hidden: yes
+    hidden: no
   }
 
   dimension: learningcourse {

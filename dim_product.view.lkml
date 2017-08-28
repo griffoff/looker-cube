@@ -51,6 +51,8 @@ CASE
     sql_trigger_value: select count(*) from dw_ga.dim_product ;;
   }
 
+  set: curated_fields {fields:[course,edition,productfamily, coursearea, discipline, product, title, count]}
+
   dimension: course {
     label: "Course Name"
     group_label: "Product Details"

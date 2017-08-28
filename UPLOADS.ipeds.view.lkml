@@ -1,6 +1,9 @@
 view: ipeds {
   view_label: "Institution"
   sql_table_name: UPLOADS.ZPG.IPEDS ;;
+  set: curated_fields {
+    fields: []
+  }
 
   dimension: full_time_undergraduate_enrollment_drvef_2015_ {
     label: "Full time undergrad enrollment level"

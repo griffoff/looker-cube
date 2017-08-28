@@ -77,6 +77,10 @@ view: course_section_facts {
     fields: [dim_start_date.calendarmonthname, dim_course.coursekey, dim_product.isbn13, total_noofactivations, product_facts.activations_for_isbn, total_users]
   }
 
+  set: curated_fields {
+    fields:[total_noofactivations,total_users,course_count]
+  }
+
   dimension: courseid {
     hidden: yes
     type: string

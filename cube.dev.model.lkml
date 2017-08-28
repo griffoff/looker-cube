@@ -15,6 +15,7 @@ explore: learningpathusage {
   label: "Learning Path - MT Usage Data"
   description: "Start point for learning path usage from the student persepctive including application usage information collected via google analytics."
   extends: [dim_user, dim_course, dim_pagedomain]
+  extension: required
 
   join: dim_course {
     sql_on: ${learningpathusage.courseid} = ${dim_course.courseid} ;;

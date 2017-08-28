@@ -11,6 +11,7 @@ derived_table: {
   dimension: paid {
     type: yesno
     sql: ${userid} is not null;;
+    hidden: yes
   }
 
   dimension: paidcategory {
@@ -23,6 +24,9 @@ derived_table: {
 view: fact_siteusage {
   label: "Learning Path - Usage Data"
   sql_table_name: DW_GA.FACT_SITEUSAGE ;;
+  set:  curated_fields {
+    fields: [percent_of_activations,percent_of_all_activations,session_count,usercount]
+  }
 
   dimension: pk {
     sql: ${TABLE}.pageinstanceid || ${TABLE}.userid || ${TABLE}.learningpathid || ${TABLE}.eventdate || ${TABLE}.daysfromcoursestart ;;

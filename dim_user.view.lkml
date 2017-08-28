@@ -1,6 +1,7 @@
 view: dim_user {
   label: "User"
   sql_table_name: DW_GA.DIM_USER ;;
+  set: curated_fields {fields:[user_role,numberofvisits,productsactivated]}
 
   dimension: userid {
     label: "User Id"
