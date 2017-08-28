@@ -5,6 +5,7 @@ view: course_section_facts {
     with c as (
       select
         c.courseid
+        ,c.productplatformid
         ,c.productid
         ,c.institutionid
         ,case when length(split_part(c.coursekey, '-', 1)) > 15 and array_size(split(c.coursekey, '-')) >= 2 and c.productplatformid= 26 then 'yes' else 'no' end as is_lms_integrated
@@ -40,20 +41,21 @@ view: course_section_facts {
     ,a as (
       select
           a.courseid
+          ,c.productplatformid
           ,p.productfamily
           ,p.edition
           ,c.date_granularity
           ,c.is_lms_integrated
           ,c.institutionid
           ,min(case when a.organization = 'Higher Ed' then 'HED' else 'Not HED' end) as HED
-          ,p.productfamily || p.edition || c.is_lms_integrated || HED || c.date_granularity as by_product_fk
+          ,c.productplatformid || p.productfamily || p.edition || c.is_lms_integrated || HED || c.date_granularity as by_product_fk
           ,sum(NOOFACTIVATIONS) as NOOFACTIVATIONS
           --,sum(sum(NOOFACTIVATIONS)) over (partition by p.productfamily, p.edition, c.institutionid, c.is_lms_integrated, c.date_granularity) as product_activations
           --,sum(count(distinct a.courseid)) over (partition by p.productfamily, p.edition, c.is_lms_integrated, c.date_granularity) as activated_courses
       from ${fact_activation.SQL_TABLE_NAME} a
       inner join c on a.courseid = c.courseid
       inner join dw_ga.dim_product p on c.productid = p.productid
-    group by 1, 2, 3, 4, 5, 6
+    group by 1, 2, 3, 4, 5, 6, 7
     )
     select distinct
       a.*
