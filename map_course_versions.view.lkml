@@ -4,9 +4,6 @@ view: map_course_versions {
       with courses as (
         select begin_date, end_date, "#CONTEXT_ID" as context_id, last_updated_on
         from stg_clts.olr_courses_all
-        union
-        select begin_date, end_date, "#CONTEXT_ID", last_updated_on
-        from stg_clts.olr_courses
       )
       ,dates as (
         select context_id, begin_date::date as start_date, end_date::date as end_date
