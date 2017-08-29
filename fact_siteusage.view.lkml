@@ -27,10 +27,16 @@ view: fact_siteusage {
     sql:
       select
             coalesce(datediff(day, v.start_date, fsu.eventdate), daysfromcoursestart) as new_relative_days_from_start
+            --,row_number() over (order by pageinstanceid, userid, learningpathid, eventdate, new_relative_days_from_start) as id
+            ,looker_scratch.fact_siteusageid.nextval as id
             ,fsu.*
+            ,CASE
+              WHEN fsu.PAGEVIEWTIME>=1000
+                THEN fsu.PAGEVIEWTIME /1000.0/86400.0
+              END as pageviewtime_days
       from dw_ga.fact_siteusage fsu
       inner join dw_ga.dim_course c on fsu.courseid = c.courseid
-      left join looker_scratch.LR$JJ5M7TW9EU48VE836D97C_map_course_versions v on c.coursekey = v.context_id
+      left join ${map_course_versions.SQL_TABLE_NAME} v on c.coursekey = v.context_id
                                                                   and fsu.eventdate between v.effective_from and v.effective_to
       order by courseid, new_relative_days_from_start, userid;;
 
@@ -38,7 +44,7 @@ view: fact_siteusage {
   }
 
   dimension: pk {
-    sql: ${TABLE}.pageinstanceid || ${TABLE}.userid || ${TABLE}.learningpathid || ${TABLE}.eventdate || ${TABLE}.daysfromcoursestart ;;
+    sql: ${TABLE}.id ;;
     hidden: yes
     primary_key: yes
   }
@@ -238,11 +244,7 @@ view: fact_siteusage {
 
   dimension: pageviewtime {
     type: number
-    sql: CASE
-              WHEN ${TABLE}.PAGEVIEWTIME>=1000
-                THEN ${TABLE}.PAGEVIEWTIME /1000.0/86400.0
-              ELSE NULL
-              END;;
+    sql: ${TABLE}.PageViewTime_days;;
     hidden: yes
   }
 
