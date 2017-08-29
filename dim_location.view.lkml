@@ -1,6 +1,7 @@
 view: dim_location {
   label: "Geography"
   sql_table_name: DW_GA.DIM_LOCATION ;;
+  set: curated_fields {fields:[country,count]}
 
   dimension: city {
     type: string

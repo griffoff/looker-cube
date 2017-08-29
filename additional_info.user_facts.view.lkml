@@ -17,6 +17,9 @@ view: user_facts {
       GROUP BY 1
        ;;
   }
+  set: curated_fields{
+    fields: [activities_completed,activities_completed_by_user,gradable_activities_completed,gradable_activities_completed_by_user,overall_score]
+  }
 
   dimension: userid {
     type: string

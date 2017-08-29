@@ -1,6 +1,7 @@
 view: olr_courses {
   label: "Course / Section Details"
   sql_table_name: STG_CLTS.OLR_COURSES ;;
+  set: curated_fields {fields:[course_key,course_name,instructor_name]}
 
   dimension_group: begin_date {
     label: "Course Start"

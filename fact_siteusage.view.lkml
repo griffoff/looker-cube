@@ -11,6 +11,7 @@ derived_table: {
   dimension: paid {
     type: yesno
     sql: ${userid} is not null;;
+    hidden: yes
   }
 
   dimension: paidcategory {
@@ -22,6 +23,10 @@ derived_table: {
 
 view: fact_siteusage {
   label: "Learning Path - Usage Data"
+  #sql_table_name: DW_GA.FACT_SITEUSAGE ;;
+  set:  curated_fields {
+    fields: [percent_of_activations,percent_of_all_activations,session_count,usercount]
+    }
   #sql_table_name: DW_GA.FACT_SITEUSAGE ;;
   derived_table: {
     sql:
@@ -41,6 +46,7 @@ view: fact_siteusage {
       order by courseid, new_relative_days_from_start, userid;;
 
       sql_trigger_value: select count(*) from dw_ga.fact_siteusage ;;
+#>>>>>>> branch 'master' of git@lkrgit_github_050fc477331387631c224b6276ad0eb279f1ba4b:griffoff/looker-cube.git
   }
 
   dimension: pk {

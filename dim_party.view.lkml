@@ -41,6 +41,7 @@ view: dim_party {
     ;;
     sql_trigger_value: select count(*) from dw_ga.dim_party ;;
   }
+  set: curated_fields {fields:[guid,is_external,count]}
 
   set: personDetails {
     fields: [dim_course.coursekey, dim_course.coursename, guid, mainpartyemail, firstname, lastname, fact_activation.total_noofactivations, is_external, dim_user.productsactivated, course_section_facts.total_noofactivations]

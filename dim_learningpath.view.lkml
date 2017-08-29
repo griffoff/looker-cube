@@ -9,6 +9,7 @@ view: lp_node_map {
       ;;
       sql_trigger_value: select count(*) from dw_ga.fact_activity ;;
   }
+  set: curated_fields {fields:[nodeid,snapshotid]}
 
   dimension: learningpathid {
     type:  number
@@ -80,6 +81,9 @@ view: lp_structure {
 view: dim_learningpath {
   label: "Learning Path"
   #sql_table_name: DW_GA.DIM_LEARNINGPATH ;;
+  set: curated_fields {
+    fields: [learningtype,lowest_level,lowest_level_count,snapshot_status, ref_id]
+  }
 
   derived_table: {
     sql:

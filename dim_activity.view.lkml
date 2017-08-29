@@ -54,6 +54,7 @@ view: dim_activity {
       ;;
       sql_trigger_value: select count(*) from dw_ga.dim_activity ;;
   }
+  set: curated_fields {fields:[gradable_percent,practice_percent,notscorable_percent,unassigned_percent,APPLICATIONNAME,count_gradable,status]}
 
   dimension: activitycategory {
     group_label: "Activity Category"
