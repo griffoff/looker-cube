@@ -361,8 +361,8 @@ view: dim_activity {
     label: "% Gradable - student level"
     description: "Percent of student exposed to a given activity marked gradable by an instructor (counts towards student grade)"
     type: number
-#     sql:  ${count_gradable}/${count};;
-    sql:  ${gradable_course_user_count}/${denominator_student_exposure_percent_calcs} ;;
+#     sql:  ${count_gradable}/nullif(${count}, 0);;
+    sql:  ${gradable_course_user_count}/nullif(${denominator_student_exposure_percent_calcs}, 0) ;;
     value_format_name:  percent_1
     hidden:  no
     html:
