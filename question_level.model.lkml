@@ -8,6 +8,10 @@ include: "*.dashboard.lkml"  # include all dashboards in this project
 
 case_sensitive: no
 
+explore: dataprofiling {
+  label: "Data Profiling"
+}
+
 explore: csfitakes {
   label: "CSFI data"
   extends: [dim_course]
