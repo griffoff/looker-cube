@@ -332,49 +332,49 @@ view: all_questions {
     type: string
     group_label: "Item Hierarchy"
     label: "Level 0"
-    sql: ${TABLE}.label_level0::string ;;
+    sql: ${TABLE}.activity_label_level0::string ;;
   }
 
   dimension: label_level1 {
     type: string
     group_label: "Item Hierarchy"
     label: "Level 1"
-    sql: ${TABLE}.label_level1 ;;
+    sql: ${TABLE}.activity_label_level1 ;;
   }
 
   dimension: label_level2 {
     type: string
     group_label: "Item Hierarchy"
     label: "Level 2"
-    sql: ${TABLE}.label_level2 ;;
+    sql: ${TABLE}.activity_label_level2 ;;
   }
 
   dimension: label_level3 {
     type: string
     group_label: "Item Hierarchy"
     label: "Level 3"
-    sql: ${TABLE}.label_level3 ;;
+    sql: ${TABLE}.activity_label_level3 ;;
   }
 
   dimension: label_level4 {
     type: string
     group_label: "Item Hierarchy"
     label: "Level 4"
-    sql: ${TABLE}.label_level4 ;;
+    sql: ${TABLE}.activity_label_level4 ;;
   }
 
   dimension: label_level5 {
     type: string
     group_label: "Item Hierarchy"
     label: "Level 5"
-    sql: ${TABLE}.label_level5 ;;
+    sql: ${TABLE}.activity_label_level5 ;;
   }
 
   dimension: label_level6 {
     type: string
     group_label: "Item Hierarchy"
     label: "Level 6"
-    sql: ${TABLE}.label_level6 ;;
+    sql: ${TABLE}.activity_label_level6 ;;
   }
 
   dimension: nodeType {
