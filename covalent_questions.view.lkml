@@ -13,7 +13,7 @@ view: soa_questions {
 }
 
 view: all_questions {
-  sql_table_name: dev.zpg.all_questions ;;
+  sql_table_name: looker_scratch.all_questions ;;
   label: "All Covalent Questions"
 
   set: course_details {
