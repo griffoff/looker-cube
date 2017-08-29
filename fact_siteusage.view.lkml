@@ -278,7 +278,7 @@ view: fact_siteusage {
     group_label: "Time in product"
     label: "Time in product (daily avg per student)"
     type: number
-    sql: ${pageviewtime_sum} / ${usercount} / ${daycount};;
+    sql: ${pageviewtime_sum} / nullif(${usercount}, 0) / nullif(${daycount}, 0);;
     value_format: "h:mm:ss"
   }
 
@@ -286,7 +286,7 @@ view: fact_siteusage {
     group_label: "Time in product"
     label: "Time in product (avg per student)"
     type: number
-    sql: ${pageviewtime_sum} / ${usercount};;
+    sql: ${pageviewtime_sum} / nullif(${usercount}, 0);;
     value_format: "h:mm:ss"
   }
 
