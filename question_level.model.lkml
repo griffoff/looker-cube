@@ -101,6 +101,16 @@ explore: all_questions {
       type: inner
     }
 
+    join: item_properties {
+      sql_on: ${all_questions.activityitemuri} = ${item_properties.activity_activityitemuri} ;;
+      relationship: many_to_one
+    }
+
+    join: item_taxonomy {
+      sql_on: ${all_questions.activityitemuri} = ${item_taxonomy.activity_activityitemuri} ;;
+      relationship: many_to_many
+    }
+
 #     join: dim_productplatform {
 #       sql_on: split_part(${all_questions.activityuri}, ':', 1) = lower(${dim_productplatform.productplatform}) ;;
 #       relationship: many_to_one
