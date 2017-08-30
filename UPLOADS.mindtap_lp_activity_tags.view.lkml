@@ -1,6 +1,6 @@
-view: lp_activity_tags_test {
+view: mindtap_lp_activity_tags {
   label: "Learning Path"
-  sql_table_name: UPLOADS.ZJB.LP_ACTIVITY_TAGS_TEST ;;
+  sql_table_name: UPLOADS.ZJB.MINDTAP_LP_ACTIVITY_TAGS ;;
 
   dimension: activity_cluster {
     label: "04 - Activity Cluster"
@@ -18,20 +18,20 @@ view: lp_activity_tags_test {
     sql: ${TABLE}.ACTIVITY_SUB_CLUSTER ;;
   }
 
-  dimension: activty_subtype {
+  dimension: activity_sub_type {
     label: "03 - Activity Sub-Type"
     group_label: "Activity Tags (pilot)"
     description: "Not available for most product families - part of pilot analytics project"
     type: string
-    sql: ${TABLE}.ACTIVTY_SUBTYPE ;;
+    sql: ${TABLE}.ACTIVITY_SUB_TYPE ;;
   }
 
-  dimension: activty_type {
+  dimension: activity_type {
     label: "02 - Activity Type"
     group_label: "Activity Tags (pilot)"
     description: "Describes primary content/activity type (e.g. Mastery Training or Video Case).  Not available for most product families - part of pilot analytics project"
     type: string
-    sql: ${TABLE}.ACTIVTY_TYPE ;;
+    sql: ${TABLE}.ACTIVITY_TYPE ;;
   }
 
   dimension: chapter {
@@ -58,11 +58,11 @@ view: lp_activity_tags_test {
     hidden: yes
   }
 
-  dimension: primary_key {
-    type: number
-    sql: ${TABLE}.PRIMARY_KEY ;;
-    primary_key: yes
-  }
+#   dimension: primary_key {
+#     type: number
+#     sql: ${TABLE}.PRIMARY_KEY ;;
+#     primary_key: yes
+#   }
 
   dimension: product_family {
     group_label: "Activity Tags (pilot)"
@@ -72,11 +72,11 @@ view: lp_activity_tags_test {
     hidden: yes
   }
 
-  dimension: product_family_edition {
+  dimension: edition_number {
     group_label: "Activity Tags (pilot)"
     description: "Not available for most product families - part of pilot analytics project"
     type: number
-    sql: ${TABLE}.PRODUCT_FAMILY_EDITION ;;
+    sql: ${TABLE}.EDITION ;;
     hidden: yes
   }
 

@@ -443,8 +443,8 @@ explore: fact_siteusage {
     relationship: many_to_one
   }
 
-  join: lp_activity_tags_test {
-    sql_on: (${dim_product.productfamily},${dim_learningpath.lowest_level})=(${lp_activity_tags_test.product_family},${lp_activity_tags_test.learning_path_activity_title});;
+  join: mindtap_lp_activity_tags {
+    sql_on: (${dim_product.productfamily},${dim_learningpath.lowest_level})=(${mindtap_lp_activity_tags.product_family},${mindtap_lp_activity_tags.learning_path_activity_title});;
     relationship: one_to_many
   }
 }
@@ -551,8 +551,8 @@ explore: LP_Analysis_PSR_Limited_View {
     relationship: many_to_one
   }
 
-  join: lp_activity_tags_test {
-    sql_on: (${dim_product.productfamily},${dim_learningpath.lowest_level})=(${lp_activity_tags_test.product_family},${lp_activity_tags_test.learning_path_activity_title});;
+  join: mindtap_lp_activity_tags {
+    sql_on: (${dim_product.productfamily},${dim_learningpath.lowest_level})=(${mindtap_lp_activity_tags.product_family},${mindtap_lp_activity_tags.learning_path_activity_title});;
     relationship: one_to_many
   }
 
