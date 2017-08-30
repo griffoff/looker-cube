@@ -45,7 +45,7 @@ view: all_questions {
 
   dimension: activityitemuri {
     type: string
-    sql: ${TABLE}.ACTIVITYITEMURI ;;
+    sql: ${TABLE}.ACTIVITY_ACTIVITYITEMURI ;;
   }
 
   dimension: activityuri {
@@ -68,7 +68,7 @@ view: all_questions {
   }
 
   dimension: label {
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}.LABEL::string ;;
   }
@@ -290,8 +290,7 @@ view: all_questions {
   dimension: id {
     hidden: yes
     primary_key: yes
-    sql: ${TABLE}.nextval ;;
-    #sql: ${TABLE}.id ;;
+    sql: ${TABLE}.id ;;
   }
 
   measure: attempts_sum {
