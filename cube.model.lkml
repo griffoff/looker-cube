@@ -449,7 +449,7 @@ explore: LP_Analysis_PSR_Limited_View {
   label: "Learning Path Analysis - Pilot Tagging Explore"
   from: fact_siteusage
   description: "TEST Explore Start point for learning path usage from the student persepctive including application usage information collected via google analytics."
-  extends: [dim_user, dim_course, dim_pagedomain, dim_learningpath]
+  extends: [dim_user, dim_course, dim_pagedomain, dim_learningpath, dim_product]
 
   join: dim_date {
     view_label: "Date - Date of activity"

@@ -592,9 +592,18 @@ view: products {
 
   dimension: prod_family_cd {
     label: "Product Family Code"
-    group_label: "Categories"
+    group_label: "Product Family"
+    description: "Use if data for multiple editions is desired.  This dimension pulls data for all non-filtered editions of a given product family."
     type: string
     sql: ${TABLE}.PROD_FAMILY_CD ;;
+  }
+
+  dimension: prod_family_cd_edition{
+    label: "Product Family Code + Edition"
+    group_label: "Product Family"
+    description: "Use if comparing multiple titles or specific products within a Course Area/Discipline.  This dimension pulls data for a specific combination of product family and edition."
+    type: string
+    sql: concat(concat(${prod_family_cd},' - '),${edition}) ;;
   }
 
   dimension: prod_family_de {
