@@ -360,7 +360,7 @@ explore: fact_session {
 explore: fact_siteusage {
   label: "Learning Path - MT Usage Data"
   description: "Start point for learning path usage from the student persepctive including application usage information collected via google analytics."
-  extends: [dim_user, dim_course, dim_pagedomain]
+  extends: [dim_user, dim_course, dim_pagedomain, dim_learningpath]
 
   join: dim_date {
     view_label: "Date - Date of activity"
@@ -443,17 +443,13 @@ explore: fact_siteusage {
     relationship: many_to_one
   }
 
-  join: mindtap_lp_activity_tags {
-    sql_on: (${dim_product.productfamily},${dim_learningpath.lowest_level})=(${mindtap_lp_activity_tags.product_family},${mindtap_lp_activity_tags.learning_path_activity_title});;
-    relationship: one_to_many
-  }
 }
 
 explore: LP_Analysis_PSR_Limited_View {
   label: "Learning Path Analysis - Pilot Tagging Explore"
   from: fact_siteusage
   description: "TEST Explore Start point for learning path usage from the student persepctive including application usage information collected via google analytics."
-  extends: [dim_user, dim_course, dim_pagedomain]
+  extends: [dim_user, dim_course, dim_pagedomain, dim_learningpath]
 
   join: dim_date {
     view_label: "Date - Date of activity"
@@ -549,11 +545,6 @@ explore: LP_Analysis_PSR_Limited_View {
     view_label: "User"
     sql_on: (${LP_Analysis_PSR_Limited_View.courseid}, ${LP_Analysis_PSR_Limited_View.userid}) = (${paid_users.courseid}, ${paid_users.userid}) ;;
     relationship: many_to_one
-  }
-
-  join: mindtap_lp_activity_tags {
-    sql_on: (${dim_product.productfamily},${dim_learningpath.lowest_level})=(${mindtap_lp_activity_tags.product_family},${mindtap_lp_activity_tags.learning_path_activity_title});;
-    relationship: one_to_many
   }
 
   join: olr_courses {
