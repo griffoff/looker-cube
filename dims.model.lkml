@@ -85,6 +85,13 @@ explore: dim_course {
     sql_on: ${course_section_facts.by_product_fk} = ${product_facts.by_product_fk} ;;
     relationship: many_to_one
   }
+
+#   join: magellanhigeredpipgj {
+#     sql_on: ${magellanhigeredpipgj.entity_number} = ${dim_institution.entity_no}
+#           and ${magellanhigeredpipgj.isbn_13} = ${dim_product.isbn13};;
+#           type: full_outer
+#           relationship: many_to_one
+#   }
 }
 
 explore: dim_date {
