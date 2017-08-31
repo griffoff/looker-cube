@@ -45,7 +45,8 @@ CASE
                ELSE dw_ga.dim_product.PUBLICATIONSERIES
         END
         as discipline_rollup
-      ,dense_rank() over (partition by productfamily order by nullif(edition, '-')::int desc) as latest
+      ,nullif(edition, '-')::int as edition_number
+      ,dense_rank() over (partition by productfamily order by edition_number desc) as latest
     from dw_ga.dim_product
     order by productid;;
     sql_trigger_value: select count(*) from dw_ga.dim_product ;;
@@ -72,6 +73,11 @@ CASE
     label: "Edition"
     group_label: "Product Details"
     sql: ${TABLE}.EDITION ;;
+  }
+
+  dimension: edition_number {
+    type:  number
+    hidden: yes
   }
 
   dimension: majorsubjectmatter {
