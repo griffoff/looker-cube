@@ -25,6 +25,7 @@ view: dim_course {
           ,c."#CONTEXT_ID" as olr_context_id
           ,c.mag_acct_id
           ,orgs.organization
+          ,to_char(dc.STARTDATE, 'YYYYMMDD')::int as startdatekey_new
     from dw_ga.dim_course dc
     left join stg_clts.olr_courses c on dc.coursekey = c."#CONTEXT_ID"
     left join orgs on dc.coursekey = orgs.context_id
@@ -200,7 +201,7 @@ view: dim_course {
 
   dimension: startdatekey {
     type: number
-    sql: to_char(${TABLE}.STARTDATE, 'YYYYMMDD')::int ;;
+    sql: ${TABLE}.startdatekey_new ;;
     hidden: yes
   }
 

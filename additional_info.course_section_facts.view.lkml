@@ -12,7 +12,7 @@ view: course_section_facts {
         ,COALESCE(d.fiscalyearvalue, 'UNKNOWN') as date_granularity
       from ${dim_course.SQL_TABLE_NAME} c
       --left join dw_ga.dim_date d on case when c.startdatekey = -1 then c.enddatekey else c.startdatekey end = d.datekey
-      left join dw_ga.dim_date d on c.startdatekey = d.datekey
+      left join dw_ga.dim_date d on c.startdatekey_new = d.datekey
       left join dw_ga.dim_institution i on c.institutionid = i.institutionid
       )
     ,i as (
