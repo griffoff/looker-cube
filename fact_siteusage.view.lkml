@@ -255,14 +255,16 @@ view: fact_siteusage {
   }
 
   measure: pageviewtime_max {
-    label: "Browser time (max)"
+    group_label: "Time in product"
+    label: "Time in product (max time per page)"
     type: max
     sql: ${pageviewtime};;
     value_format: "hh:mm:ss"
   }
 
   measure: pageviewtime_avg {
-    label: "Browser time (avg)"
+    group_label: "Time in product"
+    label: "Time in product (avg time per page)"
     type: average
     sql: ${pageviewtime};;
     value_format: "h:mm:ss"
@@ -304,7 +306,8 @@ view: fact_siteusage {
   }
 
   measure: pageviewtime_sum {
-    label: "Browser time (total)"
+    group_label: "Time in product"
+    label: "Time in product (total)"
     type: sum
     sql: ${pageviewtime} ;;
     value_format: "hh:mm:ss"
@@ -324,7 +327,7 @@ view: fact_siteusage {
     type: count_distinct
     sql: ${TABLE}.sessionnumber ;;
     value_format: "#,##0"
-    hidden: no
+    hidden: yes
   }
 
   dimension: partyid {
