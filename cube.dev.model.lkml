@@ -1,5 +1,5 @@
 connection: "snowflake_prod"
-label:"Cube Data on Looker"
+label:"DEV - Cube Data on Looker"
 
 #include dims model
 include: "dims.model.lkml"
@@ -49,16 +49,6 @@ explore: fact_session {
     relationship: many_to_one
   }
 }
-
-explore: magellan_data {
-  extends: [dim_course]
-  join: dim_course {
-    sql_on:  ${magellan_data.coursekey} = ${dim_course.coursekey} ;;
-    relationship: one_to_one
-  }
-}
-
-#explore: magellan_summary_data {}
 
 explore: learningpathusage {
   from: fact_activity
