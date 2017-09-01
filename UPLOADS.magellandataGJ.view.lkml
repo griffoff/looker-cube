@@ -1,4 +1,4 @@
-view: magellanhigeredpipgj {
+view: magellandatagj {
   view_label: "Gaurav Magellan Upload"
   sql_table_name: uploads.ZSH.MAGELLANDataGJ ;;
 
@@ -50,8 +50,9 @@ view: magellanhigeredpipgj {
   }
 
   measure: revenue {
-    type: sum
+    type: sum_distinct
     sql: ${TABLE}.REVENUE ;;
+    value_format_name: usd_0
   }
 
   dimension: stage {
@@ -89,8 +90,8 @@ view: magellanhigeredpipgj {
     sql: ${TABLE}.TYPE ;;
   }
 
-  dimension: units {
-    type: number
+  measure: units {
+    type: sum_distinct
     sql: ${TABLE}.UNITS ;;
   }
   dimension: entity_number{
@@ -99,8 +100,9 @@ view: magellanhigeredpipgj {
     }
 
   measure: weighted_revenue {
-    type: sum
+    type: sum_distinct
     sql: ${TABLE}.WEIGHTED_REVENUE ;;
+    value_format_name:  usd_0
   }
 
   measure: count {
