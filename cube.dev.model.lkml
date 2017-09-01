@@ -9,6 +9,47 @@ include: "*.view"
 # include all the dashboards
 include: "*.dashboard"
 
+explore: fact_session {
+  label: "Web - Sessions"
+  extends: [dim_user]
+
+  join: dim_location {
+    sql_on: ${fact_session.locationid} = ${dim_location.locationid} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_session_date {
+    from: dim_date
+    sql_on: ${fact_session.eventdatekey} = ${dim_session_date.datekey} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_time {
+    sql_on: ${fact_session.timekey} = ${dim_time.timekey} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_deviceplatform {
+    sql_on: ${fact_session.deviceplatformid} = ${dim_deviceplatform.deviceplatformid} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_product {
+    sql_on: ${fact_session.productid} = ${dim_product.productid} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_productplatform {
+    sql_on: ${fact_session.productplatformid} = ${dim_productplatform.productplatformid} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_user {
+    sql_on: ${fact_session.userid} = ${dim_user.userid} ;;
+    relationship: many_to_one
+  }
+}
+
 
 explore: learningpathusage {
   from: fact_activity
