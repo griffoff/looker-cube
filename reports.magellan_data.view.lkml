@@ -1,6 +1,12 @@
 view: magellan_data {
   sql_table_name: REPORTS.MAGELLAN_DATA ;;
 
+  dimension: pk {
+    sql: ${coursekey} || ${week_of_course} ;;
+    primary_key: yes
+    hidden: yes
+  }
+
   dimension: avg_instructor_logins_per_day {
     type: number
     sql: ${TABLE}.AVG_INSTRUCTOR_LOGINS_PER_DAY ;;

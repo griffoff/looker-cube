@@ -50,6 +50,15 @@ explore: fact_session {
   }
 }
 
+explore: magellan_data {
+  extends: [dim_course]
+  join: dim_course {
+    sql_on:  ${magellan_data.coursekey} = ${dim_course.coursekey} ;;
+    relationship: one_to_one
+  }
+}
+
+#explore: magellan_summary_data {}
 
 explore: learningpathusage {
   from: fact_activity
