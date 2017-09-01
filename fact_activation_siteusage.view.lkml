@@ -3,8 +3,10 @@ view: fact_activation_siteusage {
   derived_table: {
     sql:
       select CourseId
-        ,avg(PageViewTime) / 1000.0 as Avg_PageViewTime_secs
+        ,avg(PageViewTime) / 1000.0 / /86400 as Avg_PageViewTime_days
         ,count(distinct userid) as user_count
+        ,sum(pageViewTime) / 1000.0 / 86400 as Total_PageViewTime_days
+        ,Total_PageViewTime_days / user_count as Avg_TimeInProductPerStudent
       from dw_ga.fact_siteusage
       group by 1;;
 
@@ -24,6 +26,12 @@ view: fact_activation_siteusage {
     type:  sum
   }
 
+  measure: Avg_TimeInProductPerStudent {
+    label: "Avg total time in product"
+    type: average
+    value_format: "d hh:mm"
+  }
+
   measure: site_usage_percent_of_activations{
     label: "Site Usage: % of activations"
     description: "% of users who accessed a platform based on Google Analytics data as a % of product activations.
@@ -36,7 +44,7 @@ view: fact_activation_siteusage {
   measure: pageviewtime_avg {
     label: "Avg Page view time"
     type: average
-    sql: ${TABLE}.Avg_PageViewTime_secs/86400.0 ;;
+    sql: ${TABLE}.Avg_PageViewTime_days ;;
     value_format: "hh:mm:ss"
   }
 

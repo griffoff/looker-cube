@@ -17,9 +17,16 @@ explore: magellandatagj {
     sql_on: ${magellandatagj.isbn_13} = ${dim_product.isbn13} ;;
     relationship: many_to_one
   }
+
   join: dim_course {
     sql_on: ${dim_product.productid} = ${dim_course.productid}
         and ${dim_institution.institutionid} = ${dim_course.institutionid};;
+        relationship: one_to_many
+  }
+
+  join: fact_siteusage {
+    sql_on: ${dim_course.courseid} = ${fact_siteusage.courseid} ;;
+    relationship: one_to_many
   }
 
 }

@@ -287,7 +287,7 @@ view: fact_siteusage {
     label: "Time in product (avg per student)"
     type: number
     sql: ${pageviewtime_sum} / nullif(${usercount}, 0);;
-    value_format: "h:mm:ss"
+    value_format: "d \d\a\y\s h \h\r\s m \m\i\n\s"
   }
 
   measure: daycount {
