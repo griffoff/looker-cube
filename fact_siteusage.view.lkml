@@ -310,7 +310,8 @@ view: fact_siteusage {
     label: "Time in product (total) days:hours:min:sec"
     type: sum
     sql: ${pageviewtime} ;;
-    value_format: "d:hh:mm:ss"
+#     value_format: "d:hh:mm:ss"
+    value_format: "d \d\a\y\s h \h\r\s m \m\i\n\s"
   }
 
   measure: pageviewtime_sum_hours {
