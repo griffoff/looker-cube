@@ -121,7 +121,7 @@ view: dim_user {
   dimension: pageviewtime {
     label: "Total page view time (hh:mm:ss)"
     type: number
-    sql: ${TABLE}.PAGEVIEWTIME / 1000 / 84000;;
+    sql: ${TABLE}.PAGEVIEWTIME / 1000 / 86400;;
     value_format: "hh:mm:ss"
   }
 
@@ -136,7 +136,7 @@ view: dim_user {
   dimension: sessionviewtime {
     label: "Total session view time (hh:mm:ss)"
     type: number
-    sql: ${TABLE}.SESSIONVIEWTIME / 1000 / 84000;;
+    sql: ${TABLE}.SESSIONVIEWTIME / 1000 / 86400;;
     value_format: "hh:mm:ss"
   }
 
