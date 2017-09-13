@@ -64,7 +64,7 @@ view: all_questions {
 
   dimension: externalid {
     type: string
-    sql: ${TABLE}.EXTERNALID ;;
+    sql: ${TABLE}.activity_externalid ;;
   }
 
   dimension: label {
@@ -338,42 +338,42 @@ view: all_questions {
     type: string
     group_label: "Item Hierarchy"
     label: "Level 1"
-    sql: ${TABLE}.activity_label_level1 ;;
+    sql: ${TABLE}.activity_label_level1::string ;;
   }
 
   dimension: label_level2 {
     type: string
     group_label: "Item Hierarchy"
     label: "Level 2"
-    sql: ${TABLE}.activity_label_level2 ;;
+    sql: ${TABLE}.activity_label_level2::string ;;
   }
 
   dimension: label_level3 {
     type: string
     group_label: "Item Hierarchy"
     label: "Level 3"
-    sql: ${TABLE}.activity_label_level3 ;;
+    sql: ${TABLE}.activity_label_level3::string ;;
   }
 
   dimension: label_level4 {
     type: string
     group_label: "Item Hierarchy"
     label: "Level 4"
-    sql: ${TABLE}.activity_label_level4 ;;
+    sql: ${TABLE}.activity_label_level4::string ;;
   }
 
   dimension: label_level5 {
     type: string
     group_label: "Item Hierarchy"
     label: "Level 5"
-    sql: ${TABLE}.activity_label_level5 ;;
+    sql: ${TABLE}.activity_label_level5::string ;;
   }
 
   dimension: label_level6 {
     type: string
     group_label: "Item Hierarchy"
     label: "Level 6"
-    sql: ${TABLE}.activity_label_level6 ;;
+    sql: ${TABLE}.activity_label_level6::string ;;
   }
 
   dimension: nodeType {
@@ -397,14 +397,14 @@ view: all_questions {
   dimension: itemName {
     label: "Item Name"
     type: string
-    sql: coalesce(${TABLE}.itemName, ${TABLE}.label_level0, ${TABLE}.label) ;;
+    sql: coalesce(${itemNameBase}, ${TABLE}.activity_label_level0, ${TABLE}.label) ;;
   }
 
   dimension: itemNameBase {
     label: "Item Name"
     hidden: yes
     type: string
-    sql: ${TABLE}.itemName::string ;;
+    sql: ${TABLE}.activity_itemName::string ;;
   }
 
   dimension: itemNameIsBlank {
@@ -474,7 +474,7 @@ view: all_questions {
   dimension: combined_activity_label {
     label: "Activity Label"
     type: string
-    sql: coalesce(${structure_activity_label}, ${TABLE}.ACTIVITY_LABEL) ;;
+    sql: coalesce(${structure_activity_label}, ${activity_label}) ;;
     #order_by_field: structure_activity_sort
   }
 
@@ -495,7 +495,7 @@ view: all_questions {
   dimension: combined_activity_type {
     label: "Activity Type"
     type: string
-    sql: coalesce(${TABLE}.structure_activity_type, ${activity_type}) ;;
+    sql: coalesce(${structure_activity_type}, ${activity_type}) ;;
   }
 
   dimension: gradability {
