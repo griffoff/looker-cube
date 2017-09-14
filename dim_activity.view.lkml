@@ -54,6 +54,7 @@ view: dim_activity {
       ;;
       sql_trigger_value: select count(*) from dw_ga.dim_activity ;;
   }
+  set: curated_fields {fields:[gradable_percent,practice_percent,notscorable_percent,unassigned_percent,APPLICATIONNAME,count_gradable,status]}
 
   dimension: activitycategory {
     group_label: "Activity Category"
@@ -360,8 +361,8 @@ view: dim_activity {
     label: "% Gradable - student level"
     description: "Percent of student exposed to a given activity marked gradable by an instructor (counts towards student grade)"
     type: number
-#     sql:  ${count_gradable}/${count};;
-    sql:  ${gradable_course_user_count}/${denominator_student_exposure_percent_calcs} ;;
+#     sql:  ${count_gradable}/nullif(${count}, 0);;
+    sql:  ${gradable_course_user_count}/nullif(${denominator_student_exposure_percent_calcs}, 0) ;;
     value_format_name:  percent_1
     hidden:  no
     html:
@@ -432,7 +433,8 @@ view: dim_activity {
   }
 
   dimension: status {
-    hidden: yes
+    label: "Status - Used for filtering modification types - should be hidden"
+    hidden: no
     type: string
     sql: ${TABLE}.status ;;
   }

@@ -1,6 +1,39 @@
 view: fact_activity {
   label: "Learning Path Modifications"
-  sql_table_name: DW_GA.FACT_ACTIVITY ;;
+  #sql_table_name: DW_GA.FACT_ACTIVITY ;;
+  derived_table: {
+    sql:
+      with a as (
+        select a.*
+            ,to_timestamp_tz(a.createddatekey || right('0' || regexp_replace(a.timekey, '24(\\d\\d)', '00\\1'), 4), 'YYYYMMDDHH24MI') as created_time
+            ,to_timestamp_tz(
+                lead(a.createddatekey) over (partition by a.courseid, a.learningpathid order by a.createddatekey, a.timekey)
+                || right('0' ||
+                    lead(regexp_replace(timekey, '24(\\d\\d)', '00\\1')) over (partition by a.courseid, a.learningpathid order by a.createddatekey, a.timekey)
+                    ,4)
+              , 'YYYYMMDDHH24MI') as next_created_time
+        from dw_ga.fact_activity a
+       )
+      select
+        a.*
+        ,case when row_number() over (partition by courseid, learningpathid order by loaddate) = 1 then 0::timestamp else created_time end as fromdate
+        ,case when row_number() over (partition by courseid, learningpathid order by loaddate desc) = 1 then current_timestamp() else next_created_time end as todate
+      from a
+      where (
+        created_time != next_created_time
+        or next_created_time is null)
+      order by courseid, learningpathid, created_time, next_created_time
+      ;;
+      sql_trigger_value: select count(*) from dw_ga.fact_activity ;;
+  }
+
+  dimension: created_time {
+    hidden: yes
+  }
+
+  dimension: next_created_time {
+    hidden: yes
+  }
 
   dimension: id {
     primary_key: yes

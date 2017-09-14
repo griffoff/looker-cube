@@ -113,6 +113,16 @@ explore: schema_comparison {
   }
 }
 
+explore: tables {
+  label: "Information Schema"
+
+  join: load_history {
+    sql_on: ${tables.table_catalog} = ${load_history.table_catalog}
+          and ${tables.table_schema} = ${load_history.schema_name}
+          and ${tables.table_name} = ${load_history.table_name};;
+  }
+}
+
 explore: activities_per_week {
   extends: [dim_course]
   label: "Student Assignment Completion"

@@ -45,11 +45,14 @@ CASE
                ELSE dw_ga.dim_product.PUBLICATIONSERIES
         END
         as discipline_rollup
-      ,dense_rank() over (partition by productfamily order by nullif(edition, '-')::int desc) as latest
+      ,nullif(edition, '-')::int as edition_number
+      ,dense_rank() over (partition by productfamily order by edition_number desc) as latest
     from dw_ga.dim_product
     order by productid;;
     sql_trigger_value: select count(*) from dw_ga.dim_product ;;
   }
+
+  set: curated_fields {fields:[course,edition,productfamily, coursearea, discipline, product, title, count,productfamily_edition]}
 
   dimension: course {
     label: "Course Name"
@@ -70,6 +73,11 @@ CASE
     label: "Edition"
     group_label: "Product Details"
     sql: ${TABLE}.EDITION ;;
+  }
+
+  dimension: edition_number {
+    type:  number
+    hidden: yes
   }
 
   dimension: majorsubjectmatter {
@@ -97,8 +105,17 @@ CASE
   dimension: productfamily {
     type: string
     label: "Product Family"
-    group_label: "Categories"
+    group_label: "Product Family"
+    description: "Use if data for multiple editions is desired.  This dimension pulls data for all non-filtered editions of a given product family."
     sql: ${TABLE}.PRODUCTFAMILY ;;
+  }
+
+  dimension: productfamily_edition {
+    type: string
+    label: "Product Family + Edition"
+    group_label: "Product Family"
+    description: "Use if comparing multiple titles or specific products within a Course Area/Discipline.  This dimension pulls data for a specific combination of product family and edition."
+    sql: concat(concat(${productfamily},' - '),${edition});;
   }
 
   dimension: publicationgroup {
@@ -127,7 +144,7 @@ CASE
   dimension: coursearea {
     type: string
     label: "Course Area"
-    group_label: "Categories"
+#     group_label: "Categories"
     sql: ${TABLE}.COURSEAREA ;;
   }
 
@@ -140,7 +157,7 @@ CASE
   dimension: discipline {
     type: string
     label: "Discipline"
-   group_label: "Categories"
+#    group_label: "Categories"
    sql: ${TABLE}.discipline_rollup;;
     #sql: ${publicationseries};;
 

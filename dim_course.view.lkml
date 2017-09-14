@@ -3,15 +3,56 @@ view: dim_course {
   #sql_table_name: DW_GA.DIM_COURSE ;;
   derived_table: {
     sql:
+    with course_orgs as (
+      select
+          context_id
+          ,organization
+          ,count(*) as cnt
+      from stg_clts.activations_olr
+      where organization is not null
+      and in_actv_flg = 1
+      group by 1, 2
+    )
+    ,orgs as (
+      select
+         context_id
+         ,organization
+         ,row_number() over (partition by context_id order by cnt desc) as r
+      from course_orgs
+    )
     select dc.*
           ,c.course_key as olr_course_key
           ,c."#CONTEXT_ID" as olr_context_id
           ,c.mag_acct_id
+          ,orgs.organization
+          ,to_char(dc.STARTDATE, 'YYYYMMDD')::int as startdatekey_new
     from dw_ga.dim_course dc
-    left join stg_clts.olr_courses c on dc.coursekey = c."#CONTEXT_ID";;
-
+    left join stg_clts.olr_courses c on dc.coursekey = c."#CONTEXT_ID"
+    left join orgs on dc.coursekey = orgs.context_id
+                  and orgs.r = 1
+    ;;
     sql_trigger_value: select count(*) from dw_ga.dim_course ;;
   }
+
+  # Attempt to classify courses into organizations (like higher ed, but activations don't always have a coursekey...
+  # So this is no good
+
+  dimension: organization {
+    label: "Organization"
+    hidden: yes
+  }
+
+  dimension: HED_filter {
+    hidden: yes
+    view_label: "** RECOMMENDED FILTERS **"
+    label: "HED filter (from course)"
+    description: "Flag to identify Higher-Ed data - based on data in activations feed"
+    type:  yesno
+    sql: ${organization} = 'Higher Ed' ;;
+  }
+
+  set: curated_fields {fields: [courseid, coursename, is_lms_integrated, count]}
+
 
   dimension: mag_acct_id {
     hidden: yes
@@ -129,7 +170,7 @@ view: dim_course {
   dimension: institutionid {
     type: string
     sql: ${TABLE}.INSTITUTIONID ;;
-    hidden: yes
+    hidden: no
   }
 
   dimension: learningcourse {
@@ -159,8 +200,8 @@ view: dim_course {
   }
 
   dimension: startdatekey {
-    type: string
-    sql: ${TABLE}.STARTDATEKEY ;;
+    type: number
+    sql: ${TABLE}.startdatekey_new ;;
     hidden: yes
   }
 

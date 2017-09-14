@@ -8,6 +8,10 @@ include: "*.dashboard.lkml"  # include all dashboards in this project
 
 case_sensitive: no
 
+explore: dataprofiling {
+  label: "Data Profiling"
+}
+
 explore: csfitakes {
   label: "CSFI data"
   extends: [dim_course]
@@ -95,6 +99,16 @@ explore: all_questions {
       sql_on: ${all_questions.activity_creationDateKey} = ${dim_creationdate.datekey} ;;
       relationship: many_to_one
       type: inner
+    }
+
+    join: item_properties {
+      sql_on: ${all_questions.activityitemuri} = ${item_properties.activity_activityitemuri} ;;
+      relationship: many_to_one
+    }
+
+    join: item_taxonomy {
+      sql_on: ${all_questions.activityitemuri} = ${item_taxonomy.activity_activityitemuri} ;;
+      relationship: many_to_many
     }
 
 #     join: dim_productplatform {

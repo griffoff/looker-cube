@@ -1,6 +1,7 @@
 view: dim_date {
   label: "Date"
   sql_table_name: DW_GA.DIM_DATE ;;
+  set: curated_fields {fields:[datevalue_date,datevalue_week,datevalue_month,datevalue_month_name,datevalue_year,datevalue_day_of_week,fiscalyear,count]}
 
   dimension: datevalue {
     label: "Date"
@@ -135,11 +136,22 @@ view: dim_date {
 
   dimension: governmentdefinedacademicterm {
     type: string
-    description: "Fall = August (8/1) - December (12/31).  Spring = January (1/1) - June (6/30).  Summer = July (7/1-7/31)"
+    description: "Fall = August (8/1) - December (12/31).  Spring = January (1/1) - June (6/30).  Summer = July (7/1-7/31)
+    This dimension represents a specific term in a specific year i.e. Fall 2017, not Fall"
     sql: ${TABLE}.GOVERNMENTDEFINEDACADEMICTERM ;;
-    label: "Government Academic Term"
+    label: "Academic Term"
     group_label: "Calendar - Government Defined Academic Calendar"
     order_by_field: governmentdefinedacademictermid
+  }
+
+  dimension: governmentdefinedacademictermofyear {
+    type: string
+    description: "Fall = August (8/1) - December (12/31).  Spring = January (1/1) - June (6/30).  Summer = July (7/1-7/31)
+    This dimension represents a specific term regardless of year i.e. Fall, not Fall 2017"
+    sql:  split_part(${TABLE}.GOVERNMENTDEFINEDACADEMICTERM, ' ', 1) ;;
+    label: "Term of year"
+    group_label: "Calendar - Government Defined Academic Calendar"
+    order_by_field: governmentdefinedacademictermofyearid
   }
 
   dimension: governmentdefinedacademicterm_description {
@@ -148,8 +160,15 @@ view: dim_date {
     hidden: yes
   }
 
+  dimension: governmentdefinedacademictermofyearid {
+    type: number
+    sql: RIGHT(${TABLE}.GOVERNMENTDEFINEDACADEMICTERMID,2)::int ;;
+    hidden: yes
+  }
+
+
   dimension: governmentdefinedacademictermid {
-    type: string
+    type: number
     sql: ${TABLE}.GOVERNMENTDEFINEDACADEMICTERMID ;;
     hidden: yes
   }
@@ -157,7 +176,7 @@ view: dim_date {
   dimension: governmentdefinedacademictermyear {
     type: string
     sql: ${TABLE}.GOVERNMENTDEFINEDACADEMICTERMYEAR ;;
-    label: "Government Academic Year"
+    label: "Academic Year"
     group_label: "Calendar - Government Defined Academic Calendar"
   }
 

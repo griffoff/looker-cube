@@ -31,7 +31,7 @@ explore:  dim_product {
     view_label: "Product"
     sql_on: ${dim_product.isbn13} = ${products.isbn13};;
     relationship:  one_to_one
-    fields: [products.prod_family_cd, products.available_dt*, products.copyright_yr]
+    fields: [products.prod_family_cd, products.available_dt*, products.copyright_yr, products.prod_family_cd_edition]
 
   }
 }
@@ -85,6 +85,7 @@ explore: dim_course {
     sql_on: ${course_section_facts.by_product_fk} = ${product_facts.by_product_fk} ;;
     relationship: many_to_one
   }
+
 }
 
 explore: dim_date {
@@ -158,6 +159,11 @@ explore: dim_learningpath {
   join: dim_activity_view_uri {
     sql_on: ${dim_learningpath.node_id} = ${dim_activity_view_uri.id} ;;
     relationship: one_to_one
+  }
+
+  join: mindtap_lp_activity_tags {
+    sql_on: (${dim_product.productfamily},${dim_product.edition_number},${dim_learningpath.lowest_level})=(${mindtap_lp_activity_tags.product_family},${mindtap_lp_activity_tags.edition_number},${mindtap_lp_activity_tags.learning_path_activity_title});;
+    relationship: one_to_many
   }
 }
 

@@ -268,6 +268,12 @@ explore: master {
     relationship: one_to_many
   }
 
+  join: activity_outcome {
+    sql_on: ${node.id} = ${activity_outcome.activity_id} ;;
+    relationship: one_to_many
+  }
+
+
 }
 explore: snapshot {
   label: "MindTap - Snapshot"
