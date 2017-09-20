@@ -11,7 +11,7 @@ include: "*.dashboard"
 
 explore: fact_session {
   label: "Web - Sessions"
-  extends: [dim_user]
+  extends: [dim_user, dim_course]
 
   join: dim_location {
     sql_on: ${fact_session.locationid} = ${dim_location.locationid} ;;
@@ -47,6 +47,11 @@ explore: fact_session {
   join: dim_user {
     sql_on: ${fact_session.userid} = ${dim_user.userid} ;;
     relationship: many_to_one
+  }
+
+  join: dim_course {
+    sql_on: ${fact_session.productid} = ${dim_course.productid} ;;
+    relationship: many_to_many
   }
 }
 
@@ -140,8 +145,8 @@ explore: learningpathusage {
     relationship: many_to_one
   }
 
-  join: lp_activity_tags_test {
-    sql_on: (${dim_product.productfamily},${dim_learningpath.lowest_level})=(${lp_activity_tags_test.product_family},${lp_activity_tags_test.learning_path_activity_title});;
-    relationship: one_to_many
+  join: mindtap_lp_activity_tags {
+    sql_on: (${dim_product.productfamily},${dim_product.edition_number},${dim_learningpath.lowest_level})=(${mindtap_lp_activity_tags.product_family},${mindtap_lp_activity_tags.edition_number}, ${lp_activity_tags_test.learning_path_activity_title});;
+    relationship: many_to_many
   }
 }
