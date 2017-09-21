@@ -163,7 +163,7 @@ explore: dim_learningpath {
 
   join: mindtap_lp_activity_tags {
     sql_on: (${dim_product.productfamily},${dim_product.edition_number},${dim_learningpath.lowest_level})=(${mindtap_lp_activity_tags.product_family},${mindtap_lp_activity_tags.edition_number},${mindtap_lp_activity_tags.learning_path_activity_title});;
-    relationship: one_to_many
+    relationship: many_to_many
   }
 }
 

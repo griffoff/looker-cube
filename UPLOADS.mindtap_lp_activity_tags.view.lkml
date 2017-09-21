@@ -1,6 +1,16 @@
 view: mindtap_lp_activity_tags {
   label: "Learning Path"
-  sql_table_name: UPLOADS.ZJB.MINDTAP_LP_ACTIVITY_TAGS ;;
+  sql_table_name: UPLOADS.GOOGLE_SHEETS.LPUPLOAD ;;
+
+  dimension: _fivetran_synced {
+    type: string
+    sql: ${TABLE}._FIVETRAN_SYNCED ;;
+  }
+
+  dimension: _row {
+    type: number
+    sql: ${TABLE}._ROW ;;
+  }
 
   dimension: activity_cluster {
     label: "04 - Activity Cluster"
