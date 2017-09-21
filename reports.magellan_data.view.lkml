@@ -97,6 +97,12 @@ view: magellan_data {
     sql: ${TABLE}.STUDENT_TOTALTIMESPENT ;;
   }
 
+  measure: student_totaltimespent_sum {
+    type: sum
+    sql: ${student_totaltimespent}/60/24 ;;
+    value_format: "dd hh:mm:ss"
+  }
+
   dimension: week_of_course {
     type: number
     sql: ${TABLE}.WEEK_OF_COURSE ;;
