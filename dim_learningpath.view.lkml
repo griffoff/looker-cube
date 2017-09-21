@@ -654,6 +654,14 @@ view: dim_learningpath {
     sql: ${TABLE}.lowest_level;;
     hidden: no
   }
+
+  measure: lowest_level_count_distinct {
+    label: "# Activities (unique name)"
+    description: "Count of unique learning path items marked as an Activity"
+    type: count_distinct
+    sql: ${TABLE}.lowest_level;;
+    hidden: no
+  }
 }
 
 #drill_fields: [*]

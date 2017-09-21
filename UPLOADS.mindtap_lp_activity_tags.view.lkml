@@ -106,6 +106,12 @@ view: mindtap_lp_activity_tags {
     sql: ${TABLE}.SECTION_NUMBER ;;
   }
 
+  measure: learning_path_activity_title_count {
+    label: "# Activities (unique from external tagging)"
+    type: count_distinct
+    sql: ${learning_path_activity_title} ;;
+  }
+
   measure: count {
     type: count
     drill_fields: [section_name]
