@@ -333,6 +333,11 @@ explore: fact_siteusage {
     type: full_outer
   }
 
+  join: dim_product {
+    sql_on: ${fact_siteusage.productid} = ${dim_product.productid} ;;
+    relationship: many_to_one
+  }
+
   join: dim_location {
     sql_on: ${fact_siteusage.locationid} = ${dim_location.locationid} ;;
     relationship: many_to_one
