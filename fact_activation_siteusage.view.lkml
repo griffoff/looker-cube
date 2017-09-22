@@ -45,7 +45,7 @@ view: fact_activation_siteusage {
     label: "Avg Page view time"
     type: average
     sql: ${TABLE}.Avg_PageViewTime_days ;;
-    value_format: "hh:mm:ss"
+    value_format_name: duration_hms
   }
 
 

@@ -259,7 +259,7 @@ view: fact_siteusage {
     label: "Time in product (max time per page)"
     type: max
     sql: ${pageviewtime};;
-    value_format: "hh:mm:ss"
+    value_format_name: duration_hms
   }
 
   measure: pageviewtime_avg {
@@ -267,7 +267,7 @@ view: fact_siteusage {
     label: "Time in product (avg time per page)"
     type: average
     sql: ${pageviewtime};;
-    value_format: "h:mm:ss"
+    value_format_name: duration_hms
     html:
     <div style="width:100%;">
       <div title="max: {{pageviewtime_max._rendered_value}}" style="width: {{pageviewtime_percent._rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">
@@ -281,7 +281,7 @@ view: fact_siteusage {
     label: "Time in product (daily avg per student)"
     type: number
     sql: ${pageviewtime_sum} / nullif(${usercount}, 0) / nullif(${daycount}, 0);;
-    value_format: "h:mm:ss"
+    value_format_name: duration_hms
   }
 
   measure: pageviewtime_useraverage {
@@ -363,6 +363,10 @@ view: fact_siteusage {
 
   measure: usercount {
     label: "# Users"
+    description: "This is the number of unique users that have activity related to the current context
+    NOTE: The total # Users will most likely be different from the sum of # Users at a lower level (for example: at chapter level).
+          This is because the same user can use each chapter and so will be counted in the # Users at chapter level,
+          if there are 10 chapters and the user visited every chapter, the sum total would be 10, but the total # Users is just 1."
     type: count_distinct
     sql: ${partyid} ;;
     hidden: no

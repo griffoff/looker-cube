@@ -153,7 +153,7 @@ view: activities_per_week {
     label: "Total time spent"
     type: sum
     sql: ${TABLE}.TOTAL_TIMESPENT_SECS / 86400.0 ;;
-    value_format: "h:mm:ss"
+    value_format_name: duration_hms
   }
 
   measure: student_count {

@@ -2,6 +2,14 @@ connection: "snowflake_prod"
 week_start_day: monday
 label:"Cube Data on Looker"
 
+named_value_format: duration_hms {
+  value_format: "hh:mm:ss"
+}
+
+named_value_format: duration_hms_full {
+  value_format: "h \h\r\s m \m\i\n\s s \s\e\c\s"
+}
+
 #include dims model
 include: "dims.model.lkml"
 # include all the views
@@ -62,6 +70,11 @@ explore: fact_activation {
     type: full_outer
     relationship: many_to_one
   }
+
+  join: dim_product {
+     sql_on: ${fact_activation.productid} = ${dim_product.productid} ;;
+     relationship: many_to_one
+   }
 
   join: dim_relative_to_start_date {
     sql_on: ${fact_activation.daysfromcoursestart} = ${dim_relative_to_start_date.days} ;;

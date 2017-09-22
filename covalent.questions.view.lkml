@@ -203,7 +203,7 @@ view: all_questions {
     type: number
     sql: ${TABLE}.TIMESPENT / 86400.0 ;;
     hidden: yes
-    value_format: "h:mm:ss"
+    value_format_name: duration_hms
   }
 
   measure: timespent_avg {
@@ -211,7 +211,7 @@ view: all_questions {
     type:  average
     sql: ${timespent} ;;
     group_label: "Time spent"
-    value_format: "h:mm:ss"
+    value_format_name: duration_hms
   }
 
   measure: timespent_min {
@@ -219,7 +219,7 @@ view: all_questions {
     type:  min
     sql: case when ${markedtaken} then ${timespent} end ;;
     group_label: "Time spent"
-    value_format: "h:mm:ss"
+    value_format_name: duration_hms
   }
 
   measure: timespent_max {
@@ -227,7 +227,7 @@ view: all_questions {
     type:  max
     sql: ${timespent} ;;
     group_label: "Time spent"
-    value_format: "h:mm:ss"
+    value_format_name: duration_hms
   }
 
   dimension: timespent_bin {
