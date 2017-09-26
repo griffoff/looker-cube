@@ -5,11 +5,13 @@ view: mindtap_lp_activity_tags {
   dimension: _fivetran_synced {
     type: string
     sql: ${TABLE}._FIVETRAN_SYNCED ;;
+    hidden: yes
   }
 
   dimension: _row {
     type: number
     sql: ${TABLE}._ROW ;;
+    hidden: yes
   }
 
   dimension: activity_cluster {
@@ -104,6 +106,14 @@ view: mindtap_lp_activity_tags {
     description: "Unit or Section section, if applicable.  Not available for most product families - part of pilot analytics project."
     type: string
     sql: ${TABLE}.SECTION_NUMBER ;;
+  }
+
+  dimension: edition_type {
+    label: "Edition Type"
+    group_label: "Activity Tags (pilot)"
+    description: "Used to identify CUSTOM or ENHANCED editions as compared to the STANDARD edition"
+    type: string
+    sql: ${TABLE}.EDITION_TYPE ;;
   }
 
   measure: learning_path_activity_title_count {
