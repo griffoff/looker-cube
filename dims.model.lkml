@@ -1,5 +1,5 @@
-connection: "snowflake_prod"
-
+#connection: "snowflake_prod"
+#  connection should/must be defined in other models that include this model
 #
 #  This model is for EXTENSIONREQUIRED explores only
 #  These are used for dimension links that can be include in other explores
@@ -8,7 +8,7 @@ connection: "snowflake_prod"
 #
 
 include: "*.view.lkml"         # include all views in this project
-include: "*.dashboard.lookml"  # include all dashboards in this project
+#include: "*.dashboard.lookml"  # include all dashboards in this project
 
 case_sensitive: no
 

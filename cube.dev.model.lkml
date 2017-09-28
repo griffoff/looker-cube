@@ -1,13 +1,15 @@
-connection: "snowflake_prod"
+include: "cube.model.lkml"
+
+#connection: "snowflake_prod"
 label:"DEV - Cube Data on Looker"
 
-#include dims model
-include: "dims.model.lkml"
-# include all the views
-include: "*.view"
+explore: fact_siteusage_dev {
+  extends: [fact_siteusage]
+  label: "DEV site usage extend"
+  from: fact_siteusage
+  view_name: fact_siteusage
 
-# include all the dashboards
-include: "*.dashboard"
+}
 
 explore: fact_session {
   label: "Web - Sessions"
@@ -58,7 +60,7 @@ explore: fact_session {
 explore: learningpathusage {
   from: fact_activity
   label: "Learning Path - MT Usage Data"
-  description: "Start point for learning path usage from the student persepctive including application usage information collected via google analytics."
+  description: "Start point for learning path usage from the student perspective including application usage information collected via google analytics."
   extends: [dim_user, dim_course, dim_pagedomain]
   extension: required
 

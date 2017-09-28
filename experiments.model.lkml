@@ -29,6 +29,17 @@ include: "*.view"
 #
 #  }
 
+
+explore: ga_data_parsed {
+  extends: [dim_course]
+  label: "THIS IS A TEST"
+
+  join: dim_course {
+    sql_on: ${ga_data_parsed.coursekey} = ${dim_course.coursekey};;
+    relationship: many_to_one
+  }
+}
+
  explore: full_student_course_metrics {
    label: "Data Science - Full Student Course Metrics"
    extends: [dim_course, dim_user]
