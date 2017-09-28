@@ -314,7 +314,6 @@ view: all_questions {
   dimension_group: creation_date {
     label: "Activity Creation"
     sql: ${TABLE}.activity_creationDate ;;
-    type:  time
     type: time
     timeframes: [
       raw,

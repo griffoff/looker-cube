@@ -218,7 +218,6 @@ view: dim_activity {
     type: count_distinct
 #    sql: case when ${gradable} = 'Graded' then ${dim_course.courseid} end;;
 #     hidden:  yes
-    type: count_distinct
     sql: ${dim_course.courseid} ;;
     filters: {
       field: status
