@@ -15,6 +15,7 @@ view: lp_node_map {
     type:  number
     sql: ${TABLE}.learningpathid ;;
     hidden: yes
+    primary_key: yes
   }
 
   dimension: nodeid {
@@ -617,7 +618,6 @@ view: dim_learningpath {
     type: string
     hidden: yes
     sql: ${TABLE}.PARENTLEARNINGPATHID ;;
-    primary_key: yes
   }
 
   measure: count {

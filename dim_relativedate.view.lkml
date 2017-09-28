@@ -105,7 +105,6 @@ view: dim_relativedate {
     description: "Latest week with activity"
     type: number
     sql: MAX(${TABLE}.WEEKS) ;;
-    type: number
     hidden: yes
   }
 }
