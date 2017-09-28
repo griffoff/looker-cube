@@ -11,6 +11,7 @@ view: mindtap_lp_activity_tags {
   dimension: _row {
     type: number
     sql: ${TABLE}._ROW ;;
+    primary_key: yes
     hidden: yes
   }
 
@@ -69,12 +70,6 @@ view: mindtap_lp_activity_tags {
     sql: ${TABLE}.LEARNING_PATH_ACTIVITY_TITLE ;;
     hidden: yes
   }
-
-#   dimension: primary_key {
-#     type: number
-#     sql: ${TABLE}.PRIMARY_KEY ;;
-#     primary_key: yes
-#   }
 
   dimension: product_family {
     group_label: "Activity Tags (pilot)"
