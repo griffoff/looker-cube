@@ -18,6 +18,7 @@ sql_trigger_value:SELECT COUNT(*) FROM UPLOADS.GOOGLE_SHEETS.LPUPLOAD   ;;
   dimension: _row {
     type: number
     sql: ${TABLE}._ROW ;;
+    primary_key: yes
     hidden: yes
   }
 
@@ -76,13 +77,6 @@ sql_trigger_value:SELECT COUNT(*) FROM UPLOADS.GOOGLE_SHEETS.LPUPLOAD   ;;
     sql: ${TABLE}.LEARNING_PATH_ACTIVITY_TITLE ;;
     hidden: yes
   }
-
-#   dimension: primary_key {
-#     type: number
-#     sql: ${TABLE}.PRIMARY_KEY ;;
-#     primary_key: yes
-#   }
-
   dimension: product_family {
     group_label: "Activity Tags (pilot)"
     description: "Not available for most product families - part of pilot analytics project"
@@ -123,12 +117,28 @@ sql_trigger_value:SELECT COUNT(*) FROM UPLOADS.GOOGLE_SHEETS.LPUPLOAD   ;;
     sql: ${TABLE}.EDITION_TYPE ;;
   }
 
+
   dimension: activity_by_group {
 #     label: "# Activities (unique from external tagging)"
 #     type: count_distinct
 #     sql: ${learning_path_activity_title} ;;
   }
 
+  dimension: activity_group {
+    label: "Activity Group"
+    group_label: "Activity Tags (pilot)"
+    description:  "WIP dimension...looking for ways to aggregate videos/media, assessment items, etc."
+    type: string
+    sql: ${TABLE}.ACTIVITY_GROUP ;;
+  }
+
+  dimension: activity_topic {
+    label: "Activity Topic"
+    group_label: "Activity Tags (pilot)"
+    description: "WIP dimension...looking to align topics/themes across products/titles (e.g. 'Anxiety' which may be the topic of chapter 1 in book X and chapter 3 in book Y)"
+    type: string
+    sql:  ${TABLE}.ACTIVITY_TOPIC ;;
+  }
 
   measure: learning_path_activity_title_count {
     label: "# Activities (unique from external tagging)"
