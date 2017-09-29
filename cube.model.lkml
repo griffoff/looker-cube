@@ -10,6 +10,10 @@ named_value_format: duration_hms_full {
   value_format: "h \h\r\s m \m\i\n\s s \s\e\c\s"
 }
 
+datagroup: fact_siteusage_datagroup {
+  sql_trigger: SELECT COUNT(*) FROM dw_ga.fact_siteusage;;
+}
+
 #include dims model
 include: "dims.model.lkml"
 # include all the views
@@ -17,6 +21,8 @@ include: "*.view"
 
 # include all the dashboards
 include: "*.dashboard"
+
+explore: activity_usage_facts {}
 
 
 explore: fact_activation {
@@ -419,6 +425,14 @@ explore: fact_siteusage {
     sql_on: (${fact_siteusage.courseid}, ${fact_siteusage.userid}) = (${paid_users.courseid}, ${paid_users.userid}) ;;
     relationship: many_to_one
   }
+
+  join: activity_usage_facts {
+    view_label: "Activity Facts"
+    sql_on: (${activity_usage_facts.courseid},${activity_usage_facts.activity_type},${activity_usage_facts.partyid})
+      = (${fact_siteusage.courseid},${mindtap_lp_activity_tags.activity_type},${fact_siteusage.partyid}) ;;
+    relationship: one_to_one
+
+}
 
 }
 

@@ -3,7 +3,7 @@ derived_table: {
   sql:
     select distinct courseid, userid
     from dw_ga.fact_activation;;
-  sql_trigger_value: select count(*) from dw_ga.fact_activation ;;
+  sql_trigger_value: SELECT COUNT(*) FROM dw_ga.fact_activation  ;;
   }
 
   dimension: courseid {hidden:yes}
@@ -45,7 +45,8 @@ view: fact_siteusage {
                                                                   and fsu.eventdate between v.effective_from and v.effective_to
       order by courseid, new_relative_days_from_start, userid;;
 
-      sql_trigger_value: select count(*) from dw_ga.fact_siteusage ;;
+#       sql_trigger_value: select count(*) from dw_ga.fact_siteusage ;;
+  datagroup_trigger: fact_siteusage_datagroup
 #>>>>>>> branch 'master' of git@lkrgit_github_050fc477331387631c224b6276ad0eb279f1ba4b:griffoff/looker-cube.git
   }
 

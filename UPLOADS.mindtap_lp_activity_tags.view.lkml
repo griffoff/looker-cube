@@ -1,6 +1,13 @@
 view: mindtap_lp_activity_tags {
   label: "Learning Path"
-  sql_table_name: UPLOADS.GOOGLE_SHEETS.LPUPLOAD ;;
+ # sql_table_name: UPLOADS.GOOGLE_SHEETS.LPUPLOAD ;;
+derived_table: {
+sql: SELECT
+*
+,COUNT (DISTINCT learning_path_Activity_Title) OVER (PARTITION BY Activity_Type,Product_Family,Edition) AS Activity_BY_GROUP
+from  UPLOADS.GOOGLE_SHEETS.LPUPLOAD  ;;
+sql_trigger_value:SELECT COUNT(*) FROM UPLOADS.GOOGLE_SHEETS.LPUPLOAD   ;;
+}
 
   dimension: _fivetran_synced {
     type: string
@@ -115,6 +122,13 @@ view: mindtap_lp_activity_tags {
     type: string
     sql: ${TABLE}.EDITION_TYPE ;;
   }
+
+  dimension: activity_by_group {
+#     label: "# Activities (unique from external tagging)"
+#     type: count_distinct
+#     sql: ${learning_path_activity_title} ;;
+  }
+
 
   measure: learning_path_activity_title_count {
     label: "# Activities (unique from external tagging)"

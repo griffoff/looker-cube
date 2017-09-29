@@ -217,6 +217,6 @@ view: dim_course {
     label: "# Course Sections"
     description: "Count of course sections."
     type: count
-    drill_fields: [dim_institution.institutionname, coursekey, coursename, dim_start_date.calendarmonthname, course_section_facts.total_noofactivations]
+    drill_fields: [dim_institution.institutionname, coursekey, coursename, dim_start_date.calendarmonthname,mindtap_lp_activity_tags.learning_path_activity_title_count, course_section_facts.total_noofactivations]
   }
 }
