@@ -61,7 +61,7 @@ explore: learningpathusage {
   from: fact_activity
   label: "Learning Path - MT Usage Data"
   description: "Start point for learning path usage from the student perspective including application usage information collected via google analytics."
-  extends: [dim_user, dim_course, dim_pagedomain]
+  extends: [dim_user, dim_course, dim_pagedomain,dim_learningpath]
   extension: required
 
   join: dim_course {
