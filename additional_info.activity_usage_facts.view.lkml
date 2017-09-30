@@ -7,10 +7,10 @@ view: activity_usage_facts {
       column: no_of_unique_activities { field: dim_learningpath.lowest_level_count_distinct }
       column: courseid { field: dim_course.courseid }
       column: partyid { field: dim_party.partyid }
-      filters: {
-        field: dim_start_date.fiscalyear
-        value: "FY17"
-      }
+#       filters: {
+#         field: dim_start_date.fiscalyear
+#         value: "FY17"
+#       }
 #       filters: {
 #         field: dim_product.productfamily_edition
 #         value: "CACIOPPO^, DISCOVERING PSYCH - 002"
