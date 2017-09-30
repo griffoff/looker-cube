@@ -14,7 +14,7 @@ explore: fact_siteusage_dev {
   join: activity_usage_facts {
     view_label: "Activity Facts"
     sql_on: (${activity_usage_facts.courseid},${activity_usage_facts.activity_type},${activity_usage_facts.partyid})
-      = (${fact_siteusage.courseid},${mindtap_lp_activity_tags.activity_type},${fact_siteusage.partyid}) ;;
+            = (${fact_siteusage.courseid},${mindtap_lp_activity_tags.activity_type},${fact_siteusage.partyid}) ;;
     relationship: one_to_one
   }
 

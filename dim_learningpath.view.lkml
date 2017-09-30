@@ -184,7 +184,8 @@ view: dim_learningpath {
       group by 1
     )
     select
-        lp.*
+        replace(lp.lowest_level, ' ', '') as activity_title_key
+        ,lp.*
         ,min(lowest_level_sort_base) over (partition by lowest_level) as lowest_level_sort_by_data
         ,min(lporder.daysfromcoursestart) over (partition by lowest_level) as lowest_level_sort_by_usage
         ,s.folder
@@ -278,6 +279,10 @@ view: dim_learningpath {
     ;;
 
     sql_trigger_value: select count(*) from dw_ga.dim_learningpath ;;
+  }
+
+  dimension: activity_title_key {
+    hidden: yes
   }
 
   dimension: node_id {
