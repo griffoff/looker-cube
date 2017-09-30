@@ -22,9 +22,6 @@ include: "*.view"
 # include all the dashboards
 include: "*.dashboard"
 
-explore: activity_usage_facts {}
-
-
 explore: fact_activation {
   label: "Activations"
   description: "Starting point for specific activations-related questions (e.g. how many activations do we have per product by institution?)."
