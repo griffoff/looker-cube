@@ -5,7 +5,8 @@ view: mindtap_lp_activity_tags {
     sql:
       with tags as (
         select
-            replace(learning_path_activity_title, ' ', '') as activity_title_key
+
+            regexp_replace(LEARNING_PATH_ACTIVITY_TITLE, '[\\W\\s]', '') as activity_title_key
             ,*
             ,row_number() over (partition by product_family, edition, activity_title_key order by _fivetran_synced desc) as n
         from UPLOADS.GOOGLE_SHEETS.LPUPLOAD
@@ -20,8 +21,14 @@ view: mindtap_lp_activity_tags {
     sql_trigger_value:SELECT COUNT(*) FROM UPLOADS.GOOGLE_SHEETS.LPUPLOAD   ;;
   }
 
+# samples below
+# TheBody’sUseofGlucose
+# replace(replace(learning_path_activity_title, ' ', ''),'''','') as activity_title_key
+# regexp_replace(replace(LEARNING_PATH_ACTIVITY_TITLE,'’',''), '[\\W\\s]', '') as activity_title_key
+
   dimension: activity_title_key {
-    hidden: yes
+    label: "Activity Title Key - LPUPLOADS"
+    hidden: no
   }
 
   dimension: _fivetran_synced {

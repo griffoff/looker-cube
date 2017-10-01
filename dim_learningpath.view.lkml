@@ -184,7 +184,7 @@ view: dim_learningpath {
       group by 1
     )
     select
-        replace(lp.lowest_level, ' ', '') as activity_title_key
+        regexp_replace(lp.lowest_level, '[\\W\\s]', '') as activity_title_key
         ,lp.*
         ,min(lowest_level_sort_base) over (partition by lowest_level) as lowest_level_sort_by_data
         ,min(lporder.daysfromcoursestart) over (partition by lowest_level) as lowest_level_sort_by_usage
@@ -281,8 +281,12 @@ view: dim_learningpath {
     sql_trigger_value: select count(*) from dw_ga.dim_learningpath ;;
   }
 
+  # replace(lp.lowest_level, ' ', '') as activity_title_key
+  # regexp_replace(replace(lp.lowest_level,'’',''), '[\\W\\s]', '') as activity_title_key
+
   dimension: activity_title_key {
-    hidden: yes
+    label: "Activity Title Key - Learning Path"
+    hidden: no
   }
 
   dimension: node_id {
