@@ -184,7 +184,7 @@ view: dim_learningpath {
       group by 1
     )
     select
-        regexp_replace(lp.lowest_level, '[\\W\\s]', '') as activity_title_key
+        lower(regexp_replace(lp.lowest_level, '[\\W\\s]', '')) as activity_title_key
         ,lp.*
         ,min(lowest_level_sort_base) over (partition by lowest_level) as lowest_level_sort_by_data
         ,min(lporder.daysfromcoursestart) over (partition by lowest_level) as lowest_level_sort_by_usage
