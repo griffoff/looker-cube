@@ -6,7 +6,7 @@ view: mindtap_lp_activity_tags {
       with tags as (
         select
 
-            regexp_replace(LEARNING_PATH_ACTIVITY_TITLE, '[\\W\\s]', '') as activity_title_key
+            lower(regexp_replace(LEARNING_PATH_ACTIVITY_TITLE, '[\\W\\s]', '')) as activity_title_key
             ,*
             ,row_number() over (partition by product_family, edition, activity_title_key order by _fivetran_synced desc) as n
         from UPLOADS.GOOGLE_SHEETS.LPUPLOAD
