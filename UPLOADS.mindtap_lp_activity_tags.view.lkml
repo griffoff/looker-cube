@@ -22,7 +22,7 @@ view: mindtap_lp_activity_tags {
           ,LEARNING_PATH_ACTIVITY_TITLE
           ,case when count(distinct activity_type) over (partition by full_key) > 1 then null else activity_type end as activity_type
           ,case when count(distinct activity_sub_type) over (partition by full_key) > 1 then null else activity_sub_type end as activity_sub_type
-          ,case when count(distinct activity_sub_type) over (partition by full_key) > 1 then null else activity_sub_type end as activity_sub_type
+         --,case when count(distinct activity_sub_type) over (partition by full_key) > 1 then null else activity_sub_type end as activity_sub_type
           ,case when count(distinct activity_cluster) over (partition by full_key) > 1 then null else activity_cluster end as activity_cluster
           ,case when count(distinct activity_sub_cluster) over (partition by full_key) > 1 then null else activity_sub_cluster end as activity_sub_cluster
           ,case when count(distinct activity_topic) over (partition by full_key) > 1 then null else activity_topic end as activity_topic
