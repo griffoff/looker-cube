@@ -173,4 +173,13 @@ measure: count {
   drill_fields: [section_name]
   hidden: yes
 }
+
+  measure:  total_activity_activations{
+    label: "total activity activations"
+    type: number
+    sql:  ${mindtap_lp_activity_tags.learning_path_activity_title_count} * ${course_section_facts.course_count} ;;
+  }
+
+
+
 }
