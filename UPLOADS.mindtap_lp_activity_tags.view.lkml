@@ -5,18 +5,36 @@ view: mindtap_lp_activity_tags {
     sql:
       with tags as (
         select
-
-            lower(regexp_replace(LEARNING_PATH_ACTIVITY_TITLE, '[\\W\\s]', '')) as activity_title_key
-            ,*
-            ,row_number() over (partition by product_family, edition, activity_title_key order by _fivetran_synced desc) as n
+          lower(regexp_replace(LEARNING_PATH_ACTIVITY_TITLE, '[\\W\\s]', '')) as activity_title_key
+          ,Product_Family || Edition || LEARNING_PATH_ACTIVITY_TITLE as full_key
+          ,*
+          ,row_number() over (partition by product_family, edition, activity_title_key
+                                          order by _fivetran_synced desc, case when activity_type is null then 1 else 0 end, length(LEARNING_PATH_ACTIVITY_TITLE)) as n
         from UPLOADS.GOOGLE_SHEETS.LPUPLOAD
       )
-      select
-        *
-        ,COUNT (DISTINCT learning_path_activity_title) OVER (PARTITION BY Activity_Type,Product_Family,Edition) AS Activity_BY_GROUP
+      SELECT
+          _ROW
+          ,_FIVETRAN_SYNCED
+          ,activity_title_key
+          ,PRODUCT_FAMILY
+          ,EDITION
+          ,EDITION_TYPE
+          ,LEARNING_PATH_ACTIVITY_TITLE
+          ,case when count(distinct activity_type) over (partition by full_key) > 1 then null else activity_type end as activity_type
+          ,case when count(distinct activity_sub_type) over (partition by full_key) > 1 then null else activity_sub_type end as activity_sub_type
+          ,case when count(distinct activity_sub_type) over (partition by full_key) > 1 then null else activity_sub_type end as activity_sub_type
+          ,case when count(distinct activity_cluster) over (partition by full_key) > 1 then null else activity_cluster end as activity_cluster
+          ,case when count(distinct activity_sub_cluster) over (partition by full_key) > 1 then null else activity_sub_cluster end as activity_sub_cluster
+          ,case when count(distinct activity_topic) over (partition by full_key) > 1 then null else activity_topic end as activity_topic
+          ,case when count(distinct activity_group) over (partition by full_key) > 1 then null else activity_group end as activity_group
+          ,case when count(distinct chapter) over (partition by full_key) > 1 then null else chapter end as chapter
+          ,case when count(distinct section_number) over (partition by full_key) > 1 then null else section_number end as section_number
+          ,case when count(distinct section_name) over (partition by full_key) > 1 then null else section_name end as section_name
+          ,case when count(distinct chapter_topic) over (partition by full_key) > 1 then null else chapter_topic end as chapter_topic
+          ,COUNT (DISTINCT learning_path_activity_title) OVER (PARTITION BY Activity_Type,Product_Family,Edition) AS Activity_BY_GROUP
       from tags
       where n = 1
-      order by 1
+      order by product_family, edition, activity_title_key
       ;;
     sql_trigger_value:SELECT COUNT(*) FROM UPLOADS.GOOGLE_SHEETS.LPUPLOAD   ;;
   }
@@ -177,8 +195,14 @@ measure: count {
   measure:  total_activity_activations{
     label: "total activity activations"
     type: number
-    sql:  ${mindtap_lp_activity_tags.learning_path_activity_title_count} * ${course_section_facts.course_count} ;;
-    drill_fields: [activity_type,learning_path_activity_title,dim_course.coursekey,course_section_facts.total_noofactivations]
+    # Simply count rows where there are activations
+    # - this works because an explore should be joined to course_seection_facts for every row
+    #   ,so we are NOT counting courses, we are counting rows that have a valid course_section_facts record, and this in turn means that it must have activations
+    #   To be more explicit you could do COUNT(CASE WHEN ${course_section_facts.totalnoofactivations} THEN 1 END)
+    sql:  COUNT(${course_section_facts.courseid}) ;;
+#     type:  number
+#     sql:  ${mindtap_lp_activity_tags.learning_path_activity_title_count} * ${course_section_facts.course_count} ;;
+    drill_fields: [activity_type,chapter,learning_path_activity_title,dim_course.coursekey,dim_activity.status,course_section_facts.total_noofactivations]
   }
 
 
