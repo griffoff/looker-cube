@@ -178,6 +178,7 @@ measure: count {
     label: "total activity activations"
     type: number
     sql:  ${mindtap_lp_activity_tags.learning_path_activity_title_count} * ${course_section_facts.course_count} ;;
+    drill_fields: [activity_type,learning_path_activity_title,dim_course.coursekey,course_section_facts.total_noofactivations]
   }
 
 
