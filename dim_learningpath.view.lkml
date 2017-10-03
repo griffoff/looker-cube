@@ -183,7 +183,7 @@ view: dim_learningpath {
       from ${lp_node_map.SQL_TABLE_NAME}
       group by 1
     )
-    select
+    select distinct
         lower(regexp_replace(lp.lowest_level, '[\\W\\s]', '')) as activity_title_key
         ,lp.*
         ,min(lowest_level_sort_base) over (partition by lowest_level) as lowest_level_sort_by_data
