@@ -39,6 +39,25 @@ view: mindtap_lp_activity_tags {
     sql_trigger_value:SELECT COUNT(*) FROM UPLOADS.GOOGLE_SHEETS.LPUPLOAD   ;;
   }
 
+  parameter: group_picker {
+    label: "Analyse by"
+    type: unquoted
+    allowed_value: {
+      label: "Activity Type"
+      value: "activity_type"
+    }
+    allowed_value: {
+      label: "Chapter"
+      value: "chapter"
+    }
+  }
+
+  dimension: dynamic_group {
+    label: "Activity dynamic group"
+    type: string
+    sql: ${TABLE}.{% parameter group_picker %} ;;
+  }
+
 # samples below
 # TheBody’sUseofGlucose
 # replace(replace(learning_path_activity_title, ' ', ''),'''','') as activity_title_key
