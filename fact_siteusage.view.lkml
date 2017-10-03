@@ -369,7 +369,7 @@ view: fact_siteusage {
     type: count_distinct
     sql: ${partyid} ;;
     hidden: no
-    drill_fields: [dim_product.productfamily, dim_institution.institutionname, dim_learningpath.lowest_level, usercount]
+    drill_fields: [dim_product.productfamily, dim_institution.institutionname, mindtap_lp_activity_tags.chapter, mindtap_lp_activity_tags.learning_path_activity_title, usercount, percent_of_activations]
   }
 
   measure: percent_of_activations {
