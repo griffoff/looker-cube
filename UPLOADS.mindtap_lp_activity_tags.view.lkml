@@ -119,6 +119,13 @@ view: mindtap_lp_activity_tags {
     description: "Chapter number as defined in the learning path.  Chapter 0 contains all 'getting started' and intro activities.  Not available for most product families - part of pilot analytics project"
     type: number
     sql: ${TABLE}.CHAPTER ;;
+    order_by_field: chapter_sort
+  }
+
+  dimension: chapter_sort {
+    hidden: yes
+    type: number
+    sql:  case when ${chapter} ilike 'appendix' then 9999 else coalesce(try_cast(${chapter} as int), -1) end;;
   }
 
   dimension: chapter_topic {
