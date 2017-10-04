@@ -32,15 +32,40 @@ view: activity_usage_facts {
 #   }
 
   dimension: activity_type_usage_bucket{
-    label: ""
+    label: "Student Usage Bucket"
     type: string
-    sql: CASE WHEN COALESCE(${no_of_unique_activities},0) = 0 THEN '0-Nousage'
-          WHEN ${no_of_unique_activities} = 1 THEN 'One Time usage'
-          WHEN ${no_of_unique_activities}/${mindtap_lp_activity_tags.activity_by_group} < 0.25 THEN '25%'
-          WHEN ${no_of_unique_activities}/${mindtap_lp_activity_tags.activity_by_group} < 0.5 THEN '50%'
-          WHEN ${no_of_unique_activities}/${mindtap_lp_activity_tags.activity_by_group} < 0.75 THEN '75%'
-          ELSE '75%+' END
-          ;;
+    case: {
+      when: {
+        sql: COALESCE(${no_of_unique_activities},0) = 0 ;;
+        label: "0-Nousage"
+      }
+      when: {
+        sql: ${no_of_unique_activities} = 1;;
+        label: "One Time usage"
+      }
+      when: {
+        sql: ${no_of_unique_activities}/${mindtap_lp_activity_tags.activity_by_group} < 0.25 ;;
+        label: "25%"
+      }
+      when: {
+        sql: ${no_of_unique_activities}/${mindtap_lp_activity_tags.activity_by_group} < 0.5 ;;
+        label: "50%"
+      }
+      when: {
+        sql: ${no_of_unique_activities}/${mindtap_lp_activity_tags.activity_by_group} < 0.75 ;;
+        label: "75%"
+      }
+      else: "75%+"
+    }
+#     sql: CASE WHEN COALESCE(${no_of_unique_activities},0) = 0 THEN '0-Nousage'
+#           WHEN ${no_of_unique_activities} = 1 THEN 'One Time usage'
+#           WHEN ${no_of_unique_activities}/${mindtap_lp_activity_tags.activity_by_group} < 0.25 THEN '25%'
+#           WHEN ${no_of_unique_activities}/${mindtap_lp_activity_tags.activity_by_group} < 0.5 THEN '50%'
+#           WHEN ${no_of_unique_activities}/${mindtap_lp_activity_tags.activity_by_group} < 0.75 THEN '75%'
+#           ELSE '75%+' END
+#           ;;
+#       order_by_field: bucket_sort
   }
+
 
 }
