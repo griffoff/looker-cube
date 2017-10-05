@@ -8,7 +8,6 @@ view: mindtap_lp_activity_tags {
           lower(regexp_replace(LEARNING_PATH_ACTIVITY_TITLE, '[\\W\\s]', '')) as activity_title_key
           ,Product_Family || Edition || LEARNING_PATH_ACTIVITY_TITLE as full_key
           ,*
-          ,CONCAT(${activity_type}, Coalesce(CONCAT(': ',NULLIF(${activity_sub_type},'')),'')) as activity_usage_facts_grouping
           ,row_number() over (partition by product_family, edition, activity_title_key
                                           order by _fivetran_synced desc, case when activity_type is null then 1 else 0 end, length(LEARNING_PATH_ACTIVITY_TITLE)) as n
         from UPLOADS.GOOGLE_SHEETS.LPUPLOAD
@@ -20,6 +19,7 @@ view: mindtap_lp_activity_tags {
           ,PRODUCT_FAMILY
           ,EDITION
           ,EDITION_TYPE
+          ,CONCAT(activity_type, Coalesce(CONCAT(': ',NULLIF(activity_sub_type,'')),'')) as activity_usage_facts_grouping
           ,max(learning_path_activity_title) over (partition by activity_title_key) as LEARNING_PATH_ACTIVITY_TITLE
           ,case when count(distinct activity_type) over (partition by full_key) > 1 then null else activity_type end as activity_type
           ,case when count(distinct activity_sub_type) over (partition by full_key) > 1 then null else activity_sub_type end as activity_sub_type
