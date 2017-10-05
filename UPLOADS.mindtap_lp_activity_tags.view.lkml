@@ -8,6 +8,7 @@ view: mindtap_lp_activity_tags {
           lower(regexp_replace(LEARNING_PATH_ACTIVITY_TITLE, '[\\W\\s]', '')) as activity_title_key
           ,Product_Family || Edition || LEARNING_PATH_ACTIVITY_TITLE as full_key
           ,*
+          ,CONCAT(${activity_type}, Coalesce(CONCAT(': ',NULLIF(${activity_sub_type},'')),'')) as activity_usage_facts_grouping
           ,row_number() over (partition by product_family, edition, activity_title_key
                                           order by _fivetran_synced desc, case when activity_type is null then 1 else 0 end, length(LEARNING_PATH_ACTIVITY_TITLE)) as n
         from UPLOADS.GOOGLE_SHEETS.LPUPLOAD
@@ -213,17 +214,17 @@ dimension: activity_topic {
   sql:  ${TABLE}.ACTIVITY_TOPIC ;;
 }
 
-dimension: concat_activity_sub_type {
-    label: "10 - Activity + Sub-Type"
-    group_label: "Activity Tags (pilot)"
-    description: "Not available for most product families - part of pilot analytics project"
-    type: string
-    sql:CONCAT(${activity_type}, Coalesce(CONCAT(': ',NULLIF(${activity_sub_type},'')),'')) ;;
-  }
+# dimension: concat_activity_sub_type {
+#     label: "10 - Activity + Sub-Type"
+#     group_label: "Activity Tags (pilot)"
+#     description: "Not available for most product families - part of pilot analytics project"
+#     type: string
+#     sql:CONCAT(${activity_type}, Coalesce(CONCAT(': ',NULLIF(${activity_sub_type},'')),'')) ;;
+#   }
 
 dimension: activity_usage_facts_grouping {
   hidden: yes
-  sql: ${concat_activity_sub_type} ;;
+  sql: ${TABLE}.activity_usage_facts_grouping} ;;
 }
 
 measure: learning_path_activity_title_count {
