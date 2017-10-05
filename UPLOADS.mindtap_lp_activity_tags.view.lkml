@@ -206,6 +206,14 @@ dimension: activity_topic {
   sql:  ${TABLE}.ACTIVITY_TOPIC ;;
 }
 
+dimension: Concat_activity_sub_type {
+    label: "10 - Activity + Sub-Type"
+    group_label: "Activity Tags (pilot)"
+    description: "Not available for most product families - part of pilot analytics project"
+    type: string
+    sql:CONCAT(CONCAT(activity_type,' '), Coalesce(activity_sub_type,'')) ;;
+  }
+
 measure: learning_path_activity_title_count {
   label: "# Activities (unique from external tagging)"
   type: count_distinct
@@ -228,7 +236,7 @@ measure: count {
     sql:  COUNT(${course_section_facts.courseid}) ;;
 #     type:  number
 #     sql:  ${mindtap_lp_activity_tags.learning_path_activity_title_count} * ${course_section_facts.course_count} ;;
-    drill_fields: [activity_type,chapter,learning_path_activity_title,dim_course.coursekey,dim_activity.status,course_section_facts.total_noofactivations]
+    drill_fields: [dim_course.coursekey,chapter,activity_type,learning_path_activity_title,dim_activity.status,course_section_facts.total_noofactivations]
   }
 
 
