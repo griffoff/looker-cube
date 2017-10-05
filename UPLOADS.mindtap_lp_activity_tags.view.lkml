@@ -190,6 +190,13 @@ view: mindtap_lp_activity_tags {
 #     sql: ${learning_path_activity_title} ;;
 }
 
+measure: activity_by_group_measure {
+  label: "Activity by Group - Measure"
+  description: "converted activity by group dimension"
+  type: number
+  sql: ${activity_by_group} ;;
+  }
+
 dimension: activity_group {
   label: "Activity Group"
   group_label: "Activity Tags (pilot)"
