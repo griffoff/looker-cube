@@ -156,9 +156,17 @@ view: fact_siteusage {
   }
 
   dimension_group: eventdate {
+    label: "Event Start"
     type: time
     timeframes: [time, hour, minute, date, week, month, raw]
     sql: ${TABLE}.EVENTDATE ;;
+  }
+
+  dimension_group: eventenddate {
+    label: "Event End"
+    type: time
+    timeframes: [time, hour, minute, date, week, month, raw]
+    sql: DATEADD(millisecond, ${pageviewtime}, ${TABLE}.EVENTDATE) ;;
   }
 
   dimension: eventdatekey {
