@@ -218,7 +218,7 @@ dimension: Concat_activity_sub_type {
     group_label: "Activity Tags (pilot)"
     description: "Not available for most product families - part of pilot analytics project"
     type: string
-    sql:CONCAT(activity_type, Coalesce(CONCAT(': ',NULLIF(activity_sub_type,'')),'')) ;;
+    sql:CONCAT(${activity_type}, Coalesce(CONCAT(': ',NULLIF(${activity_sub_type},'')),'')) ;;
   }
 
 measure: learning_path_activity_title_count {
