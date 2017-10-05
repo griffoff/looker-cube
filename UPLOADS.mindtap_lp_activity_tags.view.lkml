@@ -19,7 +19,7 @@ view: mindtap_lp_activity_tags {
           ,PRODUCT_FAMILY
           ,EDITION
           ,EDITION_TYPE
-          ,LEARNING_PATH_ACTIVITY_TITLE
+          ,max(learning_path_activity_title) over (partition by activity_title_key) as LEARNING_PATH_ACTIVITY_TITLE
           ,case when count(distinct activity_type) over (partition by full_key) > 1 then null else activity_type end as activity_type
           ,case when count(distinct activity_sub_type) over (partition by full_key) > 1 then null else activity_sub_type end as activity_sub_type
          --,case when count(distinct activity_sub_type) over (partition by full_key) > 1 then null else activity_sub_type end as activity_sub_type
