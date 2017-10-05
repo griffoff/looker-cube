@@ -19,7 +19,7 @@ view: mindtap_lp_activity_tags {
           ,PRODUCT_FAMILY
           ,EDITION
           ,EDITION_TYPE
-          ,CONCAT(activity_type, Coalesce(CONCAT(': ',NULLIF(activity_sub_type,'')),'')) as activity_usage_facts_grouping
+          --,CONCAT(activity_type, Coalesce(CONCAT(': ',NULLIF(activity_sub_type,'')),'')) as activity_usage_facts_grouping
           ,max(learning_path_activity_title) over (partition by activity_title_key) as LEARNING_PATH_ACTIVITY_TITLE
           ,case when count(distinct activity_type) over (partition by full_key) > 1 then null else activity_type end as activity_type
           ,case when count(distinct activity_sub_type) over (partition by full_key) > 1 then null else activity_sub_type end as activity_sub_type
@@ -214,7 +214,7 @@ dimension: activity_topic {
   sql:  ${TABLE}.ACTIVITY_TOPIC ;;
 }
 
-dimension: concat_activity_sub_type {
+dimension: Concat_activity_sub_type {
     label: "10 - Activity + Sub-Type"
     group_label: "Activity Tags (pilot)"
     description: "Not available for most product families - part of pilot analytics project"
