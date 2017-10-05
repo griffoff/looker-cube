@@ -213,13 +213,18 @@ dimension: activity_topic {
   sql:  ${TABLE}.ACTIVITY_TOPIC ;;
 }
 
-dimension: Concat_activity_sub_type {
+dimension: concat_activity_sub_type {
     label: "10 - Activity + Sub-Type"
     group_label: "Activity Tags (pilot)"
     description: "Not available for most product families - part of pilot analytics project"
     type: string
     sql:CONCAT(${activity_type}, Coalesce(CONCAT(': ',NULLIF(${activity_sub_type},'')),'')) ;;
   }
+
+dimension: activity_usage_facts_grouping {
+  hidden: yes
+  sql: ${concat_activity_sub_type} ;;
+}
 
 measure: learning_path_activity_title_count {
   label: "# Activities (unique from external tagging)"
