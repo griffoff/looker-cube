@@ -430,9 +430,33 @@ view: dim_activity {
   }
 
   dimension: status {
-    label: "Status - Used for filtering modification types - should be hidden"
+    label: "Gradable Status"
+    description: "
+    “Graded” = Student gets a score (scorable) and the score counts towards his/her grade (gradable)
+    “Practice” = Student gets a score (scorable) but the activity does NOT count towards his/her grade (not gradable)
+    “Non-scorable” = Students cannot get a score for the activity (typically videos and readings)
+    “Unassigned” = activity was removed from the student’s learning path
+    "
     hidden: no
-    type: string
+#     type: string
+#     case: {
+#       when: {
+#         label: "Graded"
+#         sql: ${TABLE}.status = 'graded' ;;
+#       }
+#       when: {
+#         label: "Practice"
+#         sql: ${TABLE}.status = 'practice' ;;
+#       }
+#       when: {
+#         label: "Non-scorable"
+#         sql: ${TABLE}.status = 'nonscorable' ;;
+#       }
+#       when: {
+#         label: "Unassigned"
+#         sql: ${TABLE}.status = 'unassigned' ;;
+#       }
+#     }
     sql: ${TABLE}.status ;;
   }
 

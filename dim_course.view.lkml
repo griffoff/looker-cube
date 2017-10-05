@@ -87,7 +87,7 @@ view: dim_course {
 
     link: {
       label: "Explore Mindtap Learning Path for this Course/Section"
-      url: "/explore/cube/fact_activityoutcome?fields=dim_learningpath.lowest_level,dim_activity.activitysubcategory,fact_activityoutcome.score_avg,dim_user.count,&f[dim_course.coursekey]={{ value }}"
+      url: "/explore/cube/fact_siteusage?fields=dim_learningpath.lowest_level,dim_activity.activitysubcategory,fact_activityoutcome.score_avg,dim_user.count,&f[dim_course.coursekey]={{ value }}"
     }
 
     link: {
