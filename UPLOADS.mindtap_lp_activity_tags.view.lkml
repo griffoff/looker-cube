@@ -31,7 +31,7 @@ view: mindtap_lp_activity_tags {
           ,case when count(distinct section_number) over (partition by full_key) > 1 then null else section_number end as section_number
           ,case when count(distinct section_name) over (partition by full_key) > 1 then null else section_name end as section_name
           ,case when count(distinct chapter_topic) over (partition by full_key) > 1 then null else chapter_topic end as chapter_topic
-          ,COUNT (DISTINCT learning_path_activity_title) OVER (PARTITION BY Activity_Type,Product_Family,Edition) AS Activity_BY_GROUP
+          ,COUNT (DISTINCT learning_path_activity_title) OVER (PARTITION BY Activity_Type,Activity_sub_Type,Product_Family,Edition) AS Activity_BY_GROUP
       from tags
       where n = 1
       order by product_family, edition, activity_title_key
@@ -191,7 +191,7 @@ view: mindtap_lp_activity_tags {
 }
 
 measure: activity_by_group_measure {
-  label: "Activity by Group - Measure"
+  label: " # Unique Activities By Type"
   description: "converted activity by group dimension"
   type: number
   sql: ${activity_by_group} ;;
@@ -218,7 +218,7 @@ dimension: Concat_activity_sub_type {
     group_label: "Activity Tags (pilot)"
     description: "Not available for most product families - part of pilot analytics project"
     type: string
-    sql:CONCAT(CONCAT(activity_type,' '), Coalesce(activity_sub_type,'')) ;;
+    sql:CONCAT(activity_type, Coalesce(CONCAT(': ',NULLIF(activity_sub_type,'')),'')) ;;
   }
 
 measure: learning_path_activity_title_count {
