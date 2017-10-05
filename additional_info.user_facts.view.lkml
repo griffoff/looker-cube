@@ -16,6 +16,7 @@ view: user_facts {
       INNER JOIN dw_ga.DIM_ACTIVITY a ON s.ACTIVITYID = a.ACTIVITYID
       GROUP BY 1
        ;;
+      datagroup_trigger: fact_activityoutcome_datagroup
   }
   set: curated_fields{
     fields: [activities_completed,activities_completed_by_user,gradable_activities_completed,gradable_activities_completed_by_user,overall_score]
