@@ -14,6 +14,10 @@ datagroup: fact_siteusage_datagroup {
   sql_trigger: SELECT COUNT(*) FROM dw_ga.fact_siteusage;;
 }
 
+datagroup: fact_activityoutcome_datagroup {
+  sql_trigger: SELECT COUNT(*) FROM dw_ga.fact_activityoutcome;;
+}
+
 #include dims model
 include: "dims.model.lkml"
 # include all the views
