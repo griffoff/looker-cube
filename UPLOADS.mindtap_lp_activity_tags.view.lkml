@@ -191,7 +191,7 @@ view: mindtap_lp_activity_tags {
 }
 
 measure: activity_by_group_measure {
-  label: "Activity by Group - Measure"
+  label: " # Unique Activities By Type"
   description: "converted activity by group dimension"
   type: number
   sql: ${activity_by_group} ;;
@@ -218,7 +218,7 @@ dimension: Concat_activity_sub_type {
     group_label: "Activity Tags (pilot)"
     description: "Not available for most product families - part of pilot analytics project"
     type: string
-    sql:CONCAT(CONCAT(activity_type,' '), Coalesce(activity_sub_type,'')) ;;
+    sql:CONCAT(activity_type, Coalesce(CONCAT(': ',NULLIF(activity_sub_type,'')),'')) ;;
   }
 
 measure: learning_path_activity_title_count {
