@@ -239,7 +239,7 @@ measure: count {
 }
 
   measure:  total_activity_activations{
-    label: "total activity activations"
+    label: "Activity Availability"
     type: number
     # Simply count rows where there are activations
     # - this works because an explore should be joined to course_seection_facts for every row
