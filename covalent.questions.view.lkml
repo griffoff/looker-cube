@@ -13,7 +13,7 @@ view: soa_questions {
 }
 
 view: all_questions {
-  sql_table_name: dev.zpg.all_questions ;;
+  sql_table_name: looker_scratch.all_questions ;;
   label: "All Covalent Questions"
 
   set: course_details {
@@ -45,7 +45,7 @@ view: all_questions {
 
   dimension: activityitemuri {
     type: string
-    sql: ${TABLE}.ACTIVITYITEMURI ;;
+    sql: ${TABLE}.ACTIVITY_ACTIVITYITEMURI ;;
   }
 
   dimension: activityuri {
@@ -64,11 +64,11 @@ view: all_questions {
 
   dimension: externalid {
     type: string
-    sql: ${TABLE}.EXTERNALID ;;
+    sql: ${TABLE}.activity_externalid ;;
   }
 
   dimension: label {
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}.LABEL::string ;;
   }
@@ -203,7 +203,7 @@ view: all_questions {
     type: number
     sql: ${TABLE}.TIMESPENT / 86400.0 ;;
     hidden: yes
-    value_format: "h:mm:ss"
+    value_format_name: duration_hms
   }
 
   measure: timespent_avg {
@@ -211,7 +211,7 @@ view: all_questions {
     type:  average
     sql: ${timespent} ;;
     group_label: "Time spent"
-    value_format: "h:mm:ss"
+    value_format_name: duration_hms
   }
 
   measure: timespent_min {
@@ -219,7 +219,7 @@ view: all_questions {
     type:  min
     sql: case when ${markedtaken} then ${timespent} end ;;
     group_label: "Time spent"
-    value_format: "h:mm:ss"
+    value_format_name: duration_hms
   }
 
   measure: timespent_max {
@@ -227,7 +227,7 @@ view: all_questions {
     type:  max
     sql: ${timespent} ;;
     group_label: "Time spent"
-    value_format: "h:mm:ss"
+    value_format_name: duration_hms
   }
 
   dimension: timespent_bin {
@@ -290,8 +290,7 @@ view: all_questions {
   dimension: id {
     hidden: yes
     primary_key: yes
-    sql: ${TABLE}.nextval ;;
-    #sql: ${TABLE}.id ;;
+    sql: ${TABLE}.id ;;
   }
 
   measure: attempts_sum {
@@ -315,7 +314,6 @@ view: all_questions {
   dimension_group: creation_date {
     label: "Activity Creation"
     sql: ${TABLE}.activity_creationDate ;;
-    type:  time
     type: time
     timeframes: [
       raw,
@@ -332,49 +330,49 @@ view: all_questions {
     type: string
     group_label: "Item Hierarchy"
     label: "Level 0"
-    sql: ${TABLE}.label_level0::string ;;
+    sql: ${TABLE}.activity_label_level0::string ;;
   }
 
   dimension: label_level1 {
     type: string
     group_label: "Item Hierarchy"
     label: "Level 1"
-    sql: ${TABLE}.label_level1 ;;
+    sql: ${TABLE}.activity_label_level1::string ;;
   }
 
   dimension: label_level2 {
     type: string
     group_label: "Item Hierarchy"
     label: "Level 2"
-    sql: ${TABLE}.label_level2 ;;
+    sql: ${TABLE}.activity_label_level2::string ;;
   }
 
   dimension: label_level3 {
     type: string
     group_label: "Item Hierarchy"
     label: "Level 3"
-    sql: ${TABLE}.label_level3 ;;
+    sql: ${TABLE}.activity_label_level3::string ;;
   }
 
   dimension: label_level4 {
     type: string
     group_label: "Item Hierarchy"
     label: "Level 4"
-    sql: ${TABLE}.label_level4 ;;
+    sql: ${TABLE}.activity_label_level4::string ;;
   }
 
   dimension: label_level5 {
     type: string
     group_label: "Item Hierarchy"
     label: "Level 5"
-    sql: ${TABLE}.label_level5 ;;
+    sql: ${TABLE}.activity_label_level5::string ;;
   }
 
   dimension: label_level6 {
     type: string
     group_label: "Item Hierarchy"
     label: "Level 6"
-    sql: ${TABLE}.label_level6 ;;
+    sql: ${TABLE}.activity_label_level6::string ;;
   }
 
   dimension: nodeType {
@@ -398,14 +396,14 @@ view: all_questions {
   dimension: itemName {
     label: "Item Name"
     type: string
-    sql: coalesce(${TABLE}.itemName, ${TABLE}.label_level0, ${TABLE}.label) ;;
+    sql: coalesce(${itemNameBase}, ${TABLE}.activity_label_level0, ${TABLE}.label) ;;
   }
 
   dimension: itemNameBase {
     label: "Item Name"
     hidden: yes
     type: string
-    sql: ${TABLE}.itemName::string ;;
+    sql: ${TABLE}.activity_itemName::string ;;
   }
 
   dimension: itemNameIsBlank {
@@ -475,7 +473,7 @@ view: all_questions {
   dimension: combined_activity_label {
     label: "Activity Label"
     type: string
-    sql: coalesce(${structure_activity_label}, ${TABLE}.ACTIVITY_LABEL) ;;
+    sql: coalesce(${structure_activity_label}, ${activity_label}) ;;
     #order_by_field: structure_activity_sort
   }
 
@@ -496,7 +494,7 @@ view: all_questions {
   dimension: combined_activity_type {
     label: "Activity Type"
     type: string
-    sql: coalesce(${TABLE}.structure_activity_type, ${activity_type}) ;;
+    sql: coalesce(${structure_activity_type}, ${activity_type}) ;;
   }
 
   dimension: gradability {
@@ -539,7 +537,7 @@ view: all_questions {
     label: "% Item Usage"
     type: number
     description: "% of users who did this item of the total activated users on courses with this item"
-    sql: ${user_count} / nullif(${fact_activation_by_course.total_noofactivations}, 0) ;;
+    sql: ${user_count} / nullif(${course_section_facts.total_noofactivations}, 0) ;;
     value_format_name: percent_1
   }
 

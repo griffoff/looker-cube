@@ -1,5 +1,5 @@
 view: fact_activityoutcome {
-  label: "Learning Path"
+  label: "Learning Path - Activity Takes"
   sql_table_name: DW_GA.FACT_ACTIVITYOUTCOME ;;
 
   dimension: rowid {
@@ -35,12 +35,20 @@ view: fact_activityoutcome {
   }
 
   dimension: completed {
+    label: "Take Completed"
     type: string
     sql:  CASE
               WHEN ${TABLE}.COMPLETED = 'true' THEN 'Completed'
               WHEN ${TABLE}.COMPLETED = 'false' THEN 'In Progress'
           ELSE 'Not Attempted'
           END;;
+  }
+
+  measure: completed_activities {
+    type: count_distinct
+    label: "# Completed Activities"
+    description: "Number of completed activities"
+    sql: case when ${TABLE}.completed then ${id} end ;;
   }
 
   dimension: completeddatekey {
@@ -319,7 +327,7 @@ view: fact_activityoutcome {
     type: average
     # sql: COALESCE(NULLIF(${TABLE}.TIMEDURATION, 0), ${TABLE}.TIMESPENT) /1000.0 ;;
     sql: NULLIF(${TABLE}.TIMEDURATION /1000.0, 0)/86400.0 ;;
-    value_format: "h:mm:ss"
+    value_format_name: duration_hms
     hidden: yes
   }
 
@@ -327,7 +335,7 @@ view: fact_activityoutcome {
     label: "Avg. Time spent"
     type: average
     sql: NULLIF(${TABLE}.TIMESPENT /1000.0, 0)/86400.0 ;;
-    value_format: "h:mm:ss"
+    value_format_name: duration_hms
     hidden: yes
   }
 
@@ -336,7 +344,7 @@ view: fact_activityoutcome {
     type: average
     hidden: yes
     sql: ${timeduration}/86400.0 ;;
-    value_format: "h:mm:ss"
+    value_format_name: duration_hms
   }
 
   dimension: timeduration_bucket {
@@ -372,6 +380,12 @@ view: fact_activityoutcome {
     type: count_distinct
     sql: case when ${score} >= 0 then (${TABLE}.USERID) end ;;
     label: "# of users completed"
+  }
+
+  measure: usercount_withscore {
+    type: count_distinct
+    sql: case when ${score} > 0 then (${TABLE}.USERID) end ;;
+    label: "# of users completed with greater than 0 score"
   }
 
   measure: count {

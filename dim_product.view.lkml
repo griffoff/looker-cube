@@ -44,9 +44,15 @@ CASE
                WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Literature/Upper Level English' then 'Literature'
                ELSE dw_ga.dim_product.PUBLICATIONSERIES
         END
-    as discipline_rollup from dw_ga.dim_product;;
+        as discipline_rollup
+      ,nullif(edition, '-')::int as edition_number
+      ,dense_rank() over (partition by productfamily order by edition_number desc) as latest
+    from dw_ga.dim_product
+    order by productid;;
     sql_trigger_value: select count(*) from dw_ga.dim_product ;;
   }
+
+  set: curated_fields {fields:[course,edition,productfamily, coursearea, discipline, product, title, count,productfamily_edition]}
 
   dimension: course {
     label: "Course Name"
@@ -65,8 +71,13 @@ CASE
   dimension: edition {
     type: string
     label: "Edition"
-    group_label: "Product Details"
+    group_label: "Product Family"
     sql: ${TABLE}.EDITION ;;
+  }
+
+  dimension: edition_number {
+    type:  number
+    hidden: yes
   }
 
   dimension: majorsubjectmatter {
@@ -94,8 +105,17 @@ CASE
   dimension: productfamily {
     type: string
     label: "Product Family"
-    group_label: "Categories"
+    group_label: "Product Family"
+    description: "Use if data for multiple editions is desired.  This dimension pulls data for all non-filtered editions of a given product family."
     sql: ${TABLE}.PRODUCTFAMILY ;;
+  }
+
+  dimension: productfamily_edition {
+    type: string
+    label: "Product Family + Edition"
+    group_label: "Product Family"
+    description: "Use if comparing multiple titles or specific products within a Course Area/Discipline.  This dimension pulls data for a specific combination of product family and edition."
+    sql: concat(concat(${productfamily},' - '),${edition});;
   }
 
   dimension: publicationgroup {
@@ -124,7 +144,7 @@ CASE
   dimension: coursearea {
     type: string
     label: "Course Area"
-    group_label: "Categories"
+#     group_label: "Categories"
     sql: ${TABLE}.COURSEAREA ;;
   }
 
@@ -137,59 +157,10 @@ CASE
   dimension: discipline {
     type: string
     label: "Discipline"
-   group_label: "Categories"
-#     sql:  CASE
-#                WHEN ${publicationgroup} in ('Career Ed', 'SWEP') THEN
-#                     CASE
-#                         WHEN ${minorsubjectmatter} = 'Office Management' THEN 'Course Tech Office Management'
-#                         WHEN ${minorsubjectmatter} = 'Health Admin and Management' THEN 'Health Information Management'
-#                         ELSE ${minorsubjectmatter}
-#                         END
-#                WHEN ${productfamily} = 'MT CRMS Literature' THEN 'Literature'
-#                WHEN ${publicationseries} in ('CT-Networking', 'CT-Prog/PC/HD', 'CT-Revealed Series') THEN 'Creative and Technical'
-#                 --??
-#                WHEN ${publicationseries} = 'CPG-Networking Security' then 'Creative and Technical'
-#                 --??
-#                WHEN ${publicationseries} like 'CT-%' THEN 'Computing'
-#                WHEN ${publicationseries} like '%History%'
-#                   OR ${coursearea} = 'History: U.S. Survey' THEN 'History'
-#                WHEN ${publicationseries} = 'Composition' THEN 'English'
-#                WHEN ${publicationseries} like 'Biology%' THEN 'Biology'
-#                WHEN ${publicationseries} = 'Human Resources Management' THEN 'Management'
-#                WHEN ${publicationseries} = 'Health Sciences' THEN 'Sports/Health/Recreat/Leisure'
-#                WHEN ${publicationseries} = 'Intro Poli Sci' THEN 'Political Science'
-#                WHEN ${publicationseries} = 'FreshmanOrient/College Success' THEN 'Freshman Orientation/College'
-#                WHEN ${publicationseries} = 'Nutrition' THEN 'Life Sciences'
-#                WHEN ${publicationseries} = 'General Business' THEN 'Business'
-#                WHEN ${publicationseries} = 'Not Specified' THEN
-#                     ${majorsubjectmatter}
-#                     /*
-#                     CASE
-#                     WHEN ${majorsubjectmatter} = 'Accross Cengage Disciplines' THEN 'Other ' || ${publicationgroup}
-#                     ELSE ${majorsubjectmatter}
-#                     END
-#                     */
-#                WHEN ${publicationseries} = 'Applied Math' THEN 'Applied Math-SMT'
-#                WHEN ${publicationseries} = 'Earth Science' THEN 'Earth Sciences'
-#                WHEN ${publicationseries} = 'Milady - Cosmetology' THEN 'Cosmetology'
-#                WHEN ${publicationseries} = 'UNKNOWN' THEN 'Not Specified'
-#                WHEN ${publicationseries} in ('Civil Engineering', 'General Engineering') then 'PGR 142-' || ${publicationseries}
-#                WHEN ${publicationseries} = 'Religion' then 'Religion & Phenomena'
-#                WHEN ${publicationseries} = 'Mass Communication' then 'Communication Arts'
-#                WHEN ${publicationseries} = 'Literature/Upper Level English' then 'Literature'
-#                ELSE ${publicationseries}
-#         END
-# ;;
+#    group_label: "Categories"
+   sql: ${TABLE}.discipline_rollup;;
+    #sql: ${publicationseries};;
 
-     sql: ${TABLE}.discipline_rollup;;
-
-    description: "
-      derived from PublicationSeries
-      except
-        - Nelson Canda which = MajorSubjectMatter
-        - publication group: Career Ed = MinorSubjectMatter
-       - also History includes U.S. History
-      "
     link: {
       label: "Engagement Toolkit"
       url: "http://dashboard.cengage.info/engtoolkit/discipline/{{value}}"
@@ -203,6 +174,7 @@ CASE
     group_label: "Categories"
     type: string
     sql: row_number() over (order by SUM(noofactivations) desc) ;;
+    hidden: yes
   }
 #
 #   dimension: discipline_rank_tier  {
@@ -228,6 +200,7 @@ CASE
       END
 
       ;;
+    hidden: yes
   }
 
 
@@ -288,6 +261,8 @@ CASE
   }
 
   dimension: iac_isbn {
+    description: "IAC ISBN is the core ISBN for a given product/title.  If you need ISBN for usage data, ideally use this value.
+      However, the raw data source has IAC ISBN data gaps for a small percentage of products; if this impacts your analysis, utilize ISBN13."
     type: string
     label: "IAC ISBN"
     group_label: "ISBN"
@@ -295,6 +270,7 @@ CASE
   }
 
   dimension: isbn10 {
+    description: "Do not use for analysis.  ISBN10 dimension is available to help confirm what the correct IAC ISBN or ISBN13 should be."
     type: string
     label: "ISBN10"
     group_label: "ISBN"
@@ -302,6 +278,8 @@ CASE
   }
 
   dimension: isbn13 {
+    description: "ISBN13 can be used for ISBN-level analysis if necessary.  IAC ISBN is preferred, but due to some limited gaps in IAC ISBN data,
+      ISBN13 may be required as a substitute.  No ISBN13 gaps have been found as of July 2017."
     type: string
     label: "ISBN13"
     group_label: "ISBN"
@@ -309,6 +287,7 @@ CASE
   }
 
   dimension: mindtap_isbn {
+    description: "Do not use for analysis.  Mindtap ISBN dimension is available to help confirm what the correct IAC ISBN or ISBN13 should be."
     type: string
     label: "Mindtap ISBN"
     group_label: "ISBN"
@@ -316,6 +295,7 @@ CASE
   }
 
   dimension: pac_isbn {
+    description: "Do not use for analysis.  PAC ISBN dimension is available to help confirm what the correct IAC ISBN or ISBN13 should be."
     type: string
     label: "PAC ISBN"
     group_label: "ISBN"
@@ -323,17 +303,32 @@ CASE
   }
 
   dimension: public_coretext_isbn {
+    description: "Do not use for analysis.  CoreText ISBN dimension is available to help confirm what the correct IAC ISBN or ISBN13 should be."
     type: string
     label: "Public CoreText ISBN"
     group_label: "ISBN"
     sql: ${TABLE}.PUBLIC_CORETEXT_ISBN ;;
   }
 
-  dimension: islatestedition {
-    label: "Latest Edition?"
-    type: string
+  dimension: editionrecency {
+    label: "Edition List"
+    description: "Relative edition index - latest edition is always 1, the previous edition 2, and so on.
+    e.g.
+    - Product Family X has editions 001, 002, 003
+    - Edition List will be 3, 2, 1
+    "
+    type: number
     group_label: "Product Details"
-    sql: ${TABLE}.ISLATESTEDITION ;;
+    sql: ${TABLE}.latest ;;
+  }
+
+  dimension: islatestedition {
+    label: "Current Edition"
+    description: "Flag that can be used as a filter to only look at the latest edition of a given product."
+    type: yesno
+    group_label: "Product Details"
+    #sql: ${TABLE}.ISLATESTEDITION ;;
+    sql: ${editionrecency} = 1 ;;
   }
 
   dimension_group: loaddate {
@@ -381,6 +376,8 @@ CASE
 
   measure: count {
     label: "No. of Products"
+    description: "Count of the number of products included in a given view.
+    This measure is only relevant at a high-level (e.g. for an institution).  At a low (e.g. course key) level, this measure has limited value."
     type: count
     drill_fields: []
   }

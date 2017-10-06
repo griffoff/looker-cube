@@ -1,5 +1,5 @@
-connection: "snowflake_prod"
-
+#connection: "snowflake_prod"
+#  connection should/must be defined in other models that include this model
 #
 #  This model is for EXTENSIONREQUIRED explores only
 #  These are used for dimension links that can be include in other explores
@@ -8,7 +8,7 @@ connection: "snowflake_prod"
 #
 
 include: "*.view.lkml"         # include all views in this project
-include: "*.dashboard.lookml"  # include all dashboards in this project
+#include: "*.dashboard.lookml"  # include all dashboards in this project
 
 case_sensitive: no
 
@@ -31,7 +31,7 @@ explore:  dim_product {
     view_label: "Product"
     sql_on: ${dim_product.isbn13} = ${products.isbn13};;
     relationship:  one_to_one
-    fields: [products.prod_family_cd, products.available_dt*, products.copyright_yr]
+    fields: [products.prod_family_cd, products.available_dt*, products.copyright_yr, products.prod_family_cd_edition]
 
   }
 }
@@ -41,8 +41,8 @@ explore: dim_course {
   extension: required
   extends: [dim_institution, dim_product]
 
-  join: course_facts {
-    sql_on: ${dim_course.courseid} = ${course_facts.courseid} ;;
+  join: olr_courses {
+    sql_on: ${dim_course.coursekey} = ${olr_courses.context_id};;
     relationship: one_to_one
   }
 
@@ -76,15 +76,16 @@ explore: dim_course {
     sql_on: ${dim_course.filterflag} = ${dim_filter.filterflag} ;;
   }
 
-  join:  fact_activation_by_course {
-    sql_on: ${dim_course.courseid} = ${fact_activation_by_course.courseid} ;;
+  join:  course_section_facts {
+    sql_on: ${dim_course.courseid} = ${course_section_facts.courseid} ;;
     relationship: one_to_one
   }
 
-  join:  fact_activation_by_product {
-    sql_on: ${fact_activation_by_course.by_product_fk} = ${fact_activation_by_product.pk} ;;
+  join:  product_facts {
+    sql_on: ${course_section_facts.by_product_fk} = ${product_facts.by_product_fk} ;;
     relationship: many_to_one
   }
+
 }
 
 explore: dim_date {
@@ -120,6 +121,16 @@ explore: dim_institution {
     sql_on: ${dim_institution.locationid} = ${dim_location.locationid} ;;
     relationship: many_to_one
   }
+
+  join: ipeds_map {
+    sql_on: ${dim_institution.entity_no} = ${ipeds_map.entity_no} ;;
+    relationship: one_to_one
+  }
+
+  join: ipeds {
+    sql_on: ${ipeds_map.ipeds_id} = ${ipeds.unit_id} ;;
+    relationship: many_to_one
+  }
 }
 
 explore: dim_deviceplatform {
@@ -132,21 +143,6 @@ explore: dim_eventtype {
 
 explore: dim_learningpath {
   extension: required
-  #- join: parentlearningpath
-  #  type: left_outer
-  #  sql_on: ${dim_learningpath.parentlearningpathid} = ${parentlearningpath.parentlearningpathid}
-  #  relationship: many_to_one
-  #join: dim_master_node {
-  #  sql_on: ${dim_learningpath.masternodeid} = ${dim_master_node.masternodeid} ;;
-  #  relationship: many_to_one
-  #}
-
-#   join: dim_first_used_date {
-#     view_label: "First Used"
-#     from:  dim_date
-#     sql_on: ${dim_learningpath.first_used_datekey} = ${dim_first_used_date.datekey} ;;
-#     relationship: many_to_one
-#   }
 
   join: dim_master_first_used_date {
     view_label: "Date - Learning Path - Master First Use"
@@ -158,6 +154,16 @@ explore: dim_learningpath {
   join: lp_node_map {
     sql_on: ${dim_learningpath.learningpathid} = ${lp_node_map.learningpathid} ;;
     relationship: one_to_many
+  }
+
+  join: dim_activity_view_uri {
+    sql_on: ${dim_learningpath.node_id} = ${dim_activity_view_uri.id} ;;
+    relationship: one_to_one
+  }
+
+  join: mindtap_lp_activity_tags {
+    sql_on: (${dim_product.productfamily},${dim_product.edition_number},${dim_learningpath.activity_title_key})=(${mindtap_lp_activity_tags.product_family},${mindtap_lp_activity_tags.edition_number},${mindtap_lp_activity_tags.activity_title_key});;
+    relationship: many_to_many
   }
 }
 

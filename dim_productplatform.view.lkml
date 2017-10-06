@@ -22,7 +22,8 @@ view: dim_productplatform {
   }
 
   dimension: productplatform {
-    label: "Platfom name"
+    label: "Platform name"
+    description: "MindTap, Aplia, CNOW, etc."
     type: string
     sql: ${TABLE}.PRODUCTPLATFORM ;;
   }

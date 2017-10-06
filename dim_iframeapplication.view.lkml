@@ -30,9 +30,10 @@ view: dim_iframeapplication {
                 max(iframeapplicationid) over (partition by n.displayname) as iframeapplicationid_group
                 ,a.*
                 ,n.displayname as bestdisplayname
-                ,REPLACE(REPLACE(REPLACE(REPLACE(a.IFRAMEAPPLICATIONNAME, '_', ' '), 'LAUNCH', ''), 'VIEW', ''), 'FLASH CARDS', 'FLASHCARDS') as CleanedApplicationName
+                ,REPLACE(REPLACE(REPLACE(REPLACE(app.matchname, '_', ' '), 'LAUNCH', ''), 'VIEW', ''), 'FLASH CARDS', 'FLASHCARDS') as CleanedApplicationName
             from DW_GA.DIM_IFRAMEAPPLICATION a
-            inner join names n on a.iframeapplicationid = n.id
+            left join apps app on a.iframeapplicationid = app.id
+            left join names n on a.iframeapplicationid = n.id
     ;;
 
     sql_trigger_value: select count(*) from DW_GA.dim_iframeapplication ;;

@@ -37,12 +37,14 @@ view: dim_party {
         end as Is_Internal
     from dw_ga.dim_party p
     left join tu on p.guid = tu.guid
+    order by p.partyid
     ;;
     sql_trigger_value: select count(*) from dw_ga.dim_party ;;
   }
+  set: curated_fields {fields:[guid,is_external,count]}
 
   set: personDetails {
-    fields: [dim_course.coursekey, dim_course.coursename, guid, mainpartyemail, firstname, lastname, fact_activation.total_noofactivations, is_external, dim_user.productsactivated, fact_activation_by_course.total_noofactivations]
+    fields: [dim_course.coursekey, dim_course.coursename, guid, mainpartyemail, firstname, lastname, fact_activation.total_noofactivations, is_external, dim_user.productsactivated, course_section_facts.total_noofactivations]
   }
 
   dimension: dw_ldid {
@@ -65,6 +67,7 @@ view: dim_party {
   }
 
   dimension: is_external {
+    view_label: "** RECOMMENDED FILTERS **"
     label: "Real User"
     description: "Indicates a real user of the product, rather than a cengage employee"
     type: yesno
@@ -156,6 +159,10 @@ view: dim_party {
 
   measure: count {
     label: "# Users"
+    description: "This is the number of unique users that have activity related to the current context
+    NOTE: The total # Users will most likely be different from the sum of # Users at a lower level (for example: at chapter level).
+    This is because the same user can use each chapter and so will be counted in the # Users at chapter level,
+    if there are 10 chapters and the user visited every chapter, the sum total would be 10, but the total # Users is just 1."
     type: count
     drill_fields: [personDetails*]
   }

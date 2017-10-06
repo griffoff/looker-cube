@@ -126,6 +126,14 @@ view: answer {
   dimension: score {
     type: number
     sql: ${TABLE}.SCORE ;;
+    value_format_name: percent_1
+  }
+
+  measure: avg_score {
+    label: "Average Score"
+    type: average
+    sql: ${score} ;;
+    value_format_name: percent_1
   }
 
   dimension_group: score_credit_last_modified {

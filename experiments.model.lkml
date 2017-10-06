@@ -1,5 +1,5 @@
 connection: "snowflake_prod"
-label:"Cube Data on Looker"
+label:"Experimental / Data Science"
 
 #include dims model
 include: "dims.model.lkml"
@@ -28,6 +28,17 @@ include: "*.view"
 #   }
 #
 #  }
+
+
+explore: ga_data_parsed {
+  extends: [dim_course]
+  label: "THIS IS A TEST"
+
+  join: dim_course {
+    sql_on: ${ga_data_parsed.coursekey} = ${dim_course.coursekey};;
+    relationship: many_to_one
+  }
+}
 
  explore: full_student_course_metrics {
    label: "Data Science - Full Student Course Metrics"
@@ -111,5 +122,24 @@ explore: schema_comparison {
     sql_on: (${table_comparison.schema_name}, ${table_comparison.table_name}) = (${column_comparison.schema_name}, ${column_comparison.table_name}) ;;
     relationship: one_to_many
   }
+}
 
+explore: tables {
+  label: "Information Schema"
+
+  join: load_history {
+    sql_on: ${tables.table_catalog} = ${load_history.table_catalog}
+          and ${tables.table_schema} = ${load_history.schema_name}
+          and ${tables.table_name} = ${load_history.table_name};;
+  }
+}
+
+explore: activities_per_week {
+  extends: [dim_course]
+  label: "Student Assignment Completion"
+  description: "Data set used as base for trial period abuse investigation"
+  join: dim_course {
+    sql_on: ${activities_per_week.courseid} = ${dim_course.courseid};;
+    relationship: many_to_one
+  }
 }

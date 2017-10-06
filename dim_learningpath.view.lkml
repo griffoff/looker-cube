@@ -7,12 +7,15 @@ view: lp_node_map {
       join dw_ga.dim_learningpath dl on f.learningpathid=dl.learningpathid
       join stg_mindtap.node n on f.id = n.id
       ;;
+      sql_trigger_value: select count(*) from dw_ga.fact_activity ;;
   }
+  set: curated_fields {fields:[nodeid,snapshotid]}
 
   dimension: learningpathid {
     type:  number
     sql: ${TABLE}.learningpathid ;;
     hidden: yes
+    primary_key: yes
   }
 
   dimension: nodeid {
@@ -37,16 +40,58 @@ view: lp_node_map {
 
 }
 
+view: lp_structure {
+  derived_table: {
+    sql:
+    with n as (
+      select
+          n.id, n.parent_id, split_part(n.node_type, '.', -1) as node_type, n.name, n.snapshot_id, n.created_date, n.origin_id
+          ,count(*) over (partition by n.parent_id) as siblings
+          ,coalesce(c.children, 0) as children
+          ,max(m.snapshot_id) over (partition by n.snapshot_id) as master_id
+      from stg_mindtap.node n
+      left join stg_mindtap.node m on n.origin_id = m.id
+      left join (select parent_id, count(*) as children from stg_mindtap.node group by 1) c on n.id = c.parent_id
+    )
+    select
+        n5.node_type as n5_type, n5.name as n5_name, n5.siblings as n5_siblings
+        ,n4.node_type as n4_type, n4.name as n4_name, n4.siblings as n4_siblings
+        ,n3.node_type as n3_type, n2.name as n3_name, n3.siblings as n3_siblings
+        ,n2.node_type as n2_type, n2.name as n2_name, n2.siblings as n2_siblings
+        ,n1.node_type as n1_type, n1.name as n1_name, n1.siblings as n1_siblings
+        ,n.node_type as node_type, n.name, n.siblings as siblings
+        ,n.snapshot_id
+        ,n0.id
+        ,n.children
+        ,count(*) as activities
+    from n n0
+    inner join n on n0.origin_id = n.id
+    inner join n n1 on n.parent_id = n1.id
+    left join n n2 on n1.parent_id = n2.id
+    left join n n3 on n2.parent_id = n3.id
+    left join n n4 on n3.parent_id = n4.id
+    left join n n5 on n4.parent_id = n5.id
+    where n.children = 0
+    group by 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21
+    order by n0.id
+    ;;
+    sql_trigger_value: select count(*) from stg_mindtap.node ;;
+  }
+}
+
 view: dim_learningpath {
   label: "Learning Path"
   #sql_table_name: DW_GA.DIM_LEARNINGPATH ;;
+  set: curated_fields {
+    fields: [learningtype,lowest_level,lowest_level_count,snapshot_status, ref_id]
+  }
 
   derived_table: {
     sql:
     with lp as (
       select
           lp.learningpathid
-          ,lp.learningcourse
+          ,max(m.mastercoursename) over (partition by lp.learningcourse) as learningcourse
           ,coalesce(m.level1, lp.level1) as level1
           ,coalesce(m.level2, lp.level2) as level2
           ,coalesce(m.level3, lp.level3) as level3
@@ -112,15 +157,199 @@ view: dim_learningpath {
       from o
       where r = 1
     )
-    select
-        lp.*
+    ,struct_choices as
+    (
+      select
+          lp.learningpathid
+          ,lp.lowest_level
+          ,lp.learningcourse
+          ,plp.learninggroup
+          ,plp.learningunit
+          ,case when plp.learninggroup is null then 0 else count(*) over (partition by plp.learninggroup) end as similar_items
+      from lp
+      inner join dw_ga.parentlearningpath plp on lp.parentlearningpathid = plp.parentlearningpathid
+    )
+    ,struct as
+    (
+      select
+          learningpathid
+          ,first_value(learninggroup) over (partition by learningcourse, lowest_level order by similar_items desc) as folder
+          ,first_value(learningunit) over (partition by learningcourse, lowest_level order by similar_items desc) as chapter
+      from struct_choices
+    )
+    ,node_map as
+    (
+      select learningpathid, max(node_id) node_id
+      from ${lp_node_map.SQL_TABLE_NAME}
+      group by 1
+    )
+    select distinct
+        lower(regexp_replace(lp.lowest_level, '[\\W\\s]', '')) as activity_title_key
+        ,lp.*
         ,min(lowest_level_sort_base) over (partition by lowest_level) as lowest_level_sort_by_data
         ,min(lporder.daysfromcoursestart) over (partition by lowest_level) as lowest_level_sort_by_usage
+        ,s.folder
+        ,replace(replace(s.chapter, 'WEEK', 'CHAPTER'), 'MODULE', 'CHAPTER') as chapter
+        ,case when count(distinct lp.lowest_level) over (partition by s.folder) < 10
+              then s.folder
+              else lp.lowest_level
+              end as compound_activity
+        ,case when count(distinct lp.lowest_level) over (partition by s.folder) < 10
+              then true
+              else false
+              end as is_compound_activity
+        ,node_map.node_id
+        ,upper(case
+          when n1_type = 'LearningUnit' then n1_name
+          when n2_type = 'LearningUnit' then n2_name
+          when n3_type = 'LearningUnit' then n3_name
+          when n4_type = 'LearningUnit' then n4_name
+          when n5_type = 'LearningUnit' then n5_name
+          else replace(replace(s.chapter, 'WEEK', 'CHAPTER'), 'MODULE', 'CHAPTER')
+          end) as chapter_from_source
+        ,min(lowest_level_sort_base) over (partition by upper(case
+                                                              when n1_type = 'LearningUnit' then n1_name
+                                                              when n2_type = 'LearningUnit' then n2_name
+                                                              when n3_type = 'LearningUnit' then n3_name
+                                                              when n4_type = 'LearningUnit' then n4_name
+                                                              when n5_type = 'LearningUnit' then n5_name
+                                                              else replace(replace(s.chapter, 'WEEK', 'CHAPTER'), 'MODULE', 'CHAPTER')
+                                                              end)) as chapter_sort_by_data
+        ,case when siblings < 10 and n1_type = 'Group' then n1_name else name end as compound_activity_from_source
+        ,case when siblings < 10 and n1_type = 'Group' then true else false end as is_compound_activity_from_source
+        ,min(a.ref_id) over (partition by lp.lowest_level) as ref_id
+        ,case
+              --Business(Paralegal) added by Nalini Pillay
+              when lp.lowest_level ilike '%Case Studies%' then 'Case Studies'
+              when lp.lowest_level ilike '%Additional Assignment%' then 'Additional Assignment'
+              when lp.lowest_level ilike '%Assignment%.%' then 'Assignment'
+              when lp.lowest_level ilike '%Test Yourself%' then 'Chapter Quizzes'
+              when lp.lowest_level ilike '%Outline%' then 'Chapter Outlines'
+              when lp.lowest_level ilike '%Helpful Websites%' then 'Helpful Websites'
+              when lp.lowest_level ilike '%Crossword Puzzle%' then 'Crossword Puzzles'
+              when lp.lowest_level ilike '%Lecture Notes%' then 'PowerPoints'
+              when lp.lowest_level ilike '%Hands-on%' then 'Hands-on Exercises'
+              when lp.lowest_level ilike '%Job Search%' then 'Learning Lab Assignment: Job Search'
+
+              --Psychology - added by John B.
+              when lp.lowest_level ilike '%Mastery Training%' then 'Mastery Training'
+              when lp.lowest_level ilike '%Quiz%' then 'Quiz'
+              when lp.lowest_level ilike '%Practice Test%' then 'Practice Test'
+              when lp.lowest_level ilike '%COMPLETE Apply%' then 'Complete Apply'
+              when lp.lowest_level ilike '%COMPLETE Research%' then 'Complete Research'
+              when lp.lowest_level ilike '%START Zoom%' then 'Start Zoom'
+              when lp.lowest_level ilike '%Concept Check%' then 'Concept Check'
+
+              --English added by Nalini Pillay
+              when lp.lowest_level ilike 'Graded Assignment%' then 'Graded Assignment'
+              when lp.lowest_level ilike 'Assignment%' then 'Graded Assignment'
+              when lp.lowest_level ilike 'Quick Review%' then 'Quick Review'
+              when lp.lowest_level ilike 'VIDEO TUTORIAL%' then 'Video Tutorial'
+
+              --CJ added by John B.
+              when lp.lowest_level ilike '%Visual Summary%' then 'Visual Summary'
+              when lp.lowest_level ilike '%Choose your path%' then 'You Decide - Part 1'
+              when lp.lowest_level ilike '%Justify your choice%' then 'You Decide - Part 2'
+              when lp.lowest_level ilike '%Skill Builder%' then 'Skill Builder'
+              when lp.lowest_level ilike '%Video Case%' then 'Video Cases'
+              when lp.lowest_level ilike '%Case Study%' then 'Case Study'
+              when lp.lowest_level ilike '%Essay%' then 'Essay'
+              when lp.lowest_level ilike '%Reading%' then 'Reading'
+              when lp.lowest_level ilike '%Post Test%' then 'Post Test'
+              when lp.lowest_level ilike '%Real World Challenge%' then 'Real World Challenge'
+              when lp.lowest_level ilike '%Exam%' then 'Exam'
+
+              --History added by John
+              when lp.lowest_level ilike '%Setting the Scene%' then 'Setting the Scene'
+              when lp.lowest_level ilike '%Audio Summary%' then 'Audio Summary'
+              when lp.lowest_level ilike '%Critical Thinking Activity%' then 'Critical Thinking'
+              when lp.lowest_level ilike '%Flashcards%' then 'Flashcards'
+              when lp.lowest_level ilike '%Reflection%' then 'Reflection'
+
+              -- GENERIC added by John
+              when lp.lowest_level ilike '%Investigate Development%' then 'Investigate Development'
+              end as lowest_level_category
     from lp
     left join lporder on decode(lp.masternodeid, -1, lp.learningpathid, lp.masternodeid) = lporder.lpid
+    left join struct s on lp.learningpathid = s.learningpathid
+    left join node_map on lp.learningpathid = node_map.learningpathid
+    left join ${lp_structure.SQL_TABLE_NAME} n on node_map.node_id = n.id
+    left join ${dim_activity_view_uri.SQL_TABLE_NAME} a on node_map.node_id = a.id
+    order by lp.learningpathid
     ;;
 
     sql_trigger_value: select count(*) from dw_ga.dim_learningpath ;;
+  }
+
+  # replace(lp.lowest_level, ' ', '') as activity_title_key
+  # regexp_replace(replace(lp.lowest_level,'’',''), '[\\W\\s]', '') as activity_title_key
+
+  dimension: activity_title_key {
+    label: "Activity Title Key - Learning Path"
+    hidden: no
+  }
+
+  dimension: node_id {
+    hidden: yes
+  }
+
+  dimension:  lowest_level_group {
+    label: "Learning Path Activity Folder"
+    group_label: "NEW FIELDS"
+    description: "the text before ':' or blank if no colon exists in the text"
+    type: string
+    sql: case when array_size(split(${lowest_level}, ':')) = 2 then split_part(${lowest_level}, ':', 1) end ;;
+  }
+
+  dimension: ref_id {
+    hidden: yes
+  }
+
+  dimension: folder {
+    group_label: "NEW FIELDS"
+    description: "based on existing 'parentlearningpath' - needs work to make it related to master"
+  }
+
+  dimension: chapter {
+    group_label: "NEW FIELDS"
+    description: "based on existing 'parentlearningpath' - needs work to make it related to master"
+  }
+
+  dimension: is_compound_activity {
+    group_label: "NEW FIELDS"
+    description: "'Yes' if activity is one of less than 10 activities in its parent folder"
+    type: yesno
+  }
+
+  dimension: compound_activity {
+    group_label: "NEW FIELDS"
+    description: "Activity name or Folder name if activity is one of less than 10 activities in its parent folder"
+    html: {{rendered_value}} ;;
+
+  }
+
+  dimension: chapter_sort_by_data {
+    hidden: yes
+  }
+
+  dimension: chapter_from_source {
+    group_label: "NEW FIELDS"
+    description: "(FROM mindtap source data)"
+    order_by_field: chapter_sort_by_data
+  }
+
+  dimension: is_compound_activity_from_source {
+    group_label: "NEW FIELDS"
+    description: "'Yes' if activity is one of less than 10 activities in its parent folder
+    (FROM mindtap source data) "
+    type: yesno
+  }
+
+  dimension: compound_activity_from_source {
+    group_label: "NEW FIELDS"
+    description: "Activity name or Folder name if activity is one of less than 10 activities in its parent folder
+    (FROM mindtap source data) "
+    html: {{rendered_value}} ;;
   }
 
   dimension: first_used_datekey {
@@ -162,10 +391,10 @@ view: dim_learningpath {
   }
 
   dimension: learningtype {
-    label: "Type"
+    label: "Learning path activity/plank type"
     type: string
     sql: ${TABLE}.LEARNINGTYPE ;;
-    hidden: yes
+   # hidden: yes
   }
 
   dimension: level1 {
@@ -281,34 +510,98 @@ view: dim_learningpath {
   dimension: lowest_level {
     label: "Learning Path Activity Title"
     type: string
-    sql: ${TABLE}.lowest_level ;;
+    sql:COALESCE (${mindtap_lp_activity_tags.learning_path_activity_title}, ${TABLE}.lowest_level) ;;
     order_by_field: lowest_level_sort_by_data
+
+
+    link: {
+      label: "Explore Aplia question level data this activity"
+      url: "/explore/source/problem?fields=problem.problem_title,answer.avg_score,answer.count,assignment.count,course.count&f[assignment.mindlink_guid]={{ ref_id._value }}"
+    }
   }
 
   dimension:  lowest_level_category {
     label: "Learning Path Activity Group"
     description: "Categorization of learning path items into useful groups - groups are driven by product team requests"
     type: string
-    sql: case when ${lowest_level} ilike '%Mastery Training%' then 'Mastery Training'
-              when ${lowest_level} ilike '%Quiz%' then 'Quiz'
-              when ${lowest_level} ilike '%Practice Test%' then 'Practice Test'
-              when ${lowest_level} ilike '%COMPLETE Apply%' then 'Complete Apply'
-              when ${lowest_level} ilike '%COMPLETE Research%' then 'Complete Research'
-              when ${lowest_level} ilike '%START Zoom%' then 'Start Zoom'
-              --CJ
-              when ${lowest_level} ilike '%Visual Summary%' then 'Visual Summary'
-              when ${lowest_level} ilike '%Choose your path%' then 'You Decide - Part 1'
-              when ${lowest_level} ilike '%Justify your choice%' then 'You Decide - Part 2'
-              when ${lowest_level} ilike '%Skill Builder%' then 'Skill Builder'
-              when ${lowest_level} ilike '%Video Case%' then 'Video Cases'
-              when ${lowest_level} ilike '%Case Study%' then 'Case Study'
-              when ${lowest_level} ilike '%Essay%' then 'Essay'
-              when ${lowest_level} ilike '%Reading%' then 'Reading'
-              when ${lowest_level} ilike '%Post Test%' then 'Post Test'
-              when ${lowest_level} ilike '%Real World Challenge%' then 'Real World Challenge'
-              when ${lowest_level} ilike '%Exam%' then 'Exam'
+    link: {
+      label: "Show activities in this group"
+      url: "/explore/cube/fact_activityoutcome?fields=dim_learningpath.chapter,dim_learningpath.lowest_level_category,dim_learningpath.lowest_level,dim_activity.APPLICATIONNAME,dim_activity.activitysubcategory,dim_learningpath.count,&f[dim_learningpath.lowest_level_category]={{ value }}"
+    }
+#     sql: case
+#
+#             --Business(Paralegal) added by Nalini Pillay
+#               when ${lowest_level} ilike '%Case Studies%' then 'Case Studies'
+#               when ${lowest_level} ilike '%Additional Assignment%' then 'Additional Assignment'
+#               when ${lowest_level} ilike '%Assignment%.%' then 'Assignment'
+#               when ${lowest_level} ilike '%Test Yourself%' then 'Chapter Quizzes'
+#               when ${lowest_level} ilike '%Outline%' then 'Chapter Outlines'
+#               when ${lowest_level} ilike '%Helpful Websites%' then 'Helpful Websites'
+#               when ${lowest_level} ilike '%Crossword Puzzle%' then 'Crossword Puzzles'
+#               when ${lowest_level} ilike '%Lecture Notes%' then 'PowerPoints'
+#               when ${lowest_level} ilike '%Hands-on%' then 'Hands-on Exercises'
+#               when ${lowest_level} ilike '%Job Search%' then 'Learning Lab Assignment: Job Search'
+#
+#               --Psychology - added by John B.
+#               when ${lowest_level} ilike '%Mastery Training%' then 'Mastery Training'
+#               when ${lowest_level} ilike '%Quiz%' then 'Quiz'
+#               when ${lowest_level} ilike '%Practice Test%' then 'Practice Test'
+#               when ${lowest_level} ilike '%COMPLETE Apply%' then 'Complete Apply'
+#               when ${lowest_level} ilike '%COMPLETE Research%' then 'Complete Research'
+#               when ${lowest_level} ilike '%START Zoom%' then 'Start Zoom'
+#               when ${lowest_level} ilike '%Concept Check%' then 'Concept Check'
+#
+#               --English added by Nalini Pillay
+#               when ${lowest_level} ilike 'Graded Assignment%' then 'Graded Assignment'
+#               when ${lowest_level} ilike 'Assignment%' then 'Graded Assignment'
+#               when ${lowest_level} ilike 'Quick Review%' then 'Quick Review'
+#               when ${lowest_level} ilike 'VIDEO TUTORIAL%' then 'Video Tutorial'
+#
+#               --CJ added by John B.
+#               when ${lowest_level} ilike '%Visual Summary%' then 'Visual Summary'
+#               when ${lowest_level} ilike '%Choose your path%' then 'You Decide - Part 1'
+#               when ${lowest_level} ilike '%Justify your choice%' then 'You Decide - Part 2'
+#               when ${lowest_level} ilike '%Skill Builder%' then 'Skill Builder'
+#               when ${lowest_level} ilike '%Video Case%' then 'Video Cases'
+#               when ${lowest_level} ilike '%Case Study%' then 'Case Study'
+#               when ${lowest_level} ilike '%Essay%' then 'Essay'
+#               when ${lowest_level} ilike '%Reading%' then 'Reading'
+#               when ${lowest_level} ilike '%Post Test%' then 'Post Test'
+#               when ${lowest_level} ilike '%Real World Challenge%' then 'Real World Challenge'
+#               when ${lowest_level} ilike '%Exam%' then 'Exam'
+#
+#               --History added by John
+#               when ${lowest_level} ilike '%Setting the Scene%' then 'Setting the Scene'
+#               when ${lowest_level} ilike '%Audio Summary%' then 'Audio Summary'
+#               when ${lowest_level} ilike '%Critical Thinking Activity%' then 'Critical Thinking'
+#               when ${lowest_level} ilike '%Flashcards%' then 'Flashcards'
+#               when ${lowest_level} ilike '%Reflection%' then 'Reflection'
+#
+#               --generic
+#               when ${dim_activity.APPLICATIONNAME} in ('CNOW.HW', 'APLIA')
+#                     or trim(${dim_activity.activitysubcategory}) in ('HOMEWORK', 'ASSESSMENT') then 'Assessment'
+#
+#               when ${dim_activity.APPLICATIONNAME} = 'CENGAGE.READER' or ${dim_activity.activitysubcategory} = 'READING' then 'Reading'
+#               when ${dim_activity.APPLICATIONNAME} = 'CENGAGE.MEDIA' or ${dim_activity.activitysubcategory} = 'MEDIA' then 'Media'
+#               when ${dim_activity.APPLICATIONNAME} = 'MINDAPP-GROVE' then 'Media Quiz'
+#               --when ${dim_activity.APPLICATIONNAME} in ('CNOW.HW', 'APLIA') then 'Assessment'
+#
+#               else 'Uncategorized'
+#               end;;
+
+    sql: coalesce(${TABLE}.lowest_level_category,
+              case
+              --generic
+              when ${dim_activity.APPLICATIONNAME} in ('CNOW.HW', 'APLIA')
+                    or trim(${dim_activity.activitysubcategory}) in ('HOMEWORK', 'ASSESSMENT') then 'Assessment'
+
+              when ${dim_activity.APPLICATIONNAME} = 'CENGAGE.READER' or ${dim_activity.activitysubcategory} = 'READING' then 'Reading'
+              when ${dim_activity.APPLICATIONNAME} = 'CENGAGE.MEDIA' or ${dim_activity.activitysubcategory} = 'MEDIA' then 'Media'
+              when ${dim_activity.APPLICATIONNAME} = 'MINDAPP-GROVE' then 'Media Quiz'
+              --when ${dim_activity.APPLICATIONNAME} in ('CNOW.HW', 'APLIA') then 'Assessment'
               else 'Uncategorized'
-              end;;
+              end
+            );;
   }
 
   dimension: masternodeid {
@@ -361,6 +654,22 @@ view: dim_learningpath {
     label: "Global Avg. Score"
     type: min
     value_format_name: percent_1
+  }
+
+  measure: lowest_level_count {
+    label: "# Activities"
+    description: "Count of all learning path items marked as an Activity"
+    type: count
+    sql: ${TABLE}.lowest_level;;
+    hidden: no
+  }
+
+  measure: lowest_level_count_distinct {
+    label: "# Activities (unique name)"
+    description: "Count of unique learning path items marked as an Activity"
+    type: count_distinct
+    sql: ${TABLE}.lowest_level;;
+    hidden: no
   }
 }
 

@@ -16,6 +16,10 @@ view: user_facts {
       INNER JOIN dw_ga.DIM_ACTIVITY a ON s.ACTIVITYID = a.ACTIVITYID
       GROUP BY 1
        ;;
+      datagroup_trigger: fact_activityoutcome_datagroup
+  }
+  set: curated_fields{
+    fields: [activities_completed,activities_completed_by_user,gradable_activities_completed,gradable_activities_completed_by_user,overall_score]
   }
 
   dimension: userid {
@@ -74,19 +78,19 @@ view: user_facts {
 
   dimension: gradable_activities_completed {
     label: "# Gradable activities completed"
-    type: string
+    type: number
     sql: ${TABLE}.GRADABLE_ACTIVITIES_COMPLETED ;;
   }
 
   dimension: nongradable_activities_completed {
     label: "# Non gradable activities completed"
-    type: string
+    type: number
     sql: ${TABLE}.NONGRADABLE_ACTIVITIES_COMPLETED ;;
   }
 
   dimension: activities_completed {
     label: "# Activities completed"
-    type: string
+    type: number
     sql: ${TABLE}.ACTIVITIES_COMPLETED ;;
   }
 
@@ -106,6 +110,27 @@ view: user_facts {
     type: string
     sql: ${TABLE}.AVG_NONGRADABLE_ATTEMPTS ;;
     hidden: yes
+  }
+
+  measure: activities_completed_by_user {
+    label: "# Activities Completed"
+    description: "Total number of activities completed"
+    type: sum
+    sql: ${activities_completed}  ;;
+  }
+
+  measure: gradable_activities_completed_by_user {
+    label: "# Gradable Activities Completed"
+    description: "Total number of gradable activities completed"
+    type: sum
+    sql: ${gradable_activities_completed}  ;;
+  }
+
+  measure: non_gradable_activities_completed_by_user {
+    label: "# Non-gradable Activities Completed"
+    description: "Total number of gradeable activities completed"
+    type: sum
+    sql: ${nongradable_activities_completed}  ;;
   }
 
   set: detail {

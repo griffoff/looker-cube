@@ -80,9 +80,32 @@ view: dim_relativedate {
 
   dimension: weeksname {
     label: "Weeks Relative to Course Start Date"
+    type: number
+    sql: ${TABLE}.WEEKS ;;
+    value_format: "\W\e\e\k 0"
+  }
+
+  dimension: weeksname_bucket {
+    label: "Weeks Relative to Course Start Date (Buckets)"
+    description: "Using for RFI Dashboard element. Please hide when finished setting up"
     type: string
-    sql: ${TABLE}.WEEKSNAME ;;
-    order_by_field: weeks
+    hidden: no
+    sql:
+            CASE
+                WHEN ${weeksname} <0 THEN 'Pre-Class'
+                WHEN ${weeksname} BETWEEN 0 AND 2 THEN 'Weeks 0-2'
+                WHEN ${weeksname} BETWEEN 3 AND 8 THEN 'Weeks 3-8'
+                WHEN ${weeksname} >= 9 THEN 'Weeks 9+'
+                ELSE NULL
+            END;;
+  }
+
+  measure: max_weeks {
+    label: "Max Weeks"
+    description: "Latest week with activity"
+    type: number
+    sql: MAX(${TABLE}.WEEKS) ;;
+    hidden: yes
   }
 }
 

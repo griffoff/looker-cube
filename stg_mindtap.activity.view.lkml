@@ -63,6 +63,7 @@ dimension: search_uri {
 }
 
 dimension: app_activity_id {
+  hidden: yes
   type: string
   label: "App Activity ID"
   sql: ${TABLE}.APP_ACTIVITY_ID;;

@@ -104,18 +104,21 @@ view: fact_session {
   }
 
   measure: sessionviewtime_avg {
-    label: "Avg. session length (mins)"
+    label: "Avg. session length"
     type: average
-    sql: ${sessionviewtime}/60000.0 ;;
-    value_format: "0.0 \m\i\n\s"
+    sql: ${sessionviewtime}/1000/84000 ;;
+    value_format_name: duration_hms
   }
 
   measure: sessionviewtime_total {
-    label: "Total session time (hrs)"
-    type: average
-    sql: ${sessionviewtime}/3600000.0 ;;
-    value_format: "0.0 \h\r\s"
+    label: "Total session time"
+    type: sum
+    #sql: ${sessionviewtime}/3600000.0 ;;
+    sql: ${sessionviewtime}/1000.0/84000 ;;
+    value_format_name: duration_hms
   }
+
+
 
   dimension: timekey {
     hidden: yes

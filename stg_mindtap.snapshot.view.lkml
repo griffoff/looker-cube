@@ -38,8 +38,8 @@ view: snapshot {
   }
 
   dimension: created_date {
-    type: string
-    sql: ${TABLE}.CREATED_DATE ;;
+    type: date_time
+    sql: dateadd(millisecond, ${TABLE}.CREATED_DATE::int, 0::timestamp) ;;
   }
 
   dimension: credits {
@@ -133,8 +133,8 @@ view: snapshot {
   }
 
   dimension: last_modified_date {
-    type: string
-    sql: ${TABLE}.LAST_MODIFIED_DATE ;;
+    type: date_time
+    sql: dateadd(millisecond, ${TABLE}.LAST_MODIFIED_DATE::int, 0::timestamp) ;;
   }
 
   dimension: ldts {

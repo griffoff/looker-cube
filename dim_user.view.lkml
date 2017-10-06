@@ -1,6 +1,7 @@
 view: dim_user {
   label: "User"
   sql_table_name: DW_GA.DIM_USER ;;
+  set: curated_fields {fields:[user_role,numberofvisits,productsactivated]}
 
   dimension: userid {
     label: "User Id"
@@ -118,9 +119,10 @@ view: dim_user {
   }
 
   dimension: pageviewtime {
-    label: "Total page view time"
+    label: "Total page view time (hh:mm:ss)"
     type: number
-    sql: ${TABLE}.PAGEVIEWTIME ;;
+    sql: ${TABLE}.PAGEVIEWTIME / 1000 / 86400;;
+    value_format_name: duration_hms
   }
 
   dimension: productsactivated {
@@ -132,9 +134,10 @@ view: dim_user {
   }
 
   dimension: sessionviewtime {
-    label: "Total session view time"
+    label: "Total session view time (hh:mm:ss)"
     type: number
-    sql: ${TABLE}.SESSIONVIEWTIME ;;
+    sql: ${TABLE}.SESSIONVIEWTIME / 1000 / 86400;;
+    value_format_name: duration_hms
   }
 
   dimension: weekssincefirstactivated {

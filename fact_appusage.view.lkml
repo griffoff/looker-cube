@@ -7,7 +7,7 @@ view: fact_appusage {
               ,DENSE_RANK() OVER (ORDER BY sum(CLICKCOUNT)  DESC) as clickrank
               ,DENSE_RANK() OVER (ORDER BY count(distinct userid)  DESC) as userrank
         FROM dw_ga.FACT_APPUSAGE f
-        inner join looker_workshop.dim_iframeapplication a on  f.iframeapplicationid = a.iframeapplicationid
+        inner join ${dim_iframeapplication.SQL_TABLE_NAME} a on  f.iframeapplicationid = a.iframeapplicationid
         INNER JOIN dw_ga.dim_date ON f.eventdatekey = dim_date.datekey
         where dim_date.fiscalyearvalue = 'FY16'
         --where f.eventdatekey >= to_char(dateadd(YEAR, -1, CURRENT_DATE), 'yyyymmdd')::int
@@ -21,6 +21,7 @@ view: fact_appusage {
       select f.*, r2.clickrank, r2.userrank
       from dw_ga.fact_appusage f
       inner join r2 on f.iframeapplicationid = r2.iframeapplicationid
+      order by f.courseid, f.userid, f.iframeapplicationid
           ;;
       sql_trigger_value: select count(*) from dw_ga.fact_appusage ;;
   }
