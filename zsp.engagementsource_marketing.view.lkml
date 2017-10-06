@@ -74,6 +74,11 @@ view: engagementsource_marketing {
     sql: ${TABLE}.LOGINS ;;
   }
 
+  measure : login_count {
+    type:  sum
+    sql: ${logins} ;;
+  }
+
   dimension: media {
     type: number
     sql: ${TABLE}.MEDIA ;;
@@ -148,4 +153,5 @@ view: engagementsource_marketing {
     type: count
     drill_fields: []
   }
+
 }
