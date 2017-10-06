@@ -278,6 +278,12 @@ explore: master {
 explore: snapshot {
   label: "MindTap - Snapshot"
 
+  # join to parent snapshot
+  join: master {
+    from:  snapshot
+    sql_on: ${snapshot.parent_id} = ${master.id} ;;
+  }
+
   join:  org {
     sql_on: ${snapshot.org_id} = ${org.id} ;;
     relationship: one_to_one
