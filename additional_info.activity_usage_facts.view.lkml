@@ -2,7 +2,7 @@ view: activity_usage_facts {
 
   derived_table: {
     explore_source: fact_siteusage {
-#       column: activity_usage_facts_grouping { field: mindtap_lp_activity_tags.activity_usage_facts_grouping }
+      column: activity_usage_facts_grouping { field: mindtap_lp_activity_tags.activity_usage_facts_grouping }
       column: activity_type { field: mindtap_lp_activity_tags.activity_type }
       column: activity_by_group { field: mindtap_lp_activity_tags.activity_by_group }
       column: no_of_unique_activities { field: dim_learningpath.lowest_level_count_distinct }
@@ -19,7 +19,9 @@ view: activity_usage_facts {
     }
     datagroup_trigger: fact_siteusage_datagroup
   }
-#   dimension: activity_usage_facts_grouping {}
+  dimension: activity_usage_facts_grouping {
+    hidden: yes
+  }
   dimension: activity_type {}
   dimension: activity_by_group {}
   dimension: no_of_unique_activities {}
