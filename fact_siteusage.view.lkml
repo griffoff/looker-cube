@@ -369,7 +369,7 @@ view: fact_siteusage {
   }
 
   measure: usercount {
-    label: "# Users"
+    label: "# Users (Distinct)"
     description: "This is the number of unique users that have activity related to the current context
     NOTE: The total # Users will most likely be different from the sum of # Users at a lower level (for example: at chapter level).
           This is because the same user can use each chapter and so will be counted in the # Users at chapter level,
@@ -378,6 +378,13 @@ view: fact_siteusage {
     sql: ${partyid} ;;
     hidden: no
     drill_fields: [dim_product.productfamily, dim_institution.institutionname, mindtap_lp_activity_tags.chapter, mindtap_lp_activity_tags.learning_path_activity_title, usercount, percent_of_activations]
+  }
+
+  measure: total_users {
+  label: "# Users (Total)"
+  description: "Total number of people who clicked on an item"
+  type: count
+  sql: ${partyid} ;;
   }
 
   measure: percent_of_activations {
