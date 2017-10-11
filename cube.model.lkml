@@ -434,6 +434,14 @@ explore: fact_siteusage {
     relationship: many_to_many
 
 }
+  join: activity_chapter_usage_facts {
+    view_label: "Activity Chapter Usage Facts"
+    sql_on: (${activity_chapter_usage_facts.courseid},${activity_chapter_usage_facts.chapter},${activity_chapter_usage_facts.partyid})
+      = (${fact_siteusage.courseid},${mindtap_lp_activity_tags.chapter},${fact_siteusage.partyid}) ;;
+    relationship: many_to_many
+
+  }
+
 
 }
 

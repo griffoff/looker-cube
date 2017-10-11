@@ -33,6 +33,7 @@ view: mindtap_lp_activity_tags {
           ,case when count(distinct section_name) over (partition by full_key) > 1 then null else section_name end as section_name
           ,case when count(distinct chapter_topic) over (partition by full_key) > 1 then null else chapter_topic end as chapter_topic
           ,COUNT (DISTINCT learning_path_activity_title) OVER (PARTITION BY Activity_Type,Activity_sub_Type,Product_Family,Edition) AS Activity_BY_GROUP
+          ,COUNT (DISTINCT learning_path_activity_title) OVER (PARTITION BY chapter,Product_Family,Edition) AS Activity_BY_Chapter
       from tags
       where n = 1
       order by product_family, edition, activity_title_key
@@ -189,6 +190,10 @@ view: mindtap_lp_activity_tags {
 #     label: "# Activities (unique from external tagging)"
 #     type: count_distinct
 #     sql: ${learning_path_activity_title} ;;
+}
+
+dimension: activity_by_chapter {
+label: "Activities in a chapter"
 }
 
 measure: activity_by_group_measure {

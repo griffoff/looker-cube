@@ -28,13 +28,6 @@ view: activity_usage_facts {
   dimension: courseid {}
   dimension: partyid {}
 
-#   measure: UsageCount {
-#     label: "Count of ActivityType By User"
-#     type: count_distinct
-#     sql: ${activity_type} ;;
-# #    sql_distinct_key: ${partyid} ;;
-#   }
-
   dimension: activity_type_usage_bucket{
     label: "Student Usage Bucket"
     type: string
