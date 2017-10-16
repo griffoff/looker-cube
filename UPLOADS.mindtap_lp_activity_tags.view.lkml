@@ -10,7 +10,7 @@ view: mindtap_lp_activity_tags {
           ,*
           ,row_number() over (partition by product_family, edition, activity_title_key
                                           order by _fivetran_synced desc, case when activity_type is null then 1 else 0 end, length(LEARNING_PATH_ACTIVITY_TITLE)) as n
-        from UPLOADS.LEARNINGPATH_METADATA.TAGS_COMBINED
+        from UPLOADS.GOOGLE_SHEETS.LPUPLOAD
       )
       SELECT
           _ROW
