@@ -159,6 +159,10 @@ view: dim_party {
 
   measure: count {
     label: "# Users"
+    description: "This is the number of unique users that have activity related to the current context
+    NOTE: The total # Users will most likely be different from the sum of # Users at a lower level (for example: at chapter level).
+    This is because the same user can use each chapter and so will be counted in the # Users at chapter level,
+    if there are 10 chapters and the user visited every chapter, the sum total would be 10, but the total # Users is just 1."
     type: count
     drill_fields: [personDetails*]
   }

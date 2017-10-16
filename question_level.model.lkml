@@ -6,8 +6,6 @@ label:"Item Analysis"
 include: "*.view.lkml"         # include all views in this project
 include: "*.dashboard.lkml"  # include all dashboards in this project
 
-case_sensitive: no
-
 explore: dataprofiling {
   label: "Data Profiling"
 }

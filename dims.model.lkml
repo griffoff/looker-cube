@@ -1,5 +1,5 @@
-connection: "snowflake_prod"
-
+#connection: "snowflake_prod"
+#  connection should/must be defined in other models that include this model
 #
 #  This model is for EXTENSIONREQUIRED explores only
 #  These are used for dimension links that can be include in other explores
@@ -8,7 +8,7 @@ connection: "snowflake_prod"
 #
 
 include: "*.view.lkml"         # include all views in this project
-include: "*.dashboard.lookml"  # include all dashboards in this project
+#include: "*.dashboard.lookml"  # include all dashboards in this project
 
 case_sensitive: no
 
@@ -162,8 +162,8 @@ explore: dim_learningpath {
   }
 
   join: mindtap_lp_activity_tags {
-    sql_on: (${dim_product.productfamily},${dim_product.edition_number},${dim_learningpath.lowest_level})=(${mindtap_lp_activity_tags.product_family},${mindtap_lp_activity_tags.edition_number},${mindtap_lp_activity_tags.learning_path_activity_title});;
-    relationship: one_to_many
+    sql_on: (${dim_product.productfamily},${dim_product.edition_number},${dim_learningpath.activity_title_key})=(${mindtap_lp_activity_tags.product_family},${mindtap_lp_activity_tags.edition_number},${mindtap_lp_activity_tags.activity_title_key});;
+    relationship: many_to_many
   }
 }
 

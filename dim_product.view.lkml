@@ -71,7 +71,7 @@ CASE
   dimension: edition {
     type: string
     label: "Edition"
-    group_label: "Product Details"
+    group_label: "Product Family"
     sql: ${TABLE}.EDITION ;;
   }
 

@@ -1,17 +1,28 @@
-connection: "snowflake_prod"
+include: "cube.model.lkml"
+
+#connection: "snowflake_prod"
 label:"DEV - Cube Data on Looker"
 
-#include dims model
-include: "dims.model.lkml"
-# include all the views
-include: "*.view"
+explore: activity_usage_facts {}
 
-# include all the dashboards
-include: "*.dashboard"
+explore: fact_siteusage_dev {
+  extends: [fact_siteusage]
+  label: "DEV site usage extend"
+  from: fact_siteusage
+  view_name: fact_siteusage
+
+  join: activity_usage_facts {
+    view_label: "Activity Facts"
+    sql_on: (${activity_usage_facts.courseid},${activity_usage_facts.activity_type},${activity_usage_facts.partyid})
+            = (${fact_siteusage.courseid},${mindtap_lp_activity_tags.activity_type},${fact_siteusage.partyid}) ;;
+    relationship: one_to_one
+  }
+
+}
 
 explore: fact_session {
   label: "Web - Sessions"
-  extends: [dim_user]
+  extends: [dim_user, dim_course]
 
   join: dim_location {
     sql_on: ${fact_session.locationid} = ${dim_location.locationid} ;;
@@ -48,13 +59,18 @@ explore: fact_session {
     sql_on: ${fact_session.userid} = ${dim_user.userid} ;;
     relationship: many_to_one
   }
+
+  join: dim_course {
+    sql_on: ${fact_session.productid} = ${dim_course.productid} ;;
+    relationship: many_to_many
+  }
 }
 
 explore: learningpathusage {
   from: fact_activity
   label: "Learning Path - MT Usage Data"
-  description: "Start point for learning path usage from the student persepctive including application usage information collected via google analytics."
-  extends: [dim_user, dim_course, dim_pagedomain]
+  description: "Start point for learning path usage from the student perspective including application usage information collected via google analytics."
+  extends: [dim_user, dim_course, dim_pagedomain,dim_learningpath]
   extension: required
 
   join: dim_course {
@@ -140,8 +156,8 @@ explore: learningpathusage {
     relationship: many_to_one
   }
 
-  join: lp_activity_tags_test {
-    sql_on: (${dim_product.productfamily},${dim_learningpath.lowest_level})=(${lp_activity_tags_test.product_family},${lp_activity_tags_test.learning_path_activity_title});;
-    relationship: one_to_many
+  join: mindtap_lp_activity_tags {
+    sql_on: (${dim_product.productfamily},${dim_product.edition_number},${dim_learningpath.lowest_level})=(${mindtap_lp_activity_tags.product_family},${mindtap_lp_activity_tags.edition_number}, ${lp_activity_tags_test.learning_path_activity_title});;
+    relationship: many_to_many
   }
 }

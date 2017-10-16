@@ -15,6 +15,7 @@ view: lp_node_map {
     type:  number
     sql: ${TABLE}.learningpathid ;;
     hidden: yes
+    primary_key: yes
   }
 
   dimension: nodeid {
@@ -182,8 +183,9 @@ view: dim_learningpath {
       from ${lp_node_map.SQL_TABLE_NAME}
       group by 1
     )
-    select
-        lp.*
+    select distinct
+        lower(regexp_replace(lp.lowest_level, '[\\W\\s]', '')) as activity_title_key
+        ,lp.*
         ,min(lowest_level_sort_base) over (partition by lowest_level) as lowest_level_sort_by_data
         ,min(lporder.daysfromcoursestart) over (partition by lowest_level) as lowest_level_sort_by_usage
         ,s.folder
@@ -277,6 +279,14 @@ view: dim_learningpath {
     ;;
 
     sql_trigger_value: select count(*) from dw_ga.dim_learningpath ;;
+  }
+
+  # replace(lp.lowest_level, ' ', '') as activity_title_key
+  # regexp_replace(replace(lp.lowest_level,'’',''), '[\\W\\s]', '') as activity_title_key
+
+  dimension: activity_title_key {
+    label: "Activity Title Key - Learning Path"
+    hidden: no
   }
 
   dimension: node_id {
@@ -500,7 +510,7 @@ view: dim_learningpath {
   dimension: lowest_level {
     label: "Learning Path Activity Title"
     type: string
-    sql: ${TABLE}.lowest_level ;;
+    sql:COALESCE (${mindtap_lp_activity_tags.learning_path_activity_title}, ${TABLE}.lowest_level) ;;
     order_by_field: lowest_level_sort_by_data
 
 
@@ -617,7 +627,6 @@ view: dim_learningpath {
     type: string
     hidden: yes
     sql: ${TABLE}.PARENTLEARNINGPATHID ;;
-    primary_key: yes
   }
 
   measure: count {
@@ -651,6 +660,14 @@ view: dim_learningpath {
     label: "# Activities"
     description: "Count of all learning path items marked as an Activity"
     type: count
+    sql: ${TABLE}.lowest_level;;
+    hidden: no
+  }
+
+  measure: lowest_level_count_distinct {
+    label: "# Activities (unique name)"
+    description: "Count of unique learning path items marked as an Activity"
+    type: count_distinct
     sql: ${TABLE}.lowest_level;;
     hidden: no
   }

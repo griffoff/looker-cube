@@ -122,7 +122,7 @@ view: dim_user {
     label: "Total page view time (hh:mm:ss)"
     type: number
     sql: ${TABLE}.PAGEVIEWTIME / 1000 / 86400;;
-    value_format: "hh:mm:ss"
+    value_format_name: duration_hms
   }
 
   dimension: productsactivated {
@@ -137,7 +137,7 @@ view: dim_user {
     label: "Total session view time (hh:mm:ss)"
     type: number
     sql: ${TABLE}.SESSIONVIEWTIME / 1000 / 86400;;
-    value_format: "hh:mm:ss"
+    value_format_name: duration_hms
   }
 
   dimension: weekssincefirstactivated {

@@ -2,6 +2,22 @@ connection: "snowflake_prod"
 week_start_day: monday
 label:"Cube Data on Looker"
 
+named_value_format: duration_hms {
+  value_format: "hh:mm:ss"
+}
+
+named_value_format: duration_hms_full {
+  value_format: "h \h\r\s m \m\i\n\s s \s\e\c\s"
+}
+
+datagroup: fact_siteusage_datagroup {
+  sql_trigger: SELECT COUNT(*) FROM dw_ga.fact_siteusage;;
+}
+
+datagroup: fact_activityoutcome_datagroup {
+  sql_trigger: SELECT COUNT(*) FROM dw_ga.fact_activityoutcome;;
+}
+
 #include dims model
 include: "dims.model.lkml"
 # include all the views
@@ -9,7 +25,6 @@ include: "*.view"
 
 # include all the dashboards
 include: "*.dashboard"
-
 
 explore: fact_activation {
   label: "Activations"
@@ -62,6 +77,11 @@ explore: fact_activation {
     type: full_outer
     relationship: many_to_one
   }
+
+  join: dim_product {
+     sql_on: ${fact_activation.productid} = ${dim_product.productid} ;;
+     relationship: many_to_one
+   }
 
   join: dim_relative_to_start_date {
     sql_on: ${fact_activation.daysfromcoursestart} = ${dim_relative_to_start_date.days} ;;
@@ -333,6 +353,11 @@ explore: fact_siteusage {
     type: full_outer
   }
 
+  join: dim_product {
+    sql_on: ${fact_siteusage.productid} = ${dim_product.productid} ;;
+    relationship: many_to_one
+  }
+
   join: dim_location {
     sql_on: ${fact_siteusage.locationid} = ${dim_location.locationid} ;;
     relationship: many_to_one
@@ -401,6 +426,22 @@ explore: fact_siteusage {
     sql_on: (${fact_siteusage.courseid}, ${fact_siteusage.userid}) = (${paid_users.courseid}, ${paid_users.userid}) ;;
     relationship: many_to_one
   }
+
+  join: activity_usage_facts {
+    view_label: "Activity Facts"
+    sql_on: (${activity_usage_facts.courseid},${activity_usage_facts.activity_usage_facts_grouping},${activity_usage_facts.partyid})
+      = (${fact_siteusage.courseid},${mindtap_lp_activity_tags.activity_usage_facts_grouping},${fact_siteusage.partyid}) ;;
+    relationship: many_to_many
+
+}
+  join: activity_chapter_usage_facts {
+    view_label: "Activity Chapter Usage Facts"
+    sql_on: (${activity_chapter_usage_facts.courseid},${activity_chapter_usage_facts.chapter},${activity_chapter_usage_facts.partyid})
+      = (${fact_siteusage.courseid},${mindtap_lp_activity_tags.chapter},${fact_siteusage.partyid}) ;;
+    relationship: many_to_many
+
+  }
+
 
 }
 

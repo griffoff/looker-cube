@@ -3,7 +3,7 @@ view: fact_activation_siteusage {
   derived_table: {
     sql:
       select CourseId
-        ,avg(PageViewTime) / 1000.0 / /86400 as Avg_PageViewTime_days
+        ,avg(PageViewTime) / 1000.0 / 86400 as Avg_PageViewTime_days
         ,count(distinct userid) as user_count
         ,sum(pageViewTime) / 1000.0 / 86400 as Total_PageViewTime_days
         ,Total_PageViewTime_days / user_count as Avg_TimeInProductPerStudent
@@ -45,7 +45,7 @@ view: fact_activation_siteusage {
     label: "Avg Page view time"
     type: average
     sql: ${TABLE}.Avg_PageViewTime_days ;;
-    value_format: "hh:mm:ss"
+    value_format_name: duration_hms
   }
 
 

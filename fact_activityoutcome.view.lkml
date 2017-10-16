@@ -327,7 +327,7 @@ view: fact_activityoutcome {
     type: average
     # sql: COALESCE(NULLIF(${TABLE}.TIMEDURATION, 0), ${TABLE}.TIMESPENT) /1000.0 ;;
     sql: NULLIF(${TABLE}.TIMEDURATION /1000.0, 0)/86400.0 ;;
-    value_format: "h:mm:ss"
+    value_format_name: duration_hms
     hidden: yes
   }
 
@@ -335,7 +335,7 @@ view: fact_activityoutcome {
     label: "Avg. Time spent"
     type: average
     sql: NULLIF(${TABLE}.TIMESPENT /1000.0, 0)/86400.0 ;;
-    value_format: "h:mm:ss"
+    value_format_name: duration_hms
     hidden: yes
   }
 
@@ -344,7 +344,7 @@ view: fact_activityoutcome {
     type: average
     hidden: yes
     sql: ${timeduration}/86400.0 ;;
-    value_format: "h:mm:ss"
+    value_format_name: duration_hms
   }
 
   dimension: timeduration_bucket {

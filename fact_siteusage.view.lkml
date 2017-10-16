@@ -3,7 +3,7 @@ derived_table: {
   sql:
     select distinct courseid, userid
     from dw_ga.fact_activation;;
-  sql_trigger_value: select count(*) from dw_ga.fact_activation ;;
+  sql_trigger_value: SELECT COUNT(*) FROM dw_ga.fact_activation  ;;
   }
 
   dimension: courseid {hidden:yes}
@@ -45,8 +45,7 @@ view: fact_siteusage {
                                                                   and fsu.eventdate between v.effective_from and v.effective_to
       order by courseid, new_relative_days_from_start, userid;;
 
-      sql_trigger_value: select count(*) from dw_ga.fact_siteusage ;;
-#>>>>>>> branch 'master' of git@lkrgit_github_050fc477331387631c224b6276ad0eb279f1ba4b:griffoff/looker-cube.git
+      sql_trigger_value: select count(*) from dw_ga.fact_siteusage;;
   }
 
   dimension: pk {
@@ -157,9 +156,17 @@ view: fact_siteusage {
   }
 
   dimension_group: eventdate {
+    label: "Event Start"
     type: time
     timeframes: [time, hour, minute, date, week, month, raw]
     sql: ${TABLE}.EVENTDATE ;;
+  }
+
+  dimension_group: eventenddate {
+    label: "Event End"
+    type: time
+    timeframes: [time, hour, minute, date, week, month, raw]
+    sql: DATEADD(millisecond, ${pageviewtime}, ${TABLE}.EVENTDATE) ;;
   }
 
   dimension: eventdatekey {
@@ -259,7 +266,7 @@ view: fact_siteusage {
     label: "Time in product (max time per page)"
     type: max
     sql: ${pageviewtime};;
-    value_format: "hh:mm:ss"
+    value_format_name: duration_hms
   }
 
   measure: pageviewtime_avg {
@@ -267,7 +274,7 @@ view: fact_siteusage {
     label: "Time in product (avg time per page)"
     type: average
     sql: ${pageviewtime};;
-    value_format: "h:mm:ss"
+    value_format_name: duration_hms
     html:
     <div style="width:100%;">
       <div title="max: {{pageviewtime_max._rendered_value}}" style="width: {{pageviewtime_percent._rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">
@@ -281,7 +288,7 @@ view: fact_siteusage {
     label: "Time in product (daily avg per student)"
     type: number
     sql: ${pageviewtime_sum} / nullif(${usercount}, 0) / nullif(${daycount}, 0);;
-    value_format: "h:mm:ss"
+    value_format_name: duration_hms
   }
 
   measure: pageviewtime_useraverage {
@@ -362,11 +369,25 @@ view: fact_siteusage {
   }
 
   measure: usercount {
-    label: "# Users"
+    label: "# Users (Distinct)"
+    description: "This is the number of unique users that have activity related to the current context
+    NOTE: The total # Users will most likely be different from the sum of # Users at a lower level (for example: at chapter level).
+          This is because the same user can use each chapter and so will be counted in the # Users at chapter level,
+          if there are 10 chapters and the user visited every chapter, the sum total would be 10, but the total # Users is just 1."
     type: count_distinct
     sql: ${partyid} ;;
     hidden: no
-    drill_fields: [dim_product.productfamily, dim_institution.institutionname, dim_learningpath.lowest_level, usercount]
+#     drill_fields: [dim_product.productfamily, dim_institution.institutionname, mindtap_lp_activity_tags.chapter, mindtap_lp_activity_tags.learning_path_activity_title, usercount, percent_of_activations]
+
+#     drill_fields: [mindtap_lp_activity_tags.activity_type,mindtap_lp_activity_tags.learning_path_activity_title_count]
+    drill_fields: [mindtap_lp_activity_tags.chapter,mindtap_lp_activity_tags.activity_type,mindtap_lp_activity_tags.learning_path_activity_title,percent_of_activations]
+  }
+
+  measure: total_users {
+  label: "# Users (Total)"
+  description: "Total number of people who clicked on an item"
+  type: count
+  sql: ${partyid} ;;
   }
 
   measure: percent_of_activations {
