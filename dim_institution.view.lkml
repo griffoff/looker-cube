@@ -10,7 +10,7 @@ view: dim_institution {
         ;;
         sql_trigger_value: select count(*) from dw_ga.dim_institution ;;
   }
-  set: curated_fields {fields:[HED_filter,country,entity_no,institutionname]}
+  set: curated_fields {fields:[HED_filter,country,entity_no,institutionname,postalcode,city]}
 
 #   sql_table_name: DW_GA.DIM_INSTITUTION ;;
 
@@ -31,6 +31,7 @@ view: dim_institution {
 
   dimension: city {
     group_label: "Location"
+    label: "City"
     type: string
     sql: ${TABLE}.CITY ;;
   }

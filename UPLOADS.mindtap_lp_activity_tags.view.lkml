@@ -122,6 +122,11 @@ view: mindtap_lp_activity_tags {
     type: number
     sql: ${TABLE}.CHAPTER ;;
     order_by_field: chapter_sort
+    link: {
+      label: "# Activity Types in a Chapter"
+      url: "/explore/cube/fact_siteusage?fields=mindtap_lp_activity_tags.activity_type,mindtap_lp_activity_tags.learning_path_activity_title_count,
+      &f[mindtap_lp_activity_tags.chapter]={{ value }},&f[dim_product.productfamily_edition]={{_filters['dim_product.productfamily_edition'] | url_encode}}"
+    }
   }
 
   dimension: chapter_sort {
@@ -232,14 +237,14 @@ dimension: activity_usage_facts_grouping {
   sql: ${TABLE}.activity_usage_facts_grouping ;;
   link: {
     label: "# Activities in each chapter"
-    url: "/explore/cube/fact_siteusage?fields=mindtap_lp_activity_tags.chapter,mindtap_lp_activity_tags.activity_type,mindtap_lp_activity_tags.learning_path_activity_title_count,
+    url: "/explore/cube/fact_siteusage?fields=mindtap_lp_activity_tags.activity_type,mindtap_lp_activity_tags.chapter,mindtap_lp_activity_tags.learning_path_activity_title_count,
     &f[mindtap_lp_activity_tags.activity_usage_facts_grouping]={{ value }},&f[dim_product.productfamily_edition]={{_filters['dim_product.productfamily_edition'] | url_encode}}"
     }
-  # link: {
-  #   label: ""
-  #   url: "/explore/cube/fact_siteusage?fields=mindtap_lp_activity_tags.chapter,mindtap_lp_activity_tags.activity_type,&f[mindtap_lp_activity_tags.activity_usage_facts_grouping]={{ value }}"
-  #   # icon_url: "https://www.google.com/search?q=hello+icon&tbm=isch&source=iu&pf=m&ictx=1&fir=d8Lisv8JLsdFvM%253A%252Cy3H0d1mqD2VoyM%252C_&usg=__u9O24h1owB9QIRdP6UOBGrBJsmQ%3D&sa=X&ved=0ahUKEwiT_dWW2OvWAhVFw4MKHQNcBDcQ9QEILDAB#imgrc=d8Lisv8JLsdFvM:"
-  # }
+  link: {
+    label: "Activity Type breakdown by status"
+    url: "/explore/cube/fact_activity?fields=mindtap_lp_activity_tags.activity_type,dim_activity.status,fact_siteusage.percent_of_activations,
+    &f[mindtap_lp_activity_tags.activity_usage_facts_grouping]={{ value }},&f[dim_product.productfamily_edition]={{_filters['dim_product.productfamily_edition'] | url_encode}}"
+  }
 }
 
 measure: learning_path_activity_title_count {
