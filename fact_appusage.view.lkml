@@ -154,7 +154,7 @@ view: fact_appusage {
     label: "# of Users"
     type: count_distinct
     sql: ${userid} ;;
-    drill_fields: [dim_party.guid]
+    drill_fields: [dim_institution.institutionname,dim_course.count]
   }
 
   #measure: appusage_percent_of_activations {

@@ -405,6 +405,7 @@ view: fact_siteusage {
         <div style="width: {{rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">{{rendered_value}}</div>
       </div>
     ;;
+    drill_fields: [dim_institution.institutionname,percent_of_activations]
   }
 
   measure: percent_of_all_activations {
