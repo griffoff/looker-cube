@@ -10,7 +10,7 @@ view: mindtap_lp_activity_tags {
           ,*
           ,row_number() over (partition by product_family, edition, activity_title_key
                                           order by _fivetran_synced desc, case when activity_type is null then 1 else 0 end, length(LEARNING_PATH_ACTIVITY_TITLE)) as n
-        from UPLOADS.GOOGLE_SHEETS.LPUPLOAD
+        from UPLOADS.LEARNINGPATH_METADATA.TAGS_COMBINED
       )
       SELECT
           _ROW
@@ -24,8 +24,8 @@ view: mindtap_lp_activity_tags {
           ,case when count(distinct activity_type) over (partition by full_key) > 1 then null else activity_type end as activity_type
           ,case when count(distinct activity_sub_type) over (partition by full_key) > 1 then null else activity_sub_type end as activity_sub_type
          --,case when count(distinct activity_sub_type) over (partition by full_key) > 1 then null else activity_sub_type end as activity_sub_type
-          ,case when count(distinct activity_cluster) over (partition by full_key) > 1 then null else activity_cluster end as activity_cluster
-          ,case when count(distinct activity_sub_cluster) over (partition by full_key) > 1 then null else activity_sub_cluster end as activity_sub_cluster
+          --,case when count(distinct activity_cluster) over (partition by full_key) > 1 then null else activity_cluster end as activity_cluster
+          --,case when count(distinct activity_sub_cluster) over (partition by full_key) > 1 then null else activity_sub_cluster end as activity_sub_cluster
           ,case when count(distinct activity_topic) over (partition by full_key) > 1 then null else activity_topic end as activity_topic
           ,case when count(distinct activity_group) over (partition by full_key) > 1 then null else activity_group end as activity_group
           ,case when count(distinct chapter) over (partition by full_key) > 1 then null else chapter end as chapter
@@ -38,7 +38,10 @@ view: mindtap_lp_activity_tags {
       where n = 1
       order by product_family, edition, activity_title_key
       ;;
-    sql_trigger_value:SELECT COUNT(*) FROM UPLOADS.GOOGLE_SHEETS.LPUPLOAD   ;;
+    sql_trigger_value:SELECT MAX(done)
+                          from uploads.learningpath_metadata.FIVETRAN_AUDIT
+                          where rows_updated_or_inserted > 0
+                          AND UPPER(status) = 'OK';  ;;
   }
 
   parameter: group_picker {
@@ -83,21 +86,21 @@ view: mindtap_lp_activity_tags {
     hidden: yes
   }
 
-  dimension: activity_cluster {
-    label: "04 - Activity Cluster"
-    group_label: "Activity Tags (pilot)"
-    description: "Field to enable links between activities not defined by chapter or activity type.  Validating need for this field (limited use).  Not available for most product families - part of pilot analytics project"
-    type: string
-    sql: ${TABLE}.ACTIVITY_CLUSTER ;;
-  }
-
-  dimension: activity_sub_cluster {
-    label: "05 - Activity Sub-Cluster"
-    group_label: "Activity Tags (pilot)"
-    description: "Additional field to enable links between activities not defined by chapter or activity type.  Validating need for this field (limited use). Not available for most product families - part of pilot analytics project"
-    type: string
-    sql: ${TABLE}.ACTIVITY_SUB_CLUSTER ;;
-  }
+#   dimension: activity_cluster {
+#     label: "04 - Activity Cluster"
+#     group_label: "Activity Tags (pilot)"
+#     description: "Field to enable links between activities not defined by chapter or activity type.  Validating need for this field (limited use).  Not available for most product families - part of pilot analytics project"
+#     type: string
+#     sql: ${TABLE}.ACTIVITY_CLUSTER ;;
+#   }
+#
+#   dimension: activity_sub_cluster {
+#     label: "05 - Activity Sub-Cluster"
+#     group_label: "Activity Tags (pilot)"
+#     description: "Additional field to enable links between activities not defined by chapter or activity type.  Validating need for this field (limited use). Not available for most product families - part of pilot analytics project"
+#     type: string
+#     sql: ${TABLE}.ACTIVITY_SUB_CLUSTER ;;
+#   }
 
   dimension: activity_sub_type {
     label: "03 - Activity Sub-Type"
@@ -132,7 +135,7 @@ view: mindtap_lp_activity_tags {
   dimension: chapter_sort {
     hidden: yes
     type: number
-    sql:  case when ${chapter} ilike 'appendix' then 9999 else coalesce(try_cast(${chapter} as int), -1) end;;
+    sql:  case when ${chapter} ilike 'appendix' then 9999 else coalesce(cast(${chapter} AS INT), -1) end;;
   }
 
   dimension: chapter_topic {
@@ -245,6 +248,11 @@ dimension: activity_usage_facts_grouping {
     url: "/explore/cube/fact_activity?fields=mindtap_lp_activity_tags.activity_type,dim_activity.status,fact_siteusage.percent_of_activations,
     &f[mindtap_lp_activity_tags.activity_usage_facts_grouping]={{ value }},&f[dim_product.productfamily_edition]={{_filters['dim_product.productfamily_edition'] | url_encode}}"
   }
+  link: {
+    label: "Activity Type Usage Breakdown"
+    url: "/explore/cube/fact_activity?fields=mindtap_lp_activity_tags.activity_type,mindtap_lp_activity_tags.chapter,mindtap_lp_activity_tags.learning_path_activity_title,fact_siteusage.percent_of_activations,
+    &f[mindtap_lp_activity_tags.activity_usage_facts_grouping]={{ value }},&f[dim_product.productfamily_edition]={{_filters['dim_product.productfamily_edition'] | url_encode}}"
+  }
 }
 
 measure: learning_path_activity_title_count {
@@ -269,7 +277,8 @@ measure: count {
     sql:  COUNT(${course_section_facts.courseid}) ;;
 #     type:  number
 #     sql:  ${mindtap_lp_activity_tags.learning_path_activity_title_count} * ${course_section_facts.course_count} ;;
-    drill_fields: [dim_course.coursekey,chapter,activity_type,learning_path_activity_title,dim_activity.status,course_section_facts.total_noofactivations]
+#     drill_fields: [dim_course.coursekey,chapter,activity_type,learning_path_activity_title,dim_activity.status,course_section_facts.total_noofactivations]
+    drill_fields: [dim_institution.institutionname,courseinstructor.instructorid,courseinstructor.instructoremail,activity_usage_facts_grouping,chapter,learning_path_activity_title,course_section_facts.total_noofactivations]
   }
 
 

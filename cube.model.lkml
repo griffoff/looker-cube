@@ -231,14 +231,19 @@ explore: fact_activity {
     type: full_outer
   }
 
+  join: courseinstructor {
+    sql_on: ${olr_courses.course_key} = ${courseinstructor.coursekey} ;;
+    relationship: many_to_many
+  }
+
 #   join:  fact_activityoutcome {
 #     sql_on: (${dim_course.courseid}, ${dim_activity.activityid}) = (${fact_activityoutcome.courseid}, ${fact_activityoutcome.activityid}) ;;
 #     relationship: one_to_many
 #   }
 
   join:  fact_siteusage {
-    sql_on: (${dim_course.courseid}, ${dim_activity.activityid}) = (${fact_siteusage.courseid}, ${fact_siteusage.activityid}) ;;
-    relationship: one_to_many
+    sql_on: (${fact_activity.courseid}, ${fact_activity.learningpathid}) = (${fact_siteusage.courseid}, ${fact_siteusage.learningpathid}) ;;
+    relationship: many_to_many
   }
 
   join: dim_relative_to_start_date {
