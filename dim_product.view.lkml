@@ -3,7 +3,7 @@ view: dim_product {
   #sql_table_name: DW_GA.DIM_PRODUCT ;;
   derived_table: {
     sql: select *,
-CASE
+          CASE
                WHEN dw_ga.dim_product.PUBLICATIONGROUP in ('Career Ed', 'SWEP') THEN
                     CASE
                         WHEN dw_ga.dim_product.MINORSUBJECTMATTER = 'Office Management' THEN 'Course Tech Office Management'
