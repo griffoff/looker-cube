@@ -421,6 +421,22 @@ view: fact_siteusage {
       </div>
     ;;
   }
+
+  measure: time_on_task_to_final_score_correlation {
+    label: "Time spent in activity to MindTap overall score correlation"
+    type: number
+    sql: CORR(${user_final_scores.final_score}, ${pageviewtime}) ;;
+    value_format_name: decimal_3
+  }
+
+  measure: time_on_task_to_final_score_correlation_rank_by_product_family {
+    label: "Time spent in activity to MindTap overall score correlation rank by product family"
+    type: number
+    sql: dense_rank() over (partition by ${dim_product.discipline}, ${dim_product.productfamily_edition} order by coalesce(${time_on_task_to_final_score_correlation}, 0) desc)  ;;
+    value_format_name: decimal_0
+    required_fields: [dim_product.discipline, dim_product.productfamily_edition]
+    can_filter: no
+  }
 }
 #- measure: count
 #  label: 'No. of page view records'
