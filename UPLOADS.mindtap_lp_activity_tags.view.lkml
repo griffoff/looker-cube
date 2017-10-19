@@ -38,7 +38,10 @@ view: mindtap_lp_activity_tags {
       where n = 1
       order by product_family, edition, activity_title_key
       ;;
-    sql_trigger_value:SELECT COUNT(*) FROM UPLOADS.LEARNINGPATH_METADATA.TAGS_COMBINED   ;;
+    sql_trigger_value:SELECT MAX(done)
+                          from uploads.learningpath_metadata.FIVETRAN_AUDIT
+                          where rows_updated_or_inserted > 0
+                          AND UPPER(status) = 'OK';  ;;
   }
 
   parameter: group_picker {
