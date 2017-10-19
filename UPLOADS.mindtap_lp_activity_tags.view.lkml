@@ -38,7 +38,10 @@ view: mindtap_lp_activity_tags {
       where n = 1
       order by product_family, edition, activity_title_key
       ;;
-    sql_trigger_value:SELECT COUNT(*) FROM UPLOADS.LEARNINGPATH_METADATA.TAGS_COMBINED   ;;
+    sql_trigger_value:SELECT MAX(done)
+                          from uploads.learningpath_metadata.FIVETRAN_AUDIT
+                          where rows_updated_or_inserted > 0
+                          AND UPPER(status) = 'OK';  ;;
   }
 
   parameter: group_picker {
@@ -275,7 +278,7 @@ measure: count {
 #     type:  number
 #     sql:  ${mindtap_lp_activity_tags.learning_path_activity_title_count} * ${course_section_facts.course_count} ;;
 #     drill_fields: [dim_course.coursekey,chapter,activity_type,learning_path_activity_title,dim_activity.status,course_section_facts.total_noofactivations]
-    drill_fields: [dim_institution.institutionname,chapter,activity_usage_facts_grouping,learning_path_activity_title,course_section_facts.total_noofactivations]
+    drill_fields: [dim_institution.institutionname,courseinstructor.instructorid,courseinstructor.instructoremail,activity_usage_facts_grouping,chapter,learning_path_activity_title,course_section_facts.total_noofactivations]
   }
 
 
