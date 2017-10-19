@@ -78,8 +78,18 @@ view: olr_courses {
     hidden:  yes
   }
 
-  dimension: end_date {
-    type: string
+  dimension_group: end_date {
+    label: "End Date"
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
     sql: ${TABLE}.END_DATE ;;
   }
 
