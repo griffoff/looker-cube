@@ -388,6 +388,14 @@ view: fact_activityoutcome {
     label: "# of users completed with greater than 0 score"
   }
 
+  measure: score_to_final_score_correlation {
+    label: "Activity Score to MindTap overall score correlation"
+    type: number
+    sql: CORR(${user_final_scores.final_score}, ${score}) ;;
+    value_format_name: decimal_3
+  }
+
+
   measure: count {
     type: count
     drill_fields: [id]

@@ -99,91 +99,6 @@ join: lifespan {
   }
 }
 
-explore: fact_activityoutcome {
-  label: "Learning Path Analysis"
-  description: "Starting point for learning path activities, assigned vs gradable, scores, etc."
-  extends: [dim_user, dim_course, dim_learningpath]
-  extension: required
-
-  always_filter: {
-    filters: {
-      field: dim_learningpath.learningtype
-      value: "Activity"
-    }
-  }
-
-#   join: dim_completion_date {
-#     sql_on: ${fact_activityoutcome.completeddatekey} = ${dim_completion_date.datekey} ;;
-#     relationship: many_to_one
-#   }
-
-  join: dim_user {
-    sql_on: ${fact_activityoutcome.userid} = ${dim_user.userid} ;;
-    relationship: many_to_one
-  }
-
-  join: dim_learningpath {
-    sql_on: ${fact_activityoutcome.learningpathid} = ${dim_learningpath.learningpathid} ;;
-    relationship: many_to_one
-  }
-
-  join: fact_activity {
-    sql_on: ${dim_learningpath.learningpathid} = ${fact_activity.learningpathid} ;;
-    relationship:  one_to_many
-  }
-
-  join: dim_activity {
-    sql_on: ${fact_activityoutcome.activityid} = ${dim_activity.activityid} ;;
-    relationship: many_to_one
-  }
-
-  join: dim_eventtype {
-    sql_on: ${fact_activity.eventtypeid} = ${dim_eventtype.eventtypeid} ;;
-    relationship: many_to_one
-  }
-
-  join: dim_course {
-#     sql_on: ${fact_activityoutcome.courseid} = ${dim_course.courseid} ;;
-#    sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
-    sql_on: ${fact_activation.courseid} = ${dim_course.courseid} ;;
-    relationship: many_to_one
-    type: full_outer
-  }
-
-  join: dim_relative_to_start_date {
-    sql_on: ${fact_activityoutcome.daysfromcoursestart} = ${dim_relative_to_start_date.days} ;;
-    relationship: many_to_one
-  }
-
-#   join: dim_relative_to_end_date {
-#     sql_on: ${fact_activityoutcome.daysbeforecourseend} = ${dim_relative_to_end_date.days} ;;
-#     relationship: many_to_one
-#   }
-#
-#   join: dim_relative_to_due_date {
-#     sql_on: ${fact_activityoutcome.daysleftbeforeduedate} = ${dim_relative_to_due_date.days} ;;
-#     relationship: many_to_one
-#   }
-
-  join: dim_time {
-    sql_on: ${fact_activityoutcome.timekey} = ${dim_time.timekey} ;;
-    relationship: many_to_one
-  }
-
-  join: dim_filter {
-    sql_on: ${fact_activityoutcome.filterflag} = ${dim_filter.filterflag} ;;
-    relationship: many_to_one
-  }
-
-  join: fact_siteusage {
-    sql_on: ${fact_siteusage.learningpathid} = ${fact_activityoutcome.learningpathid}
-          and ${fact_siteusage.userid} = ${fact_activityoutcome.userid}
-          and ${fact_siteusage.eventdatekey} = ${fact_activityoutcome.startdatekey}
-          ;;
-    relationship: many_to_many
-  }
-
-}
 
 explore: fact_activity {
   label: "Learning Path - MT Instructor Modifications"
@@ -349,6 +264,11 @@ explore: fact_siteusage {
   join: dim_date {
     view_label: "Date - Date of activity"
     sql_on: ${fact_siteusage.eventdatekey} = ${dim_date.datekey} ;;
+    relationship: many_to_one
+  }
+
+  join: user_final_scores {
+    sql_on: (${fact_siteusage.courseid}, ${fact_siteusage.partyid}) = (${user_final_scores.courseid}, ${user_final_scores.partyid}) ;;
     relationship: many_to_one
   }
 

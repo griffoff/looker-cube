@@ -20,6 +20,77 @@ explore: fact_siteusage_dev {
 
 }
 
+explore: fact_activityoutcomesummary {
+  label: "Learning Path Analysis"
+  description: "Starting point for learning path activities, assigned vs gradable, scores, etc."
+  extends: [dim_user, dim_course, dim_learningpath]
+
+  always_filter: {
+    filters: {
+      field: dim_learningpath.learningtype
+      value: "Activity"
+    }
+  }
+
+#   join: dim_completion_date {
+#     sql_on: ${fact_activityoutcome.completeddatekey} = ${dim_completion_date.datekey} ;;
+#     relationship: many_to_one
+#   }
+
+  join: dim_user {
+    sql_on: ${fact_activityoutcomesummary.userid} = ${dim_user.userid} ;;
+    relationship: many_to_one
+  }
+
+  join: user_final_scores {
+    sql_on: (${fact_activityoutcomesummary.courseid}, ${fact_activityoutcomesummary.partyid}) = (${user_final_scores.courseid}, ${user_final_scores.partyid}) ;;
+    relationship: many_to_one
+  }
+
+  join: dim_learningpath {
+    sql_on: ${fact_activityoutcomesummary.learningpathid} = ${dim_learningpath.learningpathid} ;;
+    relationship: many_to_one
+  }
+
+  join: fact_activity {
+    sql_on: ${dim_learningpath.learningpathid} = ${fact_activity.learningpathid} ;;
+    relationship:  one_to_many
+  }
+
+  join: dim_activity {
+    sql_on: ${fact_activityoutcomesummary.activityid} = ${dim_activity.activityid} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_eventtype {
+    sql_on: ${fact_activity.eventtypeid} = ${dim_eventtype.eventtypeid} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_course {
+  #     sql_on: ${fact_activityoutcome.courseid} = ${dim_course.courseid} ;;
+  #    sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
+    sql_on: ${fact_activation.courseid} = ${dim_course.courseid} ;;
+    relationship: many_to_one
+    type: full_outer
+  }
+
+  join: dim_filter {
+    sql_on: ${fact_activityoutcomesummary.filterflag} = ${dim_filter.filterflag} ;;
+    relationship: many_to_one
+  }
+
+  join: fact_siteusage {
+    sql_on: ${fact_siteusage.learningpathid} = ${fact_activityoutcomesummary.learningpathid}
+            and ${fact_siteusage.userid} = ${fact_activityoutcomesummary.userid}
+            and ${fact_siteusage.eventdatekey} = ${fact_activityoutcomesummary.modifieddatekey}
+            ;;
+    relationship: many_to_many
+  }
+
+}
+
+
 explore: fact_session {
   label: "Web - Sessions"
   extends: [dim_user, dim_course]
