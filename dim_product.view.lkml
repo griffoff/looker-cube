@@ -47,6 +47,7 @@ view: dim_product {
         as discipline_rollup
       ,nullif(edition, '-')::int as edition_number
       ,dense_rank() over (partition by productfamily order by edition_number desc) as latest
+      ,concat(concat(productfamily,' - '),edition) as productfamily_edition
     from dw_ga.dim_product
     order by productid;;
     sql_trigger_value: select count(*) from dw_ga.dim_product ;;
@@ -115,7 +116,7 @@ view: dim_product {
     label: "Product Family + Edition"
     group_label: "Product Family"
     description: "Use if comparing multiple titles or specific products within a Course Area/Discipline.  This dimension pulls data for a specific combination of product family and edition."
-    sql: concat(concat(${productfamily},' - '),${edition});;
+    #sql: concat(concat(${productfamily},' - '),${edition});;
   }
 
   dimension: publicationgroup {
