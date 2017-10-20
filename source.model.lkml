@@ -8,6 +8,36 @@ include: "dims.model.lkml"
 # # and define the joins that connect them together.
 #
 
+# Database Metadata
+explore: schema_comparison {
+  label: "Compare schemas: STG to PROD "
+  join: table_comparison {
+    sql_on: ${schema_comparison.schema_name} = ${table_comparison.schema_name};;
+    relationship: one_to_many
+  }
+  join: column_comparison {
+    sql_on: (${table_comparison.schema_name}, ${table_comparison.table_name}) = (${column_comparison.schema_name}, ${column_comparison.table_name}) ;;
+    relationship: one_to_many
+  }
+}
+
+explore: tables {
+  label: "Information Schema"
+
+  join: load_history {
+    sql_on: ${tables.table_catalog} = ${load_history.table_catalog}
+          and ${tables.table_schema} = ${load_history.schema_name}
+          and ${tables.table_name} = ${load_history.table_name};;
+  }
+
+  join: columns {
+    sql_on:  ${tables.table_catalog} = ${columns.table_catalog}
+          and ${tables.table_schema} = ${columns.table_schema}
+          and ${tables.table_name} = ${columns.table_name};;
+  }
+}
+
+
 # CLTS
 explore: olr_courses {
   label: "CLTS - Courses"

@@ -89,7 +89,7 @@ view: dim_relativedate {
     label: "Weeks Relative to Course Start Date (Buckets)"
     description: "Using for RFI Dashboard element. Please hide when finished setting up"
     type: string
-    hidden: no
+    hidden: yes
     sql:
             CASE
                 WHEN ${weeksname} <0 THEN 'Pre-Class'
