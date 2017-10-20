@@ -132,6 +132,12 @@ explore: tables {
           and ${tables.table_schema} = ${load_history.schema_name}
           and ${tables.table_name} = ${load_history.table_name};;
   }
+
+  join: columns {
+    sql_on:  ${tables.table_catalog} = ${columns.table_catalog}
+          and ${tables.table_schema} = ${columns.table_schema}
+          and ${tables.table_name} = ${columns.table_name};;
+  }
 }
 
 explore: activities_per_week {
