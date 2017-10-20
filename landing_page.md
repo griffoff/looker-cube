@@ -132,7 +132,7 @@ table,tr,td {
       <td>
       <div>
         <h5 style="font-weight: 100; padding: 15px 25px; background-color: #4d0099; margin: 10px 15px 20px 0; text-align:center; margin-top: 17px;font-size:20px">
-          <a target="_blank" style="color: #fff; text-transform: uppercase; font-weight:400;" href="https://cengage.looker.com/dashboards/110">Student: Usage Over Time</a>
+          <a target="_blank" style="color: #fff; text-transform: uppercase; font-weight:400;" href="https://cengage.looker.com/dashboards/76">Student: Usage Over Time</a>
         </h5>
         <table>
              <tr>
