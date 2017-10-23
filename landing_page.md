@@ -17,48 +17,48 @@ table,tr,td {
 <table style="border-left:none;border:none">
   <!--<tbody >-->
     <tr>
-      <td>
+      <td style="border: 1px; padding: 0px; padding-right: 2px; width: 50%;">
       <div>
         <h5 style="font-weight: 100; padding: 15px 25px; background-color: #4d0099; margin: 10px 15px 20px 0; text-align:center; margin-top: 17px;font-size:20px">
           <a target="_blank" style="color: #fff; text-transform: uppercase; font-weight:400;" href="https://cengage.looker.com/dashboards/102">Student: Activity Usage</a>
         </h5>
         <table>
-             <tr class = 'no-border-row'>
+             <tr>
                 <th>
                    <div style="margin-bottom: 15px; width: 100%;">
                       <a href="https://cengage.looker.com/dashboards/102" target="_blank">
                       <img style="height: 100px; padding: 0px 0px 0px 0px;" src="http://www.iconarchive.com/download/i99510/webalys/kameleon.pics/Student-3.ico">
                       </a>
-                    </div>
+                   </div>
                 </th>
                 <th>
-                  <!--<td style="border: 0px; padding: 0px 0px 10px 0px;" colspan="3">-->
+                <!--  <td style="border: 1px; padding: 0px; padding-right: 2px;"> -->
                   <a style="border-radius: 5px; display: block;  text-align: center; color: black; text-decoration: none; font-size: 13px; line-height: 1.2;">
                <!--   <a style="font size:10px; display: block;"> -->
                   <p style="text-align:center;font-size: 15px;"><i><u>Questions Addressed</u></i></p>
-                    <p style="font-size:100%;text-align:left;">Are students utilizling all of the activities?</p>
-                    <p style="font-size:100%;text-align:left;">Which are the most used activity types by students?</p>
+                  <p style="font-size:100%;text-align:left;">Are students utilizling all of the activities?</p>
+                  <p style="font-size:100%;text-align:left;">Which are the most used activity types by students?</p>
                   </a>
-                  <!--</td>-->
+              <!--    </td> -->
                 </th>
              </tr>
           </table>
       </div>
       </td>
-      <td>
+      <td style="border: 0px; padding: 0px; padding-right: 2px; width: 50%;">
         <div>
           <h5 style="font-weight: 100; padding: 15px 25px; background-color: #4d0099; margin: 10px 15px 20px 0; text-align:center; margin-top: 17px;font-size:20px">
             <a target="_blank" style="color: #fff; text-transform: uppercase; font-weight:400;" href="https://cengage.looker.com/dashboards/101">Instructor: LP Modifications</a>
            </h5>
           <table border="2">
              <tr>
-                <th>
+                <td style="border: 0px; padding: 0px; padding-right: 0px;">
                    <div style="margin-bottom: 15px; width: 100%;">
                       <a href="https://cengage.looker.com/dashboards/101" target="_blank">
-                      <img style="height: 100px; padding: 0px 0px 0px 0px;" src="http://www.iconarchive.com/download/i88868/icons8/ios7/Science-Classroom.ico">
+                      <img style="height: 100px; padding: 0px;" src="http://www.iconarchive.com/download/i88868/icons8/ios7/Science-Classroom.ico">
                       </a>
                     </div>
-                </th>
+                </td>
                 <th>
                   <!--<td style="border: 0px; padding: 0px 0px 10px 0px;" colspan="3">-->
                   <a style="border-radius: 5px; display: block;  text-align: center; color: black; text-decoration: none; font-size: 13px; line-height: 1.2;">
@@ -84,7 +84,7 @@ table,tr,td {
              <tr>
                 <th>
                    <div style="margin-bottom: 15px; width: 100%;">
-                      <a href="https://cengage.looker.com/dashboards/1101" target="_blank">
+                      <a href="https://cengage.looker.com/dashboards/110" target="_blank">
                       <img style="height: 100px; padding: 0px 0px 0px 0px;" src="http://www.iconarchive.com/download/i42966/oxygen-icons.org/oxygen/Apps-preferences-desktop-icons.ico">
                       </a>
                     </div>
@@ -138,7 +138,7 @@ table,tr,td {
              <tr>
                 <th>
                    <div style="margin-bottom: 15px; width: 100%;">
-                      <a href="https://cengage.looker.com/dashboards/1101" target="_blank">
+                      <a href="https://cengage.looker.com/dashboards/76" target="_blank">
                       <img style="height: 100px; padding: 0px 0px 0px 0px;" src="http://www.iconarchive.com/download/i79780/hamzasaleem/stock/Time-Machine.ico">
                       </a>
                     </div>
