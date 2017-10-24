@@ -2,7 +2,7 @@ view: user_facts {
   label: "User"
   derived_table: {
     sql: SELECT
-        userId
+        s.userId
         ,sum(POINTS_EARNED) / nullif(sum(POINTS_POSSIBLE), 0) AS overall_score
         ,sum(CASE WHEN a.assigned = 1 THEN POINTS_EARNED END) / nullif(sum(CASE WHEN a.ASSIGNED = 1 THEN POINTS_POSSIBLE END), 0) AS gradable_score
         ,sum(CASE WHEN a.assigned != 1 THEN POINTS_EARNED END) / nullif(sum(CASE WHEN a.ASSIGNED != 1 THEN POINTS_POSSIBLE END), 0) AS nongradable_score
@@ -12,14 +12,16 @@ view: user_facts {
         ,avg(ATTEMPTS) AS avg_attempts
         ,avg(CASE WHEN assigned = 1 THEN ATTEMPTS end) AS avg_gradable_attempts
         ,avg(CASE WHEN assigned != 1 THEN ATTEMPTS end) AS avg_nongradable_attempts
+        ,count(distinct sessionNumber) AS logins_by_user
       FROM dw_ga.FACT_ACTIVITYOUTCOMESUMMARY s
       INNER JOIN dw_ga.DIM_ACTIVITY a ON s.ACTIVITYID = a.ACTIVITYID
+      INNER JOIN dw_ga.FACT_SESSION f ON s.USERID = f.USERID
       GROUP BY 1
        ;;
       datagroup_trigger: fact_activityoutcome_datagroup
   }
   set: curated_fields{
-    fields: [activities_completed,activities_completed_by_user,gradable_activities_completed,gradable_activities_completed_by_user,overall_score]
+    fields: [activities_completed,activities_completed_by_user,gradable_activities_completed,gradable_activities_completed_by_user,overall_score,logins_by_user]
   }
 
   dimension: userid {
@@ -32,6 +34,13 @@ view: user_facts {
   dimension: overall_score {
     type: number
     sql: ${TABLE}.OVERALL_SCORE ;;
+    hidden: yes
+  }
+
+  dimension: logins_by_user {
+    label: "#Login"
+    type: number
+    sql: ${TABLE}.logins_by_user ;;
     hidden: yes
   }
 
@@ -131,6 +140,13 @@ view: user_facts {
     description: "Total number of gradeable activities completed"
     type: sum
     sql: ${nongradable_activities_completed}  ;;
+  }
+
+  measure: logins_from_session_number {
+    label: "# Logins"
+    description: "Calculated off session number from fact_session"
+    type: sum
+    sql:  ${logins_by_user} ;;
   }
 
   set: detail {

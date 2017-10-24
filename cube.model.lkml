@@ -366,8 +366,6 @@ explore: fact_siteusage {
     relationship: many_to_many
 
   }
-
-
 }
 
 explore: LP_Analysis_PSR_Limited_View {
