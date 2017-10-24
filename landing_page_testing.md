@@ -82,6 +82,8 @@
   </tbody>
 </table>
 
+<hr>
+
   <div style="width: 100%; text-align: center; overflow: hidden;">
     <h1 style="background-color: #fff; padding: 30px 0 15px;font-weight:500; margin-bottom: 0; font-weight: 600;">Looker Resources</h1>
   </div>
