@@ -381,7 +381,7 @@ view: fact_siteusage {
 
 #     drill_fields: [mindtap_lp_activity_tags.activity_type,mindtap_lp_activity_tags.learning_path_activity_title_count]
 #     drill_fields: [mindtap_lp_activity_tags.chapter,mindtap_lp_activity_tags.activity_type,mindtap_lp_activity_tags.learning_path_activity_title,percent_of_activations]
-    drill_fields: [mindtap_lp_activity_tags.activity_type,fact_activityoutcome.score_avg,product_facts.product_users,pageviewtime_useraverage]
+    drill_fields: [partyid,mindtap_lp_activity_tags.activity_type,fact_activityoutcome.score_avg,user_facts.logins_from_session_number,pageviewtime_useraverage]
 
 
   }
