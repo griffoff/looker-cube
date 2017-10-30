@@ -263,7 +263,7 @@ view: fact_siteusage {
 
   measure: pageviewtime_max {
     group_label: "Time in product"
-    label: "Time in product (max time per page)"
+    label: "Time in Mindtap product (max time per page)"
     type: max
     sql: ${pageviewtime};;
     value_format_name: duration_hms
