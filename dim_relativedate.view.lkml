@@ -57,7 +57,7 @@ view: dim_relativedate {
   dimension: monthsbucket {
     label: "Relative Months Bucket"
     type: tier
-    hidden: yes
+#     hidden: yes
     tiers: [
       1,
       2,
@@ -68,7 +68,7 @@ view: dim_relativedate {
     ]
     style: integer
     sql: ${TABLE}.DAYS ;;
-    value_format: "0 \m/t/h/s"
+    value_format: "0 \m\t\h\s"
   }
 
   dimension: weeks {
