@@ -286,7 +286,7 @@ measure: count {
 #     type:  number
 #     sql:  ${mindtap_lp_activity_tags.learning_path_activity_title_count} * ${course_section_facts.course_count} ;;
 #     drill_fields: [dim_course.coursekey,chapter,activity_type,learning_path_activity_title,dim_activity.status,course_section_facts.total_noofactivations],courseinstructor.instructoremail
-    drill_fields: [dim_institution.institutionname,courseinstructor.instructorid,activity_usage_facts_grouping,chapter,learning_path_activity_title,course_section_facts.total_noofactivations]
+    drill_fields: [dim_institution.institutionname,courseinstructor.instructorid,activity_usage_facts_grouping,chapter,learning_path_activity_title,course_section_facts.total_noofactivations,fact_siteusage.percent_of_activations]
   }
 
 
