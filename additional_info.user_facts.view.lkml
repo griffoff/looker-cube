@@ -143,10 +143,15 @@ view: user_facts {
   }
 
   measure: logins_from_session_number {
-    label: "# Logins"
+    label: "Total Logins"
     description: "Calculated off session number from fact_session"
     type: sum
     sql:  ${logins_by_user} ;;
+    html:
+    {% if value > 45 %}
+    <font color="red">{{ rendered_value }}</font>
+    {% endif %}
+    ;;
   }
 
   set: detail {
