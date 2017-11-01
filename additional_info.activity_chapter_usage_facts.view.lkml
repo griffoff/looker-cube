@@ -11,6 +11,7 @@ view: activity_chapter_usage_facts {
       }
       datagroup_trigger: fact_siteusage_datagroup
     }
+  set: curated_fields {fields:[activity_type_usage_bucket,chapter]}
 
     dimension: chapter {
       order_by_field: chapter_order

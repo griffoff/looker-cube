@@ -20,6 +20,9 @@ view: activity_usage_facts {
     }
     datagroup_trigger: fact_siteusage_datagroup
   }
+
+  set: curated_fields {fields:[activity_type_usage_bucket,activity_type,activity_by_group]}
+
   dimension: activity_usage_facts_grouping {
     hidden: yes
   }

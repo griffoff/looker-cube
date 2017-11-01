@@ -490,7 +490,175 @@ explore: LP_Analysis_PSR_Limited_View {
     fields: [user_facts.curated_fields*]
   }
 
-#   join: fact_siteusage {
-#     fields: [fact_siteusage.curated_fields*]
-#   }
+}
+  explore: LP_Analysis_Siteusage {
+    label: "Learning Path Analysis - MT Usage Data"
+    from: fact_siteusage
+    description: "TEST Explore Start point for learning path usage from the student persepctive including application usage information collected via google analytics."
+    extends: [dim_user, dim_course, dim_pagedomain, dim_learningpath]
+
+    join: dim_date {
+      view_label: "Date - Date of activity"
+      sql_on: ${LP_Analysis_Siteusage.eventdatekey} = ${dim_date.datekey} ;;
+      relationship: many_to_one
+      fields: [dim_date.curated_fields*]
+    }
+
+    join: user_final_scores {
+      sql_on: (${LP_Analysis_Siteusage.courseid}, ${LP_Analysis_Siteusage.partyid}) = (${user_final_scores.courseid}, ${user_final_scores.partyid}) ;;
+      relationship: many_to_one
+    }
+
+    join: dim_course {
+      sql_on: ${LP_Analysis_Siteusage.courseid} = ${dim_course.courseid} ;;
+      relationship: many_to_one
+      type: full_outer
+      fields: [dim_course.curated_fields*]
+    }
+
+    join: dim_product {
+      sql_on: ${LP_Analysis_Siteusage.productid} = ${dim_product.productid} ;;
+      relationship: many_to_one
+      fields: [dim_product.curated_fields*]
+    }
+
+    join: dim_location {
+      sql_on: ${LP_Analysis_Siteusage.locationid} = ${dim_location.locationid} ;;
+      relationship: many_to_one
+      fields: [dim_location.curated_fields*]
+    }
+
+    join: dim_activity {
+      sql_on: ${LP_Analysis_Siteusage.activityid} = ${dim_activity.activityid} ;;
+      relationship: many_to_one
+      fields: [dim_activity.curated_fields*]
+    }
+
+    join: dim_learningpath {
+      sql_on: ${LP_Analysis_Siteusage.learningpathid} = ${dim_learningpath.learningpathid} ;;
+      relationship: many_to_one
+      fields: [dim_learningpath.curated_fields*]
+    }
+
+    join: dim_party {
+      sql_on: ${LP_Analysis_Siteusage.partyid} = ${dim_party.partyid} ;;
+      relationship: many_to_one
+      fields: [dim_party.curated_fields*]
+    }
+
+    join: dim_user {
+      sql_on: ${LP_Analysis_Siteusage.userid} = ${dim_user.userid} ;;
+      relationship: many_to_one
+      fields: [dim_user.curated_fields*]
+    }
+
+   join: dim_pagedomain {
+      sql_on: ${LP_Analysis_Siteusage.pagedomainid} = ${dim_pagedomain.pagedomainid} ;;
+      relationship: many_to_one
+    }
+
+    join: dim_relative_to_start_date {
+      sql_on: ${LP_Analysis_Siteusage.daysfromcoursestart} = ${dim_relative_to_start_date.days} ;;
+      relationship: many_to_one
+    }
+
+    join: fact_activityoutcome {
+      sql_on: ${LP_Analysis_Siteusage.learningpathid} = ${fact_activityoutcome.learningpathid}
+          and ${LP_Analysis_Siteusage.userid} = ${fact_activityoutcome.userid}
+          and ${LP_Analysis_Siteusage.eventdatekey} = ${fact_activityoutcome.startdatekey}
+          ;;
+      relationship: many_to_many
+    }
+
+    join: activity_usage_facts {
+      view_label: "Activity Facts"
+      sql_on: (${activity_usage_facts.courseid},${activity_usage_facts.activity_usage_facts_grouping},${activity_usage_facts.partyid})
+        = (${LP_Analysis_Siteusage.courseid},${mindtap_lp_activity_tags.activity_usage_facts_grouping},${LP_Analysis_Siteusage.partyid}) ;;
+      relationship: many_to_many
+      fields: [activity_usage_facts.curated_fields*]
+    }
+    join: activity_chapter_usage_facts {
+      view_label: "Activity Chapter Usage Facts"
+      sql_on: (${activity_chapter_usage_facts.courseid},${activity_chapter_usage_facts.chapter},${activity_chapter_usage_facts.partyid})
+        = (${LP_Analysis_Siteusage.courseid},${mindtap_lp_activity_tags.chapter},${LP_Analysis_Siteusage.partyid}) ;;
+      relationship: many_to_many
+      fields: [activity_chapter_usage_facts.curated_fields*]
+    }
+  }
+
+explore: LP_Activity_Analysis {
+  from: fact_activity
+  label: "Learning Path Analysis - MT Instructor Modifications"
+  description: "Starting point for learning path analysis from the instructor perspective (e.g. What has the instructor changed?  What has the instructor added?)"
+  extends: [dim_course, dim_learningpath]
+
+  join: dim_eventtype {
+    sql_on: ${LP_Activity_Analysis.eventtypeid} = ${dim_eventtype.eventtypeid} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_created_date {
+    sql_on: ${LP_Activity_Analysis.createddatekey} = ${dim_created_date.datekey} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_instructor_user {
+    from: dim_user
+    view_label: "User (Instructor)"
+    sql_on: ${LP_Activity_Analysis.userid} = ${dim_instructor_user.userid} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_instructor_party {
+    from: dim_party
+    view_label: "User (Instructor)"
+    sql_on: ${dim_instructor_user.mainpartyid} = ${dim_instructor_party.partyid} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_learningpath {
+    sql_on: ${LP_Activity_Analysis.learningpathid} = ${dim_learningpath.learningpathid} ;;
+    relationship: many_to_one
+    fields: [dim_learningpath.curated_fields*]
+  }
+
+  join: dim_activity {
+    sql_on: ${LP_Activity_Analysis.activityid} = ${dim_activity.activityid} ;;
+    relationship: many_to_one
+    fields: [dim_activity.curated_fields*]
+  }
+
+  join: dim_course {
+    #sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
+    sql_on: ${LP_Activity_Analysis.courseid} = ${dim_course.courseid} ;;
+    relationship: many_to_one
+    type: full_outer
+    fields: [dim_course.curated_fields*]
+  }
+
+  join: courseinstructor {
+    sql_on: ${olr_courses.course_key} = ${courseinstructor.coursekey} ;;
+    relationship: many_to_many
+  }
+
+  join:  fact_siteusage {
+    sql_on: (${LP_Activity_Analysis.courseid}, ${LP_Activity_Analysis.learningpathid}) = (${fact_siteusage.courseid}, ${fact_siteusage.learningpathid}) ;;
+    relationship: many_to_many
+  }
+
+  join: dim_relative_to_start_date {
+    sql_on: ${LP_Activity_Analysis.daysfromcoursestart} = ${dim_relative_to_start_date.days} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_time {
+    sql_on: ${LP_Activity_Analysis.timekey} = ${dim_time.timekey} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_filter {
+    sql_on: ${LP_Activity_Analysis.filterflag} = ${dim_filter.filterflag} ;;
+    relationship: many_to_one
+  }
+
 }
