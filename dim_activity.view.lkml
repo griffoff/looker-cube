@@ -430,7 +430,7 @@ view: dim_activity {
   }
 
   dimension: status {
-    label: "Gradable Status"
+    label: "Activity Status"
     description: "
     “Graded” = Student gets a score (scorable) and the score counts towards his/her grade (gradable)
     “Practice” = Student gets a score (scorable) but the activity does NOT count towards his/her grade (not gradable)

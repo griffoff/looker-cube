@@ -1,4 +1,5 @@
 view: activity_usage_facts {
+  label: "Learning Path"
 
   derived_table: {
     explore_source: fact_siteusage {

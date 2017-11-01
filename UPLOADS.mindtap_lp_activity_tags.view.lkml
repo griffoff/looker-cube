@@ -86,17 +86,17 @@ view: mindtap_lp_activity_tags {
     hidden: yes
   }
 
-#   dimension: activity_cluster {
-#     label: "04 - Activity Cluster"
-#     group_label: "Activity Tags (pilot)"
-#     description: "Field to enable links between activities not defined by chapter or activity type.  Validating need for this field (limited use).  Not available for most product families - part of pilot analytics project"
-#     type: string
-#     sql: ${TABLE}.ACTIVITY_CLUSTER ;;
-#   }
+  dimension: activity_topic {
+    label: "04 - Activity Topic"
+    group_label: "Activity Tags"
+    description: "Additional field to describe links between activities.  Not used for all activities."
+    type: string
+    sql: ${TABLE}.ACTIVITY_TOPIC ;;
+  }
 #
 #   dimension: activity_sub_cluster {
 #     label: "05 - Activity Sub-Cluster"
-#     group_label: "Activity Tags (pilot)"
+#     group_label: "Activity Tags"
 #     description: "Additional field to enable links between activities not defined by chapter or activity type.  Validating need for this field (limited use). Not available for most product families - part of pilot analytics project"
 #     type: string
 #     sql: ${TABLE}.ACTIVITY_SUB_CLUSTER ;;
@@ -104,7 +104,7 @@ view: mindtap_lp_activity_tags {
 
   dimension: activity_sub_type {
     label: "03 - Activity Sub-Type"
-    group_label: "Activity Tags (pilot)"
+    group_label: "Activity Tags"
     description: "Not available for most product families - part of pilot analytics project"
     type: string
     sql: ${TABLE}.ACTIVITY_SUB_TYPE ;;
@@ -112,7 +112,7 @@ view: mindtap_lp_activity_tags {
 
   dimension: activity_type {
     label: "02 - Activity Type"
-    group_label: "Activity Tags (pilot)"
+    group_label: "Activity Tags"
     description: "Describes primary content/activity type (e.g. Mastery Training or Video Case).  Not available for most product families - part of pilot analytics project"
     type: string
     sql: ${TABLE}.ACTIVITY_TYPE ;;
@@ -120,7 +120,7 @@ view: mindtap_lp_activity_tags {
 
   dimension: chapter {
     label: "00 - Chapter"
-    group_label: "Activity Tags (pilot)"
+    group_label: "Activity Tags"
     description: "Chapter number as defined in the learning path.  Chapter 0 contains all 'getting started' and intro activities.  Not available for most product families - part of pilot analytics project"
     type: number
     sql: ${TABLE}.CHAPTER ;;
@@ -140,21 +140,21 @@ view: mindtap_lp_activity_tags {
 
   dimension: chapter_topic {
     label: "01 - Chapter Topic"
-    group_label: "Activity Tags (pilot)"
+    group_label: "Activity Tags"
     description: "Description of chapter content; ideally to be used to analyze content across products within a discipline or course area. Not available for most product families - part of pilot analytics project"
     type: string
     sql: ${TABLE}.CHAPTER_TOPIC ;;
   }
 
   dimension: learning_path_activity_title {
-    group_label: "Activity Tags (pilot)"
+    group_label: "Activity Tags"
     description: "Not available for most product families - part of pilot analytics project"
     type: string
     sql: ${TABLE}.LEARNING_PATH_ACTIVITY_TITLE ;;
     hidden: yes
   }
   dimension: product_family {
-    group_label: "Activity Tags (pilot)"
+    group_label: "Activity Tags"
     description: "Not available for most product families - part of pilot analytics project"
     type: string
     sql: ${TABLE}.PRODUCT_FAMILY ;;
@@ -162,7 +162,7 @@ view: mindtap_lp_activity_tags {
   }
 
   dimension: edition_number {
-    group_label: "Activity Tags (pilot)"
+    group_label: "Activity Tags"
     description: "Not available for most product families - part of pilot analytics project"
     type: number
     sql: ${TABLE}.EDITION ;;
@@ -171,7 +171,7 @@ view: mindtap_lp_activity_tags {
 
   dimension: section_name {
     label: "07 - Section Name"
-    group_label: "Activity Tags (pilot)"
+    group_label: "Activity Tags"
     description: "Unit or Section name, if applicable.  Not available for most product families - part of pilot analytics project."
     type: string
     sql: ${TABLE}.SECTION_NAME ;;
@@ -179,7 +179,7 @@ view: mindtap_lp_activity_tags {
 
   dimension: section_number {
     label: "06 - Section Number"
-    group_label: "Activity Tags (pilot)"
+    group_label: "Activity Tags"
     description: "Unit or Section section, if applicable.  Not available for most product families - part of pilot analytics project."
     type: string
     sql: ${TABLE}.SECTION_NUMBER ;;
@@ -187,7 +187,7 @@ view: mindtap_lp_activity_tags {
 
   dimension: edition_type {
     label: "Edition Type"
-    group_label: "Activity Tags (pilot)"
+    group_label: "Activity Tags"
     description: "Used to identify CUSTOM or ENHANCED editions as compared to the STANDARD edition"
     type: string
     sql: ${TABLE}.EDITION_TYPE ;;
@@ -195,41 +195,42 @@ view: mindtap_lp_activity_tags {
 
 
   dimension: activity_by_group {
-#     label: "# Activities (unique from external tagging)"
+     label: "# Unique Activities By Type (dimension)"
 #     type: count_distinct
 #     sql: ${learning_path_activity_title} ;;
 }
 
 dimension: activity_by_chapter {
-label: "Activities in a chapter"
+label: "# Unique Activities By chapter (dimension)"
+description: "Provides the number of activities in a given chapter as a dimension that can be used to categorize, cut or filter data"
 }
 
 measure: activity_by_group_measure {
-  label: " # Unique Activities By Type"
-  description: "converted activity by group dimension"
+  label: " # Unique Activities By Type (measure)"
+  description: "Number of activities in a given Activity Type as a measure that can be summed/aggregated"
   type: number
   sql: ${activity_by_group} ;;
   }
 
 dimension: activity_group {
   label: "Activity Group"
-  group_label: "Activity Tags (pilot)"
-  description:  "WIP dimension...looking for ways to aggregate videos/media, assessment items, etc."
+  group_label: "Activity Tags"
+  description:  "WIP dimension...looking for ways to aggregate videos/media, assessment items, or elements across titles etc.  Comes from the LP Tagging Google Sheet"
   type: string
   sql: ${TABLE}.ACTIVITY_GROUP ;;
 }
 
-dimension: activity_topic {
-  label: "Activity Topic"
-  group_label: "Activity Tags (pilot)"
-  description: "WIP dimension...looking to align topics/themes across products/titles (e.g. 'Anxiety' which may be the topic of chapter 1 in book X and chapter 3 in book Y)"
-  type: string
-  sql:  ${TABLE}.ACTIVITY_TOPIC ;;
-}
+# dimension: activity_topic {
+#   label: "Activity Topic"
+#   group_label: "Activity Tags"
+#   description: "WIP dimension...looking to align topics/themes across products/titles (e.g. 'Anxiety' which may be the topic of chapter 1 in book X and chapter 3 in book Y)"
+#   type: string
+#   sql:  ${TABLE}.ACTIVITY_TOPIC ;;
+# }
 
 # dimension: concat_activity_sub_type {
 #     label: "10 - Activity + Sub-Type"
-#     group_label: "Activity Tags (pilot)"
+#     group_label: "Activity Tags"
 #     description: "Not available for most product families - part of pilot analytics project"
 #     type: string
 #     sql:CONCAT(${activity_type}, Coalesce(CONCAT(': ',NULLIF(${activity_sub_type},'')),'')) ;;
@@ -237,6 +238,9 @@ dimension: activity_topic {
 
 dimension: activity_usage_facts_grouping {
 #   hidden: yes
+  group_label: "Activity Tags"
+  label: "Activity Type + Subtype"
+  description: "Concatenation of Activity Type and Activity Subtype used in most default templates."
   sql: ${TABLE}.activity_usage_facts_grouping ;;
   link: {
     label: "Usage of Specific Activities Titles"
@@ -277,6 +281,7 @@ measure: count {
 
   measure:  total_activity_activations{
     label: "Activity Availability"
+    description: "# of courses where a given activity can be accessed."
     type: number
     # Simply count rows where there are activations
     # - this works because an explore should be joined to course_seection_facts for every row

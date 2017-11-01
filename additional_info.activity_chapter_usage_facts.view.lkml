@@ -1,4 +1,5 @@
 view: activity_chapter_usage_facts {
+  label: "Learning Path"
 
     derived_table: {
 

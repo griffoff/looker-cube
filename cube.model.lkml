@@ -353,14 +353,14 @@ explore: fact_siteusage {
   }
 
   join: activity_usage_facts {
-    view_label: "Activity Facts"
+#     view_label: "Activity Facts"
     sql_on: (${activity_usage_facts.courseid},${activity_usage_facts.activity_usage_facts_grouping},${activity_usage_facts.partyid})
       = (${fact_siteusage.courseid},${mindtap_lp_activity_tags.activity_usage_facts_grouping},${fact_siteusage.partyid}) ;;
     relationship: many_to_many
 
 }
   join: activity_chapter_usage_facts {
-    view_label: "Activity Chapter Usage Facts"
+#     view_label: "Activity Chapter Usage Facts"
     sql_on: (${activity_chapter_usage_facts.courseid},${activity_chapter_usage_facts.chapter},${activity_chapter_usage_facts.partyid})
       = (${fact_siteusage.courseid},${mindtap_lp_activity_tags.chapter},${fact_siteusage.partyid}) ;;
     relationship: many_to_many
@@ -571,14 +571,14 @@ explore: LP_Analysis_PSR_Limited_View {
     }
 
     join: activity_usage_facts {
-      view_label: "Activity Facts"
+#       view_label: "Activity Facts"
       sql_on: (${activity_usage_facts.courseid},${activity_usage_facts.activity_usage_facts_grouping},${activity_usage_facts.partyid})
         = (${LP_Analysis_Siteusage.courseid},${mindtap_lp_activity_tags.activity_usage_facts_grouping},${LP_Analysis_Siteusage.partyid}) ;;
       relationship: many_to_many
       fields: [activity_usage_facts.curated_fields*]
     }
     join: activity_chapter_usage_facts {
-      view_label: "Activity Chapter Usage Facts"
+#       view_label: "Activity Chapter Usage Facts"
       sql_on: (${activity_chapter_usage_facts.courseid},${activity_chapter_usage_facts.chapter},${activity_chapter_usage_facts.partyid})
         = (${LP_Analysis_Siteusage.courseid},${mindtap_lp_activity_tags.chapter},${LP_Analysis_Siteusage.partyid}) ;;
       relationship: many_to_many

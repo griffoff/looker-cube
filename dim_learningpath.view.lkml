@@ -391,7 +391,8 @@ view: dim_learningpath {
   }
 
   dimension: learningtype {
-    label: "Learning path activity/plank type"
+    label: "Learning path plank type"
+    description: "Descriptions the type of Learning Path planks.  Options are (1) Activity, (2) Learning Path, (3) Group, (4) Unit or (5) Unknown.  For usage data, filter for 'Activity'"
     type: string
     sql: ${TABLE}.LEARNINGTYPE ;;
    # hidden: yes

@@ -1,5 +1,5 @@
 view: fact_activityoutcome {
-  label: "Learning Path - Activity Takes"
+  label: "Learning Path - Usage Data"
   sql_table_name: DW_GA.FACT_ACTIVITYOUTCOME ;;
 
   dimension: rowid {
@@ -35,7 +35,8 @@ view: fact_activityoutcome {
   }
 
   dimension: completed {
-    label: "Take Completed"
+    label: "Take Status"
+    description: "Indicates whether a given take is (1) In Progress, (2) Completed or (3) Not Attempted"
     type: string
     sql:  CASE
               WHEN ${TABLE}.COMPLETED = 'true' THEN 'Completed'
