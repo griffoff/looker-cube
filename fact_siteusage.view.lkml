@@ -247,12 +247,14 @@ view: fact_siteusage {
     label: "Views (avg)"
     type: average
     sql: ${pageviewcount} ;;
+    hidden: yes
   }
 
   measure: pageviewcount_sum {
     label: "Views (total)"
     type: sum
     sql: ${pageviewcount} ;;
+    hidden: yes
   }
 
   dimension: pageviewtime {

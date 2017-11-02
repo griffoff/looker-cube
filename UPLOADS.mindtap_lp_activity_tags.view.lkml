@@ -43,25 +43,26 @@ view: mindtap_lp_activity_tags {
                           where rows_updated_or_inserted > 0
                           AND UPPER(status) = 'OK';  ;;
   }
+  set: curated_fields {fields:[activity_topic,activity_sub_type,activity_type,chapter,chapter_topic,section_name,section_number,edition_type,activity_by_group,activity_by_chapter,activity_usage_facts_grouping,learning_path_activity_title_count,total_activity_activations]}
 
-  parameter: group_picker {
-    label: "Analyse by"
-    type: unquoted
-    allowed_value: {
-      label: "Activity Type"
-      value: "activity_type"
-    }
-    allowed_value: {
-      label: "Chapter"
-      value: "chapter"
-    }
-  }
-
-  dimension: dynamic_group {
-    label: "Activity dynamic group"
-    type: string
-    sql: ${TABLE}.{% parameter group_picker %} ;;
-  }
+#   parameter: group_picker {
+#     label: "Analyse by"
+#     type: unquoted
+#     allowed_value: {
+#       label: "Activity Type"
+#       value: "activity_type"
+#     }
+#     allowed_value: {
+#       label: "Chapter"
+#       value: "chapter"
+#     }
+#   }
+#
+#   dimension: dynamic_group {
+#     label: "Activity dynamic group"
+#     type: string
+#     sql: ${TABLE}.{% parameter group_picker %} ;;
+#   }
 
 # samples below
 # TheBody’sUseofGlucose
@@ -205,12 +206,12 @@ label: "# Unique Activities By chapter (dimension)"
 description: "Provides the number of activities in a given chapter as a dimension that can be used to categorize, cut or filter data"
 }
 
-measure: activity_by_group_measure {
-  label: " # Unique Activities By Type (measure)"
-  description: "Number of activities in a given Activity Type as a measure that can be summed/aggregated"
-  type: number
-  sql: ${activity_by_group} ;;
-  }
+# measure: activity_by_group_measure {
+#   label: " # Unique Activities By Type (measure)"
+#   description: "Number of activities in a given Activity Type as a measure that can be summed/aggregated"
+#   type: number
+#   sql: ${activity_by_group} ;;
+#   }
 
 dimension: activity_group {
   label: "Activity Group"

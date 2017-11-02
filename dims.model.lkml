@@ -145,7 +145,7 @@ explore: dim_learningpath {
   extension: required
 
   join: dim_master_first_used_date {
-    view_label: "Date - Learning Path - Master First Use"
+#     view_label: "Date - Learning Path - Master First Use"
     from:  dim_date
     sql_on: ${dim_learningpath.master_first_used_datekey} = ${dim_master_first_used_date.datekey} ;;
     relationship: many_to_one

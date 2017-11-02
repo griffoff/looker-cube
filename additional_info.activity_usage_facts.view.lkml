@@ -22,7 +22,7 @@ view: activity_usage_facts {
     datagroup_trigger: fact_siteusage_datagroup
   }
 
-  set: curated_fields {fields:[activity_type_usage_bucket,activity_type,activity_by_group]}
+  set: curated_fields {fields:[activity_type_usage_bucket]}
 
   dimension: activity_usage_facts_grouping {
     hidden: yes
@@ -34,7 +34,8 @@ view: activity_usage_facts {
   dimension: partyid {}
 
   dimension: activity_type_usage_bucket{
-    label: "Student Usage Bucket"
+    label: "Student Usage Bucket - By Activity Type"
+    description: "Percent of activities accessed by a student in an Activity Type "
     type: string
     case: {
       when: {

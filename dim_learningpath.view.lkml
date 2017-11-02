@@ -10,6 +10,7 @@ view: lp_node_map {
       sql_trigger_value: select count(*) from dw_ga.fact_activity ;;
   }
   set: curated_fields {fields:[nodeid,snapshotid]}
+  set: curated_fields_PM {fields:[]}
 
   dimension: learningpathid {
     type:  number

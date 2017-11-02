@@ -497,13 +497,6 @@ explore: LP_Analysis_PSR_Limited_View {
     description: "TEST Explore Start point for learning path usage from the student persepctive including application usage information collected via google analytics."
     extends: [dim_user, dim_course, dim_pagedomain, dim_learningpath]
 
-    join: dim_date {
-      view_label: "Date - Date of activity"
-      sql_on: ${LP_Analysis_Siteusage.eventdatekey} = ${dim_date.datekey} ;;
-      relationship: many_to_one
-      fields: [dim_date.curated_fields*]
-    }
-
     join: user_final_scores {
       sql_on: (${LP_Analysis_Siteusage.courseid}, ${LP_Analysis_Siteusage.partyid}) = (${user_final_scores.courseid}, ${user_final_scores.partyid}) ;;
       relationship: many_to_one
@@ -531,7 +524,7 @@ explore: LP_Analysis_PSR_Limited_View {
     join: dim_activity {
       sql_on: ${LP_Analysis_Siteusage.activityid} = ${dim_activity.activityid} ;;
       relationship: many_to_one
-      fields: [dim_activity.curated_fields*]
+      fields: [dim_activity.curated_fields_PM*]
     }
 
     join: dim_learningpath {
@@ -584,6 +577,15 @@ explore: LP_Analysis_PSR_Limited_View {
       relationship: many_to_many
       fields: [activity_chapter_usage_facts.curated_fields*]
     }
+    join: course_section_facts {
+      fields: [course_section_facts.curated_fields*]
+    }
+    join: fact_siteusage {
+      fields: [fact_siteusage.curated_fields*]
+    }
+    join: dim_activity_view_uri {
+      fields: [dim_activity_view_uri.curated_field*]
+    }
   }
 
 explore: LP_Activity_Analysis {
@@ -594,11 +596,6 @@ explore: LP_Activity_Analysis {
 
   join: dim_eventtype {
     sql_on: ${LP_Activity_Analysis.eventtypeid} = ${dim_eventtype.eventtypeid} ;;
-    relationship: many_to_one
-  }
-
-  join: dim_created_date {
-    sql_on: ${LP_Activity_Analysis.createddatekey} = ${dim_created_date.datekey} ;;
     relationship: many_to_one
   }
 
@@ -625,7 +622,7 @@ explore: LP_Activity_Analysis {
   join: dim_activity {
     sql_on: ${LP_Activity_Analysis.activityid} = ${dim_activity.activityid} ;;
     relationship: many_to_one
-    fields: [dim_activity.curated_fields*]
+    fields: [dim_activity.curated_fields_PM*]
   }
 
   join: dim_course {
@@ -642,8 +639,10 @@ explore: LP_Activity_Analysis {
   }
 
   join:  fact_siteusage {
+    view_label: "Learning Path"
     sql_on: (${LP_Activity_Analysis.courseid}, ${LP_Activity_Analysis.learningpathid}) = (${fact_siteusage.courseid}, ${fact_siteusage.learningpathid}) ;;
     relationship: many_to_many
+    fields: [fact_siteusage.curated_fields*]
   }
 
   join: dim_relative_to_start_date {
@@ -651,14 +650,22 @@ explore: LP_Activity_Analysis {
     relationship: many_to_one
   }
 
-  join: dim_time {
-    sql_on: ${LP_Activity_Analysis.timekey} = ${dim_time.timekey} ;;
-    relationship: many_to_one
-  }
-
   join: dim_filter {
     sql_on: ${LP_Activity_Analysis.filterflag} = ${dim_filter.filterflag} ;;
     relationship: many_to_one
   }
+  join: course_section_facts {
+    fields: [course_section_facts.curated_fields*]
+  }
+  join: mindtap_lp_activity_tags {
+    fields: [mindtap_lp_activity_tags.curated_fields*]
+  }
+  join: dim_activity_view_uri {
+    fields: [dim_activity_view_uri.curated_field*]
+  }
+  join: lp_node_map {
+    fields: [lp_node_map.curated_fields_PM*]
+  }
+
 
 }

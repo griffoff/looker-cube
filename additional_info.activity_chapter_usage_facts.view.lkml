@@ -12,7 +12,7 @@ view: activity_chapter_usage_facts {
       }
       datagroup_trigger: fact_siteusage_datagroup
     }
-  set: curated_fields {fields:[activity_type_usage_bucket,chapter]}
+  set: curated_fields {fields:[activity_type_usage_bucket]}
 
     dimension: chapter {
       order_by_field: chapter_order
@@ -28,7 +28,8 @@ view: activity_chapter_usage_facts {
 
 
     dimension: activity_type_usage_bucket{
-      label: "Student Usage Bucket"
+      label: "Student Usage Bucket - By Chapter"
+      description: "Percent of activities accessed by a student in a particular chapter"
       type: string
       case: {
         when: {

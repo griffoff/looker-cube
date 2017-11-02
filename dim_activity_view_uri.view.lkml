@@ -106,7 +106,7 @@ view: dim_activity_view_uri {
     from urls;;
     sql_trigger_value: select count(*) from stg_mindtap.activity ;;
   }
-
+set: curated_field {fields:[path]}
   dimension: id {
     primary_key: yes
     hidden: yes
@@ -138,6 +138,7 @@ view: dim_activity_view_uri {
   dimension: path {
     group_label: "YouTube"
     label: "Link (YouTube)"
+    description: "Youtube Link added by the Instructor"
     type: string
     html: <a title="{{details_wrapped._value}}" target="_blank" href="{{value}}">{{value}}</a> ;;
   }

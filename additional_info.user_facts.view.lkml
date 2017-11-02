@@ -89,24 +89,28 @@ view: user_facts {
     label: "# Gradable activities completed"
     type: number
     sql: ${TABLE}.GRADABLE_ACTIVITIES_COMPLETED ;;
+    hidden: yes
   }
 
   dimension: nongradable_activities_completed {
     label: "# Non gradable activities completed"
     type: number
     sql: ${TABLE}.NONGRADABLE_ACTIVITIES_COMPLETED ;;
+    hidden: yes
   }
 
   dimension: activities_completed {
     label: "# Activities completed"
     type: number
     sql: ${TABLE}.ACTIVITIES_COMPLETED ;;
+    hidden: yes
   }
 
   dimension: avg_attempts {
     label: "Avg # Attempts"
     type: string
     sql: ${TABLE}.AVG_ATTEMPTS ;;
+    hidden: yes
   }
 
   dimension: avg_gradable_attempts {
@@ -137,7 +141,7 @@ view: user_facts {
 
   measure: non_gradable_activities_completed_by_user {
     label: "# Non-gradable Activities Completed"
-    description: "Total number of gradeable activities completed"
+    description: "Total number of Non gradeable activities completed"
     type: sum
     sql: ${nongradable_activities_completed}  ;;
   }
