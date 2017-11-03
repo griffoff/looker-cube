@@ -491,74 +491,74 @@ explore: LP_Analysis_PSR_Limited_View {
   }
 
 }
-  explore: LP_Analysis_Siteusage {
+  explore: LP_Siteusage_Analysis {
     label: "Learning Path Analysis - MT Usage Data"
     from: fact_siteusage
     description: "TEST Explore Start point for learning path usage from the student persepctive including application usage information collected via google analytics."
     extends: [dim_user, dim_course, dim_pagedomain, dim_learningpath]
 
     join: user_final_scores {
-      sql_on: (${LP_Analysis_Siteusage.courseid}, ${LP_Analysis_Siteusage.partyid}) = (${user_final_scores.courseid}, ${user_final_scores.partyid}) ;;
+      sql_on: (${LP_Siteusage_Analysis.courseid}, ${LP_Siteusage_Analysis.partyid}) = (${user_final_scores.courseid}, ${user_final_scores.partyid}) ;;
       relationship: many_to_one
     }
 
     join: dim_course {
-      sql_on: ${LP_Analysis_Siteusage.courseid} = ${dim_course.courseid} ;;
+      sql_on: ${LP_Siteusage_Analysis.courseid} = ${dim_course.courseid} ;;
       relationship: many_to_one
       type: full_outer
       fields: [dim_course.curated_fields*]
     }
 
     join: dim_product {
-      sql_on: ${LP_Analysis_Siteusage.productid} = ${dim_product.productid} ;;
+      sql_on: ${LP_Siteusage_Analysis.productid} = ${dim_product.productid} ;;
       relationship: many_to_one
       fields: [dim_product.curated_fields*]
     }
 
     join: dim_location {
-      sql_on: ${LP_Analysis_Siteusage.locationid} = ${dim_location.locationid} ;;
+      sql_on: ${LP_Siteusage_Analysis.locationid} = ${dim_location.locationid} ;;
       relationship: many_to_one
       fields: [dim_location.curated_fields*]
     }
 
     join: dim_activity {
-      sql_on: ${LP_Analysis_Siteusage.activityid} = ${dim_activity.activityid} ;;
+      sql_on: ${LP_Siteusage_Analysis.activityid} = ${dim_activity.activityid} ;;
       relationship: many_to_one
       fields: [dim_activity.curated_fields_PM*]
     }
 
     join: dim_learningpath {
-      sql_on: ${LP_Analysis_Siteusage.learningpathid} = ${dim_learningpath.learningpathid} ;;
+      sql_on: ${LP_Siteusage_Analysis.learningpathid} = ${dim_learningpath.learningpathid} ;;
       relationship: many_to_one
       fields: [dim_learningpath.curated_fields*]
     }
 
     join: dim_party {
-      sql_on: ${LP_Analysis_Siteusage.partyid} = ${dim_party.partyid} ;;
+      sql_on: ${LP_Siteusage_Analysis.partyid} = ${dim_party.partyid} ;;
       relationship: many_to_one
       fields: [dim_party.curated_fields*]
     }
 
     join: dim_user {
-      sql_on: ${LP_Analysis_Siteusage.userid} = ${dim_user.userid} ;;
+      sql_on: ${LP_Siteusage_Analysis.userid} = ${dim_user.userid} ;;
       relationship: many_to_one
       fields: [dim_user.curated_fields*]
     }
 
    join: dim_pagedomain {
-      sql_on: ${LP_Analysis_Siteusage.pagedomainid} = ${dim_pagedomain.pagedomainid} ;;
+      sql_on: ${LP_Siteusage_Analysis.pagedomainid} = ${dim_pagedomain.pagedomainid} ;;
       relationship: many_to_one
     }
 
     join: dim_relative_to_start_date {
-      sql_on: ${LP_Analysis_Siteusage.daysfromcoursestart} = ${dim_relative_to_start_date.days} ;;
+      sql_on: ${LP_Siteusage_Analysis.daysfromcoursestart} = ${dim_relative_to_start_date.days} ;;
       relationship: many_to_one
     }
 
     join: fact_activityoutcome {
-      sql_on: ${LP_Analysis_Siteusage.learningpathid} = ${fact_activityoutcome.learningpathid}
-          and ${LP_Analysis_Siteusage.userid} = ${fact_activityoutcome.userid}
-          and ${LP_Analysis_Siteusage.eventdatekey} = ${fact_activityoutcome.startdatekey}
+      sql_on: ${LP_Siteusage_Analysis.learningpathid} = ${fact_activityoutcome.learningpathid}
+          and ${LP_Siteusage_Analysis.userid} = ${fact_activityoutcome.userid}
+          and ${LP_Siteusage_Analysis.eventdatekey} = ${fact_activityoutcome.startdatekey}
           ;;
       relationship: many_to_many
     }
@@ -566,23 +566,23 @@ explore: LP_Analysis_PSR_Limited_View {
     join: activity_usage_facts {
 #       view_label: "Activity Facts"
       sql_on: (${activity_usage_facts.courseid},${activity_usage_facts.activity_usage_facts_grouping},${activity_usage_facts.partyid})
-        = (${LP_Analysis_Siteusage.courseid},${mindtap_lp_activity_tags.activity_usage_facts_grouping},${LP_Analysis_Siteusage.partyid}) ;;
+        = (${LP_Siteusage_Analysis.courseid},${mindtap_lp_activity_tags.activity_usage_facts_grouping},${LP_Siteusage_Analysis.partyid}) ;;
       relationship: many_to_many
       fields: [activity_usage_facts.curated_fields*]
     }
     join: activity_chapter_usage_facts {
 #       view_label: "Activity Chapter Usage Facts"
       sql_on: (${activity_chapter_usage_facts.courseid},${activity_chapter_usage_facts.chapter},${activity_chapter_usage_facts.partyid})
-        = (${LP_Analysis_Siteusage.courseid},${mindtap_lp_activity_tags.chapter},${LP_Analysis_Siteusage.partyid}) ;;
+        = (${LP_Siteusage_Analysis.courseid},${mindtap_lp_activity_tags.chapter},${LP_Siteusage_Analysis.partyid}) ;;
       relationship: many_to_many
       fields: [activity_chapter_usage_facts.curated_fields*]
     }
     join: course_section_facts {
       fields: [course_section_facts.curated_fields*]
     }
-    join: fact_siteusage {
-      fields: [fact_siteusage.curated_fields*]
-    }
+#     join: fact_siteusage {
+#       fields: [fact_siteusage.curated_fields*]
+#     }
     join: dim_activity_view_uri {
       fields: [dim_activity_view_uri.curated_field*]
     }
