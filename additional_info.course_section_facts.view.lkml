@@ -79,7 +79,7 @@ view: course_section_facts {
   }
 
   set: curated_fields {
-    fields:[total_noofactivations,total_users,course_count]
+    fields:[total_noofactivations,institution_count,total_users,course_count]
   }
 
   dimension: courseid {
