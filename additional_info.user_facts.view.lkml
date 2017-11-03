@@ -148,7 +148,7 @@ view: user_facts {
 
   measure: logins_from_session_number {
     label: "Total Logins"
-    description: "Calculated off session number from fact_session"
+    description: "Total logins into the product made by the user (calculated off session number from fact_session)"
     type: sum
     sql:  ${logins_by_user} ;;
     html:
