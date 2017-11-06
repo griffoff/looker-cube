@@ -198,6 +198,7 @@ explore:  fact_appusage_by_user {
     sql_on: ${fact_appusage_by_user.courseid} = ${dim_course.courseid} ;;
     relationship: one_to_one
     type: full_outer
+    fields: [dim_course.curated_fields*]
   }
 
   join: dim_iframeapplication {
@@ -215,6 +216,7 @@ explore:  fact_appusage_by_user {
   join: dim_user {
     sql_on: ${fact_appusage_by_user.userid} = ${dim_user.userid} ;;
     relationship: many_to_one
+    fields: [dim_user.curated_fields*]
   }
 
   join: fact_appusage {
@@ -225,6 +227,7 @@ explore:  fact_appusage_by_user {
   join: dim_learningpath {
     sql_on: ${fact_appusage.learningpathid} = ${dim_learningpath.learningpathid} ;;
     relationship: many_to_one
+    fields: [dim_learningpath.curated_fields*]
   }
 
   join: dim_location {
@@ -243,14 +246,12 @@ explore:  fact_appusage_by_user {
     relationship: many_to_one
   }
 
-  join: dim_time {
-    sql_on: ${fact_appusage.timekey} = ${dim_time.timekey} ;;
-    relationship: many_to_one
-  }
-
   join: dim_relative_to_start_date {
     sql_on: datediff(day, to_date(nullif(${dim_course.startdatekey}, -1)::string, 'YYYYMMDD'), to_date(nullif(${fact_appusage.eventdatekey}, -1)::string, 'YYYYMMDD')) = ${dim_relative_to_start_date.days} ;;
     relationship: many_to_one
+  }
+  join: user_facts {
+    fields: [user_facts.curated_fields*]
   }
 }
 
