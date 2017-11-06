@@ -661,8 +661,8 @@ view: dim_learningpath {
   measure: lowest_level_count {
     label: "# Activities"
     description: "Count of all learning path items marked as an Activity"
-    type: count
-    sql: ${TABLE}.lowest_level;;
+    type: number
+    sql: count(${lowest_level});;
     hidden: no
   }
 
