@@ -106,7 +106,7 @@ view: dim_activity_view_uri {
     from urls;;
     sql_trigger_value: select count(*) from stg_mindtap.activity ;;
   }
-set: curated_field {fields:[path]}
+set: curated_field {fields:[path,contentsource,content_source_category]}
   dimension: id {
     primary_key: yes
     hidden: yes
