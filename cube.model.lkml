@@ -580,11 +580,14 @@ explore: LP_Analysis_PSR_Limited_View {
     join: course_section_facts {
       fields: [course_section_facts.curated_fields*]
     }
-#     join: fact_siteusage {
-#       fields: [fact_siteusage.curated_fields*]
-#     }
+    join: user_facts {
+      fields: [user_facts.curated_fields*]
+    }
     join: dim_activity_view_uri {
       fields: [dim_activity_view_uri.curated_field*]
+    }
+    join: mindtap_lp_activity_tags {
+      fields: [mindtap_lp_activity_tags.curated_fields*]
     }
   }
 

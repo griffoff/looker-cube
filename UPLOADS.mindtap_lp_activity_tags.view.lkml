@@ -263,6 +263,7 @@ dimension: activity_usage_facts_grouping {
 
 measure: learning_path_activity_title_count {
   label: "# Activities (unique from external tagging)"
+  description: "Number of activities rolled up to an activity type through external tagging exercise"
   type: count_distinct
   sql: ${learning_path_activity_title} ;;
 }

@@ -62,6 +62,7 @@ view: fact_siteusage {
 
   measure: clickcount_avg {
     label: "Clicks (avg)"
+    description: "Average number of clicks in the product"
     type: average
     sql: ${TABLE}.CLICKCOUNT ;;
     html:
@@ -76,6 +77,7 @@ view: fact_siteusage {
     label: "Clicks (max)"
     type: number
     sql: max(${clickcount} ) over ();;
+    hidden: yes
   }
 
   measure: clickcount_avg_max {
@@ -108,6 +110,7 @@ view: fact_siteusage {
 
   measure: clickcount {
     label: "Clicks (total)"
+    description: "Total number of clicks in the product"
     type: sum
     sql: ${TABLE}.CLICKCOUNT ;;
     html:
@@ -432,6 +435,7 @@ view: fact_siteusage {
     type: number
     sql: CORR(${user_final_scores.final_score}, ${pageviewtime}) ;;
     value_format_name: decimal_3
+    hidden: yes
   }
 
   measure: time_on_task_to_final_score_correlation_rank_by_product_family {
@@ -441,6 +445,7 @@ view: fact_siteusage {
     value_format_name: decimal_0
     required_fields: [dim_product.discipline, dim_product.productfamily_edition]
     can_filter: no
+    hidden: yes
   }
 }
 #- measure: count

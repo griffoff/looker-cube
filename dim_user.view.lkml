@@ -90,6 +90,7 @@ view: dim_user {
 
   dimension: user_role {
     label: "User Role"
+    description: "distinguishes between Instructors, Students, TA's and Others"
     type: string
     sql:
         CASE

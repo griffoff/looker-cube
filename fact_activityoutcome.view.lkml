@@ -381,12 +381,14 @@ view: fact_activityoutcome {
     type: count_distinct
     sql: case when ${score} >= 0 then (${TABLE}.USERID) end ;;
     label: "# of users completed"
+    description: "Count of users who completed an activity"
   }
 
   measure: usercount_withscore {
     type: count_distinct
     sql: case when ${score} > 0 then (${TABLE}.USERID) end ;;
     label: "# of users completed with greater than 0 score"
+    description: "Count of users who had scores greater than 0"
   }
 
   measure: score_to_final_score_correlation {
@@ -394,6 +396,7 @@ view: fact_activityoutcome {
     type: number
     sql: CORR(${user_final_scores.final_score}, ${score}) ;;
     value_format_name: decimal_3
+    hidden: yes
   }
 
 
