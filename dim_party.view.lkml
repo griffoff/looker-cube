@@ -131,7 +131,7 @@ view: dim_party {
 
   dimension: mainpartyemail {
     group_label: "PII"
-    label: "e-mail address"
+    label: "E-mail Address"
     type: string
     sql:
     CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' THEN
@@ -149,7 +149,7 @@ view: dim_party {
 
 
   dimension: partyid {
-    label: "Party Id"
+    label: "Party ID"
     description: "Internal non PII person identifier"
     type: string
     sql: ${TABLE}.PARTYID ;;

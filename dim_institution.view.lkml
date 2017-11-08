@@ -44,7 +44,7 @@ view: dim_institution {
 
   dimension: postalcode {
     group_label: "Location"
-    label: "Postal/Zip code"
+    label: "Postal/Zip Code"
     type: zipcode
     sql: ${TABLE}.POSTALCODE ;;
   }
@@ -111,7 +111,7 @@ view: dim_institution {
   }
 
   dimension: institutionname {
-    label: "Institution name"
+    label: "Institution Name"
     type: string
     sql: ${TABLE}.INSTITUTIONNAME ;;
   }

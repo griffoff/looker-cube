@@ -376,7 +376,7 @@ view: dim_product {
 
 
   measure: count {
-    label: "No. of Products"
+    label: "# Products"
     description: "Count of the number of products included in a given view.
     This measure is only relevant at a high-level (e.g. for an institution).  At a low (e.g. course key) level, this measure has limited value."
     type: count

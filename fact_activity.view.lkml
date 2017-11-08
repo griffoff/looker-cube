@@ -157,7 +157,7 @@ view: fact_activity {
   }
 
   measure: count {
-    label: "No. of Actions"
+    label: "# Actions"
     type: count
     drill_fields: [dim_product.discipline, dim_institution.institutionname, dim_activity.assignment_status, dim_learningpath.lowest_level, count]
   }

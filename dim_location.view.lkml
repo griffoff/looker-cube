@@ -82,7 +82,7 @@ view: dim_location {
   }
 
   measure: count {
-    label: "# of locations"
+    label: "# Locations"
     type: count
     drill_fields: [location.country, location.city, location.region]
   }

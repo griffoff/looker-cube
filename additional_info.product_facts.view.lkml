@@ -58,7 +58,7 @@ view: product_facts {
   measure: activations_for_isbn {
     label: "Product Activations"
     description: "
-    Total paid activations for Product Family + Edition combination for a given Fiscal Year and whether it is LMS integrated
+    Total paid activations for Product Family + Edition combination for a given Fiscal Year and whether it is LMS integrated.
 
     Measure represents all activations for all courses of 'this product'.
     'This product' means all courses that share the same combination of (1) Product Family, (2) Edition, (3) Fiscal Year and (4) LMS status.
@@ -85,7 +85,7 @@ view: product_facts {
   measure: product_users {
     label: "Product Users"
     description: "
-    Total Users with at least 1 login for Product Family + Edition combination for a given Fiscal Year and whether it is LMS integrated
+    Total Users with at least 1 login for Product Family + Edition combination for a given Fiscal Year and whether it is LMS integrated.
 
     Measure represents all users for all courses of 'this product'.
     'This product' means all courses that share the same combination of (1) Product Family, (2) Edition, (3) Fiscal Year and (4) LMS status.

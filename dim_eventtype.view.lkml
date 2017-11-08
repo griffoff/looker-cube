@@ -46,7 +46,7 @@ view: dim_eventtype {
   }
 
   measure: removed_percent {
-    label: "% Activities Removed"
+    label: "% of Activities Removed"
     type: number
     sql: ${removed_count} / ${dim_activity.count} ;;
     value_format_name: percent_2

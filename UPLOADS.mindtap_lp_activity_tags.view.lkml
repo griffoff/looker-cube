@@ -202,7 +202,7 @@ view: mindtap_lp_activity_tags {
 }
 
 dimension: activity_by_chapter {
-label: "# Unique Activities By chapter (dimension)"
+label: "# Unique Activities By Chapter (dimension)"
 description: "Provides the number of activities in a given chapter as a dimension that can be used to categorize, cut or filter data"
 }
 
