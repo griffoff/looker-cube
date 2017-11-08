@@ -20,6 +20,7 @@ view: lp_node_map {
   }
 
   dimension: nodeid {
+    label: "Node ID"
     group_label: "Source Links"
     type:  number
     sql: ${TABLE}.node_id ;;
@@ -30,6 +31,7 @@ view: lp_node_map {
   }
 
   dimension: snapshotid {
+    label: "Snapshot ID"
     group_label: "Source Links"
     type:  number
     sql: ${TABLE}.snapshot_id ;;
@@ -392,7 +394,7 @@ view: dim_learningpath {
   }
 
   dimension: learningtype {
-    label: "Learning path plank type"
+    label: "Learning Path Plank Type"
     description: "Describes the type of Learning Path planks.  Options are (1) Activity, (2) Learning Path, (3) Group, (4) Unit or (5) Unknown.  For usage data, filter for 'Activity'"
     type: string
     sql: ${TABLE}.LEARNINGTYPE ;;
