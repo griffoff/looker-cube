@@ -181,7 +181,7 @@ view: mindtap_lp_activity_tags {
   dimension: section_number {
     label: "06 - Section Number"
     group_label: "Activity Tags"
-    description: "Unit or Section section, if applicable.  Not available for most product families - part of pilot analytics project."
+    description: "Unit or Section Number, if applicable.  Not available for most product families - part of pilot analytics project."
     type: string
     sql: ${TABLE}.SECTION_NUMBER ;;
   }
