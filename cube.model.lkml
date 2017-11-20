@@ -495,13 +495,11 @@ explore: LP_Analysis_PSR_Limited_View {
   explore: LP_Siteusage_Analysis {
     label: "Learning Path Analysis - MT Usage Data"
     from: fact_siteusage
-    description: "TEST Explore Start point for learning path usage from the student persepctive including application usage information collected via google analytics."
+#     fields: [LP_Siteusage_Analysis.curated_fields*,dim_course.curated_fields*,dim_product.curated_fields*,dim_location.curated_fields*,dim_activity.curated_fields_PM*
+#       ,dim_learningpath.curated_fields*,dim_party.curated_fields*,dim_user.curated_fields*,activity_usage_facts.curated_fields*,activity_chapter_usage_facts.curated_fields*,
+#       course_section_facts.curated_fields*,user_facts.curated_fields*,dim_activity_view_uri.curated_field*,mindtap_lp_activity_tags.curated_fields*]
+    description: "Explore Start point for learning path usage from the student persepctive including application usage information collected via google analytics."
     extends: [dim_user, dim_course, dim_pagedomain, dim_learningpath]
-
-    join: user_final_scores {
-      sql_on: (${LP_Siteusage_Analysis.courseid}, ${LP_Siteusage_Analysis.partyid}) = (${user_final_scores.courseid}, ${user_final_scores.partyid}) ;;
-      relationship: many_to_one
-    }
 
     join: dim_course {
       sql_on: ${LP_Siteusage_Analysis.courseid} = ${dim_course.courseid} ;;
@@ -509,13 +507,13 @@ explore: LP_Analysis_PSR_Limited_View {
       type: full_outer
       fields: [dim_course.curated_fields*]
     }
-
-    join: dim_product {
-      sql_on: ${LP_Siteusage_Analysis.productid} = ${dim_product.productid} ;;
-      relationship: many_to_one
-      fields: [dim_product.curated_fields*]
-    }
-
+#
+#     join: dim_product {
+#       sql_on: ${LP_Siteusage_Analysis.productid} = ${dim_product.productid} ;;
+#       relationship: many_to_one
+#       fields: [dim_product.curated_fields*]
+#     }
+#
     join: dim_location {
       sql_on: ${LP_Siteusage_Analysis.locationid} = ${dim_location.locationid} ;;
       relationship: many_to_one
