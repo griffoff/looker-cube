@@ -39,7 +39,8 @@ view: dim_institution {
   dimension: country {
     group_label: "Location"
     type: string
-    sql: ${TABLE}.COUNTRY ;;
+#     sql: ${TABLE}.COUNTRY ;;
+    sql: CASE WHEN LOWER(${TABLE}.COUNTRY) IN ('us','united states') THEN 'UNITED STATES' ELSE UPPER(${TABLE}.COUNTRY) END ;;
   }
 
   dimension: postalcode {
