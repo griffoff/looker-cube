@@ -27,3 +27,8 @@ explore: liberty_daily_feed {
   label: "Liberty Data feed"
   description: "Data points for the daily feed to Liberty"
 }
+
+explore: adaptivetestprep_appusage {
+  label: "ATP App Usage"
+  description: "Adaptive Test Prep App usage data"
+}
