@@ -262,8 +262,10 @@ view: dim_product {
   }
 
   dimension: iac_isbn {
-    description: "IAC ISBN is the core ISBN for a given product/title.  If you need ISBN for usage data, ideally use this value.
-      However, the raw data source has IAC ISBN data gaps for a small percentage of products; if this impacts your analysis, utilize ISBN13."
+    description: "This is the digital product. This ISBN is purchased with a transaction, the ISBN linked to an Access Code, and the ISBN Courses are built on.
+    These have search metadata added in business systems, and are indexed by the various catalogs.
+    The IAC ISBN will be a sub-product to a Core/Title ISBN. There can be multiple IAC ISBNs associated with a single Core,
+    but an IAC ISBN itself can have only ONE Core ISBN. IAC ISBN may have one or multiple Component ISBNs in its Bill of Materials."
     type: string
     label: "IAC ISBN"
     group_label: "ISBN"
@@ -271,7 +273,9 @@ view: dim_product {
   }
 
   dimension: isbn10 {
-    description: "Do not use for analysis.  ISBN10 dimension is available to help confirm what the correct IAC ISBN or ISBN13 should be."
+    description: "These are individual products inside of an IAC.  These are MindTap products, Coursemate, CNOW, Aplia, ebooks, recourse centers, mobile apps, etc.
+    One component ISBN may be part of multiple IACs. Only one Courseware Component ISBN product may exist in an IAC.
+    But that component can be in multiple IACs that have different shared components along with it that are also Component ISBNs."
     type: string
     label: "ISBN10"
     group_label: "ISBN"
@@ -296,7 +300,7 @@ view: dim_product {
   }
 
   dimension: pac_isbn {
-    description: "Do not use for analysis.  PAC ISBN dimension is available to help confirm what the correct IAC ISBN or ISBN13 should be."
+    description: "This is the ISBN of a physical Printed Access Card, similar to how a physical workbook would have a unique ISBN.  Printed on this card is a single Access Code that has been generated from an IAC ISBN."
     type: string
     label: "PAC ISBN"
     group_label: "ISBN"
