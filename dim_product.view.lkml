@@ -53,7 +53,7 @@ view: dim_product {
     sql_trigger_value: select count(*) from dw_ga.dim_product ;;
   }
 
-  set: curated_fields {fields:[course,edition,productfamily, coursearea, discipline, product, title, count,productfamily_edition]}
+  set: curated_fields {fields:[course,edition,productfamily, coursearea, discipline, product, title, count,productfamily_edition,minorsubjectmatter]}
 
   dimension: course {
     label: "Course Name"
