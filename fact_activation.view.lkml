@@ -10,7 +10,18 @@ view: fact_activation {
             ,count(*) as cnt
         from stg_clts.activations_olr
         where organization is not null
+        and latest
         and in_actv_flg = 1
+        group by 1, 2
+        union
+        select
+            actv_code
+            ,organization
+            ,count(*) as cnt
+        from stg_clts.activations_non_olr
+        where organization is not null
+        and latest
+        --and in_actv_flg = 1
         group by 1, 2
       )
       ,orgs as (

@@ -13,22 +13,26 @@ view: tables {
 #                         + (select count(*) from dev.information_schema.tables);;
 #   }
 
-  dimension: bytes {
-    type: number
+  measure: bytes {
+    group_label: "Data size"
+    type: sum
     sql: ${TABLE}.BYTES ;;
   }
 
-  dimension: Mbytes {
+  measure: Mbytes {
+    group_label: "Data size"
     type: number
     sql: ${bytes}/ (1024*1024) ;;
   }
 
-  dimension: Gbytes {
+  measure: Gbytes {
+    group_label: "Data size"
     type: number
     sql: ${Mbytes} / 1024 ;;
   }
 
-  dimension: Tbytes {
+  measure: Tbytes {
+    group_label: "Data size"
     type: number
     sql: ${Gbytes} / 1024 ;;
   }
@@ -101,8 +105,9 @@ view: tables {
     sql: ${TABLE}.RETENTION_TIME ;;
   }
 
-  dimension: row_count {
-    type: number
+  measure: row_count {
+    label: "# rows"
+    type: sum
     sql: ${TABLE}.ROW_COUNT ;;
   }
 
@@ -152,7 +157,8 @@ view: tables {
   }
 
   measure: count {
+    label: "# tables"
     type: count
-    drill_fields: [table_name, self_referencing_column_name, user_defined_type_name]
+    drill_fields: [table_catalog, table_schema, table_name, table_type, created_date, last_altered_date, row_count, Mbytes]
   }
 }
