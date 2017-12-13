@@ -28,6 +28,22 @@ view: dim_productplatform {
     sql: ${TABLE}.PRODUCTPLATFORM ;;
   }
 
+  dimension: includeinactivationsreport {
+    label: "Included in Activations report"
+    type: yesno
+    sql: ${productplatform} in ('MindTap', 'Aplia','CNOW','SAM','4LTR Online','OWL V2')
+              or ${productplatform} in ('Diet Analysis Plus', 'Write Experience', 'Insite', 'Speech Studio')
+              or ${productplatform} in ('OWL','SAM', 'WebAssign', 'Quia') ;;
+  }
+
+  dimension: activationsreportplatform {
+    label: "Platform in Activations Report"
+    type:  string
+    sql: case when ${productplatform} in ('Diet Analysis Plus', 'Write Experience', 'Insite', 'Speech Studio') then 'Other platforms'
+              when ${productplatform} = '4LTR Online' then '4LTR'
+              else ${productplatform} end;;
+  }
+
   dimension: productplatformid {
     type: string
     sql: ${TABLE}.PRODUCTPLATFORMID ;;
