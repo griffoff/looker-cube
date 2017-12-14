@@ -3,38 +3,29 @@ view: fact_activation {
   #sql_table_name: ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION ;;
   derived_table: {
     sql:
-      with activation_orgs as (
+      with orgs as (
         select
-            actv_code
+            actv_olr_id as activationid
             ,organization
-            ,count(*) as cnt
+            ,'OLR' as registrationtype
         from stg_clts.activations_olr
         where organization is not null
         and latest
-        and in_actv_flg = 1
-        group by 1, 2
-        union
+        --and in_actv_flg = 1
+        union all
         select
-            actv_code
+            actv_non_olr_id
             ,organization
-            ,count(*) as cnt
+            ,'Non_OLR'
         from stg_clts.activations_non_olr
         where organization is not null
         and latest
         --and in_actv_flg = 1
         group by 1, 2
       )
-      ,orgs as (
-        select
-           actv_code
-           ,organization
-           ,row_number() over (partition by actv_code order by cnt desc) as r
-        from activation_orgs
-      )
-      select a.*, orgs.organization
+      select a.*, coalesce(orgs.organization, 'UNKNOWN') as organization
       from DW_GA.FACT_ACTIVATION a
-      left join orgs on a.activationcode = orgs.actv_code
-                    and orgs.r = 1
+      left join orgs on (a.registrationtype, a.activationid) = (orgs.registrationtype, orgs.activationid)
       order by courseid, activationdatekey, activationregionid;;
 
       sql_trigger_value: select count(*) from DW_GA.FACT_ACTIVATION ;;
