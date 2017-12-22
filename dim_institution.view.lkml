@@ -53,6 +53,7 @@ view: dim_institution {
   dimension: region {
     group_label: "Location"
     type: string
+    map_layer_name: us_states
     sql: ${TABLE}.REGION ;;
   }
 
