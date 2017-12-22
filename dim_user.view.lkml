@@ -92,6 +92,7 @@ view: dim_user {
     label: "User Role"
     description: "distinguishes between Instructors, Students, TA's and Others"
     type: string
+    hidden: yes #this dimension is active in dim_party
     sql:
         CASE
           WHEN ${mainpartyrole} = 'INSTRUCTOR' THEN 'Instructor'
