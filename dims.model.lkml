@@ -122,15 +122,15 @@ explore: dim_institution {
     relationship: many_to_one
   }
 
-  join: ipeds_map {
-    sql_on: ${dim_institution.entity_no} = ${ipeds_map.entity_no} ;;
-    relationship: one_to_one
-  }
+#   join: ipeds_map {
+#     sql_on: ${dim_institution.entity_no} = ${ipeds_map.entity_no} ;;
+#     relationship: one_to_one
+#   }
 
-  join: ipeds {
-    sql_on: ${ipeds_map.ipeds_id} = ${ipeds.unit_id} ;;
-    relationship: many_to_one
-  }
+#   join: ipeds {
+#     sql_on: ${ipeds_map.ipeds_id} = ${ipeds.unit_id} ;;
+#     relationship: many_to_one
+#   }
 }
 
 explore: dim_deviceplatform {
