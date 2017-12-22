@@ -154,6 +154,7 @@ view: fact_appusage {
     label: "# of Users"
     type: count_distinct
     sql: ${userid} ;;
+    hidden: yes
     drill_fields: [dim_iframeapplication.displayname,dim_institution.institutionname,dim_course.is_lms_integrated,courseinstructor.instructorid,dim_course.count,fact_siteusage.percent_of_activations]
   }
 

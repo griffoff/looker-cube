@@ -197,7 +197,7 @@ explore:  fact_appusage_by_user {
   join: dim_course {
     sql_on: ${fact_appusage_by_user.courseid} = ${dim_course.courseid} ;;
     relationship: one_to_one
-    type: full_outer
+    type: inner
     fields: [dim_course.curated_fields*]
   }
 
@@ -240,6 +240,11 @@ explore:  fact_appusage_by_user {
      sql_on: ${fact_appusage.eventdatekey} = ${dim_date.datekey} ;;
      relationship: many_to_one
    }
+
+  #override dim_course join type for performance
+  join: dim_start_date {
+    type: inner
+  }
 
   join: dim_deviceplatform {
     sql_on: ${fact_appusage.deviceplatformid} = ${dim_deviceplatform.deviceplatformid} ;;
