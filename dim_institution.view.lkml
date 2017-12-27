@@ -122,17 +122,20 @@ view: dim_institution {
     label: "Market Segment - Major"
     group_label: "Market Segment"
     type: string
+    hidden: yes
     sql: ${TABLE}.MARKETSEGMENTMAJOR ;;
   }
 
   dimension: marketsegmentminor {
     label: "Market Segment - Minor"
     group_label: "Market Segment"
+    hidden: yes
     type: string
     sql: ${TABLE}.MARKETSEGMENTMINOR ;;
   }
 
   dimension: source {
+    description: "distinguishes between CLTS,Activation & OLR Courses"
     type: string
     sql: ${TABLE}.SOURCE ;;
   }

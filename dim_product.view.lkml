@@ -91,6 +91,7 @@ view: dim_product {
   dimension: minorsubjectmatter {
     type: string
     label: "Minor Subject Matter"
+    description: "Brand Discipline"
     group_label: "Subject Matter"
     sql: ${TABLE}.MINORSUBJECTMATTER ;;
   }
