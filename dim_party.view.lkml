@@ -114,13 +114,15 @@ view: dim_party {
     group_label: "PII"
     type: string
     sql:
-    CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' THEN
+    CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' or ${TABLE}.mainpartyrole != 'STUDENT' THEN
     ${TABLE}.GUID
     ELSE
     MD5(${TABLE}.GUID || 'salt')
     END ;;
     html:
     {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
+    {{ value }}
+    {%elsif dim_party.mainpartyrole._value != 'Student' %}
     {{ value }}
     {% else %}
     [Masked]
@@ -133,13 +135,15 @@ view: dim_party {
     type: string
     #sql: ${TABLE}.LASTNAME ;;
     sql:
-     CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' THEN
+     CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' or ${TABLE}.mainpartyrole != 'STUDENT' THEN
         ${TABLE}.LASTNAME
      ELSE
         MD5(${TABLE}.LASTNAME || 'salt')
      END ;;
     html:
     {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
+    {{ value }}
+    {%elsif dim_party.mainpartyrole._value != 'Student' %}
     {{ value }}
     {% else %}
     [Masked]
@@ -151,7 +155,7 @@ view: dim_party {
     label: "E-mail Address"
     type: string
     sql:
-    CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' THEN
+    CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' or ${TABLE}.mainpartyrole != 'STUDENT' THEN
     ${TABLE}.MAINPARTYEMAIL
     ELSE
     MD5(${TABLE}.MAINPARTYEMAIL || 'salt')
@@ -159,6 +163,8 @@ view: dim_party {
     html:
       {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
         {{ value }}
+      {%elsif dim_party.mainpartyrole._value != 'Student' %}
+      {{ value }}
       {% else %}
         [Masked]
       {% endif %}  ;;
