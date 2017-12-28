@@ -166,12 +166,14 @@ view: course_section_facts {
 
   measure: institution_count {
     label: "# Institutions with activations"
+    description: "Number of Institutions with activations for a course"
     type: count_distinct
     sql: case when ${TABLE}.NOOFACTIVATIONS > 0 then ${dim_institution.institutionid} end ;;
   }
 
   measure: course_count {
     label: "# Course sections with activations"
+    description: "Number of Course Sections activated"
     type: count_distinct
     sql: ${courseid} ;;
   }
