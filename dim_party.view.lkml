@@ -38,7 +38,7 @@ view: dim_party {
         end as Is_Internal
     from dw_ga.dim_party p
     left join tu on p.guid = tu.guid
-    left join dw_ga.dim_user user on p.partyid = user.mainpartyid
+    left join dw_ga.dim_user user on p.partyid = user.HelperPartyid
     order by p.partyid
     ;;
     sql_trigger_value: select count(*) from dw_ga.dim_party ;;
