@@ -38,7 +38,7 @@ view: dim_party {
         end as Is_Internal
     from dw_ga.dim_party p
     left join tu on p.guid = tu.guid
-    left join dw_ga.dim_user user on p.partyid = user.HelperPartyid
+    left join dw_ga.dim_user user on p.partyid = user.mainpartyid
     order by p.partyid
     ;;
     sql_trigger_value: select count(*) from dw_ga.dim_party ;;
@@ -102,7 +102,7 @@ view: dim_party {
     html:
     {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
     {{ value }}
-    {%elsif dim_party.mainpartyrole._value != 'Student' %}
+    {%elsif mainpartyrole._value != 'Student' %}
     {{ value }}
     {% else %}
     [Masked]
@@ -122,7 +122,7 @@ view: dim_party {
     html:
     {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
     {{ value }}
-    {%elsif dim_party.mainpartyrole._value != 'Student' %}
+    {%elsif mainpartyrole._value != 'Student' %}
     {{ value }}
     {% else %}
     [Masked]
@@ -143,7 +143,7 @@ view: dim_party {
     html:
     {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
     {{ value }}
-    {%elsif dim_party.mainpartyrole._value != 'Student' %}
+    {%elsif mainpartyrole._value != 'Student' %}
     {{ value }}
     {% else %}
     [Masked]
