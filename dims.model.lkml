@@ -44,6 +44,7 @@ explore: dim_course {
   join: olr_courses {
     sql_on: ${dim_course.coursekey} = ${olr_courses.context_id};;
     relationship: one_to_one
+    fields: [olr_courses.curated_fields*]
   }
 
   join: dim_start_date {
