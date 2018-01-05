@@ -4,7 +4,7 @@ view: olr_courses {
   set: curated_fields {fields:[course_key,course_name,instructor_name]}
 
   dimension_group: begin_date {
-    label: "Course Start"
+    label: "(OLR) Course Start"
     type: time
     timeframes: [
       raw,
@@ -79,7 +79,7 @@ view: olr_courses {
   }
 
   dimension_group: end_date {
-    label: "End Date"
+    label: "Course End"
     type: time
     timeframes: [
       raw,

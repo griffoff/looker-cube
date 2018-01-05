@@ -111,7 +111,10 @@ view: dim_relativedate {
 
 view: dim_relative_to_start_date {
   extends: [dim_relativedate]
-  label: "Date - Course Start Date"
+  label: "Course / Section Details"
+
+  dimension: weeksname {group_label: "Course Start Date"}
+  dimension: monthsbucket {hidden: yes group_label: "Course Start Date"}
 }
 
 view: dim_relative_to_end_date {

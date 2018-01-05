@@ -15,6 +15,7 @@ view: dim_date {
     description: "April 1st to March 31st"
     type: string
     sql: ${TABLE}.fiscalyearvalue ;;
+    hidden: yes
   }
 
   dimension: calendarmonthid {
@@ -104,11 +105,16 @@ view: dim_date {
       month,
       month_name,
       year,
-      day_of_week
+      day_of_week,
+      #quarter_of_year,
+      fiscal_year,
+      fiscal_quarter,
+      fiscal_quarter_of_year,
+      fiscal_month_num
     ]
     convert_tz: no
     sql: ${TABLE}.DATEVALUE ;;
-    label: "Calendar - "
+    label: ""
     description: "Standard calendar"
   }
 
@@ -149,7 +155,7 @@ view: dim_date {
     description: "Fall = August (8/1) - December (12/31).  Spring = January (1/1) - June (6/30).  Summer = July (7/1-7/31)
     This dimension represents a specific term regardless of year i.e. Fall, not Fall 2017"
     sql:  split_part(${TABLE}.GOVERNMENTDEFINEDACADEMICTERM, ' ', 1) ;;
-    label: "Term of year"
+    label: "Academic Term of year"
     group_label: "Calendar - Government Defined Academic Calendar"
     order_by_field: governmentdefinedacademictermofyearid
   }
@@ -319,7 +325,51 @@ view: dim_date {
 
 view: dim_start_date {
   extends: [dim_date]
-  label: "Date - Course Start Date"
+  label: "Course / Section Details"
+
+  dimension: fiscal_year {hidden: yes group_label: "Course Start Date"}
+  dimension: governmentdefinedacademicterm {group_label: "Course Start Date"}
+  dimension: governmentdefinedacademictermofyear {group_label: "Course Start Date"}
+  dimension: governmentdefinedacademictermyear {group_label: "Course Start Date"}
+  dimension_group: datevalue {group_label: "Course Start Date"
+    timeframes: [
+      date,
+      week,
+      month,
+      month_name,
+      year,
+      day_of_week,
+      #quarter_of_year,
+      fiscal_year,
+      fiscal_quarter,
+      fiscal_quarter_of_year,
+      fiscal_month_num
+    ]}
+  dimension: isweekendname {group_label: "Course Start Date"}
+
+}
+
+view: dim_master_first_used_date {
+  extends: [dim_date]
+  label: "Learning Path"
+
+  dimension: fiscal_year {hidden: yes }
+  dimension: governmentdefinedacademicterm {group_label: "Master First Use Date"}
+  dimension: governmentdefinedacademictermofyear {group_label: "Master First Use Date"}
+  dimension: governmentdefinedacademictermyear {group_label: "Master First Use Date"}
+  dimension_group: datevalue {group_label: "Master First Use Date"
+    timeframes: [
+      date,
+      month,
+      month_name,
+      year,
+      fiscal_year,
+      fiscal_quarter,
+      fiscal_quarter_of_year,
+      fiscal_month_num
+    ]}
+  dimension: isweekendname {hidden: yes}
+
 }
 
 view: dim_end_date {

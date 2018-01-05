@@ -1,5 +1,6 @@
 connection: "snowflake_prod"
 week_start_day: monday
+fiscal_month_offset: 3
 label:"Cube Data on Looker"
 
 named_value_format: duration_hms {
