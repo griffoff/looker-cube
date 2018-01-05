@@ -594,6 +594,9 @@ explore: LP_Analysis_PSR_Limited_View {
     join: mindtap_lp_activity_tags {
       fields: [mindtap_lp_activity_tags.curated_fields*]
     }
+    join: dim_product {
+      fields: [dim_product.curated_fields*]
+    }
   }
 
 explore: LP_Activity_Analysis {
@@ -674,6 +677,8 @@ explore: LP_Activity_Analysis {
   join: lp_node_map {
     fields: [lp_node_map.curated_fields_PM*]
   }
-
+  join: dim_product {
+    fields: [dim_product.curated_fields*]
+  }
 
 }

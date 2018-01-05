@@ -56,6 +56,7 @@ view: olr_courses {
   }
 
   dimension: created_on {
+    description: "Date on which the course was created"
     type: string
     sql: ${TABLE}.CREATED_ON ;;
   }

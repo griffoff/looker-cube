@@ -92,6 +92,7 @@ view: dim_user {
     label: "User Role"
     description: "distinguishes between Instructors, Students, TA's and Others"
     type: string
+    hidden: yes #this dimension is active in dim_party
     sql:
         CASE
           WHEN ${mainpartyrole} = 'INSTRUCTOR' THEN 'Instructor'
@@ -128,6 +129,7 @@ view: dim_user {
 
   dimension: productsactivated {
     label: "No. of products activated"
+    description: "Number of products activated by an user"
     type: tier
     tiers: [1, 2, 3, 5, 10]
     style: integer

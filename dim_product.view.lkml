@@ -53,7 +53,7 @@ view: dim_product {
     sql_trigger_value: select count(*) from dw_ga.dim_product ;;
   }
 
-  set: curated_fields {fields:[course,edition,productfamily, coursearea, discipline, product, title, count,productfamily_edition,minorsubjectmatter]}
+  set: curated_fields {fields:[course,edition,productfamily, coursearea, discipline, product, title, count,productfamily_edition,minorsubjectmatter,iac_isbn,isbn10,isbn13,pac_isbn,mindtap_isbn]}
 
   dimension: course {
     label: "Course Name"
@@ -91,6 +91,7 @@ view: dim_product {
   dimension: minorsubjectmatter {
     type: string
     label: "Minor Subject Matter"
+    description: "Brand Discipline"
     group_label: "Subject Matter"
     sql: ${TABLE}.MINORSUBJECTMATTER ;;
   }
