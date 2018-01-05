@@ -163,7 +163,7 @@ view: dim_party {
     html:
       {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
         {{ value }}
-      {%elsif dim_party.mainpartyrole._value != 'Student' %}
+      {%elsif mainpartyrole._value != 'Student' %}
       {{ value }}
       {% else %}
         [Masked]
