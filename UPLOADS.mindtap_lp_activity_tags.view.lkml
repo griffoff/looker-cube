@@ -245,17 +245,17 @@ dimension: activity_usage_facts_grouping {
   sql: ${TABLE}.activity_usage_facts_grouping ;;
   link: {
     label: "Usage of Specific Activities Titles"
-    url: "/explore/cube/fact_activity?fields=mindtap_lp_activity_tags.activity_type,mindtap_lp_activity_tags.chapter,mindtap_lp_activity_tags.learning_path_activity_title,dim_activity.originallygradable,fact_siteusage.percent_of_activations,
+    url: "/explore/cube/fact_siteusage?fields=mindtap_lp_activity_tags.activity_usage_facts_grouping,mindtap_lp_activity_tags.chapter,mindtap_lp_activity_tags.learning_path_activity_title,dim_activity.originallygradable,fact_siteusage.percent_of_activations,
     &f[mindtap_lp_activity_tags.activity_usage_facts_grouping]={{ value }},&f[dim_product.productfamily_edition]={{_filters['dim_product.productfamily_edition'] | url_encode}},&f[fact_siteusage.percent_of_activations]=%3E0"
   }
   link: {
     label: "# Activities in each chapter"
-    url: "/explore/cube/fact_siteusage?fields=mindtap_lp_activity_tags.activity_type,mindtap_lp_activity_tags.chapter,mindtap_lp_activity_tags.learning_path_activity_title_count_fordrilldowns,
+    url: "/explore/cube/fact_siteusage?fields=mindtap_lp_activity_tags.activity_usage_facts_grouping,mindtap_lp_activity_tags.chapter,mindtap_lp_activity_tags.learning_path_activity_title_count_fordrilldowns,
     &f[mindtap_lp_activity_tags.activity_usage_facts_grouping]={{ value }},&f[dim_product.productfamily_edition]={{_filters['dim_product.productfamily_edition'] | url_encode}}"
     }
   link: {
     label: "Usage Breakdown By Gradable Status"
-    url: "/explore/cube/fact_activity?fields=mindtap_lp_activity_tags.activity_type,dim_activity.status,fact_siteusage.percent_of_activations,
+    url: "/explore/cube/fact_siteusage?fields=mindtap_lp_activity_tags.activity_usage_facts_grouping,dim_activity.status,fact_siteusage.percent_of_activations,
     &f[mindtap_lp_activity_tags.activity_usage_facts_grouping]={{ value }},&f[dim_product.productfamily_edition]={{_filters['dim_product.productfamily_edition'] | url_encode}}"
   }
 
