@@ -513,6 +513,7 @@ view: dim_learningpath {
 
   dimension: lowest_level {
     label: "Learning Path Activity Title"
+    description: "Activity Title displayed on the Learning Path"
     type: string
     sql:COALESCE (${mindtap_lp_activity_tags.learning_path_activity_title}, ${TABLE}.lowest_level) ;;
     order_by_field: lowest_level_sort_by_data
