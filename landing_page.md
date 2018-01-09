@@ -49,29 +49,29 @@
                 <a style="border-radius: 5px; border-color: white; display: block;  text-align: center; color: black; text-decoration: none; font-size: 13px; line-height: 1.2;">
                   <p style="text-align:center;font-size: 15px;"><i><u>Questions Addressed</u></i></p>
                   <p style="font-size:100%;text-align:left;">Which are the extra content sources Instructors adding?</p>
-                  <p style="font-size:100%;text-align:left;"> </p>
+                  <p style="font-size:100%;text-align:left;">How can I see the YouTube links instructors share with students?</p>
                 </a>
               </td>
             </tr>
             <tr>
               <td style="border: 0px; padding: 0px; padding-right: 2px; width: 50%;"><a style="background-color: #32D7DA; border-radius: 5px; text-align: center; color: white; text-decoration: none; display: inline-block; width: 100%; padding: 8px 8px; line-height: 1.5; font-size: 20px;" href="https://cengage.looker.com/dashboards/116"> Student: Usage Over Time</a></td>
-              <td style="border: 0px; padding: 0px; padding-right: 2px; width: 50%;"><a style="background-color: #32D7DA; border-radius: 5px; text-align: center; color: white; text-decoration: none; display: inline-block; width: 100%; padding: 8px 8px; line-height: 1.5; font-size: 20px;" href="/dashboards/2"> Additional Views </a></td>
+              <td style="border: 0px; padding: 0px; padding-right: 2px; width: 50%;"><a style="background-color: #32D7DA; border-radius: 5px; text-align: center; color: white; text-decoration: none; display: inline-block; width: 100%; padding: 8px 8px; line-height: 1.5; font-size: 20px;"> For future use...</a></td>
             </tr>
             <tr>
               <td style="border: 0px; padding: 10px; padding-left: 0px; width: 50%;"><a style="background-color: white; border-radius: 5px; text-align: center; color: black; text-decoration: none; display: inline-block; width: 100%; padding: 8px 8px; line-height: 1.5; font-size: 20px;" href="https://cengage.looker.com/dashboards/116" target="_blank"> <img style="height: 100px; padding: 0px 0px 0px 0px;" src="http://www.iconarchive.com/download/i79780/hamzasaleem/stock/Time-Machine.ico">
               </a>
                 <a style="border-radius: 5px; border-color: white; display: block;  text-align: center; color: black; text-decoration: none; font-size: 13px; line-height: 1.2;">
                   <p style="text-align:center;font-size: 15px;"><i><u>Questions Addressed</u></i></p>
-                  <p style="font-size:100%;text-align:left;">1st question?</p>
-                  <p style="font-size:100%;text-align:left;">2nd question?</p>
+                  <p style="font-size:100%;text-align:left;">How does usage vary over the course of a semester?</p>
+                  <p style="font-size:100%;text-align:left;">How can I monitor weekly or monthly active users?</p>
                 </a>
               </td>
-              <td style="border: 0px; padding: 10px; padding-left: 0px; width: 50%;"><a style="background-color: white; border-radius: 5px; text-align: center; color: black; text-decoration: none; display: inline-block; width: 100%; padding: 8px 8px; line-height: 1.5; font-size: 20px;" href="https://cengage.looker.com/dashboards/102" target="_blank"> <img style="height: 100px; padding: 0px 0px 0px 0px;" src="http://www.iconarchive.com/download/i91222/icons8/windows-8/Messaging-More.ico">
+              <td style="border: 0px; padding: 10px; padding-left: 0px; width: 50%;"><a style="background-color: white; border-radius: 5px; text-align: center; color: black; text-decoration: none; display: inline-block; width: 100%; padding: 8px 8px; line-height: 1.5; font-size: 20px;" target="_blank"> <img style="height: 100px; padding: 0px 0px 0px 0px;" src="http://www.iconarchive.com/download/i91222/icons8/windows-8/Messaging-More.ico">
               </a>
                 <a style="border-radius: 5px; border-color: white; display: block;  text-align: center; color: black; text-decoration: none; font-size: 13px; line-height: 1.2;">
                   <p style="text-align:center;font-size: 15px;"><i><u>Questions Addressed</u></i></p>
-                  <p style="font-size:100%;text-align:left;">1st question?</p>
-                  <p style="font-size:100%;text-align:left;">2nd question?</p>
+                  <p style="font-size:100%;text-align:left;">For future use...</p>
+                  <p style="font-size:100%;text-align:left;"></p>
                 </a>
               </td>
             </tr>
@@ -88,14 +88,14 @@
     <h1 style="background-color: #fff; padding: 30px 0 15px;font-weight:500; margin-bottom: 0; font-weight: 600;">Looker Resources</h1>
   </div>
   <div style=" float: left; margin-bottom: 30px; width: 100%;">
-      <h5 style="float: left; padding: 15px 25px; background-color: #796d91;  width: 200px; margin: 10px 15px 20px 0; text-align: center;"><a target="_blank" style="color: #fff; text-transform: uppercase; font-weight: 400;" href="http://www.looker.com/docs/admin/looker-hosted">INTERNAL WIKI</a>
+      <h5 style="float: left; padding: 15px 25px; background-color: #796d91;  width: 200px; margin: 10px 15px 20px 0; text-align: center;"><a target="_blank" style="color: #fff; text-transform: uppercase; font-weight: 400;" href="http://wiki.cengage.com/display/CANA/Platform+Analytics">INTERNAL WIKI</a>
       </h5>
     <div style="text-align: left; font-size: 17px;">
       <p style="font-weight: 300; margin-top: 17px;">Help videos and documentation on metrics available</p>
     </div>
   </div>
   <div style=" float: left; margin-bottom: 15px; width: 100%;">
-      <h5 style="float: left; padding: 15px 25px; background-color: #796d91; width: 200px; margin: 10px 15px 20px 0; text-align: center;"><a target="_blank" style="color: #fff; text-transform: uppercase; font-weight: 400;" href="http://www.looker.com/docs/admin/looker-hosted">LOOKER SUPPORT</a>
+      <h5 style="float: left; padding: 15px 25px; background-color: #796d91; width: 200px; margin: 10px 15px 20px 0; text-align: center;"><a target="_blank" style="color: #fff; text-transform: uppercase; font-weight: 400;" href="https://docs.looker.com/">LOOKER SUPPORT DOCUMENTATION</a>
       </h5>
     <div style="text-align: left; font-size: 17px;">
       <p style="font-weight: 300; margin-top: 17px;">Link to Looker's support site</p>
