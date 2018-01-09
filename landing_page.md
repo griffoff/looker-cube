@@ -88,14 +88,14 @@
     <h1 style="background-color: #fff; padding: 30px 0 15px;font-weight:500; margin-bottom: 0; font-weight: 600;">Looker Resources</h1>
   </div>
   <div style=" float: left; margin-bottom: 30px; width: 100%;">
-      <h5 style="float: left; padding: 15px 25px; background-color: #796d91;  width: 200px; margin: 10px 15px 20px 0; text-align: center;"><a target="_blank" style="color: #fff; text-transform: uppercase; font-weight: 400;" href="http://www.looker.com/docs/admin/looker-hosted">INTERNAL WIKI</a>
+      <h5 style="float: left; padding: 15px 25px; background-color: #796d91;  width: 200px; margin: 10px 15px 20px 0; text-align: center;"><a target="_blank" style="color: #fff; text-transform: uppercase; font-weight: 400;" href="http://wiki.cengage.com/display/CANA/Platform+Analytics">INTERNAL WIKI</a>
       </h5>
     <div style="text-align: left; font-size: 17px;">
       <p style="font-weight: 300; margin-top: 17px;">Help videos and documentation on metrics available</p>
     </div>
   </div>
   <div style=" float: left; margin-bottom: 15px; width: 100%;">
-      <h5 style="float: left; padding: 15px 25px; background-color: #796d91; width: 200px; margin: 10px 15px 20px 0; text-align: center;"><a target="_blank" style="color: #fff; text-transform: uppercase; font-weight: 400;" href="http://www.looker.com/docs/admin/looker-hosted">LOOKER SUPPORT</a>
+      <h5 style="float: left; padding: 15px 25px; background-color: #796d91; width: 200px; margin: 10px 15px 20px 0; text-align: center;"><a target="_blank" style="color: #fff; text-transform: uppercase; font-weight: 400;" href="https://docs.looker.com/">LOOKER SUPPORT DOCUMENTATION</a>
       </h5>
     <div style="text-align: left; font-size: 17px;">
       <p style="font-weight: 300; margin-top: 17px;">Link to Looker's support site</p>
