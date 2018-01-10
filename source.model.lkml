@@ -54,11 +54,6 @@ explore: olr_courses {
     sql_on: ${olr_courses.context_id}=${activations_olr.context_id} ;;
     relationship: one_to_many
   }
-
-  join: magellan_hed_entities {
-    sql_on: ${activations_olr.entity_no} = ${magellan_hed_entities.entity_no} ;;
-    relationship: many_to_one
-  }
 }
 
 # APLIA
