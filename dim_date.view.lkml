@@ -102,6 +102,7 @@ view: dim_date {
     timeframes: [
       date,
       week,
+      week_of_year,
       month,
       month_name,
       year,
