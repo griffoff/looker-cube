@@ -107,10 +107,10 @@ view: dim_date {
       year,
       day_of_week,
       #quarter_of_year,
-      fiscal_year,
-      fiscal_quarter,
-      fiscal_quarter_of_year,
-      fiscal_month_num
+#       fiscal_year,
+#       fiscal_quarter,
+#       fiscal_quarter_of_year,
+#       fiscal_month_num
     ]
     convert_tz: no
     sql: ${TABLE}.DATEVALUE ;;
@@ -326,8 +326,10 @@ view: dim_date {
 view: dim_start_date {
   extends: [dim_date]
   label: "Course / Section Details"
-
-  dimension: fiscal_year {hidden: yes group_label: "Course Start Date"}
+  dimension: fiscalyear {
+     hidden: no
+#     sql: ${TABLE}.fiscalyearvalue
+    group_label: "Course Start Date"}
   dimension: governmentdefinedacademicterm {group_label: "Course Start Date"}
   dimension: governmentdefinedacademictermofyear {group_label: "Course Start Date"}
   dimension: governmentdefinedacademictermyear {group_label: "Course Start Date"}
@@ -340,10 +342,10 @@ view: dim_start_date {
       year,
       day_of_week,
       #quarter_of_year,
-      fiscal_year,
-      fiscal_quarter,
-      fiscal_quarter_of_year,
-      fiscal_month_num
+#       fiscal_year,
+#       fiscal_quarter,
+#       fiscal_quarter_of_year,
+#       fiscal_month_num
     ]}
   dimension: isweekendname {group_label: "Course Start Date"}
 
@@ -353,21 +355,21 @@ view: dim_master_first_used_date {
   extends: [dim_date]
   label: "Learning Path"
 
-  dimension: fiscal_year {hidden: yes }
+#   dimension: fiscalyear {hidden: no }
   dimension: governmentdefinedacademicterm {group_label: "Master First Use Date"}
   dimension: governmentdefinedacademictermofyear {group_label: "Master First Use Date"}
   dimension: governmentdefinedacademictermyear {group_label: "Master First Use Date"}
-  dimension_group: datevalue {group_label: "Master First Use Date"
-    timeframes: [
-      date,
-      month,
-      month_name,
-      year,
-      fiscal_year,
-      fiscal_quarter,
-      fiscal_quarter_of_year,
-      fiscal_month_num
-    ]}
+#   dimension_group: datevalue {group_label: "Master First Use Date"
+#     timeframes: [
+#       date,
+#       month,
+#       month_name,
+#       year,
+#       fiscal_year,
+# #       fiscal_quarter,
+# #       fiscal_quarter_of_year,
+# #       fiscal_month_num
+#     ]}
   dimension: isweekendname {hidden: yes}
 
 }
