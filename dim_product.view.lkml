@@ -4,51 +4,51 @@ view: dim_product {
   derived_table: {
     sql: select *,
           CASE
-               WHEN dw_ga.dim_product.PUBLICATIONGROUP in ('Career Ed', 'SWEP') THEN
+               WHEN p.PUBLICATIONGROUP in ('Career Ed', 'SWEP') THEN
                     CASE
-                        WHEN dw_ga.dim_product.MINORSUBJECTMATTER = 'Office Management' THEN 'Course Tech Office Management'
-                        WHEN dw_ga.dim_product.MINORSUBJECTMATTER = 'Health Admin and Management' THEN 'Health Information Management'
-                        ELSE dw_ga.dim_product.MINORSUBJECTMATTER
+                        WHEN p.MINORSUBJECTMATTER = 'Office Management' THEN 'Course Tech Office Management'
+                        WHEN p.MINORSUBJECTMATTER = 'Health Admin and Management' THEN 'Health Information Management'
+                        ELSE p.MINORSUBJECTMATTER
                         END
-               WHEN dw_ga.dim_product.PRODUCTFAMILY = 'MT CRMS Literature' THEN 'Literature'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES in ('CT-Networking', 'CT-Prog/PC/HD', 'CT-Revealed Series') THEN 'Creative and Technical'
+               WHEN p.PRODUCTFAMILY = 'MT CRMS Literature' THEN 'Literature'
+               WHEN p.PUBLICATIONSERIES in ('CT-Networking', 'CT-Prog/PC/HD', 'CT-Revealed Series') THEN 'Creative and Technical'
                 --??
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'CPG-Networking Security' then 'Creative and Technical'
+               WHEN p.PUBLICATIONSERIES = 'CPG-Networking Security' then 'Creative and Technical'
                 --??
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES like 'CT-%' THEN 'Computing'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES like '%History%'
-                  OR dw_ga.dim_product.COURSEAREA = 'History: U.S. Survey' THEN 'History'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Composition' THEN 'English'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES like 'Biology%' THEN 'Biology'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Human Resources Management' THEN 'Management'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Health Sciences' THEN 'Sports/Health/Recreat/Leisure'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Intro Poli Sci' THEN 'Political Science'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'FreshmanOrient/College Success' THEN 'Freshman Orientation/College'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Nutrition' THEN 'Life Sciences'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'General Business' THEN 'Business'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Not Specified' THEN
-                    dw_ga.dim_product.MAJORSUBJECTMATTER
+               WHEN p.PUBLICATIONSERIES like 'CT-%' THEN 'Computing'
+               WHEN p.PUBLICATIONSERIES like '%History%'
+                  OR p.COURSEAREA = 'History: U.S. Survey' THEN 'History'
+               WHEN p.PUBLICATIONSERIES = 'Composition' THEN 'English'
+               WHEN p.PUBLICATIONSERIES like 'Biology%' THEN 'Biology'
+               WHEN p.PUBLICATIONSERIES = 'Human Resources Management' THEN 'Management'
+               WHEN p.PUBLICATIONSERIES = 'Health Sciences' THEN 'Sports/Health/Recreat/Leisure'
+               WHEN p.PUBLICATIONSERIES = 'Intro Poli Sci' THEN 'Political Science'
+               WHEN p.PUBLICATIONSERIES = 'FreshmanOrient/College Success' THEN 'Freshman Orientation/College'
+               WHEN p.PUBLICATIONSERIES = 'Nutrition' THEN 'Life Sciences'
+               WHEN p.PUBLICATIONSERIES = 'General Business' THEN 'Business'
+               WHEN p.PUBLICATIONSERIES = 'Not Specified' THEN
+                    p.MAJORSUBJECTMATTER
                     /*
                     CASE
-                    WHEN dim_product.MAJORSUBJECTMATTER = 'Accross Cengage Disciplines' THEN 'Other ' || dim_product.PUBLICATIONGROUP
-                    ELSE dim_product.MAJORSUBJECTMATTER
+                    WHEN p.MAJORSUBJECTMATTER = 'Accross Cengage Disciplines' THEN 'Other ' || p.PUBLICATIONGROUP
+                    ELSE p.MAJORSUBJECTMATTER
                     END
                     */
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Applied Math' THEN 'Applied Math-SMT'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Earth Science' THEN 'Earth Sciences'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Milady - Cosmetology' THEN 'Cosmetology'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'UNKNOWN' THEN 'Not Specified'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES in ('Civil Engineering', 'General Engineering') then 'PGR 142-' || dim_product.PUBLICATIONSERIES
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Religion' then 'Religion & Phenomena'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Mass Communication' then 'Communication Arts'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Literature/Upper Level English' then 'Literature'
-               ELSE dw_ga.dim_product.PUBLICATIONSERIES
+               WHEN p.PUBLICATIONSERIES = 'Applied Math' THEN 'Applied Math-SMT'
+               WHEN p.PUBLICATIONSERIES = 'Earth Science' THEN 'Earth Sciences'
+               WHEN p.PUBLICATIONSERIES = 'Milady - Cosmetology' THEN 'Cosmetology'
+               WHEN p.PUBLICATIONSERIES = 'UNKNOWN' THEN 'Not Specified'
+               WHEN p.PUBLICATIONSERIES in ('Civil Engineering', 'General Engineering') then 'PGR 142-' || p.PUBLICATIONSERIES
+               WHEN p.PUBLICATIONSERIES = 'Religion' then 'Religion & Phenomena'
+               WHEN p.PUBLICATIONSERIES = 'Mass Communication' then 'Communication Arts'
+               WHEN p.PUBLICATIONSERIES = 'Literature/Upper Level English' then 'Literature'
+               ELSE p.PUBLICATIONSERIES
         END
         as discipline_rollup
       ,nullif(edition, '-')::int as edition_number
       ,dense_rank() over (partition by productfamily order by edition_number desc) as latest
       ,concat(concat(productfamily,' - '),edition) as productfamily_edition
-    from dw_ga.dim_product
+    from prod.dw_ga.dim_product p
     order by productid;;
     sql_trigger_value: select count(*) from dw_ga.dim_product ;;
   }
