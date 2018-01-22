@@ -1,15 +1,7 @@
+include: "/core/common.lkml"
+
 connection: "snowflake_prod"
-week_start_day: monday
-fiscal_month_offset: 3
 label:"Cube Data on Looker"
-
-named_value_format: duration_hms {
-  value_format: "hh:mm:ss"
-}
-
-named_value_format: duration_hms_full {
-  value_format: "h \h\r\s m \m\i\n\s s \s\e\c\s"
-}
 
 datagroup: fact_siteusage_datagroup {
   sql_trigger: SELECT COUNT(*) FROM dw_ga.fact_siteusage;;
