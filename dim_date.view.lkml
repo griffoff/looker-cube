@@ -97,28 +97,28 @@ view: dim_date {
     hidden: yes
   }
 
-  dimension_group: datevalue {
-    type: time
-    timeframes: [
-      date,
-      week,
-      week_of_year,
-      month,
-      month_name,
-      year,
-      day_of_week,
-      day_of_year
-      #quarter_of_year,
-#       fiscal_year,
-#       fiscal_quarter,
-#       fiscal_quarter_of_year,
-#       fiscal_month_num
-    ]
-    convert_tz: no
-    sql: ${TABLE}.DATEVALUE ;;
-    label: ""
-    description: "Standard calendar"
-  }
+#   dimension_group: datevalue {
+#     type: time
+#     timeframes: [
+#       date,
+#       week,
+#       week_of_year,
+#       month,
+#       month_name,
+#       year,
+#       day_of_week,
+#       day_of_year
+#       #quarter_of_year,
+# #       fiscal_year,
+# #       fiscal_quarter,
+# #       fiscal_quarter_of_year,
+# #       fiscal_month_num
+#     ]
+#     convert_tz: no
+#     sql: ${TABLE}.DATEVALUE ;;
+#     label: ""
+#     description: "Standard calendar"
+#   }
 
   dimension: dayofweekid {
     type: string
