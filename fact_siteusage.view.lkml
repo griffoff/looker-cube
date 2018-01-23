@@ -27,6 +27,9 @@ view: fact_siteusage {
   set:  curated_fields {
     fields: [percent_of_activations,percent_of_all_activations,session_count,usercount]
     }
+  set:  curated_fields_for_instructor_mod{
+    fields: [session_count,usercount]
+  }
   #sql_table_name: DW_GA.FACT_SITEUSAGE ;;
   derived_table: {
     sql:

@@ -646,7 +646,7 @@ explore: LP_Activity_Analysis {
     view_label: "Learning Path"
     sql_on: (${LP_Activity_Analysis.courseid}, ${LP_Activity_Analysis.learningpathid}) = (${fact_siteusage.courseid}, ${fact_siteusage.learningpathid}) ;;
     relationship: many_to_many
-    fields: [fact_siteusage.curated_fields*]
+    fields: [fact_siteusage.curated_fields_for_instructor_mod*]
   }
 
   join: dim_relative_to_start_date {
