@@ -26,6 +26,7 @@ view: fact_activity {
       ;;
       sql_trigger_value: select count(*) from dw_ga.fact_activity ;;
   }
+  set: curated_fields { }
 
   dimension: created_time {
     hidden: yes
@@ -159,6 +160,7 @@ view: fact_activity {
   measure: count {
     label: "# Actions"
     type: count
+    hidden: yes
     drill_fields: [dim_product.discipline, dim_institution.institutionname, dim_activity.assignment_status, dim_learningpath.lowest_level, count]
   }
 }
