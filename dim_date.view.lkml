@@ -142,24 +142,24 @@ view: dim_date {
     order_by_field: dayofweekid
   }
 
-#   dimension: governmentdefinedacademicterm {
-#     type: string
-#     description: "Fall = August (8/1) - December (12/31).  Spring = January (1/1) - June (6/30).  Summer = July (7/1-7/31)
-#     This dimension represents a specific term in a specific year i.e. Fall 2017, not Fall"
-#     sql: ${TABLE}.GOVERNMENTDEFINEDACADEMICTERM ;;
-#     label: "Academic Term"
-#     group_label: "Calendar - Government Defined Academic Calendar"
-#     order_by_field: governmentdefinedacademictermid
-#   }
+   dimension: governmentdefinedacademicterm {
+     type: string
+     description: "Fall = August (8/1) - December (12/31).  Spring = January (1/1) - June (6/30).  Summer = July (7/1-7/31)
+     This dimension represents a specific term in a specific year i.e. Fall 2017, not Fall"
+     sql: ${TABLE}.GOVERNMENTDEFINEDACADEMICTERM ;;
+     label: "Academic Term"
+#      group_label: "Calendar - Government Defined Academic Calendar"
+     order_by_field: governmentdefinedacademictermid
+   }
 
-  dimension: governmentdefinedacademictermofyear {
-    type: string
-    description: "Fall = August (8/1) - December (12/31).  Spring = January (1/1) - June (6/30).  Summer = July (7/1-7/31)
-    This dimension represents a specific term regardless of year i.e. Fall, not Fall 2017"
-    sql:  split_part(${TABLE}.GOVERNMENTDEFINEDACADEMICTERM, ' ', 1) ;;
-    label: "Academic Term of year"
-    group_label: "Calendar - Government Defined Academic Calendar"
-    order_by_field: governmentdefinedacademictermofyearid
+   dimension: governmentdefinedacademictermofyear {
+     type: string
+     description: "Fall = August (8/1) - December (12/31).  Spring = January (1/1) - June (6/30).  Summer = July (7/1-7/31)
+     This dimension represents a specific term regardless of year i.e. Fall, not Fall 2017"
+     sql:  split_part(${TABLE}.GOVERNMENTDEFINEDACADEMICTERM, ' ', 1) ;;
+     label: "Academic Term of year"
+#      group_label: "Calendar - Government Defined Academic Calendar"
+     order_by_field: governmentdefinedacademictermofyearid
   }
 
   dimension: governmentdefinedacademicterm_description {
@@ -356,7 +356,10 @@ view: dim_start_date {
 
 view: dim_master_first_used_date {
   extends: [dim_date]
-  label: "Learning Path"
+  dimension: governmentdefinedacademicterm {group_label: "Course Start Date"}
+  dimension: governmentdefinedacademictermofyear {group_label: "Course Start Date"}
+#   label: "Learning Path"
+
 
 #   dimension: fiscalyear {hidden: no }
 #   dimension: governmentdefinedacademicterm {group_label: "Master First Use Date"}
