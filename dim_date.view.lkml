@@ -186,6 +186,7 @@ view: dim_date {
     sql: ${TABLE}.GOVERNMENTDEFINEDACADEMICTERMYEAR ;;
     label: "Academic Year"
     group_label: "Calendar - Government Defined Academic Calendar"
+    hidden: yes
   }
 
   dimension: hed_academicterm {
@@ -356,8 +357,8 @@ view: dim_start_date {
 
 view: dim_master_first_used_date {
   extends: [dim_date]
-  dimension: governmentdefinedacademicterm {group_label: "Course Start Date"}
-  dimension: governmentdefinedacademictermofyear {group_label: "Course Start Date"}
+  dimension: governmentdefinedacademicterm { hidden:yes}
+  dimension: governmentdefinedacademictermofyear {hidden: yes}
 #   label: "Learning Path"
 
 
