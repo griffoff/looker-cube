@@ -610,11 +610,13 @@ explore: LP_Activity_Analysis {
     relationship: many_to_one
   }
 
-  join: dim_instructor_party {
-    from: dim_party
+#   join: dim_instructor_party {
+  join: dim_party{
+#     from: dim_party
     view_label: "User (Instructor)"
-    sql_on: ${dim_instructor_user.mainpartyid} = ${dim_instructor_party.partyid} ;;
+    sql_on: ${dim_instructor_user.mainpartyid} = ${dim_party.partyid} ;;
     relationship: many_to_one
+    fields: [dim_party.curated_fields_for_instructor_mod*]
   }
 
   join: dim_learningpath {
