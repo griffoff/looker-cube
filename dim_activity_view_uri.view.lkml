@@ -115,12 +115,14 @@ set: curated_field {fields:[path,contentsource,content_source_category]}
   dimension: contentsource {
     label: "Content Source"
     type: string
+    hidden: yes
   }
 
   dimension:content_source_category {
     label: "Content Source Category"
     description: "Primary app or asset utilized when adding activities to a learning path.  Note that a high percentage of 'uncategorized' LP additions appear to be recommended readings and could likely be considerd 'non-Mindtap activities'."
     type:  string
+    hidden: yes
   }
 
   dimension: details_inline {

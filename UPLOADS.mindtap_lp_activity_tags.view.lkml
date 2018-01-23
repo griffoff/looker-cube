@@ -192,6 +192,7 @@ view: mindtap_lp_activity_tags {
     description: "Used to identify CUSTOM or ENHANCED editions as compared to the STANDARD edition"
     type: string
     sql: ${TABLE}.EDITION_TYPE ;;
+    hidden: yes
   }
 
 
