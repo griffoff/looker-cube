@@ -43,7 +43,7 @@ view: dim_party {
     ;;
     sql_trigger_value: select count(*) from dw_ga.dim_party ;;
   }
-  set: curated_fields {fields:[guid,is_external,mainpartyrole,mainpartyemail,firstname,lastname,count]}
+  set: curated_fields {fields:[guid,is_external,mainpartyrole,mainpartyemail,firstname,lastname]}
 
   set: curated_fields_for_instructor_mod {fields:[is_external]}
 
