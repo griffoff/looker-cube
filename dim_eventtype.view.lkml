@@ -73,6 +73,7 @@ view: dim_eventtype {
   dimension: major_changes {
     view_label: "Learning Path"
     label: "Major Actions"
+    description: "distinguishes between added and removed items"
     type: string
     case: {
       when: {
