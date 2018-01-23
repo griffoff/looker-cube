@@ -358,9 +358,9 @@ view: dim_master_first_used_date {
   label: "Learning Path"
 
 #   dimension: fiscalyear {hidden: no }
-  dimension: governmentdefinedacademicterm {group_label: "Master First Use Date"}
-  dimension: governmentdefinedacademictermofyear {group_label: "Master First Use Date"}
-  dimension: governmentdefinedacademictermyear {group_label: "Master First Use Date"}
+#   dimension: governmentdefinedacademicterm {group_label: "Master First Use Date"}
+#   dimension: governmentdefinedacademictermofyear {group_label: "Master First Use Date"}
+#   dimension: governmentdefinedacademictermyear {group_label: "Master First Use Date"}
 #   dimension_group: datevalue {group_label: "Master First Use Date"
 #     timeframes: [
 #       date,
