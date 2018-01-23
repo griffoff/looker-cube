@@ -603,18 +603,19 @@ explore: LP_Activity_Analysis {
     fields: [dim_eventtype.curated_fields*]
   }
 
-  join: dim_instructor_user {
-    from: dim_user
-    view_label: "User (Instructor)"
-    sql_on: ${LP_Activity_Analysis.userid} = ${dim_instructor_user.userid} ;;
+  join: dim_user {
+#     from: dim_user
+    view_label: "Course / Section Details"
+    sql_on: ${LP_Activity_Analysis.userid} = ${dim_user.userid} ;;
     relationship: many_to_one
+    fields: [dim_user.curated_fields_for_instructor_mod*]
   }
 
 #   join: dim_instructor_party {
   join: dim_party{
 #     from: dim_party
     view_label: "User (Instructor)"
-    sql_on: ${dim_instructor_user.mainpartyid} = ${dim_party.partyid} ;;
+    sql_on: ${dim_user.mainpartyid} = ${dim_party.partyid} ;;
     relationship: many_to_one
     fields: [dim_party.curated_fields_for_instructor_mod*]
   }

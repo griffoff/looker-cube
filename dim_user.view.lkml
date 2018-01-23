@@ -3,6 +3,8 @@ view: dim_user {
   sql_table_name: DW_GA.DIM_USER ;;
   set: curated_fields {fields:[user_role,mainpartyid,numberofvisits,productsactivated]}
 
+  set: curated_fields_for_instructor_mod{fields:[numberofpageviews,numberofvisits,sessionviewtime,pageviewtime]}
+
   dimension: userid {
     label: "User Id"
     description: "Internal non PII User/Account identifier.
@@ -106,6 +108,7 @@ view: dim_user {
 
   dimension: numberofpageviews {
     label: "Total no. of page views"
+    description: "This number is inclusive of both instructor & student views "
     type: tier
     tiers: [10, 100, 1000, 5000, 10000]
     style: integer
@@ -114,6 +117,7 @@ view: dim_user {
 
   dimension: numberofvisits {
     label: "Total no. of visits"
+    description: "This number is inclusive of both instructor & student visits "
     type: tier
     tiers: [1, 10, 20, 50, 100]
     style: integer
@@ -122,6 +126,7 @@ view: dim_user {
 
   dimension: pageviewtime {
     label: "Total page view time (hh:mm:ss)"
+    description: "This time is inclusive of both instructor & student views "
     type: number
     sql: ${TABLE}.PAGEVIEWTIME / 1000 / 86400;;
     value_format_name: duration_hms
@@ -138,6 +143,7 @@ view: dim_user {
 
   dimension: sessionviewtime {
     label: "Total session view time (hh:mm:ss)"
+    description: "This view time is inclusive of both instructor & student usage "
     type: number
     sql: ${TABLE}.SESSIONVIEWTIME / 1000 / 86400;;
     value_format_name: duration_hms
