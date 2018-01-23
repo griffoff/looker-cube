@@ -1,7 +1,7 @@
 view: dim_eventtype {
   label: "Learning Path Modifications"
   sql_table_name: DW_GA.DIM_EVENTTYPE ;;
-
+  set: curated_fields {fields:[major_changes]}
 
 
   measure: removed_count {
@@ -71,6 +71,7 @@ view: dim_eventtype {
   }
 
   dimension: major_changes {
+    view_label: "Learning Path"
     label: "Major Actions"
     type: string
     case: {

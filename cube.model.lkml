@@ -600,6 +600,7 @@ explore: LP_Activity_Analysis {
   join: dim_eventtype {
     sql_on: ${LP_Activity_Analysis.eventtypeid} = ${dim_eventtype.eventtypeid} ;;
     relationship: many_to_one
+    fields: [dim_eventtype.curated_fields*]
   }
 
   join: dim_instructor_user {
