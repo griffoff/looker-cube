@@ -161,6 +161,7 @@ view: fact_siteusage {
   dimension_group: eventdate {
     label: "Event Start"
     type: time
+    hidden: yes
     timeframes: [time, hour, minute, date, week, month, raw]
     sql: ${TABLE}.EVENTDATE ;;
   }
@@ -168,6 +169,7 @@ view: fact_siteusage {
   dimension_group: eventenddate {
     label: "Event End"
     type: time
+    hidden: yes
     timeframes: [time, hour, minute, date, week, month, raw]
     sql: DATEADD(millisecond, ${pageviewtime}, ${TABLE}.EVENTDATE) ;;
   }
