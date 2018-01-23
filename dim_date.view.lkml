@@ -310,6 +310,7 @@ view: dim_date {
 
   measure: count {
     label: "No. of Days"
+    hidden: yes
     type: count
     drill_fields: [detail*]
   }
