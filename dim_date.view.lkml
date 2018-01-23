@@ -142,15 +142,15 @@ view: dim_date {
     order_by_field: dayofweekid
   }
 
-  dimension: governmentdefinedacademicterm {
-    type: string
-    description: "Fall = August (8/1) - December (12/31).  Spring = January (1/1) - June (6/30).  Summer = July (7/1-7/31)
-    This dimension represents a specific term in a specific year i.e. Fall 2017, not Fall"
-    sql: ${TABLE}.GOVERNMENTDEFINEDACADEMICTERM ;;
-    label: "Academic Term"
-    group_label: "Calendar - Government Defined Academic Calendar"
-    order_by_field: governmentdefinedacademictermid
-  }
+#   dimension: governmentdefinedacademicterm {
+#     type: string
+#     description: "Fall = August (8/1) - December (12/31).  Spring = January (1/1) - June (6/30).  Summer = July (7/1-7/31)
+#     This dimension represents a specific term in a specific year i.e. Fall 2017, not Fall"
+#     sql: ${TABLE}.GOVERNMENTDEFINEDACADEMICTERM ;;
+#     label: "Academic Term"
+#     group_label: "Calendar - Government Defined Academic Calendar"
+#     order_by_field: governmentdefinedacademictermid
+#   }
 
   dimension: governmentdefinedacademictermofyear {
     type: string
