@@ -19,16 +19,16 @@ view: activations_olr {
 
   dimension: actv_counter_base {
     label: "Activation count"
-    type: number
+    type: string #number
     sql: case when ${TABLE}.ACTV_COUNT > 0 then ${actv_code} || ${actv_dt_date} || ${user_guid} end;;
     hidden: yes
   }
-
-  dimension:  is_hed {
-    label: "Is HED"
-    type: yesno
-    sql:  case when ${magellan_hed_entities.entity_no} is not null then True else False end ;;
-  }
+# In order to pass validation commented the dimension
+#  dimension:  is_hed {
+#    label: "Is HED"
+#    type: yesno
+#    sql:  case when ${magellan_hed_entities.entity_no} is not null then True else False end ;;
+#  }
 
   measure: actv_counter {
     label: "Distinct activations"
@@ -59,10 +59,17 @@ view: activations_olr {
       week,
       month,
       quarter,
-      year
+      year,
+      day_of_month,
+      month_num
     ]
     convert_tz: no
     sql: ${TABLE}.ACTV_DT ;;
+  }
+
+  dimension: actv_datekey  {
+    type: number
+    sql: ${actv_dt_year}*10000 + ${actv_dt_month_num}*100 + ${actv_dt_day_of_month} ;;
   }
 
   dimension: actv_entity_id {
@@ -88,6 +95,11 @@ view: activations_olr {
   dimension: actv_region {
     type: string
     sql: ${TABLE}.ACTV_REGION ;;
+  }
+
+  dimension: actv_trial_purchase {
+    type: string
+    sql: ${TABLE}.ACTV_TRIAL_PURCHASE ;;
   }
 
   dimension: actv_user_type {
@@ -118,6 +130,11 @@ view: activations_olr {
   dimension: in_actv_flg {
     type: string
     sql: ${TABLE}.IN_ACTV_FLG ;;
+  }
+
+  dimension: isbn13 {
+    type: string
+    sql: ${TABLE}.ISBN13 ;;
   }
 
   dimension: ldts {
