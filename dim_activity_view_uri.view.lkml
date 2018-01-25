@@ -137,12 +137,17 @@ set: curated_field {fields:[path,contentsource,content_source_category]}
     sql: ${TABLE}.details_by ;;
   }
 
+  dimension: details_wrapped {
+    hidden: yes
+    sql: ${TABLE}.details_wrapped ;;
+  }
+
   dimension: path {
     group_label: "YouTube"
     label: "Link (YouTube)"
     description: "Youtube Link added by the Instructor"
     type: string
-    html: <a title="{{details_wrapped._value}}" target="_blank" href="{{value}}">{{value}}</a> ;;
+    html: <a title="{{ dim_activity_view_uri.details_wrapped._value }}" target="_blank" href="{{value}}">{{value}}</a> ;;
   }
 
   dimension: view_uri {
@@ -153,11 +158,6 @@ set: curated_field {fields:[path,contentsource,content_source_category]}
   dimension: ref_id {
     label: "MindTap REF_ID"
     description: "Used to link to detailed information in other systems like Aplia"
-  }
-
-  dimension: details_wrapped {
-    hidden: yes
-    sql: ${TABLE}.details_wrapped ;;
   }
 
 }
