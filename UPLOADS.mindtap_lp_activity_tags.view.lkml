@@ -192,6 +192,7 @@ view: mindtap_lp_activity_tags {
     description: "Used to identify CUSTOM or ENHANCED editions as compared to the STANDARD edition"
     type: string
     sql: ${TABLE}.EDITION_TYPE ;;
+    hidden: yes
   }
 
 
@@ -283,7 +284,7 @@ measure: count {
 
   measure:  total_activity_activations{
     label: "Activity Availability"
-    description: "# of courses where a given activity can be accessed."
+    description: "# of total activities times courses."
     type: number
     # Simply count rows where there are activations
     # - this works because an explore should be joined to course_seection_facts for every row

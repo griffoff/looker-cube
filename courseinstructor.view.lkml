@@ -12,6 +12,7 @@ view: courseinstructor {
   dimension: instructoremail {
     group_label: "Instructor"
     label: "Instructor Email"
+    description: " Please use this Email ID to identify the instructor linked to a course. We do not have an instructor name field yet"
     type: string
     sql: ${TABLE}.INSTRUCTOREMAIL ;;
   }

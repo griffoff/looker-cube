@@ -1,15 +1,7 @@
+include: "/core/common.lkml"
+
 connection: "snowflake_prod"
-week_start_day: monday
-fiscal_month_offset: 3
 label:"Cube Data on Looker"
-
-named_value_format: duration_hms {
-  value_format: "hh:mm:ss"
-}
-
-named_value_format: duration_hms_full {
-  value_format: "h \h\r\s m \m\i\n\s s \s\e\c\s"
-}
 
 datagroup: fact_siteusage_datagroup {
   sql_trigger: SELECT COUNT(*) FROM dw_ga.fact_siteusage;;
@@ -608,20 +600,24 @@ explore: LP_Activity_Analysis {
   join: dim_eventtype {
     sql_on: ${LP_Activity_Analysis.eventtypeid} = ${dim_eventtype.eventtypeid} ;;
     relationship: many_to_one
+    fields: [dim_eventtype.curated_fields*]
   }
 
-  join: dim_instructor_user {
-    from: dim_user
-    view_label: "User (Instructor)"
-    sql_on: ${LP_Activity_Analysis.userid} = ${dim_instructor_user.userid} ;;
+  join: dim_user {
+#     from: dim_user
+    view_label: "Course / Section Details"
+    sql_on: ${LP_Activity_Analysis.userid} = ${dim_user.userid} ;;
     relationship: many_to_one
+    fields: [dim_user.curated_fields_for_instructor_mod*]
   }
 
-  join: dim_instructor_party {
-    from: dim_party
+#   join: dim_instructor_party {
+  join: dim_party{
+#     from: dim_party
     view_label: "User (Instructor)"
-    sql_on: ${dim_instructor_user.mainpartyid} = ${dim_instructor_party.partyid} ;;
+    sql_on: ${dim_user.mainpartyid} = ${dim_party.partyid} ;;
     relationship: many_to_one
+    fields: [dim_party.curated_fields_for_instructor_mod*]
   }
 
   join: dim_learningpath {
@@ -653,7 +649,7 @@ explore: LP_Activity_Analysis {
     view_label: "Learning Path"
     sql_on: (${LP_Activity_Analysis.courseid}, ${LP_Activity_Analysis.learningpathid}) = (${fact_siteusage.courseid}, ${fact_siteusage.learningpathid}) ;;
     relationship: many_to_many
-    fields: [fact_siteusage.curated_fields*]
+    fields: [fact_siteusage.curated_fields_for_instructor_mod*]
   }
 
   join: dim_relative_to_start_date {

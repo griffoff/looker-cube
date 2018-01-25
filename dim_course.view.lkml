@@ -8,7 +8,7 @@ view: dim_course {
           context_id
           ,organization
           ,count(*) as cnt
-      from stg_clts.activations_olr
+      from prod.stg_clts.activations_olr
       where organization is not null
       and in_actv_flg = 1
       group by 1, 2
@@ -26,8 +26,8 @@ view: dim_course {
           ,c.mag_acct_id
           ,orgs.organization
           ,to_char(dc.STARTDATE, 'YYYYMMDD')::int as startdatekey_new
-    from dw_ga.dim_course dc
-    left join stg_clts.olr_courses c on dc.coursekey = c."#CONTEXT_ID"
+    from prod.dw_ga.dim_course dc
+    left join prod.stg_clts.olr_courses c on dc.coursekey = c."#CONTEXT_ID"
     left join orgs on dc.coursekey = orgs.context_id
                   and orgs.r = 1
     ;;
