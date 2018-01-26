@@ -97,28 +97,29 @@ view: dim_date {
     hidden: yes
   }
 
-#   dimension_group: datevalue {
-#     type: time
-#     timeframes: [
-#       date,
-#       week,
-#       week_of_year,
-#       month,
-#       month_name,
-#       year,
-#       day_of_week,
-#       day_of_year
-#       #quarter_of_year,
-# #       fiscal_year,
-# #       fiscal_quarter,
-# #       fiscal_quarter_of_year,
-# #       fiscal_month_num
-#     ]
-#     convert_tz: no
-#     sql: ${TABLE}.DATEVALUE ;;
-#     label: ""
-#     description: "Standard calendar"
-#   }
+  dimension_group: datevalue {
+    type: time
+    timeframes: [
+      date,
+      week,
+      week_of_year,
+      month,
+      month_name,
+      year,
+      day_of_week,
+      day_of_year
+      #quarter_of_year,
+#       fiscal_year,
+#       fiscal_quarter,
+#       fiscal_quarter_of_year,
+#       fiscal_month_num
+    ]
+    convert_tz: no
+    sql: ${TABLE}.DATEVALUE ;;
+    label: ""
+    description: "Standard calendar"
+    hidden: yes
+  }
 
   dimension: dayofweekid {
     type: string
@@ -338,6 +339,7 @@ view: dim_start_date {
   dimension: governmentdefinedacademictermofyear {group_label: "Course Start Date"}
   dimension: governmentdefinedacademictermyear {group_label: "Course Start Date"}
   dimension_group: datevalue {group_label: "Course Start Date"
+    type: time
     timeframes: [
       date,
       week,
@@ -353,6 +355,37 @@ view: dim_start_date {
     ]}
   dimension: isweekendname {group_label: "Course Start Date"}
 
+}
+
+view: dim_activation_date {
+  extends: [dim_date]
+  label: "Activations"
+
+  dimension: fiscalyear {
+    hidden: no
+#     sql: ${TABLE}.fiscalyearvalue
+    group_label: "Activation Date"}
+  dimension: governmentdefinedacademicterm {group_label: "Activation Date"}
+  dimension: governmentdefinedacademictermofyear {group_label: "Activation Date"}
+  dimension: governmentdefinedacademictermyear {group_label: "Activation Date"}
+  dimension_group: datevalue {group_label: "Activation Date"
+    type: time
+    hidden: no
+    timeframes: [
+      date,
+      week,
+      month,
+      month_name,
+      year,
+      day_of_week,
+      day_of_year
+      #quarter_of_year,
+#       fiscal_year,
+#       fiscal_quarter,
+#       fiscal_quarter_of_year,
+#       fiscal_month_num
+    ]}
+  dimension: isweekendname {hidden:yes group_label: "Activation Date"}
 }
 
 view: dim_master_first_used_date {

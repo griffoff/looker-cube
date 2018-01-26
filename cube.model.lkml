@@ -29,9 +29,10 @@ explore: fact_activation {
   }
 
   join: dim_date {
+    from: dim_activation_date
     sql_on: ${fact_activation.activationdatekey} = ${dim_date.datekey} ;;
     relationship: many_to_one
-    view_label: "Date - Activation Date"
+    #view_label: "Date - Activation Date"
   }
 
   join: dim_activationfilter {
