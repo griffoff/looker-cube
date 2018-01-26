@@ -153,6 +153,20 @@ view: fact_activation {
     drill_fields: [coursedetails*]
   }
 
+  dimension: activationdate {
+    type: date
+    hidden: yes
+    sql: to_date(${activationdatekey}::string, 'YYYYMMDD') ;;
+  }
+
+  measure: total_activations_calendar_ytd {
+    label: "Total Activations YTD"
+    description: "Must be used with activation date year and day of year"
+    type: number
+    sql: sum(sum(${noofactivations_base})) over (partition by ${dim_date.datevalue_year}  order by ${dim_date.datevalue_day_of_year} rows unbounded preceding) ;;
+    required_fields: [dim_date.datevalue_year, dim_date.datevalue_day_pf_year]
+  }
+
   measure: avg_noofactivations {
     label: "Avg. Activations"
     type: average
