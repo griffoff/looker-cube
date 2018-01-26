@@ -129,16 +129,37 @@ view: ga_data_parsed {
   dimension: ldts {
     type: string
     sql: ${TABLE}.LDTS ;;
+    hidden: yes
   }
 
-  dimension: localtime_timestamp_tz {
-    type: string
+  dimension_group: localtime_timestamp_tz {
+    group_label: "Local Time"
+    label: ""
+    type: time
+    timeframes: [raw, date, hour_of_day, day_of_week, time_of_day, month, year, week_of_year]
     sql: ${TABLE}.LOCALTIME_TIMESTAMP_TZ ;;
   }
+
+  dimension: localtime_timestamp_tz_day_hour_sort {
+    type: number
+    sql: (decode(to_char(${localtime_timestamp_tz_raw}, 'dy'), 'Sun', 0, 'Mon', 1, 'Tue', 2, 'Wed', 3, 'Thu', 4, 'Fri', 5, 'Sat', 6) || '.' || to_char(${localtime_timestamp_tz_raw}, 'hh24'))::float ;;
+    hidden: yes
+  }
+
+  dimension: localtime_timestamp_tz_day_hour {
+    group_label: "Local Time"
+    label: "Day of Week/Hour of Day"
+    type: string
+    sql: to_char(${localtime_timestamp_tz_raw}, 'dy hh24:00') ;;
+    order_by_field: localtime_timestamp_tz_day_hour_sort
+  }
+
+
 
   dimension: localtimefmt {
     type: string
     sql: ${TABLE}.LOCALTIMEFMT ;;
+    hidden: yes
   }
 
   dimension: nbid {
@@ -191,21 +212,30 @@ view: ga_data_parsed {
   dimension: rsrc {
     type: string
     sql: ${TABLE}.RSRC ;;
+    hidden: yes
   }
 
   dimension: sessionid {
     type: string
     sql: ${TABLE}.SESSIONID ;;
+    hidden: yes
   }
 
   dimension: strlocaltime {
     type: string
     sql: ${TABLE}.STRLOCALTIME ;;
+    hidden: yes
   }
 
   dimension: totals_timeonsite {
     type: number
     sql: ${TABLE}.TOTALS_TIMEONSITE ;;
+  }
+
+  dimension: totals_timeonsite_tier {
+    type: tier
+    tiers: [0, 100, 500]
+    sql: ${totals_timeonsite} ;;
   }
 
   dimension: url {
@@ -221,6 +251,7 @@ view: ga_data_parsed {
   dimension: userssoguid {
     type: string
     sql: ${TABLE}.USERSSOGUID ;;
+    hidden: yes
   }
 
   dimension_group: visit_start {
@@ -230,18 +261,21 @@ view: ga_data_parsed {
       time,
       date,
       week,
+      week_of_year,
       month,
+      month_name,
       quarter,
       year
     ]
     sql: ${TABLE}.VISIT_START_TIME ;;
   }
 
-#   dimension: visitid {
-#     type: number
-#     value_format_name: id
-#     sql: ${TABLE}.VISITID ;;
-#   }
+  dimension: visitid {
+    type: number
+    value_format_name: id
+    sql: ${TABLE}.VISITID ;;
+    hidden: yes
+  }
 
   dimension: visitnumber {
     type: number
@@ -254,8 +288,27 @@ view: ga_data_parsed {
     hidden: yes
   }
 
-  measure: user_count {
-    label: "# Users"
+  measure: totals_timeonsite_sum {
+    type: sum
+    sql: ${totals_timeonsite} ;;
+  }
+
+  measure: totals_timeonsite_avg {
+    type: average
+    sql: ${totals_timeonsite} ;;
+  }
+
+  measure: visit_count {
+    type: count_distinct
+    sql: ${visitid} ;;
+  }
+
+  measure: visitor_count {
+    type: count_distinct
+    sql: ${fullvisitorid} ;;
+  }
+
+  measure: unique_students {
     type: count_distinct
     sql: ${userssoguid} ;;
   }

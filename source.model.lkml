@@ -386,3 +386,10 @@ explore: snapshot {
   }
 
 }
+
+
+explore: ga_data_parsed {
+  join: user_facts {
+    sql_on: ${ga_data_parsed.userssoguid} = ${user_facts.guid} ;;
+  }
+}

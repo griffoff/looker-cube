@@ -3,6 +3,7 @@ view: user_facts {
   derived_table: {
     sql: SELECT
         s.userId
+        ,max(p.guid) as guid
         ,sum(POINTS_EARNED) / nullif(sum(POINTS_POSSIBLE), 0) AS overall_score
         ,sum(CASE WHEN a.assigned = 1 THEN POINTS_EARNED END) / nullif(sum(CASE WHEN a.ASSIGNED = 1 THEN POINTS_POSSIBLE END), 0) AS gradable_score
         ,sum(CASE WHEN a.assigned != 1 THEN POINTS_EARNED END) / nullif(sum(CASE WHEN a.ASSIGNED != 1 THEN POINTS_POSSIBLE END), 0) AS nongradable_score
@@ -16,9 +17,12 @@ view: user_facts {
       FROM dw_ga.FACT_ACTIVITYOUTCOMESUMMARY s
       INNER JOIN dw_ga.DIM_ACTIVITY a ON s.ACTIVITYID = a.ACTIVITYID
       INNER JOIN dw_ga.FACT_SESSION f ON s.USERID = f.USERID
+      inner join dw_ga.dim_user u on s.userid = u.userid
+      inner join dw_ga.dim_party p on u.mainpartyid = p.partyid
       GROUP BY 1
        ;;
-      datagroup_trigger: fact_activityoutcome_datagroup
+      #datagroup_trigger: fact_activityoutcome_datagroup
+      sql_trigger_value: select * from dw_ga.fact_activityoutcome ;;
   }
   set: curated_fields{
     fields: [activities_completed,activities_completed_by_user,gradable_activities_completed,gradable_activities_completed_by_user,overall_score,logins_by_user]
@@ -29,6 +33,10 @@ view: user_facts {
     sql: ${TABLE}.USERID ;;
     hidden: yes
     primary_key: yes
+  }
+
+  dimension: guid {
+    hidden: yes
   }
 
   dimension: overall_score {
