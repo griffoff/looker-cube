@@ -229,7 +229,7 @@ view: ga_data_parsed {
 
   dimension: totals_timeonsite {
     type: number
-    sql: ${TABLE}.TOTALS_TIMEONSITE ;;
+    sql: ${TABLE}.TOTALS_TIMEONSITE/60/60/24 ;;
   }
 
   dimension: totals_timeonsite_tier {
@@ -289,13 +289,15 @@ view: ga_data_parsed {
   }
 
   measure: totals_timeonsite_sum {
-    type: sum
+    type: sum_distinct
     sql: ${totals_timeonsite} ;;
+    value_format_name: duration_hms
   }
 
   measure: totals_timeonsite_avg {
-    type: average
+    type: average_distinct
     sql: ${totals_timeonsite} ;;
+    value_format_name: duration_hms
   }
 
   measure: visit_count {
@@ -311,6 +313,11 @@ view: ga_data_parsed {
   measure: unique_students {
     type: count_distinct
     sql: ${userssoguid} ;;
+  }
+
+  measure: visits_per_student {
+    type: number
+    sql: ${visit_count} / ${visitor_count} ;;
   }
 
   measure: count {

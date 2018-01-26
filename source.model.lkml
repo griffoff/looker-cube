@@ -1,5 +1,7 @@
 connection: "snowflake_prod"
 label:"Source Data on Snowflake"
+include: "/core/common.lkml"
+
 include: "*.view.lkml"         # include all views in this project
 include: "*.dashboard.lookml"  # include all dashboards in this project
 include: "dims.model.lkml"
