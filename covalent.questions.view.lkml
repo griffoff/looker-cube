@@ -1,17 +1,3 @@
-view: mankiw_questions {
-  label: "MANKIW Questions"
-
-}
-
-view: soa_questions {
-  extends: [mankiw_questions]
-  sql_table_name: dev.zpg.soa_questions ;;
-  label: "SOA Questions"
-
-
-
-}
-
 view: all_questions {
   sql_table_name: looker_scratch.all_questions ;;
   label: "All Covalent Questions"
