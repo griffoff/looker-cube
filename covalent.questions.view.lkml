@@ -107,7 +107,7 @@ view: all_questions {
   }
 
   measure: normalscore_avg {
-    label: "Avg Score"
+    label: "Score (avg)"
     group_label: "Score"
     type: average
     sql: ${normalscore} ;;
@@ -116,7 +116,7 @@ view: all_questions {
   }
 
   measure: normalscore_min {
-    label: "Min Score"
+    label: "Score (min)"
     group_label: "Score"
     type: min
     sql: ${normalscore} ;;
@@ -124,7 +124,7 @@ view: all_questions {
   }
 
   measure: normalscore_max {
-    label: "Max Score"
+    label: "Score (max)"
     group_label: "Score"
     type: max
     sql: ${normalscore} ;;
