@@ -55,7 +55,7 @@ view: user_facts {
   dimension: user_score_category {
     label: "User Score Category (Gradable)"
     type: tier
-    tiers: [0.4, 0.7, 0.9]
+    tiers: [0.5, 0.74, 0.89]
     style: relational
     sql: ${gradable_score} ;;
     value_format_name: percent_0
@@ -64,7 +64,7 @@ view: user_facts {
   dimension: user_score_category_non_gradable {
     label: "User Score Category (Non-Gradable)"
     type: tier
-    tiers: [0.4, 0.7, 0.9]
+    tiers: [0.5, 0.74, 0.89]
     style: relational
     sql: ${nongradable_score} ;;
     value_format_name: percent_0

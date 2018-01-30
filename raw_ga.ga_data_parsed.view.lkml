@@ -320,6 +320,11 @@ view: ga_data_parsed {
     sql: ${visit_count} / ${visitor_count} ;;
   }
 
+  measure: hits_per_student {
+    type:  number
+    sql: ${count} / ${visitor_count} ;;
+  }
+
   measure: count {
     type: count
     drill_fields: [ga_data_parsed_id, hostname]
