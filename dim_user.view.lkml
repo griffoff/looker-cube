@@ -1,7 +1,9 @@
 view: dim_user {
   label: "User"
   sql_table_name: DW_GA.DIM_USER ;;
-  set: curated_fields {fields:[user_role,numberofvisits,productsactivated]}
+  set: curated_fields {fields:[user_role,mainpartyid,numberofvisits,productsactivated]}
+
+  set: curated_fields_for_instructor_mod{fields:[numberofpageviews,numberofvisits,sessionviewtime,pageviewtime]}
 
   dimension: userid {
     label: "User Id"
@@ -90,7 +92,9 @@ view: dim_user {
 
   dimension: user_role {
     label: "User Role"
+    description: "distinguishes between Instructors, Students, TA's and Others"
     type: string
+    hidden: yes #this dimension is active in dim_party
     sql:
         CASE
           WHEN ${mainpartyrole} = 'INSTRUCTOR' THEN 'Instructor'
@@ -104,6 +108,7 @@ view: dim_user {
 
   dimension: numberofpageviews {
     label: "Total no. of page views"
+    description: "This number is inclusive of both instructor & student views "
     type: tier
     tiers: [10, 100, 1000, 5000, 10000]
     style: integer
@@ -112,6 +117,7 @@ view: dim_user {
 
   dimension: numberofvisits {
     label: "Total no. of visits"
+    description: "This number is inclusive of both instructor & student visits "
     type: tier
     tiers: [1, 10, 20, 50, 100]
     style: integer
@@ -120,6 +126,7 @@ view: dim_user {
 
   dimension: pageviewtime {
     label: "Total page view time (hh:mm:ss)"
+    description: "This time is inclusive of both instructor & student views "
     type: number
     sql: ${TABLE}.PAGEVIEWTIME / 1000 / 86400;;
     value_format_name: duration_hms
@@ -127,6 +134,7 @@ view: dim_user {
 
   dimension: productsactivated {
     label: "No. of products activated"
+    description: "Number of products activated by an user"
     type: tier
     tiers: [1, 2, 3, 5, 10]
     style: integer
@@ -135,6 +143,7 @@ view: dim_user {
 
   dimension: sessionviewtime {
     label: "Total session view time (hh:mm:ss)"
+    description: "This view time is inclusive of both instructor & student usage "
     type: number
     sql: ${TABLE}.SESSIONVIEWTIME / 1000 / 86400;;
     value_format_name: duration_hms

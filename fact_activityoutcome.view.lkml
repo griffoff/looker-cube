@@ -1,5 +1,5 @@
 view: fact_activityoutcome {
-  label: "Learning Path - Activity Takes"
+  label: "Learning Path - Usage Data"
   sql_table_name: DW_GA.FACT_ACTIVITYOUTCOME ;;
 
   dimension: rowid {
@@ -35,7 +35,8 @@ view: fact_activityoutcome {
   }
 
   dimension: completed {
-    label: "Take Completed"
+    label: "Take Status"
+    description: "Indicates whether a given take is (1) In Progress, (2) Completed or (3) Not Attempted"
     type: string
     sql:  CASE
               WHEN ${TABLE}.COMPLETED = 'true' THEN 'Completed'
@@ -380,13 +381,24 @@ view: fact_activityoutcome {
     type: count_distinct
     sql: case when ${score} >= 0 then (${TABLE}.USERID) end ;;
     label: "# of users completed"
+    description: "Count of users who completed an activity"
   }
 
   measure: usercount_withscore {
     type: count_distinct
     sql: case when ${score} > 0 then (${TABLE}.USERID) end ;;
     label: "# of users completed with greater than 0 score"
+    description: "Count of users who had scores greater than 0"
   }
+
+  measure: score_to_final_score_correlation {
+    label: "Activity Score to MindTap overall score correlation"
+    type: number
+    sql: CORR(${user_final_scores.final_score}, ${score}) ;;
+    value_format_name: decimal_3
+    hidden: yes
+  }
+
 
   measure: count {
     type: count

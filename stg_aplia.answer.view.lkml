@@ -133,7 +133,7 @@ view: answer {
     label: "Average Score"
     type: average
     sql: ${score} ;;
-    value_format_name: percent_1
+#     value_format_name: percent_1
   }
 
   dimension_group: score_credit_last_modified {

@@ -57,7 +57,7 @@ view: dim_relativedate {
   dimension: monthsbucket {
     label: "Relative Months Bucket"
     type: tier
-    hidden: yes
+#     hidden: yes
     tiers: [
       1,
       2,
@@ -68,7 +68,7 @@ view: dim_relativedate {
     ]
     style: integer
     sql: ${TABLE}.DAYS ;;
-    value_format: "0 \m/t/h/s"
+    value_format: "0 \m\t\h\s"
   }
 
   dimension: weeks {
@@ -89,7 +89,7 @@ view: dim_relativedate {
     label: "Weeks Relative to Course Start Date (Buckets)"
     description: "Using for RFI Dashboard element. Please hide when finished setting up"
     type: string
-    hidden: no
+    hidden: yes
     sql:
             CASE
                 WHEN ${weeksname} <0 THEN 'Pre-Class'
@@ -111,7 +111,10 @@ view: dim_relativedate {
 
 view: dim_relative_to_start_date {
   extends: [dim_relativedate]
-  label: "Date - Course Start Date"
+  label: "Course / Section Details"
+
+  dimension: weeksname {group_label: "Course Start Date"}
+  dimension: monthsbucket {hidden: yes group_label: "Course Start Date"}
 }
 
 view: dim_relative_to_end_date {

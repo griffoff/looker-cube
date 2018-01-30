@@ -1,10 +1,10 @@
 view: olr_courses {
   label: "Course / Section Details"
   sql_table_name: STG_CLTS.OLR_COURSES ;;
-  set: curated_fields {fields:[course_key,course_name,instructor_name]}
+  set: curated_fields {fields:[course_key,course_name]}
 
   dimension_group: begin_date {
-    label: "Course Start"
+    label: "(OLR) Course Start"
     type: time
     timeframes: [
       raw,
@@ -56,6 +56,7 @@ view: olr_courses {
   }
 
   dimension: created_on {
+    description: "Date on which the course was created"
     type: string
     sql: ${TABLE}.CREATED_ON ;;
   }
@@ -78,8 +79,18 @@ view: olr_courses {
     hidden:  yes
   }
 
-  dimension: end_date {
-    type: string
+  dimension_group: end_date {
+    label: "Course End"
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
     sql: ${TABLE}.END_DATE ;;
   }
 
@@ -115,6 +126,7 @@ view: olr_courses {
   }
 
   dimension: instructor_guid {
+    label: "Instructor GUID"
     description: "Instructor user ID.  ID may represent a coordinator based on how the course was set up."
     type: string
     sql: ${TABLE}.INSTRUCTOR_GUID ;;
@@ -127,6 +139,7 @@ view: olr_courses {
   }
 
   dimension: isbn {
+    label: "ISBN"
     description: "IAC ISBN associated with a given course/section."
     type: string
     sql: ${TABLE}.ISBN ;;
@@ -174,6 +187,7 @@ view: olr_courses {
   }
 
   dimension: secondary_instructor_guid {
+    label: "Secondary Instructor GUID"
     description: "User ID of an additional instructor associated with a given course key.  If used, a department head likely is listed as the primary instructor
       as he/she set up a course for all professors."
     type: string
@@ -181,7 +195,7 @@ view: olr_courses {
   }
 
   dimension: territory_id {
-    description: "Internal cengage territory code."
+    description: "Internal Cengage territory code."
     type: string
     sql: ${TABLE}.TERRITORY_ID ;;
   }

@@ -21,7 +21,7 @@ view: ipeds {
   }
 
   dimension: institution_size_category_hd_2015_ {
-    label: "Institution size category"
+    label: "Institution Size Category"
     group_label: "IPEDS"
     type: number
     sql: ${TABLE}.INSTITUTION_SIZE_CATEGORY_HD_2015_ ;;

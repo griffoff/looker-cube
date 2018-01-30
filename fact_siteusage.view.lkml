@@ -27,6 +27,9 @@ view: fact_siteusage {
   set:  curated_fields {
     fields: [percent_of_activations,percent_of_all_activations,session_count,usercount]
     }
+  set:  curated_fields_for_instructor_mod{
+    fields: [session_count,usercount]
+  }
   #sql_table_name: DW_GA.FACT_SITEUSAGE ;;
   derived_table: {
     sql:
@@ -62,6 +65,7 @@ view: fact_siteusage {
 
   measure: clickcount_avg {
     label: "Clicks (avg)"
+    description: "Average number of clicks in the product"
     type: average
     sql: ${TABLE}.CLICKCOUNT ;;
     html:
@@ -76,6 +80,7 @@ view: fact_siteusage {
     label: "Clicks (max)"
     type: number
     sql: max(${clickcount} ) over ();;
+    hidden: yes
   }
 
   measure: clickcount_avg_max {
@@ -108,6 +113,7 @@ view: fact_siteusage {
 
   measure: clickcount {
     label: "Clicks (total)"
+    description: "Total number of clicks in the product"
     type: sum
     sql: ${TABLE}.CLICKCOUNT ;;
     html:
@@ -158,6 +164,7 @@ view: fact_siteusage {
   dimension_group: eventdate {
     label: "Event Start"
     type: time
+    hidden: yes
     timeframes: [time, hour, minute, date, week, month, raw]
     sql: ${TABLE}.EVENTDATE ;;
   }
@@ -165,6 +172,7 @@ view: fact_siteusage {
   dimension_group: eventenddate {
     label: "Event End"
     type: time
+    hidden: yes
     timeframes: [time, hour, minute, date, week, month, raw]
     sql: DATEADD(millisecond, ${pageviewtime}, ${TABLE}.EVENTDATE) ;;
   }
@@ -247,12 +255,14 @@ view: fact_siteusage {
     label: "Views (avg)"
     type: average
     sql: ${pageviewcount} ;;
+    hidden: yes
   }
 
   measure: pageviewcount_sum {
     label: "Views (total)"
     type: sum
     sql: ${pageviewcount} ;;
+    hidden: yes
   }
 
   dimension: pageviewtime {
@@ -293,7 +303,7 @@ view: fact_siteusage {
 
   measure: pageviewtime_useraverage {
     group_label: "Time in product"
-    label: "Time in product (avg per student)"
+    label: "Time in Mindtap (avg per student)"
     type: number
     sql: ${pageviewtime_sum} / nullif(${usercount}, 0);;
     value_format: "d \d\a\y\s h \h\r\s m \m\i\n\s"
@@ -369,7 +379,7 @@ view: fact_siteusage {
   }
 
   measure: usercount {
-    label: "# Users"
+    label: "# Users (Distinct)"
     description: "This is the number of unique users that have activity related to the current context
     NOTE: The total # Users will most likely be different from the sum of # Users at a lower level (for example: at chapter level).
           This is because the same user can use each chapter and so will be counted in the # Users at chapter level,
@@ -377,7 +387,20 @@ view: fact_siteusage {
     type: count_distinct
     sql: ${partyid} ;;
     hidden: no
-    drill_fields: [dim_product.productfamily, dim_institution.institutionname, mindtap_lp_activity_tags.chapter, mindtap_lp_activity_tags.learning_path_activity_title, usercount, percent_of_activations]
+#     drill_fields: [dim_product.productfamily, dim_institution.institutionname, mindtap_lp_activity_tags.chapter, mindtap_lp_activity_tags.learning_path_activity_title, usercount, percent_of_activations]
+
+#     drill_fields: [mindtap_lp_activity_tags.activity_type,mindtap_lp_activity_tags.learning_path_activity_title_count]
+#     drill_fields: [mindtap_lp_activity_tags.chapter,mindtap_lp_activity_tags.activity_type,mindtap_lp_activity_tags.learning_path_activity_title,percent_of_activations]
+    drill_fields: [partyid,mindtap_lp_activity_tags.activity_type,mindtap_lp_activity_tags.learning_path_activity_title_count_fordrilldowns,fact_activityoutcome.score_avg,user_facts.logins_from_session_number,pageviewtime_useraverage]
+
+
+  }
+
+  measure: total_users {
+  label: "# Users (Total)"
+  description: "Total number of people who clicked on an item"
+  type: count
+  sql: ${partyid} ;;
   }
 
   measure: percent_of_activations {
@@ -395,6 +418,7 @@ view: fact_siteusage {
         <div style="width: {{rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">{{rendered_value}}</div>
       </div>
     ;;
+    drill_fields: [dim_institution.institutionname,percent_of_activations]
   }
 
   measure: percent_of_all_activations {
@@ -409,6 +433,24 @@ view: fact_siteusage {
         <div style="width: {{rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">{{rendered_value}}</div>
       </div>
     ;;
+  }
+
+  measure: time_on_task_to_final_score_correlation {
+    label: "Time spent in activity to MindTap overall score correlation"
+    type: number
+    sql: CORR(${user_final_scores.final_score}, ${pageviewtime}) ;;
+    value_format_name: decimal_3
+    hidden: yes
+  }
+
+  measure: time_on_task_to_final_score_correlation_rank_by_product_family {
+    label: "Time spent in activity to MindTap overall score correlation rank by product family"
+    type: number
+    sql: dense_rank() over (partition by ${dim_product.discipline}, ${dim_product.productfamily_edition} order by coalesce(${time_on_task_to_final_score_correlation}, 0) desc)  ;;
+    value_format_name: decimal_0
+    required_fields: [dim_product.discipline, dim_product.productfamily_edition]
+    can_filter: no
+    hidden: yes
   }
 }
 #- measure: count

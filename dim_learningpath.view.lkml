@@ -10,6 +10,7 @@ view: lp_node_map {
       sql_trigger_value: select count(*) from dw_ga.fact_activity ;;
   }
   set: curated_fields {fields:[nodeid,snapshotid]}
+  set: curated_fields_PM {fields:[]}
 
   dimension: learningpathid {
     type:  number
@@ -19,6 +20,7 @@ view: lp_node_map {
   }
 
   dimension: nodeid {
+    label: "Node ID"
     group_label: "Source Links"
     type:  number
     sql: ${TABLE}.node_id ;;
@@ -29,6 +31,7 @@ view: lp_node_map {
   }
 
   dimension: snapshotid {
+    label: "Snapshot ID"
     group_label: "Source Links"
     type:  number
     sql: ${TABLE}.snapshot_id ;;
@@ -83,7 +86,7 @@ view: dim_learningpath {
   label: "Learning Path"
   #sql_table_name: DW_GA.DIM_LEARNINGPATH ;;
   set: curated_fields {
-    fields: [learningtype,lowest_level,lowest_level_count,snapshot_status, ref_id]
+    fields: [learningtype,lowest_level,snapshot_status, ref_id]
   }
 
   derived_table: {
@@ -391,7 +394,8 @@ view: dim_learningpath {
   }
 
   dimension: learningtype {
-    label: "Learning path activity/plank type"
+    label: "Learning Path Plank Type"
+    description: "Describes the type of Learning Path planks.  Options are (1) Activity, (2) Learning Path, (3) Group, (4) Unit or (5) Unknown.  For usage data, filter for 'Activity'"
     type: string
     sql: ${TABLE}.LEARNINGTYPE ;;
    # hidden: yes
@@ -509,6 +513,7 @@ view: dim_learningpath {
 
   dimension: lowest_level {
     label: "Learning Path Activity Title"
+    description: "Activity Title displayed on the Learning Path"
     type: string
     sql:COALESCE (${mindtap_lp_activity_tags.learning_path_activity_title}, ${TABLE}.lowest_level) ;;
     order_by_field: lowest_level_sort_by_data
@@ -659,8 +664,8 @@ view: dim_learningpath {
   measure: lowest_level_count {
     label: "# Activities"
     description: "Count of all learning path items marked as an Activity"
-    type: count
-    sql: ${TABLE}.lowest_level;;
+    type: number
+    sql: count(${lowest_level});;
     hidden: no
   }
 

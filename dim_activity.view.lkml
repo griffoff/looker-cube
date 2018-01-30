@@ -56,6 +56,8 @@ view: dim_activity {
   }
   set: curated_fields {fields:[gradable_percent,practice_percent,notscorable_percent,unassigned_percent,APPLICATIONNAME,count_gradable,status]}
 
+  set: curated_fields_PM {fields:[APPLICATIONNAME,count_gradable,status]}
+
   dimension: activitycategory {
     group_label: "Activity Category"
     label: "Activity Category (Lvl 1)"
@@ -430,7 +432,7 @@ view: dim_activity {
   }
 
   dimension: status {
-    label: "Gradable Status"
+    label: "Activity Status"
     description: "
     “Graded” = Student gets a score (scorable) and the score counts towards his/her grade (gradable)
     “Practice” = Student gets a score (scorable) but the activity does NOT count towards his/her grade (not gradable)

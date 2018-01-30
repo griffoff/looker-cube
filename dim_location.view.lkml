@@ -62,6 +62,7 @@ view: dim_location {
   }
 
   dimension: postalcode {
+    group_label: "Location"
     label: "Postal/Zip code"
     type: string
     sql: ${TABLE}.POSTALCODE ;;
@@ -75,14 +76,17 @@ view: dim_location {
   }
 
   dimension: regioncode {
+    group_label: "Location"
     label: "Region code"
     type: string
     sql: ${TABLE}.REGIONCODE ;;
-    hidden: yes
+    map_layer_name: us_states
+    #hidden: yes
   }
 
   measure: count {
-    label: "# of locations"
+    label: "# Locations"
+    description: "No of locations for a Institution"
     type: count
     drill_fields: [location.country, location.city, location.region]
   }

@@ -42,8 +42,10 @@ explore: dim_course {
   extends: [dim_institution, dim_product]
 
   join: olr_courses {
+    fields: [dim_course.curated_fields*]
     sql_on: ${dim_course.coursekey} = ${olr_courses.context_id};;
     relationship: one_to_one
+    fields: [olr_courses.curated_fields*]
   }
 
   join: dim_start_date {
@@ -122,15 +124,15 @@ explore: dim_institution {
     relationship: many_to_one
   }
 
-  join: ipeds_map {
-    sql_on: ${dim_institution.entity_no} = ${ipeds_map.entity_no} ;;
-    relationship: one_to_one
-  }
+#   join: ipeds_map {
+#     sql_on: ${dim_institution.entity_no} = ${ipeds_map.entity_no} ;;
+#     relationship: one_to_one
+#   }
 
-  join: ipeds {
-    sql_on: ${ipeds_map.ipeds_id} = ${ipeds.unit_id} ;;
-    relationship: many_to_one
-  }
+#   join: ipeds {
+#     sql_on: ${ipeds_map.ipeds_id} = ${ipeds.unit_id} ;;
+#     relationship: many_to_one
+#   }
 }
 
 explore: dim_deviceplatform {
@@ -145,8 +147,7 @@ explore: dim_learningpath {
   extension: required
 
   join: dim_master_first_used_date {
-    view_label: "Date - Learning Path - Master First Use"
-    from:  dim_date
+    view_label: "Learning Path"
     sql_on: ${dim_learningpath.master_first_used_datekey} = ${dim_master_first_used_date.datekey} ;;
     relationship: many_to_one
   }

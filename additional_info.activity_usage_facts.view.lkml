@@ -1,4 +1,5 @@
 view: activity_usage_facts {
+  label: "Learning Path"
 
   derived_table: {
     explore_source: fact_siteusage {
@@ -6,8 +7,8 @@ view: activity_usage_facts {
       column: activity_type { field: mindtap_lp_activity_tags.activity_type }
       column: activity_by_group { field: mindtap_lp_activity_tags.activity_by_group }
       column: no_of_unique_activities { field: dim_learningpath.lowest_level_count_distinct }
-      column: courseid { field: dim_course.courseid }
-      column: partyid { field: dim_party.partyid }
+      column: courseid { field: fact_siteusage.courseid }
+      column: partyid { field: fact_siteusage.partyid }
 #       filters: {
 #         field: dim_start_date.fiscalyear
 #         value: "FY17"
@@ -16,9 +17,13 @@ view: activity_usage_facts {
 #         field: dim_product.productfamily_edition
 #         value: "CACIOPPO^, DISCOVERING PSYCH - 002"
 #       }
+      sort: {field: fact_siteusage.courseid}
     }
     datagroup_trigger: fact_siteusage_datagroup
   }
+
+  set: curated_fields {fields:[activity_type_usage_bucket]}
+
   dimension: activity_usage_facts_grouping {
     hidden: yes
   }
@@ -28,15 +33,9 @@ view: activity_usage_facts {
   dimension: courseid {}
   dimension: partyid {}
 
-#   measure: UsageCount {
-#     label: "Count of ActivityType By User"
-#     type: count_distinct
-#     sql: ${activity_type} ;;
-# #    sql_distinct_key: ${partyid} ;;
-#   }
-
   dimension: activity_type_usage_bucket{
-    label: "Student Usage Bucket"
+    label: "Student Usage Bucket - By Activity Type"
+    description: "Percent of activities accessed by a student in an Activity Type "
     type: string
     case: {
       when: {

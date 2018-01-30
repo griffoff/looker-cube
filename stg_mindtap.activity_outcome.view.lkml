@@ -63,9 +63,10 @@ view: activity_outcome {
     sql: ${TABLE}.LAST_MODIFIED_BY ;;
   }
 
-  dimension: last_modified_date {
-    type: string
-    sql: ${TABLE}.LAST_MODIFIED_DATE ;;
+  dimension_group: last_modified_date {
+    type: time
+    timeframes: [year, day_of_week, week_of_year]
+    sql: dateadd(millisecond, ${TABLE}.LAST_MODIFIED_DATE::int, 0::timestamp) ;;
   }
 
   dimension: last_score_modified_time {

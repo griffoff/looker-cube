@@ -15,6 +15,7 @@ view: dim_party {
     )
     select
       p.*
+      ,user.mainpartyrole
       ,case
         when tu.guid is not null then true
         when upper(p.mainpartyemail) like '%CENGA%E%'
@@ -37,11 +38,14 @@ view: dim_party {
         end as Is_Internal
     from dw_ga.dim_party p
     left join tu on p.guid = tu.guid
+    left join dw_ga.dim_user user on p.partyid = user.mainpartyid
     order by p.partyid
     ;;
     sql_trigger_value: select count(*) from dw_ga.dim_party ;;
   }
-  set: curated_fields {fields:[guid,is_external,count]}
+  set: curated_fields {fields:[guid,is_external,mainpartyrole,mainpartyemail,firstname,lastname]}
+
+  set: curated_fields_for_instructor_mod {fields:[is_external]}
 
   set: personDetails {
     fields: [dim_course.coursekey, dim_course.coursename, guid, mainpartyemail, firstname, lastname, fact_activation.total_noofactivations, is_external, dim_user.productsactivated, course_section_facts.total_noofactivations]
@@ -74,18 +78,33 @@ view: dim_party {
     sql: not ${TABLE}.is_internal;;
   }
 
+  dimension: mainpartyrole {
+    label: "User Role"
+    description: "distinguishes between Instructors, Students, TA's and Others"
+    type: string
+    sql:
+        CASE
+          WHEN ${TABLE}.mainpartyrole = 'INSTRUCTOR' THEN 'Instructor'
+          WHEN ${TABLE}.mainpartyrole = 'STUDENT' THEN 'Student'
+          WHEN ${TABLE}.mainpartyrole in ('TEACHING_ASSISTANT', 'TEACHING ASSISTANT') THEN 'TA'
+          ELSE 'Other'
+        END ;;
+  }
+
   dimension: firstname {
     label: "First name"
     group_label: "PII"
     type: string
     sql:
-    CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' or ${is_internal} THEN
+    CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' or ${is_internal} or ${TABLE}.mainpartyrole != 'STUDENT' THEN
     ${TABLE}.FIRSTNAME
     ELSE
     MD5(${TABLE}.FIRSTNAME || 'salt')
     END ;;
     html:
     {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
+    {{ value }}
+    {%elsif mainpartyrole._value != 'Student' %}
     {{ value }}
     {% else %}
     [Masked]
@@ -97,13 +116,15 @@ view: dim_party {
     group_label: "PII"
     type: string
     sql:
-    CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' THEN
+    CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' or ${TABLE}.mainpartyrole != 'STUDENT' THEN
     ${TABLE}.GUID
     ELSE
     MD5(${TABLE}.GUID || 'salt')
     END ;;
     html:
     {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
+    {{ value }}
+    {%elsif mainpartyrole._value != 'Student' %}
     {{ value }}
     {% else %}
     [Masked]
@@ -116,13 +137,15 @@ view: dim_party {
     type: string
     #sql: ${TABLE}.LASTNAME ;;
     sql:
-     CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' THEN
+     CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' or ${TABLE}.mainpartyrole != 'STUDENT' THEN
         ${TABLE}.LASTNAME
      ELSE
         MD5(${TABLE}.LASTNAME || 'salt')
      END ;;
     html:
     {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
+    {{ value }}
+    {%elsif mainpartyrole._value != 'Student' %}
     {{ value }}
     {% else %}
     [Masked]
@@ -131,10 +154,10 @@ view: dim_party {
 
   dimension: mainpartyemail {
     group_label: "PII"
-    label: "e-mail address"
+    label: "E-mail Address"
     type: string
     sql:
-    CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' THEN
+    CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' or ${TABLE}.mainpartyrole != 'STUDENT' THEN
     ${TABLE}.MAINPARTYEMAIL
     ELSE
     MD5(${TABLE}.MAINPARTYEMAIL || 'salt')
@@ -142,6 +165,8 @@ view: dim_party {
     html:
       {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
         {{ value }}
+      {%elsif mainpartyrole._value != 'Student' %}
+      {{ value }}
       {% else %}
         [Masked]
       {% endif %}  ;;
@@ -149,7 +174,7 @@ view: dim_party {
 
 
   dimension: partyid {
-    label: "Party Id"
+    label: "Party ID"
     description: "Internal non PII person identifier"
     type: string
     sql: ${TABLE}.PARTYID ;;

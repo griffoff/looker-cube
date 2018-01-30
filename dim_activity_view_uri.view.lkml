@@ -106,7 +106,7 @@ view: dim_activity_view_uri {
     from urls;;
     sql_trigger_value: select count(*) from stg_mindtap.activity ;;
   }
-
+set: curated_field {fields:[path,contentsource,content_source_category]}
   dimension: id {
     primary_key: yes
     hidden: yes
@@ -115,12 +115,14 @@ view: dim_activity_view_uri {
   dimension: contentsource {
     label: "Content Source"
     type: string
+    hidden: yes
   }
 
   dimension:content_source_category {
     label: "Content Source Category"
     description: "Primary app or asset utilized when adding activities to a learning path.  Note that a high percentage of 'uncategorized' LP additions appear to be recommended readings and could likely be considerd 'non-Mindtap activities'."
     type:  string
+    hidden: yes
   }
 
   dimension: details_inline {
@@ -135,11 +137,17 @@ view: dim_activity_view_uri {
     sql: ${TABLE}.details_by ;;
   }
 
+  dimension: details_wrapped {
+    hidden: yes
+    sql: ${TABLE}.details_wrapped ;;
+  }
+
   dimension: path {
     group_label: "YouTube"
     label: "Link (YouTube)"
+    description: "Youtube Link added by the Instructor"
     type: string
-    html: <a title="{{details_wrapped._value}}" target="_blank" href="{{value}}">{{value}}</a> ;;
+    html: <a title="{{ dim_activity_view_uri.details_wrapped._value }}" target="_blank" href="{{value}}">{{value}}</a> ;;
   }
 
   dimension: view_uri {
@@ -150,11 +158,6 @@ view: dim_activity_view_uri {
   dimension: ref_id {
     label: "MindTap REF_ID"
     description: "Used to link to detailed information in other systems like Aplia"
-  }
-
-  dimension: details_wrapped {
-    hidden: yes
-    sql: ${TABLE}.details_wrapped ;;
   }
 
 }

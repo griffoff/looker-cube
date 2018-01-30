@@ -2,15 +2,28 @@ view: dim_institution {
   label: "Institution"
   derived_table: {
     sql:
+    with Inst_rank as (
+    SELECT
+      DISTINCT
+      ROW_NUMBER() OVER(Partition BY InstitutionID order by NoOFactivations DESC) as institution_rank
+      ,InstitutionID
+      ,Organization
+      ,NoOfActivations
+    FROM ${fact_activation.SQL_TABLE_NAME} -- looker_scratch.LR$JJ1J9IMSWA6J99O7DN51G_fact_activation
+    WHERE InstitutionID != -1 and courseID != -1
+    AND Organization !='UNKNOWN'
+    order by 1,2,3 desc
+    )
         select
           i.*
-          ,case when h.entity_no is not null then 'HED' else 'Not HED' end as HED
+          ,case when insti.Organization = 'Higher Ed' then 'HED' else 'Not HED' end as HED
         from dw_ga.dim_institution i
-        left join (select distinct entity_no from looker_workshop.magellan_hed_entities) h on i.entity_no = h.entity_no
+        left join (SELECT * FROM Inst_rank WHERE institution_rank = 1 ) insti ON insti.institutionID = i.InstitutionID
+       -- left join (select distinct entity_no from looker_workshop.magellan_hed_entities) h on i.entity_no = h.entity_no
         ;;
         sql_trigger_value: select count(*) from dw_ga.dim_institution ;;
   }
-  set: curated_fields {fields:[HED_filter,country,entity_no,institutionname]}
+  set: curated_fields {fields:[HED_filter,country,institutionname,postalcode,city]}
 
 #   sql_table_name: DW_GA.DIM_INSTITUTION ;;
 
@@ -25,12 +38,14 @@ view: dim_institution {
     view_label: "** RECOMMENDED FILTERS **"
     label: "HED filter"
     description: "Flag to identify Higher-Ed data"
+# hidden: yes
     type:  yesno
     sql: ${HED} = 'HED' ;;
   }
 
   dimension: city {
     group_label: "Location"
+    label: "City"
     type: string
     sql: ${TABLE}.CITY ;;
   }
@@ -38,12 +53,13 @@ view: dim_institution {
   dimension: country {
     group_label: "Location"
     type: string
-    sql: ${TABLE}.COUNTRY ;;
+#     sql: ${TABLE}.COUNTRY ;;
+    sql: CASE WHEN LOWER(${TABLE}.COUNTRY) IN ('us','united states') THEN 'UNITED STATES' ELSE UPPER(${TABLE}.COUNTRY) END ;;
   }
 
   dimension: postalcode {
     group_label: "Location"
-    label: "Postal/Zip code"
+    label: "Postal/Zip Code"
     type: zipcode
     sql: ${TABLE}.POSTALCODE ;;
   }
@@ -51,6 +67,7 @@ view: dim_institution {
   dimension: region {
     group_label: "Location"
     type: string
+    map_layer_name: us_states
     sql: ${TABLE}.REGION ;;
   }
 
@@ -110,7 +127,7 @@ view: dim_institution {
   }
 
   dimension: institutionname {
-    label: "Institution name"
+    label: "Institution Name"
     type: string
     sql: ${TABLE}.INSTITUTIONNAME ;;
   }
@@ -119,23 +136,27 @@ view: dim_institution {
     label: "Market Segment - Major"
     group_label: "Market Segment"
     type: string
+    hidden: yes
     sql: ${TABLE}.MARKETSEGMENTMAJOR ;;
   }
 
   dimension: marketsegmentminor {
     label: "Market Segment - Minor"
     group_label: "Market Segment"
+    hidden: yes
     type: string
     sql: ${TABLE}.MARKETSEGMENTMINOR ;;
   }
 
   dimension: source {
+    description: "distinguishes between CLTS,Activation & OLR Courses"
     type: string
     sql: ${TABLE}.SOURCE ;;
   }
 
   measure: count {
     label: "# Institutions"
+    description: "Count of institutions"
     type: count
     drill_fields: [institutionname]
   }

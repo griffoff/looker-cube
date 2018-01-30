@@ -14,6 +14,7 @@ view: course_section_facts {
       --left join dw_ga.dim_date d on case when c.startdatekey = -1 then c.enddatekey else c.startdatekey end = d.datekey
       left join dw_ga.dim_date d on c.startdatekey_new = d.datekey
       left join dw_ga.dim_institution i on c.institutionid = i.institutionid
+      where i.locationID != -1
       )
     ,i as (
       select course.courseid, min(instructor.instructor_first_date) as instructor_first_date, min(instructor.instructor_first_date_key) as instructor_first_date_key
@@ -48,6 +49,7 @@ view: course_section_facts {
           ,c.is_lms_integrated
           ,c.institutionid
           ,min(case when a.organization = 'Higher Ed' then 'HED' else 'Not HED' end) as HED
+         -- ,case when a.organization = 'Higher Ed' then 'HED' else 'Not HED' end as HED
           ,c.productplatformid || p.productfamily || p.edition || c.is_lms_integrated || HED || c.date_granularity as by_product_fk
           ,sum(NOOFACTIVATIONS) as NOOFACTIVATIONS
           --,sum(sum(NOOFACTIVATIONS)) over (partition by p.productfamily, p.edition, c.institutionid, c.is_lms_integrated, c.date_granularity) as product_activations
@@ -55,7 +57,8 @@ view: course_section_facts {
       from ${fact_activation.SQL_TABLE_NAME} a
       inner join c on a.courseid = c.courseid
       inner join dw_ga.dim_product p on c.productid = p.productid
-    group by 1, 2, 3, 4, 5, 6, 7
+      where a.institutionID != -1  and a.organization != 'UNKNOWN'
+      group by 1,2,3,4,5,6,7
     )
     select distinct
       a.*
@@ -79,7 +82,7 @@ view: course_section_facts {
   }
 
   set: curated_fields {
-    fields:[total_noofactivations,total_users,course_count]
+    fields:[total_noofactivations,institution_count,total_users,course_count]
   }
 
   dimension: courseid {
@@ -128,6 +131,29 @@ view: course_section_facts {
     hidden: yes
   }
 
+  dimension: date_granularity{
+    type: string
+    description: "Date Gran Test"
+    sql: ${TABLE}.date_granularity ;;
+  }
+
+  dimension: productplatformid{
+    type: string
+    description: "productplatformid Test"
+    sql: ${TABLE}.productplatformid ;;
+  }
+
+#   measure: total_noofactivationstest {
+#     label: "Total activations TESTtttttttttttt"
+#     description: "
+#     The total number oourses where this item appears
+#     "
+#     type: sum
+#     sql: ${TABLE}.NOOFACTIVATIONS ;;
+#
+#   }
+
+
   measure: total_noofactivations {
     label: "Total activations"
     description: "
@@ -166,12 +192,14 @@ view: course_section_facts {
 
   measure: institution_count {
     label: "# Institutions with activations"
+    description: "Number of Institutions with activations for a course"
     type: count_distinct
     sql: case when ${TABLE}.NOOFACTIVATIONS > 0 then ${dim_institution.institutionid} end ;;
   }
 
   measure: course_count {
     label: "# Course sections with activations"
+    description: "Number of Course Sections activated"
     type: count_distinct
     sql: ${courseid} ;;
   }

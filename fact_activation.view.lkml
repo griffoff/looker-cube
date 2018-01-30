@@ -3,27 +3,29 @@ view: fact_activation {
   #sql_table_name: ZPG_ACTIVATIONS.DW_GA.FACT_ACTIVATION ;;
   derived_table: {
     sql:
-      with activation_orgs as (
+      with orgs as (
         select
-            actv_code
+            actv_olr_id as activationid
             ,organization
-            ,count(*) as cnt
+            ,'OLR' as registrationtype
         from stg_clts.activations_olr
         where organization is not null
-        and in_actv_flg = 1
+        and latest
+        --and in_actv_flg = 1
+        union all
+        select
+            actv_non_olr_id
+            ,organization
+            ,'Non_OLR'
+        from stg_clts.activations_non_olr
+        where organization is not null
+        and latest
+        --and in_actv_flg = 1
         group by 1, 2
       )
-      ,orgs as (
-        select
-           actv_code
-           ,organization
-           ,row_number() over (partition by actv_code order by cnt desc) as r
-        from activation_orgs
-      )
-      select a.*, orgs.organization
+      select a.*, coalesce(orgs.organization, 'UNKNOWN') as organization
       from DW_GA.FACT_ACTIVATION a
-      left join orgs on a.activationcode = orgs.actv_code
-                    and orgs.r = 1
+      left join orgs on (a.registrationtype, a.activationid) = (orgs.registrationtype, orgs.activationid)
       order by courseid, activationdatekey, activationregionid;;
 
       sql_trigger_value: select count(*) from DW_GA.FACT_ACTIVATION ;;
@@ -149,6 +151,20 @@ view: fact_activation {
     type: sum
     sql: ${noofactivations_base} ;;
     drill_fields: [coursedetails*]
+  }
+
+  dimension: activationdate {
+    type: date
+    hidden: yes
+    sql: to_date(${activationdatekey}::string, 'YYYYMMDD') ;;
+  }
+
+  measure: total_activations_calendar_ytd {
+    label: "Total Activations YTD"
+    description: "Must be used with activation date year and day of year"
+    type: number
+    sql: sum(sum(${noofactivations_base})) over (partition by ${dim_date.datevalue_year}  order by ${dim_date.datevalue_day_of_year} rows unbounded preceding) ;;
+    required_fields: [dim_date.datevalue_year, dim_date.datevalue_day_pf_year]
   }
 
   measure: avg_noofactivations {

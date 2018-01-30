@@ -1,5 +1,7 @@
 connection: "snowflake_prod"
 label:"Source Data on Snowflake"
+include: "/core/common.lkml"
+
 include: "*.view.lkml"         # include all views in this project
 include: "*.dashboard.lookml"  # include all dashboards in this project
 include: "dims.model.lkml"
@@ -7,6 +9,36 @@ include: "dims.model.lkml"
 # # Select the views that should be a part of this model,
 # # and define the joins that connect them together.
 #
+
+# Database Metadata
+explore: schema_comparison {
+  label: "Compare schemas: STG to PROD "
+  join: table_comparison {
+    sql_on: ${schema_comparison.schema_name} = ${table_comparison.schema_name};;
+    relationship: one_to_many
+  }
+  join: column_comparison {
+    sql_on: (${table_comparison.schema_name}, ${table_comparison.table_name}) = (${column_comparison.schema_name}, ${column_comparison.table_name}) ;;
+    relationship: one_to_many
+  }
+}
+
+explore: tables {
+  label: "Information Schema"
+
+  join: load_history {
+    sql_on: ${tables.table_catalog} = ${load_history.table_catalog}
+          and ${tables.table_schema} = ${load_history.schema_name}
+          and ${tables.table_name} = ${load_history.table_name};;
+  }
+
+  join: columns {
+    sql_on:  ${tables.table_catalog} = ${columns.table_catalog}
+          and ${tables.table_schema} = ${columns.table_schema}
+          and ${tables.table_name} = ${columns.table_name};;
+  }
+}
+
 
 # CLTS
 explore: olr_courses {
@@ -23,11 +55,6 @@ explore: olr_courses {
   join: activations_olr {
     sql_on: ${olr_courses.context_id}=${activations_olr.context_id} ;;
     relationship: one_to_many
-  }
-
-  join: magellan_hed_entities {
-    sql_on: ${activations_olr.entity_no} = ${magellan_hed_entities.entity_no} ;;
-    relationship: many_to_one
   }
 }
 
@@ -360,4 +387,11 @@ explore: snapshot {
     relationship: many_to_many
   }
 
+}
+
+
+explore: ga_data_parsed {
+  join: user_facts {
+    sql_on: ${ga_data_parsed.userssoguid} = ${user_facts.guid} ;;
+  }
 }

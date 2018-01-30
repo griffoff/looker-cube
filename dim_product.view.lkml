@@ -3,56 +3,57 @@ view: dim_product {
   #sql_table_name: DW_GA.DIM_PRODUCT ;;
   derived_table: {
     sql: select *,
-CASE
-               WHEN dw_ga.dim_product.PUBLICATIONGROUP in ('Career Ed', 'SWEP') THEN
+          CASE
+               WHEN p.PUBLICATIONGROUP in ('Career Ed', 'SWEP') THEN
                     CASE
-                        WHEN dw_ga.dim_product.MINORSUBJECTMATTER = 'Office Management' THEN 'Course Tech Office Management'
-                        WHEN dw_ga.dim_product.MINORSUBJECTMATTER = 'Health Admin and Management' THEN 'Health Information Management'
-                        ELSE dw_ga.dim_product.MINORSUBJECTMATTER
+                        WHEN p.MINORSUBJECTMATTER = 'Office Management' THEN 'Course Tech Office Management'
+                        WHEN p.MINORSUBJECTMATTER = 'Health Admin and Management' THEN 'Health Information Management'
+                        ELSE p.MINORSUBJECTMATTER
                         END
-               WHEN dw_ga.dim_product.PRODUCTFAMILY = 'MT CRMS Literature' THEN 'Literature'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES in ('CT-Networking', 'CT-Prog/PC/HD', 'CT-Revealed Series') THEN 'Creative and Technical'
+               WHEN p.PRODUCTFAMILY = 'MT CRMS Literature' THEN 'Literature'
+               WHEN p.PUBLICATIONSERIES in ('CT-Networking', 'CT-Prog/PC/HD', 'CT-Revealed Series') THEN 'Creative and Technical'
                 --??
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'CPG-Networking Security' then 'Creative and Technical'
+               WHEN p.PUBLICATIONSERIES = 'CPG-Networking Security' then 'Creative and Technical'
                 --??
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES like 'CT-%' THEN 'Computing'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES like '%History%'
-                  OR dw_ga.dim_product.COURSEAREA = 'History: U.S. Survey' THEN 'History'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Composition' THEN 'English'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES like 'Biology%' THEN 'Biology'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Human Resources Management' THEN 'Management'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Health Sciences' THEN 'Sports/Health/Recreat/Leisure'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Intro Poli Sci' THEN 'Political Science'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'FreshmanOrient/College Success' THEN 'Freshman Orientation/College'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Nutrition' THEN 'Life Sciences'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'General Business' THEN 'Business'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Not Specified' THEN
-                    dw_ga.dim_product.MAJORSUBJECTMATTER
+               WHEN p.PUBLICATIONSERIES like 'CT-%' THEN 'Computing'
+               WHEN p.PUBLICATIONSERIES like '%History%'
+                  OR p.COURSEAREA = 'History: U.S. Survey' THEN 'History'
+               WHEN p.PUBLICATIONSERIES = 'Composition' THEN 'English'
+               WHEN p.PUBLICATIONSERIES like 'Biology%' THEN 'Biology'
+               WHEN p.PUBLICATIONSERIES = 'Human Resources Management' THEN 'Management'
+               WHEN p.PUBLICATIONSERIES = 'Health Sciences' THEN 'Sports/Health/Recreat/Leisure'
+               WHEN p.PUBLICATIONSERIES = 'Intro Poli Sci' THEN 'Political Science'
+               WHEN p.PUBLICATIONSERIES = 'FreshmanOrient/College Success' THEN 'Freshman Orientation/College'
+               WHEN p.PUBLICATIONSERIES = 'Nutrition' THEN 'Life Sciences'
+               WHEN p.PUBLICATIONSERIES = 'General Business' THEN 'Business'
+               WHEN p.PUBLICATIONSERIES = 'Not Specified' THEN
+                    p.MAJORSUBJECTMATTER
                     /*
                     CASE
-                    WHEN dim_product.MAJORSUBJECTMATTER = 'Accross Cengage Disciplines' THEN 'Other ' || dim_product.PUBLICATIONGROUP
-                    ELSE dim_product.MAJORSUBJECTMATTER
+                    WHEN p.MAJORSUBJECTMATTER = 'Accross Cengage Disciplines' THEN 'Other ' || p.PUBLICATIONGROUP
+                    ELSE p.MAJORSUBJECTMATTER
                     END
                     */
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Applied Math' THEN 'Applied Math-SMT'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Earth Science' THEN 'Earth Sciences'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Milady - Cosmetology' THEN 'Cosmetology'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'UNKNOWN' THEN 'Not Specified'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES in ('Civil Engineering', 'General Engineering') then 'PGR 142-' || dim_product.PUBLICATIONSERIES
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Religion' then 'Religion & Phenomena'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Mass Communication' then 'Communication Arts'
-               WHEN dw_ga.dim_product.PUBLICATIONSERIES = 'Literature/Upper Level English' then 'Literature'
-               ELSE dw_ga.dim_product.PUBLICATIONSERIES
+               WHEN p.PUBLICATIONSERIES = 'Applied Math' THEN 'Applied Math-SMT'
+               WHEN p.PUBLICATIONSERIES = 'Earth Science' THEN 'Earth Sciences'
+               WHEN p.PUBLICATIONSERIES = 'Milady - Cosmetology' THEN 'Cosmetology'
+               WHEN p.PUBLICATIONSERIES = 'UNKNOWN' THEN 'Not Specified'
+               WHEN p.PUBLICATIONSERIES in ('Civil Engineering', 'General Engineering') then 'PGR 142-' || p.PUBLICATIONSERIES
+               WHEN p.PUBLICATIONSERIES = 'Religion' then 'Religion & Phenomena'
+               WHEN p.PUBLICATIONSERIES = 'Mass Communication' then 'Communication Arts'
+               WHEN p.PUBLICATIONSERIES = 'Literature/Upper Level English' then 'Literature'
+               ELSE p.PUBLICATIONSERIES
         END
         as discipline_rollup
       ,nullif(edition, '-')::int as edition_number
       ,dense_rank() over (partition by productfamily order by edition_number desc) as latest
-    from dw_ga.dim_product
+      ,concat(concat(productfamily,' - '),edition) as productfamily_edition
+    from prod.dw_ga.dim_product p
     order by productid;;
     sql_trigger_value: select count(*) from dw_ga.dim_product ;;
   }
 
-  set: curated_fields {fields:[course,edition,productfamily, coursearea, discipline, product, title, count,productfamily_edition]}
+  set: curated_fields {fields:[course,edition,productfamily, coursearea, discipline, product, title, count,productfamily_edition,minorsubjectmatter,iac_isbn,isbn10,isbn13,pac_isbn,mindtap_isbn]}
 
   dimension: course {
     label: "Course Name"
@@ -90,6 +91,7 @@ CASE
   dimension: minorsubjectmatter {
     type: string
     label: "Minor Subject Matter"
+    description: "Brand Discipline"
     group_label: "Subject Matter"
     sql: ${TABLE}.MINORSUBJECTMATTER ;;
   }
@@ -115,7 +117,7 @@ CASE
     label: "Product Family + Edition"
     group_label: "Product Family"
     description: "Use if comparing multiple titles or specific products within a Course Area/Discipline.  This dimension pulls data for a specific combination of product family and edition."
-    sql: concat(concat(${productfamily},' - '),${edition});;
+    #sql: concat(concat(${productfamily},' - '),${edition});;
   }
 
   dimension: publicationgroup {
@@ -261,8 +263,10 @@ CASE
   }
 
   dimension: iac_isbn {
-    description: "IAC ISBN is the core ISBN for a given product/title.  If you need ISBN for usage data, ideally use this value.
-      However, the raw data source has IAC ISBN data gaps for a small percentage of products; if this impacts your analysis, utilize ISBN13."
+    description: "This is the digital product. This ISBN is purchased with a transaction, the ISBN linked to an Access Code, and the ISBN Courses are built on.
+    These have search metadata added in business systems, and are indexed by the various catalogs.
+    The IAC ISBN will be a sub-product to a Core/Title ISBN. There can be multiple IAC ISBNs associated with a single Core,
+    but an IAC ISBN itself can have only ONE Core ISBN. IAC ISBN may have one or multiple Component ISBNs in its Bill of Materials."
     type: string
     label: "IAC ISBN"
     group_label: "ISBN"
@@ -270,7 +274,9 @@ CASE
   }
 
   dimension: isbn10 {
-    description: "Do not use for analysis.  ISBN10 dimension is available to help confirm what the correct IAC ISBN or ISBN13 should be."
+    description: "These are individual products inside of an IAC.  These are MindTap products, Coursemate, CNOW, Aplia, ebooks, recourse centers, mobile apps, etc.
+    One component ISBN may be part of multiple IACs. Only one Courseware Component ISBN product may exist in an IAC.
+    But that component can be in multiple IACs that have different shared components along with it that are also Component ISBNs."
     type: string
     label: "ISBN10"
     group_label: "ISBN"
@@ -295,7 +301,7 @@ CASE
   }
 
   dimension: pac_isbn {
-    description: "Do not use for analysis.  PAC ISBN dimension is available to help confirm what the correct IAC ISBN or ISBN13 should be."
+    description: "This is the ISBN of a physical Printed Access Card, similar to how a physical workbook would have a unique ISBN.  Printed on this card is a single Access Code that has been generated from an IAC ISBN."
     type: string
     label: "PAC ISBN"
     group_label: "ISBN"
@@ -375,7 +381,7 @@ CASE
 
 
   measure: count {
-    label: "No. of Products"
+    label: "# Products"
     description: "Count of the number of products included in a given view.
     This measure is only relevant at a high-level (e.g. for an institution).  At a low (e.g. course key) level, this measure has limited value."
     type: count
