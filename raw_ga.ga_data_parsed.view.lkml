@@ -329,4 +329,28 @@ view: ga_data_parsed {
     type: count
     drill_fields: [ga_data_parsed_id, hostname]
   }
+
+  dimension:  time_in_mindtap {
+    hidden: yes
+    type:number
+    sql: case when lower(${eventcategory}) = 'time-in-mindtap' then ${eventvalue}
+                when lower(${eventaction}) = 'time-in-mindtap' then ${eventvalue}
+                when contains(lower(${eventlabel}), 'time-in-mindtap') then ${eventvalue}
+         else 0 end/(1000*60*60*24)  ;;
+  }
+
+  measure: time_in_mindtap_sum {
+    type: sum
+    sql: ${time_in_mindtap} ;;
+    value_format_name: duration_hms
+    group_label : "DS event metrics"
+
+  }
+
+  measure: time_in_mindtap_avg {
+    type: average
+    sql: ${time_in_mindtap} ;;
+    value_format_name: duration_hms
+    group_label : "DS event metrics"
+  }
 }
