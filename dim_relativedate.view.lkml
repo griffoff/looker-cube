@@ -16,11 +16,11 @@ view: dim_relativedate {
   }
 
   dimension: daysname {
-    label: "Relative Days"
-    hidden: yes
-    type: string
-    sql: ${TABLE}.DAYSNAME ;;
-    order_by_field: days
+    label: "Days Relative to Course Start Date"
+    hidden: no
+    type: number
+    sql: ${days} ;;
+    value_format: "\D\a\y 0"
   }
 
   dimension: daysbucket {
@@ -114,6 +114,7 @@ view: dim_relative_to_start_date {
   label: "Course / Section Details"
 
   dimension: weeksname {group_label: "Course Start Date"}
+  dimension: daysname {group_label: "Course Start Date"}
   dimension: monthsbucket {hidden: yes group_label: "Course Start Date"}
 }
 

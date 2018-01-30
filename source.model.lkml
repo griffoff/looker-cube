@@ -391,7 +391,17 @@ explore: snapshot {
 
 
 explore: ga_data_parsed {
+  extends: [dim_course]
   join: user_facts {
+    relationship: many_to_one
     sql_on: ${ga_data_parsed.userssoguid} = ${user_facts.guid} ;;
+  }
+  join: dim_course {
+    relationship: many_to_one
+    sql_on: ${ga_data_parsed.coursekey} = ${dim_course.coursekey} ;;
+  }
+  join: dim_relative_to_start_date {
+    relationship: many_to_one
+    sql_on: datediff(days, ${olr_courses.begin_date_date}, ${ga_data_parsed.hit_date}) = ${dim_relative_to_start_date.days} ;;
   }
 }

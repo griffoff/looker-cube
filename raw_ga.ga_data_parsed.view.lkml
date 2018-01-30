@@ -251,7 +251,7 @@ view: ga_data_parsed {
   dimension: userssoguid {
     type: string
     sql: ${TABLE}.USERSSOGUID ;;
-    hidden: yes
+    hidden: no
   }
 
   dimension_group: visit_start {
