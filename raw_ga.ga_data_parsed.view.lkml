@@ -330,6 +330,8 @@ view: ga_data_parsed {
     drill_fields: [ga_data_parsed_id, hostname]
   }
 
+# Dimensions and measures for RI events
+# Time in MT
   dimension:  time_in_mindtap {
     hidden: yes
     type:number
@@ -353,4 +355,99 @@ view: ga_data_parsed {
     value_format_name: duration_hms
     group_label : "DS event metrics"
   }
+
+  #ASSESSMENT
+  dimension: Assessment_activity_submitted {
+    hidden: yes
+    type: number
+    sql: case when lower(${eventaction}) = 'activity-submitted' and lower(${eventcategory}) = 'assessment' then 1 else 0 end ;;
+  }
+
+  dimension: Assessment_launch {
+    hidden: yes
+    type: number
+    sql: case when lower(${eventaction}) = 'launch' and lower(${eventcategory}) = 'assessment' then 1 else 0 end ;;
+  }
+
+  dimension: Assessment_activity_started {
+    hidden: yes
+    type: number
+    sql: case when lower(${eventaction}) = 'activity-started' and lower(${eventcategory}) = 'assessment' then 1 else 0 end ;;
+  }
+
+  dimension: Assessment_view {
+    hidden: yes
+    type: number
+    sql: case when lower(${eventaction}) = 'view' and lower(${eventcategory}) = 'assessment' then 1 else 0 end ;;
+  }
+
+  dimension: Assessment_activity {
+    hidden: yes
+    type: number
+    sql: case when lower(${eventaction}) = 'unknown' and split_part(, ':','4') = 'activity_id'
+                                                      and lower(${eventcategory}) = 'assessment' then 1 else 0 end ;;
+  }
+
+  #TODO calculate measures for each category
+  measure: Assessment_activity_submitted_sum {
+    type: sum
+    sql: ${Assessment_activity_submitted} ;;
+    value_format_name: duration_hms
+    group_label : "DS event metrics"
+
+  }
+
+  measure: Assessment_launch_sum {
+    type: sum
+    sql: ${Assessment_launch} ;;
+    value_format_name: duration_hms
+    group_label : "DS event metrics"
+
+  }
+
+  measure: Assessment_activity_started_sum {
+    type: sum
+    sql: ${Assessment_activity_started} ;;
+    value_format_name: duration_hms
+    group_label : "DS event metrics"
+
+  }
+
+  measure: Assessment_view_sum {
+    type: sum
+    sql: ${Assessment_view} ;;
+    value_format_name: duration_hms
+    group_label : "DS event metrics"
+
+  }
+
+  measure: Assessment_activity_sum {
+    type: sum
+    sql: ${Assessment_activity} ;;
+    value_format_name: duration_hms
+    group_label : "DS event metrics"
+
+  }
+
+
+  #READING
+  dimension: Reading_Launch {
+    hidden: yes
+    type: number
+    sql: case when lower(${eventaction}) = 'launch' or     lower(${eventaction}) = 'app-dock-launch'
+                        and lower(${eventcategory}) = 'reading' then 1 else 0 end ;;
+  }
+
+  dimension: Reading_view {
+    hidden: yes
+    type: number
+    sql: case when lower(eventAction) = 'view' and lower(eventCategory) = 'reading' then 1 else 0 end ;;
+  }
+
+  dimension: Reading_activity {
+    hidden: yes
+    type: number
+    sql: case when lower(eventAction) = 'unknown' and lower(eventCategory) = 'reading' then 1 else 0 end ;;
+  }
+
 }
