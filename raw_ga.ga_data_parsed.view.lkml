@@ -2085,4 +2085,20 @@ view: ga_data_parsed {
     group_label : "DS event metrics"
   }
 
+
+  dimension: reading_page_view {
+    type: number
+    sql: ${datalayer_json}:readingPageView::string::int+1 ;;
+  }
+  dimension: reading_page_count {
+    type: number
+    sql: ${datalayer_json}:readingPageCount ;;
+  }
+  measure: duration_from_prev_hit_avg {
+    type: average
+    sql: ${duration_from_prev_hit} ;;
+    value_format_name: duration_hms
+  }
+
+
 }
