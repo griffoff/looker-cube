@@ -481,7 +481,7 @@ view: ga_data_parsed {
   dimension: search_launched {
     hidden: yes
     type: number
-    sql: case when lower(${eventaction}) = 'launch' or lower(eventAction) = 'app-dock-launch'
+    sql: case when lower(${eventaction}) = 'launch' or lower(${eventaction}) = 'app-dock-launch'
                     and lower(${eventcategory}) = 'search' then 1 else 0 ;;
   }
   measure:  search_launched_sum{
@@ -507,7 +507,7 @@ view: ga_data_parsed {
   dimension: everNote_Launch {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'launch' or lower(eventAction) = 'app-dock-launch' and lower(eventcategory) = 'evernote' then 1 else 0 end ;;
+    sql: case when lower(${eventaction}) = 'launch' or lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) = 'evernote' then 1 else 0 end ;;
   }
   measure:everNote_Launch_sum{
     type: sum
@@ -518,7 +518,7 @@ view: ga_data_parsed {
   dimension: everNoteMobile_Launch {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'app-dock-launch' and lower(eventcategory) = 'evernote.mobile' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) = 'evernote.mobile' then 1 else 0 end;;
   }
   measure:everNoteMobile_Launch_sum{
     type: sum
@@ -529,7 +529,7 @@ view: ga_data_parsed {
   dimension: flashnotes_Launch {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'launch' or lower(eventAction) = 'app-dock-launch' and lower(eventcategory) = 'flashnotes' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' or lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) = 'flashnotes' then 1 else 0 end;;
   }
   measure:flashnotes_Launch_sum{
     type: sum
@@ -540,7 +540,7 @@ view: ga_data_parsed {
   dimension: flashnotesQAD_Launch {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'app-dock-launch' and lower(eventcategory) = 'flashnotesqad' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) = 'flashnotesqad' then 1 else 0 end;;
   }
   measure:flashnotesQAD_Launch_sum{
     type: sum
@@ -551,7 +551,7 @@ view: ga_data_parsed {
   dimension: flashnotesCEO_Launch {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'app-dock-launch' and lower(eventcategory) = 'flashnotes.ceo' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) = 'flashnotes.ceo' then 1 else 0 end;;
   }
   measure:flashnotesCEO_Launch_sum{
     type: sum
@@ -563,7 +563,7 @@ view: ga_data_parsed {
   dimension: mynotes_launch {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'app-dock-launch' and lower(eventcategory) = 'my+notes' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) = 'my+notes' then 1 else 0 end;;
   }
   measure:mynotes_launch_sum{
     type: sum
@@ -574,7 +574,7 @@ view: ga_data_parsed {
   dimension: notepad_launch {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'launch' and lower(eventcategory) = 'notepad' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' and lower(${eventcategory}) = 'notepad' then 1 else 0 end;;
   }
   measure:notepad_launch_sum{
     type: sum
@@ -586,7 +586,7 @@ view: ga_data_parsed {
   dimension: onenote_launch {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'launch' or lower(eventAction) = 'app-dock-launch' and lower(eventcategory) = 'onenote' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' or lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) = 'onenote' then 1 else 0 end;;
   }
   measure:onenote_launch_sum{
     type: sum
@@ -599,7 +599,7 @@ view: ga_data_parsed {
   dimension: quicknote_create {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'create' or lower(eventAction) = 'create-quicknote' and lower(eventcategory) = 'quicknote' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'create' or lower(${eventaction}) = 'create-quicknote' and lower(${eventcategory}) = 'quicknote' then 1 else 0 end;;
   }
   measure:quicknote_create_sum{
     type: sum
@@ -610,7 +610,7 @@ view: ga_data_parsed {
   dimension: quicknote_launch {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'launch' and lower(eventcategory) = 'quicknote' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' and lower(${eventcategory}) = 'quicknote' then 1 else 0 end;;
   }
   measure:quicknote_launch_sum{
     type: sum
@@ -622,7 +622,7 @@ view: ga_data_parsed {
   dimension: gradebook_launch {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch' and lower(eventcategory) = 'gradebook' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) = 'gradebook' then 1 else 0 end;;
   }
   measure:gradebook_launch_sum{
     type: sum
@@ -635,7 +635,7 @@ view: ga_data_parsed {
   dimension: homework_submitted {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'activity-submitted' and lower(eventcategory) = 'homework' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'activity-submitted' and lower(${eventcategory}) = 'homework' then 1 else 0 end;;
   }
   measure:homework_submitted_sum{
     type: sum
@@ -646,7 +646,7 @@ view: ga_data_parsed {
   dimension: homework_launch {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'launch' and lower(eventcategory) = 'homework' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' and lower(${eventcategory}) = 'homework' then 1 else 0 end;;
   }
   measure:homework_launch_sum{
     type: sum
@@ -657,7 +657,7 @@ view: ga_data_parsed {
   dimension: homework_started {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'activity-started' and lower(eventcategory) = 'homework' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'activity-started' and lower(${eventcategory}) = 'homework' then 1 else 0 end;;
   }
   measure:homework_started_sum{
     type: sum
@@ -668,7 +668,7 @@ view: ga_data_parsed {
   dimension: homework_view {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'view' and lower(eventcategory) = 'homework' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'view' and lower(${eventcategory}) = 'homework' then 1 else 0 end;;
   }
   measure:homework_view_sum{
     type: sum
@@ -679,7 +679,7 @@ view: ga_data_parsed {
   dimension: homework {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'UNKNOWN' and lower(eventcategory) = 'homework' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'UNKNOWN' and lower(${eventcategory}) = 'homework' then 1 else 0 end;;
   }
   measure:homework_sum{
     type: sum
@@ -692,7 +692,7 @@ view: ga_data_parsed {
   dimension: bookmarks_launch {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'launch' or lower(eventAction) = 'app-dock-launch' and lower(eventcategory) ='bookmarks' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' or lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) ='bookmarks' then 1 else 0 end;;
   }
   measure:bookmarks_launch_sum{
     type: sum
@@ -703,7 +703,7 @@ view: ga_data_parsed {
   dimension: bookmarks_create {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'create' or lower(eventAction) = 'create-bookmark' and lower(eventcategory) ='bookmarks' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'create' or lower(${eventaction}) = 'create-bookmark' and lower(${eventcategory}) ='bookmarks' then 1 else 0 end;;
   }
   measure:bookmarks_create_sum{
     type: sum
@@ -715,7 +715,7 @@ view: ga_data_parsed {
   dimension: progress_launch {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch' and lower(eventcategory) = 'progress' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) = 'progress' then 1 else 0 end;;
   }
   measure:progress_launch_sum{
     type: sum
@@ -727,7 +727,7 @@ view: ga_data_parsed {
   dimension: flashcards_launch {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'launch' or lower(eventAction) = 'app-dock-launch' and lower(eventcategory) = 'flashcards' or lower(eventCategory) = 'flash-cards' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' or lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) = 'flashcards' or lower(${eventcategory}) = 'flash-cards' then 1 else 0 end;;
   }
   measure:flashcards_launch_sum{
     type: sum
@@ -738,7 +738,7 @@ view: ga_data_parsed {
   dimension: flashcards_view {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'view' and lower(eventcategory) = 'flashcards' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'view' and lower(${eventcategory}) = 'flashcards' then 1 else 0 end;;
   }
   measure:flashcards_view_sum{
     type: sum
@@ -750,7 +750,7 @@ view: ga_data_parsed {
   dimension: glossary_launch {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'launch' or lower(eventAction) = 'app-dock-launch' and lower(eventcategory) = 'glossary' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' or lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) = 'glossary' then 1 else 0 end;;
   }
   measure:glossary_launch_sum{
     type: sum
@@ -761,7 +761,7 @@ view: ga_data_parsed {
   dimension: glossary_view {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'view' and lower(eventcategory) = 'glossary' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'view' and lower(${eventcategory}) = 'glossary' then 1 else 0 end;;
   }
   measure:glossary_view_sum{
     type: sum
@@ -772,9 +772,9 @@ view: ga_data_parsed {
   dimension: glossary_show {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'glossary-show' and lower(eventcategory) = 'glossary' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'glossary-show' and lower(${eventcategory}) = 'glossary' then 1 else 0 end;;
   }
-  measure:glossary_show_sum{
+  measure:glossary_show_sum1{
     type: sum
     sql: ${glossary_show} ;;
     group_label : "DS event metrics"
@@ -784,7 +784,7 @@ view: ga_data_parsed {
   dimension: highlights_launch {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'app-dock-launch' and lower(eventcategory) ='highlight' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) ='highlight' then 1 else 0 end;;
   }
   measure:highlights_launch_sum{
     type: sum
@@ -795,7 +795,7 @@ view: ga_data_parsed {
   dimension: highlights_create {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'create' or lower(eventAction) = 'create-highlight' and lower(eventcategory) ='highlight' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'create' or lower(${eventaction}) = 'create-highlight' and lower(${eventcategory}) ='highlight' then 1 else 0 end;;
   }
   measure:highlights_create_sum{
     type: sum
@@ -807,7 +807,7 @@ view: ga_data_parsed {
   dimension: messagecenter_launch {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'messagecenter' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'messagecenter' then 1 else 0 end;;
   }
   measure:messagecenter_launch_sum{
     type: sum
@@ -819,7 +819,7 @@ view: ga_data_parsed {
   dimension: messagecenter_preferences_changed {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) ='preferences-changed' and lower(eventcategory) = 'message-center' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) ='preferences-changed' and lower(${eventcategory}) = 'message-center' then 1 else 0 end;;
   }
   measure:messagecenter_preferences_changed_sum{
     type: sum
@@ -830,7 +830,7 @@ view: ga_data_parsed {
   dimension: messagecenter_message_sent {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='message-sent' and lower(eventcategory) = 'message-center' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='message-sent' and lower(${eventcategory}) = 'message-center' then 1 else 0 end;;
   }
   measure:messagecenter_message_sent_sum{
     type: sum
@@ -842,9 +842,9 @@ view: ga_data_parsed {
   dimension: studyguide_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' and lower(eventcategory) = 'studyguide' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' and lower(${eventcategory}) = 'studyguide' then 1 else 0 end;;
   }
-  measure:studyguide_launch_sum{
+  measure:studyguide_launch_sum1{
     type: sum
     sql: ${studyguide_launch} ;;
     group_label : "DS event metrics"
@@ -853,7 +853,7 @@ view: ga_data_parsed {
   dimension: studyguide {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='unknown' and lower(eventcategory) = 'studyguide' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='unknown' and lower(${eventcategory}) = 'studyguide' then 1 else 0 end;;
   }
   measure:studyguide_sum{
     type: sum
@@ -865,7 +865,7 @@ view: ga_data_parsed {
   dimension: concept_map_interacted {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='interacted' and lower(eventcategory) = 'concept-map' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='interacted' and lower(${eventcategory}) = 'concept-map' then 1 else 0 end;;
   }
   measure:concept_map_interacted_sum{
     type: sum
@@ -876,7 +876,7 @@ view: ga_data_parsed {
   dimension: concept_map {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='unknown' and lower(eventcategory) = 'concept-map' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='unknown' and lower(${eventcategory}) = 'concept-map' then 1 else 0 end;;
   }
   measure:concept_map_sum{
     type: sum
@@ -888,7 +888,7 @@ view: ga_data_parsed {
   dimension: conceptmap_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' and lower(eventcategory) = 'conceptmap' then 1 else 0 end ;;
+    sql:case when lower(${eventaction}) ='launch' and lower(${eventcategory}) = 'conceptmap' then 1 else 0 end ;;
   }
   measure:conceptmap_launch_sum{
     type: sum
@@ -900,7 +900,7 @@ view: ga_data_parsed {
   dimension: conceptmap_activity_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'conceptmap.activity' then 1 else 0 end ;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'conceptmap.activity' then 1 else 0 end ;;
   }
   measure:conceptmap_activity_launch_sum{
     type: sum
@@ -912,7 +912,7 @@ view: ga_data_parsed {
   dimension: conceptmap_app_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'conceptmap-dock.app' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'conceptmap-dock.app' then 1 else 0 end;;
   }
   measure:conceptmap_app_launch_sum{
     type: sum
@@ -924,7 +924,7 @@ view: ga_data_parsed {
   dimension: readspeaker_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'readspeaker' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'readspeaker' then 1 else 0 end;;
   }
   measure:readspeaker_launch_sum{
     type: sum
@@ -935,7 +935,7 @@ view: ga_data_parsed {
   dimension: readspeaker1_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'readspeaker1' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'readspeaker1' then 1 else 0 end;;
   }
   measure:readspeaker1_launch_sum{
     type: sum
@@ -946,7 +946,7 @@ view: ga_data_parsed {
   dimension: readspeaker3_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'readspeaker3' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'readspeaker3' then 1 else 0 end;;
   }
   measure:readspeaker3_launch_sum{
     type: sum
@@ -958,7 +958,7 @@ view: ga_data_parsed {
   dimension: dictionary_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'dictionary' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'dictionary' then 1 else 0 end;;
   }
   measure:dictionary_launch_sum{
     type: sum
@@ -970,7 +970,7 @@ view: ga_data_parsed {
   dimension: outcome_management_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'outcome.management' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'outcome.management' then 1 else 0 end;;
   }
   measure:outcome_management_launch_sum{
     type: sum
@@ -982,7 +982,7 @@ view: ga_data_parsed {
   dimension: rssfeed_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'rssfeed' or lower(eventCategory) = 'rss-feed' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'rssfeed' or lower(${eventcategory}) = 'rss-feed' then 1 else 0 end;;
   }
   measure:rssfeed_launch_sum{
     type: sum
@@ -994,7 +994,7 @@ view: ga_data_parsed {
   dimension: kaltura_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch' and lower(eventcategory) = 'kaltura' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) = 'kaltura' then 1 else 0 end;;
   }
   measure:kaltura_launch_sum{
     type: sum
@@ -1007,9 +1007,9 @@ view: ga_data_parsed {
   dimension: googledoc_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'google.doc' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'google.doc' then 1 else 0 end;;
   }
-  measure:googledoc_launch_sum{
+  measure:googledoc_launch_sum1{
     type: sum
     sql: ${googledoc_launch} ;;
     group_label : "DS event metrics"
@@ -1019,9 +1019,9 @@ view: ga_data_parsed {
   dimension: googledocs_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' and lower(eventcategory) = 'googledocs' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' and lower(${eventcategory}) = 'googledocs' then 1 else 0 end;;
   }
-  measure:googledocs_launch_sum{
+  measure:googledocs_launch_sum2{
     type: sum
     sql: ${googledocs_launch} ;;
     group_label : "DS event metrics"
@@ -1031,9 +1031,9 @@ view: ga_data_parsed {
   dimension: google_docs_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' and lower(eventcategory) = 'google-doc' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' and lower(${eventcategory}) = 'google-doc' then 1 else 0 end;;
   }
-  measure:google_docs_launch_sum{
+  measure:google_docs_launch_sum3{
     type: sum
     sql: ${google_docs_launch} ;;
     group_label : "DS event metrics"
@@ -1043,7 +1043,7 @@ view: ga_data_parsed {
   dimension: youseeu_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'youseeu' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'youseeu' then 1 else 0 end;;
   }
   measure:youseeu_launch_sum{
     type: sum
@@ -1055,7 +1055,7 @@ view: ga_data_parsed {
   dimension: mindappscenario_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'mindapp-scenario' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'mindapp-scenario' then 1 else 0 end;;
   }
   measure:mindappscenario_launch_sum{
     type: sum
@@ -1067,7 +1067,7 @@ view: ga_data_parsed {
   dimension: studyhubmindapp_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'studyhub.mindapp' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'studyhub.mindapp' then 1 else 0 end;;
   }
   measure:studyhubmindapp_launch_sum{
     type: sum
@@ -1079,7 +1079,7 @@ view: ga_data_parsed {
   dimension: weblinks_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' and lower(eventcategory) = 'weblinks' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' and lower(${eventcategory}) = 'weblinks' then 1 else 0 end;;
   }
   measure:weblinks_launch_sum{
     type: sum
@@ -1091,7 +1091,7 @@ view: ga_data_parsed {
   dimension: dlappdock_techconnections_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch' and lower(eventcategory) = 'dlappdock.techconnections' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) = 'dlappdock.techconnections' then 1 else 0 end;;
   }
   measure:dlappdock_techconnections_launch_sum{
     type: sum
@@ -1104,7 +1104,7 @@ view: ga_data_parsed {
   dimension: dlmt_iq_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) = 'app-dock-launch' and lower(eventCategory) = 'dlmt.iq' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) = 'app-dock-launch' and lower(eventCategory) = 'dlmt.iq' then 1 else 0 end;;
   }
   measure:dlmt_iq_launch_sum{
     type: sum
@@ -1116,7 +1116,7 @@ view: ga_data_parsed {
   dimension: dlmt_iq_instructortestcreator_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch' and lower(eventcategory) = 'dlmt.iq.instructortestcreator' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) = 'dlmt.iq.instructortestcreator' then 1 else 0 end;;
   }
   measure:dlmt_iq_instructortestcreator_launch_sum{
     type: sum
@@ -1128,7 +1128,7 @@ view: ga_data_parsed {
   dimension: dlmt_iq_studenttestcreator_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'dlmt.iq.studenttestcreator' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'dlmt.iq.studenttestcreator' then 1 else 0 end;;
   }
   measure:dlmt_iq_studenttestcreator_launch_sum{
     type: sum
@@ -1140,7 +1140,7 @@ view: ga_data_parsed {
   dimension: connectyardlearner_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'connectyard.learner' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'connectyard.learner' then 1 else 0 end;;
   }
   measure:connectyardlearner_launch_sum{
     type: sum
@@ -1152,7 +1152,7 @@ view: ga_data_parsed {
   dimension: mindtap_instructor_resourcecenter_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'mindtapinstructorresourcecenter' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'mindtapinstructorresourcecenter' then 1 else 0 end;;
   }
   measure:mindtap_instructor_resourcecenter_launch_sum{
     type: sum
@@ -1164,7 +1164,7 @@ view: ga_data_parsed {
   dimension: questia_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch' and lower(eventcategory) = 'questia' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) = 'questia' then 1 else 0 end;;
   }
   measure:questia_launch_sum{
     type: sum
@@ -1176,7 +1176,7 @@ view: ga_data_parsed {
   dimension: studycenter_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'studycenter' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'studycenter' then 1 else 0 end;;
   }
   measure:studycenter_launch_sum{
     type: sum
@@ -1188,7 +1188,7 @@ view: ga_data_parsed {
   dimension: chemistryreference_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'chemistryreference' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'chemistryreference' then 1 else 0 end;;
   }
   measure:chemistryreference_launch_sum{
     type: sum
@@ -1200,7 +1200,7 @@ view: ga_data_parsed {
   dimension: outlinespeech_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'outline.speech' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'outline.speech' then 1 else 0 end;;
   }
   measure:outlinespeech_launch_sum{
     type: sum
@@ -1212,7 +1212,7 @@ view: ga_data_parsed {
   dimension: cnowhw_preclass_ilrn_com_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='app-dock-launch' and lower(eventcategory) = 'cnow.hw-preclass_ilrn_com' or lower(eventCategory) = 'cnow.hw-preclass-ilrn-com' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='app-dock-launch' and lower(${eventcategory}) = 'cnow.hw-preclass_ilrn_com' or lower(${eventcategory}) = 'cnow.hw-preclass-ilrn-com' then 1 else 0 end;;
   }
   measure:cnowhw_preclass_ilrn_com_launch_sum{
     type: sum
@@ -1224,7 +1224,7 @@ view: ga_data_parsed {
   dimension: wac_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'wac' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'wac' then 1 else 0 end;;
   }
   measure:wac_launch_sum{
     type: sum
@@ -1236,7 +1236,7 @@ view: ga_data_parsed {
   dimension: insite_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch' and lower(eventcategory) = 'insite' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) = 'insite' then 1 else 0 end;;
   }
   measure:insite_launch_sum{
     type: sum
@@ -1248,7 +1248,7 @@ view: ga_data_parsed {
   dimension: atp_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch' and lower(eventcategory) = 'atp' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) = 'atp' then 1 else 0 end;;
   }
   measure:atp_launch_sum{
     type: sum
@@ -1260,7 +1260,7 @@ view: ga_data_parsed {
   dimension: polling_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch' and lower(eventcategory) = 'polling' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) = 'polling' then 1 else 0 end;;
   }
   measure:polling_launch_sum{
     type: sum
@@ -1272,7 +1272,7 @@ view: ga_data_parsed {
   dimension: diet_wellnes_plus_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'diet.wellnes.plus' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'diet.wellnes.plus' then 1 else 0 end;;
   }
   measure:diet_wellnes_plus_launch_sum{
     type: sum
@@ -1284,7 +1284,7 @@ view: ga_data_parsed {
   dimension: mindapp_eportfolio_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'mindapp-eportfolio' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'mindapp-eportfolio' then 1 else 0 end;;
   }
   measure:mindapp_eportfolio_launch_sum{
     type: sum
@@ -1296,7 +1296,7 @@ view: ga_data_parsed {
   dimension: systemcheck_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'systemcheck' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'systemcheck' then 1 else 0 end;;
   }
   measure:systemcheck_launch_sum{
     type: sum
@@ -1308,7 +1308,7 @@ view: ga_data_parsed {
   dimension: mindapp_resource_viewer_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='app-dock-launch' and lower(eventcategory) = 'mindapp.resource.viewer' then 1 else 0 end ;;
+    sql:case when lower(${eventaction}) ='app-dock-launch' and lower(${eventcategory}) = 'mindapp.resource.viewer' then 1 else 0 end ;;
   }
   measure:mindapp_resource_viewer_launch_sum{
     type: sum
@@ -1320,7 +1320,7 @@ view: ga_data_parsed {
   dimension: dashboard_navigation {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='unknown' and lower(eventcategory) = 'dashboard' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='unknown' and lower(${eventcategory}) = 'dashboard' then 1 else 0 end;;
   }
   measure:dashboard_navigation_sum{
     type: sum
@@ -1332,7 +1332,7 @@ view: ga_data_parsed {
   dimension: onedrive_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'onedrive' then 1 else 0 end ;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'onedrive' then 1 else 0 end ;;
   }
   measure:onedrive_launch_sum{
     type: sum
@@ -1344,7 +1344,7 @@ view: ga_data_parsed {
   dimension: faq_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch' and lower(eventcategory) = 'faq' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) = 'faq' then 1 else 0 end;;
   }
   measure:faq_launch_sum{
     type: sum
@@ -1356,7 +1356,7 @@ view: ga_data_parsed {
   dimension: blog_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch' and lower(eventcategory) = 'blog' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) = 'blog' then 1 else 0 end;;
   }
   measure:blog_launch_sum{
     type: sum
@@ -1369,7 +1369,7 @@ view: ga_data_parsed {
   dimension: rssfeed_activity_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'RSS Feed' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'RSS Feed' then 1 else 0 end;;
   }
   measure:rssfeed_activity_launch_sum{
     type: sum
@@ -1380,7 +1380,7 @@ view: ga_data_parsed {
   dimension: studyguide_activity_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'study guide' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'study guide' then 1 else 0 end;;
   }
   measure:studyguide_activity_launch_sum{
     type: sum
@@ -1391,7 +1391,7 @@ view: ga_data_parsed {
   dimension: studyguide_activity_view {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'view' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'study guide' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'view' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'study guide' then 1 else 0 end;;
   }
   measure:studyguide_activity_view_sum{
     type: sum
@@ -1402,7 +1402,7 @@ view: ga_data_parsed {
   dimension: homework_activity_launch {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'homework' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'homework' then 1 else 0 end;;
   }
   measure:homework_activity_launch_sum{
     type: sum
@@ -1413,7 +1413,7 @@ view: ga_data_parsed {
   dimension: homework_activity_view {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'view' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'homework' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'view' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'homework' then 1 else 0 end;;
   }
   measure:homework_activity_view_sum{
     type: sum
@@ -1424,7 +1424,7 @@ view: ga_data_parsed {
   dimension: media_activity_launch {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'media' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'media' then 1 else 0 end;;
   }
   measure:media_activity_launch_sum{
     type: sum
@@ -1435,7 +1435,7 @@ view: ga_data_parsed {
   dimension: weblinks_activity_launch {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'web links' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'web links' then 1 else 0 end;;
   }
   measure:weblinks_activity_launch_sum{
     type: sum
@@ -1446,7 +1446,7 @@ view: ga_data_parsed {
   dimension: googledocs_activity_launch {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'google docs' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'google docs' then 1 else 0 end;;
   }
   measure:googledocs_activity_launch_sum{
     type: sum
@@ -1457,7 +1457,7 @@ view: ga_data_parsed {
   dimension: flashcards_activity_launch {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'flash-cards' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'flash-cards' then 1 else 0 end;;
   }
   measure:flashcards_activity_launch_sum{
     type: sum
@@ -1468,7 +1468,7 @@ view: ga_data_parsed {
   dimension: assessment_activity_launch {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'assessment' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'assessment' then 1 else 0 end;;
   }
   measure:assessment_activity_launch_sum{
     type: sum
@@ -1479,7 +1479,7 @@ view: ga_data_parsed {
   dimension: assessment_activity_view {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'view' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'assessment' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'view' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'assessment' then 1 else 0 end;;
   }
   measure:assessment_activity_view_sum{
     type: sum
@@ -1490,7 +1490,7 @@ view: ga_data_parsed {
   dimension: reading_activity_launch {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'reading' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'reading' then 1 else 0 end;;
   }
   measure:reading_activity_launch_sum{
     type: sum
@@ -1501,7 +1501,7 @@ view: ga_data_parsed {
   dimension: reading_activity_view {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'view' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'reading' then 1 else 0 end ;;
+    sql: case when lower(${eventaction}) = 'view' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'reading' then 1 else 0 end ;;
   }
   measure:reading_activity_view_sum{
     type: sum
@@ -1512,7 +1512,7 @@ view: ga_data_parsed {
   dimension: other_activity_launch {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'other' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'other' then 1 else 0 end;;
   }
   measure:other_activity_launch_sum{
     type: sum
@@ -1523,7 +1523,7 @@ view: ga_data_parsed {
   dimension: other_activity_view {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'view' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'other' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'view' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'other' then 1 else 0 end;;
   }
   measure:other_activity_view_sum{
     type: sum
@@ -1534,7 +1534,7 @@ view: ga_data_parsed {
   dimension: generated_folder_activity {
     hidden: yes
     type: number
-    sql: case when lower(eventAction) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'generated' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'generated' then 1 else 0 end;;
   }
   measure:generated_folder_activity_sum{
     type: sum
@@ -1546,7 +1546,7 @@ view: ga_data_parsed {
   dimension: activitybuilder_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' and lower(eventcategory) = 'activity-builder' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' and lower(${eventcategory}) = 'activity-builder' then 1 else 0 end;;
   }
   measure:activitybuilder_launch_sum{
     type: sum
@@ -1558,7 +1558,7 @@ view: ga_data_parsed {
   dimension: diet_analysis_plus_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'diet.analysis.plus' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'diet.analysis.plus' then 1 else 0 end;;
   }
   measure:diet_analysis_plus_launch_sum{
     type: sum
@@ -1570,7 +1570,7 @@ view: ga_data_parsed {
   dimension: profile_plus_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch' and lower(eventcategory) = 'profile.plus' then 1 else 0 end ;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) = 'profile.plus' then 1 else 0 end ;;
   }
   measure:profile_plus_launch_sum{
     type: sum
@@ -1582,7 +1582,7 @@ view: ga_data_parsed {
   dimension: inapppurchase_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch' and lower(eventcategory) = 'inapppurchase' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) = 'inapppurchase' then 1 else 0 end;;
   }
   measure:inapppurchase_launch_sum{
     type: sum
@@ -1594,7 +1594,7 @@ view: ga_data_parsed {
   dimension: composition_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='app-dock-launch' and lower(eventcategory) = 'composition' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='app-dock-launch' and lower(${eventcategory}) = 'composition' then 1 else 0 end;;
   }
   measure:composition_launch_sum{
     type: sum
@@ -1606,7 +1606,7 @@ view: ga_data_parsed {
   dimension: history_conceptmapactivity_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'history-conceptmap.activity' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'history-conceptmap.activity' then 1 else 0 end;;
   }
   measure:history_conceptmapactivity_launch_sum{
     type: sum
@@ -1618,7 +1618,7 @@ view: ga_data_parsed {
   dimension: lams_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'lams' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'lams' then 1 else 0 end;;
   }
   measure:lams_launch_sum{
     type: sum
@@ -1630,7 +1630,7 @@ view: ga_data_parsed {
   dimension: lams_v2_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) = 'app-dock-launch' and lower(eventCategory) = 'lams-v2' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) = 'app-dock-launch' and lower(eventCategory) = 'lams-v2' then 1 else 0 end;;
   }
   measure:lams_v2_launch_sum{
     type: sum
@@ -1642,9 +1642,9 @@ view: ga_data_parsed {
   dimension: glossary_show2 {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='glossary-show' and lower(eventcategory) = 'glossary-show' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='glossary-show' and lower(${eventcategory}) = 'glossary-show' then 1 else 0 end;;
   }
-  measure:glossary_show2_sum{
+  measure:glossary_show_sum2{
     type: sum
     sql: ${glossary_show2} ;;
     group_label : "DS event metrics"
@@ -1653,7 +1653,7 @@ view: ga_data_parsed {
   dimension: create_glossary_show {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='create-glossary-show' and lower(eventcategory) = 'glossary-show' then 1 else 0 end  ;;
+    sql:case when lower(${eventaction}) ='create-glossary-show' and lower(${eventcategory}) = 'glossary-show' then 1 else 0 end  ;;
   }
   measure:create_glossary_show_sum{
     type: sum
@@ -1666,7 +1666,7 @@ view: ga_data_parsed {
   dimension: outline_composition_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'outline.composition' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'outline.composition' then 1 else 0 end;;
   }
   measure:outline_composition_launch_sum{
     type: sum
@@ -1678,7 +1678,7 @@ view: ga_data_parsed {
   dimension: other_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' and lower(eventcategory) = 'other' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' and lower(${eventcategory}) = 'other' then 1 else 0 end;;
   }
   measure:other_launch_sum{
     type: sum
@@ -1689,7 +1689,7 @@ view: ga_data_parsed {
   dimension: other_activity_submitted {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='activity-submitted' and lower(eventcategory) = 'other' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='activity-submitted' and lower(${eventcategory}) = 'other' then 1 else 0 end;;
   }
   measure:other_activity_submitted_sum{
     type: sum
@@ -1702,7 +1702,7 @@ view: ga_data_parsed {
   dimension: assignment_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch assignment' and lower(eventcategory) = 'launch' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch assignment' and lower(${eventcategory}) = 'launch' then 1 else 0 end;;
   }
   measure:assignment_launch_sum{
     type: sum
@@ -1713,7 +1713,7 @@ view: ga_data_parsed {
   dimension: assignment_learning_burst_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch assignment from learning burst' and lower(eventcategory) = 'launch' then 1 else 0 end ;;
+    sql:case when lower(${eventaction}) ='launch assignment from learning burst' and lower(${eventcategory}) = 'launch' then 1 else 0 end ;;
   }
   measure:assignment_learning_burst_launch_sum{
     type: sum
@@ -1723,7 +1723,7 @@ view: ga_data_parsed {
   dimension: exerciseset_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch exercise set' and lower(eventcategory) = 'launch' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch exercise set' and lower(${eventcategory}) = 'launch' then 1 else 0 end;;
   }
   measure:exerciseset_launch_sum{
     type: sum
@@ -1734,7 +1734,7 @@ view: ga_data_parsed {
   dimension: mediaquiz_learning_burst_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch media quiz from learning burst' and lower(eventcategory) = 'launch' then 1 else 0 end ;;
+    sql:case when lower(${eventaction}) ='launch media quiz from learning burst' and lower(${eventcategory}) = 'launch' then 1 else 0 end ;;
   }
   measure:mediaquiz_learning_burst_launch_sum{
     type: sum
@@ -1745,7 +1745,7 @@ view: ga_data_parsed {
   dimension: class_skills_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch class skills' and lower(eventcategory) = 'launch' then 1 else 0 end ;;
+    sql:case when lower(${eventaction}) ='launch class skills' and lower(${eventcategory}) = 'launch' then 1 else 0 end ;;
   }
   measure:class_skills_launch_sum{
     type: sum
@@ -1756,7 +1756,7 @@ view: ga_data_parsed {
   dimension: textsnippet_learning_burst_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch text snippet from learning burst' and lower(eventcategory) = 'launch' then 1 else 0 end ;;
+    sql:case when lower(${eventaction}) ='launch text snippet from learning burst' and lower(${eventcategory}) = 'launch' then 1 else 0 end ;;
   }
   measure:textsnippet_learning_burst_launch_sum{
     type: sum
@@ -1767,7 +1767,7 @@ view: ga_data_parsed {
   dimension: gradebook_launches {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch gradebook' and lower(eventcategory) = 'launch' then 1 else 0 end ;;
+    sql:case when lower(${eventaction}) ='launch gradebook' and lower(${eventcategory}) = 'launch' then 1 else 0 end ;;
   }
   measure:gradebook_launches_sum{
     type: sum
@@ -1778,7 +1778,7 @@ view: ga_data_parsed {
   dimension: quiz_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch quiz' and lower(eventcategory) = 'launch' then 1 else 0 end ;;
+    sql:case when lower(${eventaction}) ='launch quiz' and lower(${eventcategory}) = 'launch' then 1 else 0 end ;;
   }
   measure:quiz_launch_sum{
     type: sum
@@ -1789,7 +1789,7 @@ view: ga_data_parsed {
   dimension: exerciseset_learning_burst_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch exercise set learning burst' and lower(eventcategory) = 'launch' then 1 else 0 end ;;
+    sql:case when lower(${eventaction}) ='launch exercise set learning burst' and lower(${eventcategory}) = 'launch' then 1 else 0 end ;;
   }
   measure:exerciseset_learning_burst_launch_sum{
     type: sum
@@ -1800,7 +1800,7 @@ view: ga_data_parsed {
   dimension: pred_reportactivity_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch pred report activity' and lower(eventcategory) = 'launch' then 1 else 0 end ;;
+    sql:case when lower(${eventaction}) ='launch pred report activity' and lower(${eventcategory}) = 'launch' then 1 else 0 end ;;
   }
   measure:pred_reportactivity_launch_sum{
     type: sum
@@ -1811,7 +1811,7 @@ view: ga_data_parsed {
   dimension: gameactivity_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch game activity' and lower(eventcategory) = 'launch' then 1 else 0 end ;;
+    sql:case when lower(${eventaction}) ='launch game activity' and lower(${eventcategory}) = 'launch' then 1 else 0 end ;;
   }
   measure:gameactivity_launch_sum{
     type: sum
@@ -1822,7 +1822,7 @@ view: ga_data_parsed {
   dimension: mediaquiz_activity_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch media quiz activity' and lower(eventcategory) = 'launch' then 1 else 0 end ;;
+    sql:case when lower(${eventaction}) ='launch media quiz activity' and lower(${eventcategory}) = 'launch' then 1 else 0 end ;;
   }
   measure:mediaquiz_activity_launch_sum{
     type: sum
@@ -1833,7 +1833,7 @@ view: ga_data_parsed {
   dimension: game_learning_burst_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch game from learning burst' and lower(eventcategory) = 'launch' then 1 else 0 end ;;
+    sql:case when lower(${eventaction}) ='launch game from learning burst' and lower(${eventcategory}) = 'launch' then 1 else 0 end ;;
   }
   measure:game_learning_burst_launch_sum{
     type: sum
@@ -1845,7 +1845,7 @@ view: ga_data_parsed {
   dimension: videocapture_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'videocapture' then 1 else 0 end as ;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'videocapture' then 1 else 0 end as ;;
   }
   measure:videocapture_launch_sum{
     type: sum
@@ -1857,7 +1857,7 @@ view: ga_data_parsed {
   dimension: apliamobile_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch' and lower(eventcategory) = 'apliamobile' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) = 'apliamobile' then 1 else 0 end;;
   }
   measure:apliamobile_launch_sum{
     type: sum
@@ -1869,7 +1869,7 @@ view: ga_data_parsed {
   dimension: aplia_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'aplia' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'aplia' then 1 else 0 end;;
   }
   measure:aplia_launch_sum{
     type: sum
@@ -1881,7 +1881,7 @@ view: ga_data_parsed {
   dimension: alg_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'alg' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'alg' then 1 else 0 end;;
   }
   measure:alg_launch_sum{
     type: sum
@@ -1893,7 +1893,7 @@ view: ga_data_parsed {
   dimension: cnowhw_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'cnow.hw' then 1 else 0 end ;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'cnow.hw' then 1 else 0 end ;;
   }
   measure:cnowhw_launch_sum{
     type: sum
@@ -1905,7 +1905,7 @@ view: ga_data_parsed {
   dimension: mtstudycentermindapp_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='app-dock-launch' and lower(eventcategory) = 'mtstudycenter.mindapp' then 1 else 0 end ;;
+    sql:case when lower(${eventaction}) ='app-dock-launch' and lower(${eventcategory}) = 'mtstudycenter.mindapp' then 1 else 0 end ;;
   }
   measure:mtstudycentermindapp_launch_sum{
     type: sum
@@ -1917,7 +1917,7 @@ view: ga_data_parsed {
   dimension: systemsetup_interacted {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='interacted' and lower(eventcategory) = 'system+setup' then 1 else 0 end ;;
+    sql:case when lower(${eventaction}) ='interacted' and lower(${eventcategory}) = 'system+setup' then 1 else 0 end ;;
   }
   measure:systemsetup_interacted_sum{
     type: sum
@@ -1929,7 +1929,7 @@ view: ga_data_parsed {
   dimension: system_interacted {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='interacted' and lower(eventcategory) = 'system' then 1 else 0 end ;;
+    sql:case when lower(${eventaction}) ='interacted' and lower(${eventcategory}) = 'system' then 1 else 0 end ;;
   }
   measure:system_interacted_sum{
     type: sum
@@ -1941,7 +1941,7 @@ view: ga_data_parsed {
   dimension: studyhubmt4_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'studyhub.mt4' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'studyhub.mt4' then 1 else 0 end;;
   }
   measure:studyhubmt4_launch_sum{
     type: sum
@@ -1954,7 +1954,7 @@ view: ga_data_parsed {
   dimension: cerego_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'cerego' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'cerego' then 1 else 0 end;;
   }
   measure:cerego_launch_sum{
     type: sum
@@ -1967,7 +1967,7 @@ view: ga_data_parsed {
   dimension: nettutor6_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'nettutor6' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'nettutor6' then 1 else 0 end;;
   }
   measure:nettutor6_launch_sum{
     type: sum
@@ -1980,7 +1980,7 @@ view: ga_data_parsed {
   dimension: sam_appification_prod_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'sam.appification.prod' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'sam.appification.prod' then 1 else 0 end;;
   }
   measure:sam_appification_prod_launch_sum{
     type: sum
@@ -1993,7 +1993,7 @@ view: ga_data_parsed {
   dimension: speechvideolibraryprod_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'speechvideolibraryprod' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'speechvideolibraryprod' then 1 else 0 end;;
   }
   measure:speechvideolibraryprod_launch_sum{
     type: sum
@@ -2005,7 +2005,7 @@ view: ga_data_parsed {
   dimension: nettutorlti_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch'and lower(eventcategory) = 'nettutorlti' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch'and lower(${eventcategory}) = 'nettutorlti' then 1 else 0 end;;
   }
   measure:nettutorlti_launch_sum{
     type: sum
@@ -2017,7 +2017,7 @@ view: ga_data_parsed {
   dimension: webassignbspage_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) = 'app-dock-launch' and lower(eventCategory) = 'webassign.bspage' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) = 'app-dock-launch' and lower(eventCategory) = 'webassign.bspage' then 1 else 0 end;;
   }
   measure:webassignbspage_launch_sum{
     type: sum
@@ -2029,7 +2029,7 @@ view: ga_data_parsed {
   dimension: milady_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'milady' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'milady' then 1 else 0 end;;
   }
   measure:milady_launch_sum{
     type: sum
@@ -2041,7 +2041,7 @@ view: ga_data_parsed {
   dimension: milady_procedural_tracker_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'milady.procedural.tracker' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'milady.procedural.tracker' then 1 else 0 end;;
   }
   measure:milady_procedural_tracker_launch_sum{
     type: sum
@@ -2053,7 +2053,7 @@ view: ga_data_parsed {
   dimension: mindapp_ab_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'mindapp-ab' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'mindapp-ab' then 1 else 0 end;;
   }
   measure:mindapp_ab_launch_sum{
     type: sum
@@ -2065,7 +2065,7 @@ view: ga_data_parsed {
   dimension: mindapp_grove_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'mindapp-grove' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'mindapp-grove' then 1 else 0 end;;
   }
   measure:mindapp_grove_launch_sum{
     type: sum
@@ -2077,12 +2077,33 @@ view: ga_data_parsed {
   dimension: mindapp_office_365_launch {
     hidden: yes
     type: number
-    sql:case when lower(eventAction) ='launch' or lower(eventAction) = 'app-dock-launch'and lower(eventcategory) = 'mindapp-office-365' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'mindapp-office-365' then 1 else 0 end;;
   }
   measure:mindapp_office_365_launch_sum{
     type: sum
     sql: ${mindapp_office_365_launch} ;;
     group_label : "DS event metrics"
+  }
+
+  #CONDENSED MEASURES
+  measure:  glossary_sum {
+    type: sum
+    sql:  ${glossary_show_sum1} + ${glossary_show_sum2} ;;
+    group_label: "DS event metrics"
+
+  }
+
+  measure:  studyguide_launch_sum {
+    type: sum
+    sql:  ${studyguide_launch_sum1} + $(${studyguide_sum} ;;
+    group_label: "DS event metrics"
+
+  }
+
+  measure: googledocs_launch_sum {
+    type: sum
+    group_label: "DS event metrics"
+    sql: ${googledoc_launch_sum1} + ${googledocs_launch_sum2} + ${google_docs_launch_sum3} ;;
   }
 
 
