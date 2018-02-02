@@ -136,7 +136,7 @@ view: ga_data_parsed {
     group_label: "Local Time"
     label: ""
     type: time
-    timeframes: [raw, date, hour_of_day, day_of_week, time_of_day, month, year, week_of_year]
+    timeframes: [raw,time, date, hour_of_day, day_of_week, time_of_day, month, year, week_of_year]
     sql: ${TABLE}.LOCALTIME_TIMESTAMP_TZ ;;
   }
 
@@ -356,6 +356,24 @@ view: ga_data_parsed {
     group_label : "DS event metrics"
   }
 
+  #total session time
+  dimension: total_session_time {
+    hidden: yes
+    type: number
+    sql: case when lower(${eventcategory}) = 'total-session-time' then ${eventvalue}::number
+              when lower(${eventaction}) = 'total-session-time' then ${eventvalue}::number
+              when contains(lower(${eventlabel}), 'total-session-time') then ${eventvalue}::number
+          else 0 end/1000/60/60/24;;
+
+  }
+  measure: total_session_time_sum {
+    type: sum
+    sql: ${total_session_time} ;;
+    value_format_name: duration_hms
+    group_label: "DS event metrics"
+  }
+
+
   #ASSESSMENT
   dimension: assessment_activity_submitted {
     hidden: yes
@@ -384,8 +402,9 @@ view: ga_data_parsed {
   dimension: assessment_activity {
     hidden: yes
     type: number
-    sql: case when lower(${eventaction}) = 'unknown' and split_part(, ':','4') = 'activity_id'
-                                                      and lower(${eventcategory}) = 'assessment' then 1 else 0 end ;;
+    sql: case when lower(${eventaction}) = 'unknown'
+           #and split_part(, ':','4') = 'activity_id'
+          and lower(${eventcategory}) = 'assessment' then 1 else 0 end ;;
   }
 
   #TODO calculate measures for each category
@@ -1369,7 +1388,7 @@ view: ga_data_parsed {
   dimension: rssfeed_activity_launch {
     hidden: yes
     type: number
-    sql:case when lower(${eventaction}) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'RSS Feed' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) = 'launch' and ${activityuri} is not null and split_part(${activityuri}, ':', 3) = 'RSS Feed' then 1 else 0 end;;
   }
   measure:rssfeed_activity_launch_sum{
     type: sum
@@ -1380,7 +1399,7 @@ view: ga_data_parsed {
   dimension: studyguide_activity_launch {
     hidden: yes
     type: number
-    sql:case when lower(${eventaction}) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'study guide' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) = 'launch' and ${activityuri} is not null and split_part(${activityuri}, ':', 3) = 'study guide' then 1 else 0 end;;
   }
   measure:studyguide_activity_launch_sum{
     type: sum
@@ -1391,7 +1410,7 @@ view: ga_data_parsed {
   dimension: studyguide_activity_view {
     hidden: yes
     type: number
-    sql: case when lower(${eventaction}) = 'view' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'study guide' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'view' and ${activityuri} is not null and split_part(${activityuri}, ':', 3) = 'study guide' then 1 else 0 end;;
   }
   measure:studyguide_activity_view_sum{
     type: sum
@@ -1402,7 +1421,7 @@ view: ga_data_parsed {
   dimension: homework_activity_launch {
     hidden: yes
     type: number
-    sql: case when lower(${eventaction}) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'homework' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' and ${activityuri} is not null and split_part(${activityuri}, ':', 3) = 'homework' then 1 else 0 end;;
   }
   measure:homework_activity_launch_sum{
     type: sum
@@ -1413,7 +1432,7 @@ view: ga_data_parsed {
   dimension: homework_activity_view {
     hidden: yes
     type: number
-    sql: case when lower(${eventaction}) = 'view' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'homework' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'view' and ${activityuri} is not null and split_part(${activityuri}, ':', 3) = 'homework' then 1 else 0 end;;
   }
   measure:homework_activity_view_sum{
     type: sum
@@ -1424,7 +1443,7 @@ view: ga_data_parsed {
   dimension: media_activity_launch {
     hidden: yes
     type: number
-    sql: case when lower(${eventaction}) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'media' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' and ${activityuri} is not null and split_part(${activityuri}, ':', 3) = 'media' then 1 else 0 end;;
   }
   measure:media_activity_launch_sum{
     type: sum
@@ -1435,7 +1454,7 @@ view: ga_data_parsed {
   dimension: weblinks_activity_launch {
     hidden: yes
     type: number
-    sql: case when lower(${eventaction}) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'web links' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' and ${activityuri} is not null and split_part(${activityuri}, ':', 3) = 'web links' then 1 else 0 end;;
   }
   measure:weblinks_activity_launch_sum{
     type: sum
@@ -1446,7 +1465,7 @@ view: ga_data_parsed {
   dimension: googledocs_activity_launch {
     hidden: yes
     type: number
-    sql: case when lower(${eventaction}) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'google docs' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' and ${activityuri} is not null and split_part(${activityuri}, ':', 3) = 'google docs' then 1 else 0 end;;
   }
   measure:googledocs_activity_launch_sum{
     type: sum
@@ -1457,7 +1476,7 @@ view: ga_data_parsed {
   dimension: flashcards_activity_launch {
     hidden: yes
     type: number
-    sql: case when lower(${eventaction}) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'flash-cards' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' and ${activityuri} is not null and split_part(${activityuri}, ':', 3) = 'flash-cards' then 1 else 0 end;;
   }
   measure:flashcards_activity_launch_sum{
     type: sum
@@ -1468,7 +1487,7 @@ view: ga_data_parsed {
   dimension: assessment_activity_launch {
     hidden: yes
     type: number
-    sql: case when lower(${eventaction}) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'assessment' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' and ${activityuri} is not null and split_part(${activityuri}, ':', 3) = 'assessment' then 1 else 0 end;;
   }
   measure:assessment_activity_launch_sum{
     type: sum
@@ -1479,7 +1498,7 @@ view: ga_data_parsed {
   dimension: assessment_activity_view {
     hidden: yes
     type: number
-    sql: case when lower(${eventaction}) = 'view' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'assessment' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'view' and ${activityuri} is not null and split_part(${activityuri}, ':', 3) = 'assessment' then 1 else 0 end;;
   }
   measure:assessment_activity_view_sum{
     type: sum
@@ -1490,7 +1509,7 @@ view: ga_data_parsed {
   dimension: reading_activity_launch {
     hidden: yes
     type: number
-    sql: case when lower(${eventaction}) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'reading' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' and ${activityuri} is not null and split_part(${activityuri}, ':', 3) = 'reading' then 1 else 0 end;;
   }
   measure:reading_activity_launch_sum{
     type: sum
@@ -1501,7 +1520,7 @@ view: ga_data_parsed {
   dimension: reading_activity_view {
     hidden: yes
     type: number
-    sql: case when lower(${eventaction}) = 'view' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'reading' then 1 else 0 end ;;
+    sql: case when lower(${eventaction}) = 'view' and ${activityuri} is not null and split_part(${activityuri}, ':', 3) = 'reading' then 1 else 0 end ;;
   }
   measure:reading_activity_view_sum{
     type: sum
@@ -1512,7 +1531,7 @@ view: ga_data_parsed {
   dimension: other_activity_launch {
     hidden: yes
     type: number
-    sql: case when lower(${eventaction}) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'other' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' and ${activityuri} is not null and split_part(${activityuri}, ':', 3) = 'other' then 1 else 0 end;;
   }
   measure:other_activity_launch_sum{
     type: sum
@@ -1523,7 +1542,7 @@ view: ga_data_parsed {
   dimension: other_activity_view {
     hidden: yes
     type: number
-    sql: case when lower(${eventaction}) = 'view' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'other' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'view' and ${activityuri} is not null and split_part(${activityuri}, ':', 3) = 'other' then 1 else 0 end;;
   }
   measure:other_activity_view_sum{
     type: sum
@@ -1534,7 +1553,7 @@ view: ga_data_parsed {
   dimension: generated_folder_activity {
     hidden: yes
     type: number
-    sql: case when lower(${eventaction}) = 'launch' and activitycgi is not null and split_part(activityCGI, ':', 3) = 'generated' then 1 else 0 end;;
+    sql: case when lower(${eventaction}) = 'launch' and ${activityuri} is not null and split_part(${activityuri}, ':', 3) = 'generated' then 1 else 0 end;;
   }
   measure:generated_folder_activity_sum{
     type: sum
@@ -2086,24 +2105,24 @@ view: ga_data_parsed {
   }
 
   #CONDENSED MEASURES
-  measure:  glossary_sum {
-    type: sum
-    sql:  ${glossary_show_sum1} + ${glossary_show_sum2} ;;
-    group_label: "DS event metrics"
-
-  }
-
-  measure:  studyguide_launch_sum {
-    type: sum
-    sql:  ${studyguide_launch_sum1} + $(${studyguide_sum} ;;
-    group_label: "DS event metrics"
-
-  }
-
-  measure: googledocs_launch_sum {
-    type: sum
-    group_label: "DS event metrics"
-    sql: ${googledoc_launch_sum1} + ${googledocs_launch_sum2} + ${google_docs_launch_sum3} ;;
-  }
+#   measure:  glossary_sum {
+#     type: sum
+#     sql:  ${glossary_show_sum1} + ${glossary_show_sum2} ;;
+#     group_label: "DS event metrics"
+#
+#   }
+#
+#   measure:  studyguide_launch_sum {
+#     type: sum
+#     sql:  ${studyguide_launch_sum1} + ${studyguide_sum} ;;
+#     group_label: "DS event metrics"
+#
+#   }
+#
+#   measure: googledocs_launch_sum {
+#     type: sum
+#     group_label: "DS event metrics"
+#     sql: ${googledoc_launch_sum1} + ${googledocs_launch_sum2} + ${google_docs_launch_sum3} ;;
+#   }
 
 }
