@@ -1,17 +1,3 @@
-view: mankiw_questions {
-  label: "MANKIW Questions"
-
-}
-
-view: soa_questions {
-  extends: [mankiw_questions]
-  sql_table_name: dev.zpg.soa_questions ;;
-  label: "SOA Questions"
-
-
-
-}
-
 view: all_questions {
   sql_table_name: looker_scratch.all_questions ;;
   label: "All Covalent Questions"
@@ -107,7 +93,7 @@ view: all_questions {
   }
 
   measure: normalscore_avg {
-    label: "Avg Score"
+    label: "Score (avg)"
     group_label: "Score"
     type: average
     sql: ${normalscore} ;;
@@ -116,7 +102,7 @@ view: all_questions {
   }
 
   measure: normalscore_min {
-    label: "Min Score"
+    label: "Score (min)"
     group_label: "Score"
     type: min
     sql: ${normalscore} ;;
@@ -124,7 +110,7 @@ view: all_questions {
   }
 
   measure: normalscore_max {
-    label: "Max Score"
+    label: "Score (max)"
     group_label: "Score"
     type: max
     sql: ${normalscore} ;;

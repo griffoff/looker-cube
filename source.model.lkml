@@ -1,5 +1,7 @@
 connection: "snowflake_prod"
 label:"Source Data on Snowflake"
+include: "/core/common.lkml"
+
 include: "*.view.lkml"         # include all views in this project
 include: "*.dashboard.lookml"  # include all dashboards in this project
 include: "dims.model.lkml"
@@ -389,7 +391,18 @@ explore: snapshot {
 
 
 explore: ga_data_parsed {
+  label: "Google Analytics Data"
+  extends: [dim_course]
   join: user_facts {
+    relationship: many_to_one
     sql_on: ${ga_data_parsed.userssoguid} = ${user_facts.guid} ;;
+  }
+  join: dim_course {
+    relationship: many_to_one
+    sql_on: ${ga_data_parsed.coursekey} = ${dim_course.coursekey} ;;
+  }
+  join: dim_relative_to_start_date {
+    relationship: many_to_one
+    sql_on: datediff(days, ${olr_courses.begin_date_date}, ${ga_data_parsed.hit_date}) = ${dim_relative_to_start_date.days} ;;
   }
 }

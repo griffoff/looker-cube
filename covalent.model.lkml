@@ -1,5 +1,6 @@
 connection: "snowflake_prod"
 include: "dims.model.lkml"
+include: "/core/common.lkml"
 
 label:"Item Analysis"
 
@@ -17,24 +18,7 @@ explore: csfitakes {
       sql_on: ${csfitakes.coursekey} = ${dim_course.coursekey};;
       relationship: many_to_one
    }
-  }
-
-# explore: mankiw_questions {
-#   label: "Mankiw data"
-#   extends: [dim_course]
-#   join: dim_course {
-#     sql_on: ${mankiw_questions.coursekey} = ${dim_course.coursekey};;
-#     relationship: many_to_one
-#     }
-#   }
-# explore: soa_questions {
-#   label: "SOA data"
-#   extends: [dim_course]
-#   join: dim_course {
-#     sql_on: ${soa_questions.coursekey} = ${dim_course.coursekey};;
-#     relationship: many_to_one
-#   }
-# }
+}
 
 explore: productqnaproblemview {
   label: "Aplia Link"
@@ -107,6 +91,11 @@ explore: all_questions {
     join: item_taxonomy {
       sql_on: ${all_questions.activityitemuri} = ${item_taxonomy.activity_activityitemuri} ;;
       relationship: many_to_many
+    }
+
+    join: dim_relative_to_start_date {
+      relationship: many_to_one
+      sql_on: datediff(day, ${olr_courses.begin_date_date}, ${all_questions.take_submissiondate_date}) = ${dim_relative_to_start_date.days} ;;
     }
 
 #     join: dim_productplatform {
