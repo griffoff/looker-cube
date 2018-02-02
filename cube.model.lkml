@@ -191,7 +191,7 @@ explore:  fact_appusage_by_user {
   join: dim_course {
     sql_on: ${fact_appusage_by_user.courseid} = ${dim_course.courseid} ;;
     relationship: one_to_one
-    type: inner
+    type: full_outer
     fields: [dim_course.curated_fields*]
   }
 
