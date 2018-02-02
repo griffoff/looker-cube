@@ -161,6 +161,8 @@ view: flat_studentinteractions_4m_ga {
       column: localtime_timestamp_tz_time {}
       column: coretextisbn {}
     }
+
+    sql_trigger_value: select count(*) from raw_ga.ga_data_parsed ;;
   }
   dimension: userssoguid {}
   dimension: coursekey {}
