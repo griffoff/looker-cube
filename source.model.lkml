@@ -391,6 +391,7 @@ explore: snapshot {
 
 
 explore: ga_data_parsed {
+  label: "Google Analytics Data"
   extends: [dim_course]
   join: user_facts {
     relationship: many_to_one
