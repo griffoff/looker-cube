@@ -363,7 +363,7 @@ view: ga_data_parsed {
     sql: case when lower(${eventcategory}) = 'total-session-time' then ${eventvalue}::number
               when lower(${eventaction}) = 'total-session-time' then ${eventvalue}::number
               when contains(lower(${eventlabel}), 'total-session-time') then ${eventvalue}::number
-          else 0 end/1000/60/60/24;;
+          else 0 end/(1000*60*60*24);;
 
   }
   measure: total_session_time_sum {
@@ -403,7 +403,7 @@ view: ga_data_parsed {
     hidden: yes
     type: number
     sql: case when lower(${eventaction}) = 'unknown'
-           #and split_part(, ':','4') = 'activity_id'
+           --and split_part(, ':','4') = 'activity_id'
           and lower(${eventcategory}) = 'assessment' then 1 else 0 end ;;
   }
 
@@ -485,7 +485,7 @@ view: ga_data_parsed {
   dimension: media {
     hidden: yes
     type: number
-    sql: when lower(${eventcategory}) = 'media' then 1
+    sql: case when lower(${eventcategory}) = 'media' then 1
                 when lower(${eventaction}) = 'media' then 1
                 when lower(${eventlabel}) ilike('%media%') then 1 else 0 end ;;
   }
@@ -501,7 +501,7 @@ view: ga_data_parsed {
     hidden: yes
     type: number
     sql: case when lower(${eventaction}) = 'launch' or lower(${eventaction}) = 'app-dock-launch'
-                    and lower(${eventcategory}) = 'search' then 1 else 0 ;;
+                    and lower(${eventcategory}) = 'search' then 1 else 0 end;;
   }
   measure:  search_launched_sum{
     type: sum
@@ -1649,7 +1649,7 @@ view: ga_data_parsed {
   dimension: lams_v2_launch {
     hidden: yes
     type: number
-    sql:case when lower(${eventaction}) = 'app-dock-launch' and lower(eventCategory) = 'lams-v2' then 1 else 0 end;;
+    sql:case when lower(${eventaction}) = 'app-dock-launch' and lower(${eventcategory}) = 'lams-v2' then 1 else 0 end;;
   }
   measure:lams_v2_launch_sum{
     type: sum
@@ -1864,7 +1864,7 @@ view: ga_data_parsed {
   dimension: videocapture_launch {
     hidden: yes
     type: number
-    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'videocapture' then 1 else 0 end as ;;
+    sql:case when lower(${eventaction}) ='launch' or lower(${eventaction}) = 'app-dock-launch'and lower(${eventcategory}) = 'videocapture' then 1 else 0 end ;;
   }
   measure:videocapture_launch_sum{
     type: sum
@@ -2105,25 +2105,25 @@ view: ga_data_parsed {
   }
 
   #CONDENSED MEASURES
-#   measure:  glossary_sum {
-#     type: sum
-#     sql:  ${glossary_show_sum1} + ${glossary_show_sum2} ;;
-#     group_label: "DS event metrics"
-#
-#   }
-#
-#   measure:  studyguide_launch_sum {
-#     type: sum
-#     sql:  ${studyguide_launch_sum1} + ${studyguide_sum} ;;
-#     group_label: "DS event metrics"
-#
-#   }
-#
-#   measure: googledocs_launch_sum {
-#     type: sum
-#     group_label: "DS event metrics"
-#     sql: ${googledoc_launch_sum1} + ${googledocs_launch_sum2} + ${google_docs_launch_sum3} ;;
-#   }
+  measure:  glossary_sum {
+    type: number
+    sql:  ${glossary_show_sum1} + ${glossary_show_sum2} ;;
+    group_label: "DS event metrics"
+
+  }
+
+  measure:  studyguide_launch_sum {
+    type: number
+    sql:  ${studyguide_launch_sum1} + ${studyguide_sum} ;;
+    group_label: "DS event metrics"
+
+  }
+
+  measure: googledocs_launch_sum {
+    type: number
+    group_label: "DS event metrics"
+    sql: ${googledoc_launch_sum1} + ${googledocs_launch_sum2} + ${google_docs_launch_sum3} ;;
+  }
 
 
   dimension: reading_page_view {
