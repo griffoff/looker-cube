@@ -187,7 +187,7 @@ view: dim_date {
     sql: ${TABLE}.GOVERNMENTDEFINEDACADEMICTERMYEAR ;;
     label: "Academic Year"
     group_label: "Calendar - Government Defined Academic Calendar"
-    hidden: yes
+    hidden: no
   }
 
   dimension: hed_academicterm {
