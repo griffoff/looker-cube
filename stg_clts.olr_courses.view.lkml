@@ -1,7 +1,7 @@
 view: olr_courses {
   label: "Course / Section Details"
   sql_table_name: STG_CLTS.OLR_COURSES ;;
-  set: curated_fields {fields:[course_key,course_name]}
+  set: curated_fields {fields:[course_key,course_name,instructor_guid,instructor_name]}
 
   dimension_group: begin_date {
     label: "(OLR) Course Start"
@@ -126,6 +126,7 @@ view: olr_courses {
   }
 
   dimension: instructor_guid {
+    group_label: "instructor"
     label: "Instructor GUID"
     description: "Instructor user ID.  ID may represent a coordinator based on how the course was set up."
     type: string
@@ -133,6 +134,7 @@ view: olr_courses {
   }
 
   dimension: instructor_name {
+    group_label: "instructor"
     description: "Instructor name may not always be available, and when available, may represent a coordinator based on how the course was set up."
     type: string
     sql: ${TABLE}.INSTRUCTOR_NAME ;;
