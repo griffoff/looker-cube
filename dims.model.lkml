@@ -88,6 +88,12 @@ explore: dim_course {
     relationship: many_to_one
   }
 
+  join: courseinstructor {
+    sql_on: ${olr_courses.course_key} = ${courseinstructor.coursekey} ;;
+    relationship: many_to_many
+  }
+
+
 }
 
 explore: dim_date {
