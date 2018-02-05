@@ -221,6 +221,12 @@ view: ga_data_parsed {
     hidden: yes
   }
 
+  #substitute for logins
+  measure: session_count {
+    type: count_distinct
+    sql:  ${sessionid} ;;
+  }
+
   dimension: strlocaltime {
     type: string
     sql: ${TABLE}.STRLOCALTIME ;;
@@ -1932,7 +1938,7 @@ view: ga_data_parsed {
     group_label : "DS event metrics"
   }
 
-   #YSTEM+SETUP
+   #SYSTEM+SETUP
   dimension: systemsetup_interacted {
     hidden: yes
     type: number
@@ -2125,6 +2131,43 @@ view: ga_data_parsed {
     sql: ${googledoc_launch_sum1} + ${googledocs_launch_sum2} + ${google_docs_launch_sum3} ;;
   }
 
+  #ITENSITY
+  measure: intensity {
+    type: number
+    sql:  ${session_count} + ${assessment_activity_submitted_sum} + ${assessment_launch_sum} + ${assessment_activity_started_sum} + ${assessment_activity_view_sum} + ${assessment_activity_sum}+
+          ${reading_Launch_sum} + ${reading_view_sum} + ${reading_activity_sum} +
+          ${media_sum} + ${search_performed_sum} + ${search_launched_sum} +
+          ${everNote_Launch_sum} + ${everNoteMobile_Launch_sum} + ${flashnotes_Launch_sum} + ${mynotes_launch_sum}
+          ${notepad_launch_sum} + ${onenote_launch_sum} + ${quicknote_create_sum} +${quicknote_launch_sum} +
+          ${gradebook_launch_sum} + ${homework_submitted_sum} + ${homework_launch_sum} + ${homework_started_sum} + ${homework_view_sum}+ ${homework_activity_launch_sum} +
+          ${bookmarks_launch_sum} + ${bookmarks_create_sum} + ${progress_launch_sum} + ${flashcards_launch_sum} + ${flashcards_view_sum} + ${glossary_launch_sum} +
+          ${glossary_view_sum} + ${glossary_show_sum1} + ${glossary_show_sum2} + ${create_glossary_show_sum} +
+          ${highlights_launch_sum} + ${highlights_create_sum} + ${messagecenter_launch_sum} + ${messagecenter_preferences_changed_sum} +
+          ${messagecenter_message_sent_sum} + ${studyguide_launch_sum} + ${studyguide_launch_sum1}
+          ${concept_map_interacted_sum} + ${concept_map_sum} + ${conceptmap_launch_sum} + ${conceptmap_activity_launch_sum}+ ${conceptmap_app_launch_sum} +
+          ${readspeaker_launch_sum} + ${readspeaker1_launch_sum} + ${readspeaker3_launch_sum} + ${dictionary_launch_sum} + ${outcome_management_launch_sum} +
+          ${rssfeed_launch_sum} + ${kaltura_launch_sum} +
+          ${google_docs_launch} + ${youseeu_launch_sum} + ${mindappscenario_launch_sum} + ${studyhubmindapp_launch_sum} + ${weblinks_launch_sum} +
+          ${connectyardlearner_launch_sum} +
+          ${mindtap_instructor_resourcecenter_launch_sum} + ${questia_launch_sum} +
+          ${studycenter_launch_sum} + ${chemistryreference_launch_sum} +
+          ${outlinespeech_launch_sum} + ${cnowhw_preclass_ilrn_com_launch_sum} + ${wac_launch_sum} + ${insite_launch_sum} + ${atp_launch_sum} +
+          ${polling_launch_sum} + ${diet_wellnes_plus_launch_sum} +
+          ${mindapp_eportfolio_launch_sum} + ${systemcheck_launch_sum} + ${mindapp_resource_viewer_launch_sum} + ${dashboard_navigation_sum} + ${onedrive_launch_sum} +
+          ${faq_launch_sum} + ${blog_launch_sum} +
+          ${rssfeed_activity_launch_sum} + ${studyguide_activity_launch_sum} + ${studyguide_activity_view_sum} + ${homework_activity_launch_sum} + ${homework_activity_view_sum} +
+          ${media_activity_launch_sum} + ${weblinks_activity_launch_sum} + ${googledocs_activity_launch_sum} + ${flashcards_activity_launch_sum} +
+          ${assessment_activity_launch_sum} + ${assessment_activity_view_sum} + ${reading_activity_launch_sum} + ${reading_activity_view_sum} + ${other_activity_launch_sum}+
+          ${other_activity_view_sum} + ${generated_folder_activity_sum} + ${activitybuilder_launch_sum} + ${diet_analysis_plus_launch_sum} + ${profile_plus_launch_sum} +
+          ${inapppurchase_launch_sum} + ${composition_launch_sum} + ${history_conceptmapactivity_launch_sum} + ${lams_launch_sum} + ${outline_composition_launch_sum} +
+          ${other_launch_sum} + ${other_activity_submitted_sum} +
+          ${assignment_launch_sum} + ${assignment_learning_burst_launch_sum} + ${exerciseset_launch_sum} + ${mediaquiz_activity_launch_sum}+
+          ${class_skills_launch_sum} + ${textsnippet_learning_burst_launch_sum} + ${gradebook_launches_sum} + ${quiz_launch_sum} + ${exerciseset_learning_burst_launch_sum} +
+          ${pred_reportactivity_launch_sum} + ${gameactivity_launch_sum} + ${game_learning_burst_launch_sum} + ${videocapture_launch_sum} + ${apliamobile_launch_sum} +
+          ${aplia_launch_sum} +${alg_launch_sum} + ${cnowhw_launch_sum} + ${mtstudycentermindapp_launch_sum} +
+          ${systemsetup_interacted_sum} + ${system_interacted_sum} + ${studyhubmt4_launch_sum} + ${cerego_launch_sum} + ${nettutor6_launch_sum} + ${webassignbspage_launch_sum} +
+          ${milady_procedural_tracker_launch_sum} ;;
+  }
 
   dimension: reading_page_view {
     type: number
