@@ -406,8 +406,3 @@ explore: ga_data_parsed {
     sql_on: datediff(days, ${olr_courses.begin_date_date}, ${ga_data_parsed.hit_date}) = ${dim_relative_to_start_date.days} ;;
   }
 }
-
-explore: flat_studentinteractions_4m_ga
-{
-
-}
