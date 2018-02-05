@@ -170,7 +170,7 @@ view: dim_course {
   dimension: institutionid {
     type: string
     sql: ${TABLE}.INSTITUTIONID ;;
-    hidden: no
+    hidden: yes
   }
 
   dimension: learningcourse {

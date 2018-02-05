@@ -42,7 +42,7 @@ explore: dim_course {
   extends: [dim_institution, dim_product]
 
   join: olr_courses {
-    fields: [dim_course.curated_fields*]
+    fields: [olr_courses.curated_fields*]
     sql_on: ${dim_course.coursekey} = ${olr_courses.context_id};;
     relationship: one_to_one
     #fields: [olr_courses.curated_fields*]

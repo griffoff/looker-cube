@@ -126,7 +126,7 @@ view: olr_courses {
   }
 
   dimension: instructor_guid {
-    group_label: "instructor"
+    group_label: "Instructor"
     label: "Instructor GUID"
     description: "Instructor user ID.  ID may represent a coordinator based on how the course was set up."
     type: string
@@ -134,7 +134,7 @@ view: olr_courses {
   }
 
   dimension: instructor_name {
-    group_label: "instructor"
+    group_label: "Instructor"
     description: "Instructor name may not always be available, and when available, may represent a coordinator based on how the course was set up."
     type: string
     sql: ${TABLE}.INSTRUCTOR_NAME ;;
