@@ -338,7 +338,7 @@ view: ga_data_parsed {
 
   dimension: reading_page_view {
     type: number
-    sql: ${datalayer_json}:readingPageView::string::int+1 ;;
+    sql: nullif(${datalayer_json}:readingPageView::string, '')::int+1 ;;
   }
 
   dimension: reading_page_count {
