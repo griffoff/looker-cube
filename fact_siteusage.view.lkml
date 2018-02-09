@@ -169,6 +169,12 @@ view: fact_siteusage {
     sql: ${TABLE}.EVENTDATE ;;
   }
 
+  measure: firsteventdate {
+    label: "First Event Date"
+    type: date_time
+    sql:  MIN(${TABLE}.EVENTDATE);;
+  }
+
   dimension_group: eventenddate {
     label: "Event End"
     type: time
