@@ -353,7 +353,7 @@ view: dim_start_date {
 #       fiscal_quarter_of_year,
 #       fiscal_month_num
     ]}
-  dimension: date {group_label: "Course Start Date"}
+  dimension: date { sql: ${TABLE}.datevalue;; group_label: "Course Start Date"}
   dimension: isweekendname {group_label: "Course Start Date"}
 
 }
