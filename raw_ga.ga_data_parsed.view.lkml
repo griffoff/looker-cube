@@ -1,5 +1,10 @@
+map_layer: cities {
+  url: "https://github.com/drei01/geojson-world-cities/blob/master/cities.geojson"
+}
+
 view: ga_data_parsed {
-  sql_table_name: RAW_GA.GA_DATA_PARSED ;;
+  label: "User Event Data"
+  sql_table_name: DEV.RAW_GA.GA_DATA_PARSED ;;
 
   dimension: ga_data_parsed_id {
     primary_key: yes
@@ -60,6 +65,11 @@ view: ga_data_parsed {
   dimension: duration_from_prev_hit {
     type: number
     sql: ${TABLE}.DURATION_FROM_PREV_HIT ;;
+  }
+
+  dimension: duration_to_next_hit {
+    type: number
+    sql: ${TABLE}.DURATION_TO_NEXT_HIT ;;
   }
 
   dimension: duration_from_visit_start {
@@ -154,7 +164,23 @@ view: ga_data_parsed {
     order_by_field: localtime_timestamp_tz_day_hour_sort
   }
 
+  dimension: geonetwork_region {
+    type: string
+    map_layer_name: us_states
+  }
 
+  dimension: geonetwork_metro {
+    type: string
+    map_layer_name: cities
+  }
+
+  dimension: ismobile {
+    type: yesno
+  }
+
+  dimension: devicecategory {
+    type: string
+  }
 
   dimension: localtimefmt {
     type: string
@@ -2181,6 +2207,18 @@ view: ga_data_parsed {
     type: average
     sql: ${duration_from_prev_hit} ;;
     value_format_name: duration_hms
+  }
+
+  measure: duration_to_next_hit_avg {
+    type: average
+    sql: ${duration_to_next_hit} ;;
+    value_format_name: duration_hms
+  }
+
+  measure: duration_to_score_correlation {
+    type: number
+    sql: CORR(${user_final_scores.final_score}, ${duration_to_next_hit}) ;;
+    value_format_name: decimal_3
   }
 
 

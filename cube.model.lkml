@@ -230,10 +230,11 @@ explore:  fact_appusage_by_user {
     relationship: many_to_one
   }
 
-   join: dim_date {
-     sql_on: ${fact_appusage.eventdatekey} = ${dim_date.datekey} ;;
-     relationship: many_to_one
-   }
+  join: dim_date {
+    from: dim_app_usage_date
+    sql_on: ${fact_appusage.eventdatekey} = ${dim_date.datekey} ;;
+    relationship: many_to_one
+  }
 
   #override dim_course join type for performance
   join: dim_start_date {

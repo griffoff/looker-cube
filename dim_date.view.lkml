@@ -339,6 +339,7 @@ view: dim_start_date {
   dimension: governmentdefinedacademictermofyear {group_label: "Course Start Date"}
   dimension: governmentdefinedacademictermyear {group_label: "Course Start Date"}
   dimension_group: datevalue {group_label: "Course Start Date"
+    hidden: no
     type: time
     timeframes: [
       date,
@@ -353,8 +354,37 @@ view: dim_start_date {
 #       fiscal_quarter_of_year,
 #       fiscal_month_num
     ]}
-  dimension: date {group_label: "Course Start Date"}
   dimension: isweekendname {group_label: "Course Start Date"}
+
+}
+
+view: dim_app_usage_date {
+  extends: [dim_date]
+  label: "App Dock"
+  dimension: fiscalyear {
+    hidden: yes
+#     sql: ${TABLE}.fiscalyearvalue
+    group_label: "Usage Date"}
+  dimension: governmentdefinedacademicterm {group_label: "Usage Date"}
+  dimension: governmentdefinedacademictermofyear {group_label: "Usage Date"}
+  dimension: governmentdefinedacademictermyear {group_label: "Usage Date"}
+  dimension_group: datevalue {group_label: "Usage Date"
+    hidden: no
+    type: time
+    timeframes: [
+      date,
+      week,
+      month,
+      month_name,
+      year,
+      day_of_week,
+      #quarter_of_year,
+#       fiscal_year,
+#       fiscal_quarter,
+#       fiscal_quarter_of_year,
+#       fiscal_month_num
+    ]}
+  dimension: isweekendname {group_label: "Usage Date"}
 
 }
 
