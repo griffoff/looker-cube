@@ -2173,10 +2173,26 @@ view: ga_data_parsed {
     type: number
     sql: ${datalayer_json}:readingPageView::string::int+1 ;;
   }
+  measure: total_pages_viewed {
+    type: sum
+    sql: ${reading_page_view} ;;
+  }
+  #we are assuming that pages viewed are read?
+  measure: total_pages_read {
+    type: sum
+    sql: ${reading_page_view} ;;
+  }
+
   dimension: reading_page_count {
     type: number
     sql: ${datalayer_json}:readingPageCount ;;
   }
+  measure: total_pages {
+    type: sum
+    sql: ${reading_page_count} ;;
+
+  }
+
   measure: duration_from_prev_hit_avg {
     type: average
     sql: ${duration_from_prev_hit} ;;
