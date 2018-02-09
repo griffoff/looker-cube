@@ -343,7 +343,7 @@ view: ga_data_parsed {
 
   dimension: reading_page_count {
     type: number
-    sql: ${datalayer_json}:readingPageCount ;;
+    sql: nullif(${datalayer_json}:readingPageCount,'') ;;
   }
 
   measure: duration_from_prev_hit_avg {
