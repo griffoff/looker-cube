@@ -164,7 +164,7 @@ view: fact_siteusage {
   dimension_group: eventdate {
     label: "Event Start"
     type: time
-    hidden: yes
+    hidden: no
     timeframes: [time, hour, minute, date, week, month, raw]
     sql: ${TABLE}.EVENTDATE ;;
   }
