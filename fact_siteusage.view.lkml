@@ -164,9 +164,15 @@ view: fact_siteusage {
   dimension_group: eventdate {
     label: "Event Start"
     type: time
-    hidden: no
+    hidden: yes
     timeframes: [time, hour, minute, date, week, month, raw]
     sql: ${TABLE}.EVENTDATE ;;
+  }
+
+  measure: firsteventdate {
+    label: "First Event Date"
+    type: date_time
+    sql:  MIN(${TABLE}.EVENTDATE);;
   }
 
   dimension_group: eventenddate {
