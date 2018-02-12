@@ -26,6 +26,7 @@ view: dim_course {
           ,c.mag_acct_id
           ,orgs.organization
           ,to_char(dc.STARTDATE, 'YYYYMMDD')::int as startdatekey_new
+          ,dc.enddate < current_date() as course_complete
     from prod.dw_ga.dim_course dc
     left join prod.stg_clts.olr_courses c on dc.coursekey = c."#CONTEXT_ID"
     left join orgs on dc.coursekey = orgs.context_id
@@ -211,6 +212,11 @@ view: dim_course {
     sql: length(split_part(dim_course.coursekey, '-', 1)) > 15
         and array_size(split(dim_course.coursekey, '-')) >= 2
         and ${productplatformid}= 26 ;;
+  }
+
+  dimension: course_complete {
+    label: "Is Course Finished?"
+    type: yesno
   }
 
   measure: count {

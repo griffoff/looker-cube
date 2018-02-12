@@ -4,13 +4,14 @@ view: user_final_scores {
     sql:
     select
         dc.courseid || '.' || dp.partyid as pk
+        ,u.source_id as sso_guid
         ,dc.courseid
         ,dp.partyid
         ,sos.points_earned / sos.points_possible::float as final_score
-    from stg_mindtap.student_outcome_summary sos
-    inner join stg_mindtap.user u on sos.user_id = u.id
-    inner join stg_mindtap.snapshot s on sos.snapshot_id = s.id
-    inner join stg_mindtap.org o on s.org_id = o.id
+    from mindtap.prod_nb.student_outcome_summary sos
+    inner join mindtap.prod_nb.user u on sos.user_id = u.id
+    inner join mindtap.prod_nb.snapshot s on sos.snapshot_id = s.id
+    inner join mindtap.prod_nb.org o on s.org_id = o.id
     inner join dw_ga.dim_course dc on o.external_id = dc.coursekey
     inner join dw_ga.dim_party dp on u.source_id = dp.guid
     ;;
@@ -19,6 +20,21 @@ view: user_final_scores {
 
   dimension: courseid {hidden:yes}
   dimension: partyid {hidden:yes}
+  dimension: sso_guid {hidden:yes}
   dimension: pk {hidden:yes primary_key:yes}
   dimension: final_score {label: "Course Final Score (In MindTap)"}
+  dimension: final_score_category {
+    label: "Course Final Score Category (In MindTap)"
+    type: tier
+    tiers: [0.5, 0.74, 0.89]
+    style: relational
+    sql: ${final_score} ;;
+    value_format_name: percent_0
+  }
+  measure: final_score_avg {
+    label: "Course Final Score (Avg)"
+    type: average
+    sql: ${final_score} ;;
+    value_format_name: percent_1
+  }
 }

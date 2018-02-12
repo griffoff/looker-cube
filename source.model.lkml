@@ -397,6 +397,10 @@ explore: ga_data_parsed {
     relationship: many_to_one
     sql_on: ${ga_data_parsed.userssoguid} = ${user_facts.guid} ;;
   }
+  join: user_final_scores {
+    sql_on: (${dim_course.courseid}, ${ga_data_parsed.userssoguid}) = (${user_final_scores.courseid}, ${user_final_scores.sso_guid}) ;;
+    relationship: many_to_one
+  }
   join: dim_course {
     relationship: many_to_one
     sql_on: ${ga_data_parsed.coursekey} = ${dim_course.coursekey} ;;
