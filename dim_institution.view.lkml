@@ -1,3 +1,7 @@
+map_layer: cities {
+  url: "https://github.com/drei01/geojson-world-cities/blob/master/cities.geojson"
+}
+
 view: dim_institution {
   label: "Institution"
   derived_table: {
@@ -48,6 +52,7 @@ view: dim_institution {
     label: "City"
     type: string
     sql: ${TABLE}.CITY ;;
+    map_layer_name: cities
   }
 
   dimension: country {
@@ -62,6 +67,7 @@ view: dim_institution {
     label: "Postal/Zip Code"
     type: zipcode
     sql: ${TABLE}.POSTALCODE ;;
+    map_layer_name: us_zipcode_tabulation_areas
   }
 
   dimension: region {
