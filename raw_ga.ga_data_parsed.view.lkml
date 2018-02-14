@@ -376,8 +376,8 @@ view: ga_data_parsed {
 
   measure: pages_read {
     label: "Total Reader Pages Viewed"
-    type: count
-    sql: ${reading_page_view} ;;
+    type: number
+    sql: count(${reading_page_view}) ;;
   }
 
   measure: pages_in_books {
