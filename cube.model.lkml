@@ -560,6 +560,7 @@ explore: LP_Analysis_PSR_Limited_View {
           and ${LP_Siteusage_Analysis.eventdatekey} = ${fact_activityoutcome.startdatekey}
           ;;
       relationship: many_to_many
+      fields: [fact_activityoutcome.curated_fields*]
     }
 
     join: activity_usage_facts {
