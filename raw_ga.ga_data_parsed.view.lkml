@@ -363,13 +363,40 @@ view: ga_data_parsed {
   }
 
   dimension: reading_page_view {
+    label: "Page No. Viewed"
     type: number
     sql: nullif(${datalayer_json}:readingPageView::string, '')::int+1 ;;
   }
 
   dimension: reading_page_count {
+    label: "Pages in Book"
     type: number
     sql: nullif(${datalayer_json}:readingPageCount,'') ;;
+  }
+
+  measure: pages_read {
+    label: "Total Reader Pages Viewed"
+    type: number
+    sql: count(${reading_page_view}) ;;
+  }
+
+  measure: pages_in_books {
+    label: "Total Pages Available to Read"
+    type: sum_distinct
+    sql: ${reading_page_count} ;;
+  }
+
+  measure: reading_page_max {
+    type: max
+    sql: ${reading_page_view} ;;
+    hidden: yes
+  }
+
+  measure: reading_page_percent {
+    label: "% of total pages read"
+    type: number
+    sql: ${pages_read} / ${pages_in_books} ;;
+    value_format_name: percent_1
   }
 
   measure: duration_from_prev_hit_avg {
@@ -389,6 +416,5 @@ view: ga_data_parsed {
     sql: CORR(${user_final_scores.final_score}, ${duration_to_next_hit}) ;;
     value_format_name: decimal_3
   }
-
 
 }

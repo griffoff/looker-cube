@@ -53,6 +53,7 @@ view: user_facts {
   }
 
   dimension: user_score_category {
+    group_label: "Scores"
     label: "User Score Category (Gradable)"
     type: tier
     tiers: [0.5, 0.74, 0.89]
@@ -72,6 +73,7 @@ view: user_facts {
   }
 
   dimension: user_score_category_overall {
+    group_label: "Scores"
     label: "User Score Category (Overall)"
     type: tier
     tiers: [0.4, 0.7, 0.9]
