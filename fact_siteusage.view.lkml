@@ -30,6 +30,10 @@ view: fact_siteusage {
   set:  curated_fields_for_instructor_mod{
     fields: [session_count,usercount]
   }
+
+  set: wl_fields {
+    fields: [usercount,total_users]
+  }
   #sql_table_name: DW_GA.FACT_SITEUSAGE ;;
   derived_table: {
     sql:
@@ -61,6 +65,19 @@ view: fact_siteusage {
     hidden: yes
     type: string
     sql: ${TABLE}.ACTIVITYID ;;
+  }
+
+  dimension: eventactionid {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.eventactionid ;;
+  }
+
+  dimension: sourcedata {
+    hidden: no
+    type: string
+    sql: ${TABLE}.sourcedata  ;;
+
   }
 
   measure: clickcount_avg {

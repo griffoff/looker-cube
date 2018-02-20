@@ -45,6 +45,7 @@ view: mindtap_lp_activity_tags {
   }
   set: curated_fields {fields:[activity_topic,activity_sub_type,activity_type,chapter,chapter_topic,section_name,section_number,edition_type,activity_by_group,activity_by_chapter,activity_usage_facts_grouping,learning_path_activity_title_count,total_activity_activations]}
 
+  set:WL_fields  {fields:[total_activity_activations]}
 #   parameter: group_picker {
 #     label: "Analyse by"
 #     type: unquoted

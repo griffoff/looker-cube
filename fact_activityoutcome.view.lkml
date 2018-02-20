@@ -2,6 +2,8 @@ view: fact_activityoutcome {
   label: "Learning Path - Usage Data"
   sql_table_name: DW_GA.FACT_ACTIVITYOUTCOME ;;
 
+  set: curated_fields {fields:[completed,completed_activities,score_avg,usercount_withscore,usercount]}
+
   dimension: rowid {
     type: number
     sql: ${TABLE}.ROWID ;;
@@ -192,15 +194,17 @@ view: fact_activityoutcome {
   }
 
   measure: points_earned {
-    type: number
+    label: "Points Earned"
+    type: max
     sql: ${TABLE}.POINTS_EARNED ;;
-    hidden: yes
+    hidden: no
   }
 
   measure: points_possible {
-    type: number
+    label: "Points Possible"
+    type: min
     sql: ${TABLE}.POINTS_POSSIBLE ;;
-    hidden: yes
+    hidden: no
   }
 
   dimension: productid {
@@ -303,10 +307,10 @@ view: fact_activityoutcome {
   }
 
   dimension: takestartdate {
-    label: "Take Start Time"
+    label: "Activity Take Start Date"
     type: date
     sql: ${TABLE}.TAKESTARTTIME::date ;;
-    hidden: yes
+    hidden: no
   }
 
   dimension_group: takestarttime {
