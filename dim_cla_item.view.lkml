@@ -3,17 +3,20 @@ view: dim_cla_item {
 
   dimension: activitycgi {
     type: string
+    hidden: yes
     sql: ${TABLE}.ACTIVITYCGI ;;
   }
 
   dimension: cla_itemid {
     type: number
     value_format_name: id
+    hidden: yes
     sql: ${TABLE}.CLA_ITEMID ;;
   }
 
   dimension: cla_itemname {
     label: "Item Name"
+    description: "Too be added"
     type: string
     sql: ${TABLE}.CLA_ITEMNAME ;;
   }
@@ -21,22 +24,26 @@ view: dim_cla_item {
   dimension: dw_ldid {
     type: number
     value_format_name: id
+    hidden: yes
     sql: ${TABLE}.DW_LDID ;;
   }
 
   dimension: dw_ldts {
     type: string
+    hidden: yes
     sql: ${TABLE}.DW_LDTS ;;
   }
 
   dimension: learningpathid {
     type: number
     value_format_name: id
+    hidden: yes
     sql: ${TABLE}.LEARNINGPATHID ;;
   }
 
   dimension: subactivitycgi {
     type: string
+    hidden: yes
     sql: ${TABLE}.SUBACTIVITYCGI ;;
   }
 
