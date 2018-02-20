@@ -1,4 +1,5 @@
 view: dim_cla_item {
+  label: "CLA Events"
   sql_table_name: DW_GA.DIM_CLA_ITEM ;;
 
   dimension: activitycgi {
