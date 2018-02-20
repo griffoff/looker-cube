@@ -195,14 +195,14 @@ view: fact_activityoutcome {
 
   measure: points_earned {
     label: "Points Earned"
-    type: number
+    type: max
     sql: ${TABLE}.POINTS_EARNED ;;
     hidden: no
   }
 
   measure: points_possible {
     label: "Points Possible"
-    type: number
+    type: min
     sql: ${TABLE}.POINTS_POSSIBLE ;;
     hidden: no
   }
