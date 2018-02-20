@@ -31,6 +31,7 @@ view: dim_course {
     left join prod.stg_clts.olr_courses c on dc.coursekey = c."#CONTEXT_ID"
     left join orgs on dc.coursekey = orgs.context_id
                   and orgs.r = 1
+    order by olr_course_key
     ;;
     sql_trigger_value: select count(*) from dw_ga.dim_course ;;
   }

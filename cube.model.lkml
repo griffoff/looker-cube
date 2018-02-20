@@ -314,6 +314,11 @@ explore: fact_siteusage {
     relationship: many_to_one
   }
 
+  join: user_scores_daily {
+    sql_on: (${dim_course.courseid}, ${dim_party.partyid}, ${dim_relative_to_start_date.days}) = (${user_scores_daily.courseid}, ${user_scores_daily.partyid}, ${user_scores_daily.day_of_course})  ;;
+    relationship: many_to_one
+  }
+
   join: dim_deviceplatform {
     sql_on: ${fact_siteusage.deviceplatformid} = ${dim_deviceplatform.deviceplatformid} ;;
     relationship: many_to_one

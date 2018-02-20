@@ -371,7 +371,7 @@ view: ga_data_parsed {
   dimension: reading_page_count {
     label: "Pages in Book"
     type: number
-    sql: nullif(${datalayer_json}:readingPageCount,'') ;;
+    sql: nullif(${datalayer_json}:readingPageCount::string,'') ;;
   }
 
   measure: pages_read {
@@ -387,9 +387,9 @@ view: ga_data_parsed {
   }
 
   measure: reading_page_max {
+    label: "Max Page Viewed"
     type: max
     sql: ${reading_page_view} ;;
-    hidden: yes
   }
 
   measure: reading_page_percent {
