@@ -99,6 +99,34 @@ join: dim_eventaction  {
     relationship: many_to_many
   }
 
+  join: fact_appusage_by_user {
+    sql_on: (${WL_usage.courseid},${WL_usage.userid}) = (${fact_appusage_by_user.courseid},${fact_appusage_by_user.userid}) ;;
+    relationship: one_to_many
+    type: inner
+  }
+
+  join: dim_iframeapplication {
+    sql_on: ${fact_appusage_by_user.iframeapplicationid} = ${dim_iframeapplication.iframeapplicationid};;
+    relationship: many_to_one
+  }
+
+  join: dim_iframeapplication_map {
+    from: dim_iframeapplication
+    fields: [dim_iframeapplication_map.iframeapplicationid]
+    sql_on: ${dim_iframeapplication.iframeapplicationid} = ${dim_iframeapplication_map.iframeapplicationid_group};;
+    relationship: many_to_one
+  }
+
+  join: fact_appusage {
+    sql_on: (${fact_appusage_by_user.courseid}, ${fact_appusage_by_user.userid}, ${dim_iframeapplication_map.iframeapplicationid}) = (${fact_appusage.courseid}, ${fact_appusage.userid}, ${fact_appusage.iframeapplicationid})  ;;
+    relationship: one_to_many
+  }
+
+  join: dim_deviceplatform {
+    sql_on: ${fact_appusage.deviceplatformid} = ${dim_deviceplatform.deviceplatformid} ;;
+    relationship: many_to_one
+  }
+
 join: course_section_facts {
   fields: [course_section_facts.curated_fields*]
 }
