@@ -132,9 +132,10 @@ view: fact_appusage {
   }
 
   dimension: timekey {
-    type: string
-    sql: ${TABLE}.TIMEKEY ;;
-    hidden: yes
+    label: "Time of Day"
+    type: date_hour
+    sql: ${TABLE}.TIMEKEY;;
+    hidden: no
   }
 
   dimension: userid {
