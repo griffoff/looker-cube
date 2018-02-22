@@ -133,7 +133,7 @@ view: fact_appusage {
 
   dimension: timekey {
     label: "Time of Day"
-    type: number
+    type: string
     sql: ${TABLE}.TIMEKEY;;
     hidden: no
   }
