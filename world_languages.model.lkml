@@ -75,6 +75,11 @@ join: dim_eventaction  {
     fields: [dim_party.curated_fields*]
   }
 
+  join: dim_time {
+    sql_on: ${WL_usage.timekey} = ${dim_time.timekey} ;;
+    relationship: many_to_one
+  }
+
   join: dim_user {
     sql_on: ${WL_usage.userid} = ${dim_user.userid} ;;
     relationship: many_to_one
@@ -120,6 +125,7 @@ join: dim_eventaction  {
   join: fact_appusage {
     sql_on: (${fact_appusage_by_user.courseid}, ${fact_appusage_by_user.userid}, ${dim_iframeapplication_map.iframeapplicationid}) = (${fact_appusage.courseid}, ${fact_appusage.userid}, ${fact_appusage.iframeapplicationid})  ;;
     relationship: one_to_many
+    fields: [curated_fields_WL*]
   }
 
   join: dim_deviceplatform {
