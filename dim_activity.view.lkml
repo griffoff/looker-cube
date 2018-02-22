@@ -49,7 +49,8 @@ view: dim_activity {
             when a.scorable = 1 then 'practice'
             else 'nonscorable'
         end as status,
-        case when a.assigned not in (2, 3) then 1 else 0 end as available
+        case when a.assigned not in (2, 3) then 1 else 0 end as available,
+        a.estimatedminutes
       FROM dw_ga.dim_activity a
       ;;
       sql_trigger_value: select count(*) from dw_ga.dim_activity ;;
@@ -57,6 +58,7 @@ view: dim_activity {
   set: curated_fields {fields:[gradable_percent,practice_percent,notscorable_percent,unassigned_percent,APPLICATIONNAME,count_gradable,status]}
 
   set: curated_fields_PM {fields:[APPLICATIONNAME,count_gradable,status]}
+  set: curated_fields_WL {fields:[APPLICATIONNAME,count_gradable,status,estimated_minutes]}
 
   dimension: activitycategory {
     group_label: "Activity Category"
@@ -81,6 +83,14 @@ view: dim_activity {
     description: "Most specific activity categories. Product/discipline specific. (ex: saa, csfi, virtuallab, etc.)"
     type: string
     sql: ${TABLE}.SubType ;;
+  }
+
+  dimension: estimated_minutes {
+    group_label: "CLA Events"
+    label: "Estimated Minutes"
+    description: "Pre-defined estimated time to complete an activity"
+    type: number
+    sql: ${TABLE}.ESTIMATEDMINUTES ;;
   }
 
   dimension: activityid {

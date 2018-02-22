@@ -60,7 +60,7 @@ join: dim_eventaction  {
   join: dim_activity {
     sql_on: ${WL_usage.activityid} = ${dim_activity.activityid} ;;
     relationship: many_to_one
-    fields: [dim_activity.curated_fields_PM*]
+    fields: [dim_activity.curated_fields_WL*]
   }
 
   join: dim_learningpath {
