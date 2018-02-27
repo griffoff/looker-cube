@@ -75,6 +75,11 @@ join: dim_eventaction  {
     fields: [dim_party.curated_fields*]
   }
 
+  join: dim_time {
+    sql_on: ${WL_usage.timekey} = ${dim_time.timekey} ;;
+    relationship: many_to_one
+  }
+
   join: dim_user {
     sql_on: ${WL_usage.userid} = ${dim_user.userid} ;;
     relationship: many_to_one
@@ -120,6 +125,7 @@ join: dim_eventaction  {
   join: fact_appusage {
     sql_on: (${fact_appusage_by_user.courseid}, ${fact_appusage_by_user.userid}, ${dim_iframeapplication_map.iframeapplicationid}) = (${fact_appusage.courseid}, ${fact_appusage.userid}, ${fact_appusage.iframeapplicationid})  ;;
     relationship: one_to_many
+    fields: [curated_fields_WL*]
   }
 
   join: dim_deviceplatform {
@@ -143,3 +149,77 @@ join: dim_product {
   fields: [dim_product.curated_fields*]
 }
 }
+
+
+explore: WL_activity {
+  from:  fact_activity
+  label: "WL Learning Path Modifictaions"
+  description: "Starting point for learning path analysis from the instructor perspective (e.g. What has the instructor changed?  What has the instructor added?)"
+  extends: [dim_course, dim_learningpath]
+
+  join: dim_eventtype {
+    sql_on: ${WL_activity.eventtypeid} = ${dim_eventtype.eventtypeid} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_created_date {
+    sql_on: ${WL_activity.createddatekey} = ${dim_created_date.datekey} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_instructor_user {
+    from: dim_user
+    view_label: "User (Instructor)"
+    sql_on: ${WL_activity.userid} = ${dim_instructor_user.userid} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_instructor_party {
+    from: dim_party
+    view_label: "User (Instructor)"
+    sql_on: ${dim_instructor_user.mainpartyid} = ${dim_instructor_party.partyid} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_learningpath {
+    sql_on: ${WL_activity.learningpathid} = ${dim_learningpath.learningpathid} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_activity {
+    sql_on: ${WL_activity.activityid} = ${dim_activity.activityid} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_course {
+    #sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
+    sql_on: ${WL_activity.courseid} = ${dim_course.courseid} ;;
+    relationship: many_to_one
+    type: full_outer
+  }
+
+  join: courseinstructor {
+    sql_on: ${olr_courses.course_key} = ${courseinstructor.coursekey} ;;
+    relationship: many_to_many
+  }
+
+  join:  fact_siteusage {
+    sql_on: (${WL_activity.courseid}, ${WL_activity.learningpathid}) = (${fact_siteusage.courseid}, ${fact_siteusage.learningpathid}) ;;
+    relationship: many_to_many
+  }
+
+  join: dim_relative_to_start_date {
+    sql_on: ${WL_activity.daysfromcoursestart} = ${dim_relative_to_start_date.days} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_time {
+    sql_on: ${WL_activity.timekey} = ${dim_time.timekey} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_filter {
+    sql_on: ${WL_activity.filterflag} = ${dim_filter.filterflag} ;;
+    relationship: many_to_one
+  }
+  }
