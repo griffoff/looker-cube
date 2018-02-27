@@ -37,7 +37,7 @@ view: user_scores_daily {
         ,ao.user_id
         ,a.is_gradable
         ,ao.points_possible
-        ,ao.points_earned
+        ,case when ao.points_earned > ao.points_possible then ao.points_possible else ao.points_earned end as points_earned
         ,1+datediff(day, dc.startdate, to_timestamp(ao.created_date, 3)) as day_of_course
       from mindtap.prod_nb.activity_outcome ao
       inner join mindtap.prod_nb.activity a on ao.activity_id = a.id
@@ -57,6 +57,12 @@ view: user_scores_daily {
         ,sum(daily_points_earned) over (partition by sso_guid order by d.day_of_course rows unbounded preceding) as to_date_points_earned
         ,sum(daily_points_possible) over (partition by sso_guid order by d.day_of_course rows unbounded preceding) as to_date_points_possible
         ,to_date_points_earned / nullif(to_date_points_possible, 0)::float as to_date_score
+        ,sum(case when d.day_of_course < 15 then daily_points_earned end) over (partition by sso_guid) as week2_points_earned
+        ,sum(case when d.day_of_course < 15 then daily_points_possible end) over (partition by sso_guid) as week2_points_possible
+        ,week2_points_earned / nullif(week2_points_possible, 0)::float as week2_score
+        ,sum(case when d.day_of_course < 8 then daily_points_earned end) over (partition by sso_guid) as week1_points_earned
+        ,sum(case when d.day_of_course < 8 then daily_points_possible end) over (partition by sso_guid) as week1_points_possible
+        ,week1_points_earned / nullif(week1_points_possible, 0)::float as week1_score
     from course_user_days d
     inner join mindtap.prod_nb.user u on d.user_id = u.id
     inner join dw_ga.dim_party dp on u.source_id = dp.guid
@@ -78,9 +84,10 @@ view: user_scores_daily {
   dimension: day_of_course {}
   dimension: sso_guid {hidden:yes}
   dimension: pk {hidden:yes primary_key:yes}
-  dimension: daily_score {group_label: "Scores" label: "Daily Score (In MindTap)"}
-  dimension: daily_points_earned {group_label: "Scores" label: "Daily Points Earned (In MindTap)"}
-  dimension: daily_points_possible {group_label: "Scores" label: "Daily Points Possible (In MindTap)"}
+
+  dimension: daily_points_earned {group_label: "Scores" label: "Daily Points Earned (In MindTap)" hidden:yes}
+  dimension: daily_points_possible {group_label: "Scores" label: "Daily Points Possible (In MindTap)" hidden:yes}
+  dimension: daily_score {group_label: "Scores" label: "Daily Score (In MindTap)" sql: round(${TABLE}.daily_score, 3);;}
   dimension: daily_score_category {
     group_label: "Scores"
     label: "Daily Score Category (In MindTap)"
@@ -97,9 +104,9 @@ view: user_scores_daily {
     sql: ${daily_score} ;;
     value_format_name: percent_1
   }
-  dimension: to_date_points_earned {group_label: "Scores" label: "Points Earned To Date (In MindTap)"}
-  dimension: to_date_points_possible {group_label: "Scores" label: "Points Possible To Date (In MindTap)"}
-  dimension: to_date_score {group_label: "Scores" label: "Score to Date (In MindTap)"}
+  dimension: to_date_points_earned {group_label: "Scores" label: "Points Earned To Date (In MindTap)" hidden:yes}
+  dimension: to_date_points_possible {group_label: "Scores" label: "Points Possible To Date (In MindTap)" hidden:yes}
+  dimension: to_date_score {group_label: "Scores" label: "Score to Date (In MindTap)" sql: round(${TABLE}.to_date_score, 3) ;; value_format_name: percent_1}
   dimension: to_date_score_category {
     group_label: "Scores"
     label: "Score to Date Category (In MindTap)"
@@ -107,6 +114,91 @@ view: user_scores_daily {
     tiers: [0.5, 0.74, 0.89]
     style: relational
     sql: ${to_date_score} ;;
+    value_format_name: percent_0
+  }
+  measure: to_date_score_avg {
+    group_label: "Scores"
+    label: "Score to Date (Avg)"
+    type: average
+    sql: ${to_date_score} ;;
+    value_format_name: percent_1
+  }
+  dimension: week2_points_earned {group_label: "Scores" label: "week2 Points Earned (In MindTap)" hidden:yes}
+  dimension: week2_points_possible {group_label: "Scores" label: "week2 Points Possible (In MindTap)" hidden:yes}
+  dimension: week2_score {group_label: "Scores" label: "Week 2 Score (In MindTap)" sql: round(${TABLE}.week2_score, 3);;}
+  dimension: week2_score_category {
+    group_label: "Scores"
+    label: "Week 2 Score Category (In MindTap)"
+    description: "Score to Date within the first 2 weeks"
+    type: tier
+    tiers: [0.5, 0.74, 0.89]
+    style: relational
+    sql: ${to_date_score} ;;
+    value_format_name: percent_0
+  }
+
+  dimension: week1_points_earned {group_label: "Scores" label: "Week 1 Points Earned (In MindTap)" hidden:yes}
+  dimension: week1_points_possible {group_label: "Scores" label: "Week 1 Points Possible (In MindTap)" hidden:yes}
+  dimension: week1_score {group_label: "Scores" label: "Week 1 Score (In MindTap)" sql: round(${TABLE}.week1_score, 3);;}
+  dimension: week1_score_category {
+    group_label: "Scores"
+    label: "Week 1 Score Category (In MindTap)"
+    description: "Score to Date within the first week"
+    type: tier
+    tiers: [0.5, 0.74, 0.89]
+    style: relational
+    sql: ${to_date_score} ;;
+    value_format_name: percent_0
+  }
+
+  measure: student_count {
+    label: "# Students"
+    type: count_distinct
+    sql: ${sso_guid} ;;
+  }
+
+  measure: corr_week2_to_final {
+    group_label: "Scores"
+    label: "Correlation of week2 Score to Final Score"
+    type: number
+    sql: corr(${user_final_scores.final_score}, ${week2_score}) ;;
+  }
+
+  dimension: week2_score_vs_final_score {
+    type: number
+    group_label: "Scores"
+    label: "Score Improvement from Week 2"
+    description: "Difference between week2 Score and Final Score"
+    sql: ${user_final_scores.final_score} - ${week2_score} ;;
+    value_format_name: percent_1
+  }
+
+  dimension: week2_score_vs_final_score_category {
+    group_label: "Scores"
+    label: "Week 2 Score Improvement Category"
+    type: tier
+    tiers: [-0.5, -0.2, -0.1, 0.1, 0.2, 0.5]
+    sql: ${week2_score_vs_final_score} ;;
+    style: relational
+    value_format_name: percent_0
+  }
+
+  dimension: week1_score_vs_final_score {
+    type: number
+    group_label: "Scores"
+    label: "Score Improvement from Week 1"
+    description: "Difference between week2 Score and Final Score"
+    sql: ${user_final_scores.final_score} - ${week1_score} ;;
+    value_format_name: percent_1
+  }
+
+  dimension: week1_score_vs_final_score_category {
+    group_label: "Scores"
+    label: "Week 1 Score Improvement Category"
+    type: tier
+    tiers: [-0.5, -0.2, -0.1, 0.1, 0.2, 0.5]
+    sql: ${week1_score_vs_final_score} ;;
+    style: relational
     value_format_name: percent_0
   }
 }
