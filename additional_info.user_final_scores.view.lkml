@@ -22,7 +22,7 @@ view: user_final_scores {
   dimension: partyid {hidden:yes}
   dimension: sso_guid {hidden:yes}
   dimension: pk {hidden:yes primary_key:yes}
-  dimension: final_score {group_label: "Scores" label: "Course Final Score (In MindTap)"}
+  dimension: final_score {group_label: "Scores" label: "Course Final Score (In MindTap)" sql: round(${TABLE}.final_score, 3);;}
   dimension: final_score_category {
     group_label: "Scores"
     label: "Course Final Score Category (In MindTap)"
