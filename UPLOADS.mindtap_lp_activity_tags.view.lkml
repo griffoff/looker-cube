@@ -21,17 +21,17 @@ view: mindtap_lp_activity_tags {
           ,EDITION_TYPE
           ,CONCAT(activity_type, Coalesce(CONCAT(': ',NULLIF(activity_sub_type,'')),'')) as activity_usage_facts_grouping
           ,max(learning_path_activity_title) over (partition by activity_title_key) as LEARNING_PATH_ACTIVITY_TITLE
-          ,case when count(distinct activity_type) over (partition by full_key) > 1 then null else activity_type end as activity_type
-          ,case when count(distinct activity_sub_type) over (partition by full_key) > 1 then null else activity_sub_type end as activity_sub_type
+          ,case when count(distinct activity_type) over (partition by full_key) > 1 then null else InitCap(activity_type) end as activity_type
+          ,case when count(distinct activity_sub_type) over (partition by full_key) > 1 then null else InitCap(activity_sub_type) end as activity_sub_type
          --,case when count(distinct activity_sub_type) over (partition by full_key) > 1 then null else activity_sub_type end as activity_sub_type
           --,case when count(distinct activity_cluster) over (partition by full_key) > 1 then null else activity_cluster end as activity_cluster
           --,case when count(distinct activity_sub_cluster) over (partition by full_key) > 1 then null else activity_sub_cluster end as activity_sub_cluster
-          ,case when count(distinct activity_topic) over (partition by full_key) > 1 then null else activity_topic end as activity_topic
-          ,case when count(distinct activity_group) over (partition by full_key) > 1 then null else activity_group end as activity_group
+          ,case when count(distinct activity_topic) over (partition by full_key) > 1 then null else InitCap(activity_topic) end as activity_topic
+          ,case when count(distinct activity_group) over (partition by full_key) > 1 then null else InitCap(activity_group) end as activity_group
           ,case when count(distinct chapter) over (partition by full_key) > 1 then null else chapter end as chapter
           ,case when count(distinct section_number) over (partition by full_key) > 1 then null else section_number end as section_number
-          ,case when count(distinct section_name) over (partition by full_key) > 1 then null else section_name end as section_name
-          ,case when count(distinct chapter_topic) over (partition by full_key) > 1 then null else chapter_topic end as chapter_topic
+          ,case when count(distinct section_name) over (partition by full_key) > 1 then null else InitCap(section_name) end as section_name
+          ,case when count(distinct chapter_topic) over (partition by full_key) > 1 then null else InitCap(chapter_topic) end as chapter_topic
           ,COUNT (DISTINCT learning_path_activity_title) OVER (PARTITION BY Activity_Type,Activity_sub_Type,Product_Family,Edition) AS Activity_BY_GROUP
           ,COUNT (DISTINCT learning_path_activity_title) OVER (PARTITION BY chapter,Product_Family,Edition) AS Activity_BY_Chapter
       from tags
