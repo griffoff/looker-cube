@@ -17,7 +17,7 @@ view: dim_cla_item {
 
   dimension: cla_itemname {
     label: "Item Name"
-    description: "Too be added"
+    description: "To be added"
     type: string
     sql: ${TABLE}.CLA_ITEMNAME ;;
   }

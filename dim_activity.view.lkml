@@ -58,7 +58,7 @@ view: dim_activity {
   set: curated_fields {fields:[gradable_percent,practice_percent,notscorable_percent,unassigned_percent,APPLICATIONNAME,count_gradable,status]}
 
   set: curated_fields_PM {fields:[APPLICATIONNAME,count_gradable,status]}
-  set: curated_fields_WL {fields:[APPLICATIONNAME,count_gradable,status,estimated_minutes]}
+  set: curated_fields_WL {fields:[APPLICATIONNAME,count_gradable,status,estimated_minutes,activitysubcategory,activityid]}
 
   dimension: activitycategory {
     group_label: "Activity Category"
@@ -97,7 +97,7 @@ view: dim_activity {
     type: number
     sql: ${TABLE}.ACTIVITYID ;;
     primary_key: yes
-    hidden: yes
+    hidden: no
   }
 
   dimension: possiblepoints {

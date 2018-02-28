@@ -26,7 +26,7 @@ view: fact_appusage {
       sql_trigger_value: select count(*) from dw_ga.fact_appusage ;;
   }
   #sql_table_name: DW_GA.FACT_APPUSAGE ;;
-
+  set: curated_fields_WL {fields:[]}
   dimension:  pk {
     sql: ${TABLE}.pageinstanceid || ${TABLE}.eventdatekey || ${TABLE}.timekey || ${TABLE}.iframeapplicationid ;;
     hidden:  yes
@@ -135,7 +135,7 @@ view: fact_appusage {
     label: "Time of Day"
     type: string
     sql: ${TABLE}.TIMEKEY;;
-    hidden: no
+    hidden: yes
   }
 
   dimension: userid {
