@@ -378,7 +378,17 @@ view: dim_product {
     hidden: yes
   }
 
+  measure: count_disciplines {
+    label: "# Disciplines"
+    type: count_distinct
+    sql: ${discipline} ;;
+  }
 
+  measure: count_product_family {
+    label: "# Product Families"
+    type: count_distinct
+    sql: ${productfamily} ;;
+  }
 
   measure: count {
     label: "# Products"
