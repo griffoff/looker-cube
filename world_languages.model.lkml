@@ -151,10 +151,10 @@ join: mindtap_lp_activity_tags {
 join: dim_product {
   fields: [dim_product.curated_fields*]
 }
-join: fact_session {
-  sql_on: (${fact_appusage.deviceplatformid},${WL_usage.timekey},${dim_user.userid}) = (${fact_session.deviceplatformid},${fact_session.timekey},${fact_session.userid}) ;;
-  type: inner
-}
+# join: fact_session {
+#   sql_on: (${fact_appusage.deviceplatformid},${WL_usage.timekey},${dim_user.userid}) = (${fact_session.deviceplatformid},${fact_session.timekey},${fact_session.userid}) ;;
+#   type: inner
+# }
 }
 
 
