@@ -164,7 +164,7 @@ view: fact_activation {
     description: "Must be used with activation date year and day of year"
     type: number
     sql: sum(sum(${noofactivations_base})) over (partition by ${dim_date.datevalue_year}  order by ${dim_date.datevalue_day_of_year} rows unbounded preceding) ;;
-    required_fields: [dim_date.datevalue_year, dim_date.datevalue_day_pf_year]
+    required_fields: [dim_date.datevalue_year, dim_date.datevalue_day_of_year]
   }
 
   measure: avg_noofactivations {

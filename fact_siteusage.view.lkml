@@ -179,9 +179,9 @@ view: fact_siteusage {
   }
 
   dimension_group: eventdate {
-    label: "Event Start"
+    group_label: "Date of Activity"
     type: time
-    hidden: yes
+    hidden: no
     timeframes: [time, hour, minute, date, week, month, raw]
     sql: ${TABLE}.EVENTDATE ;;
   }
@@ -428,8 +428,8 @@ view: fact_siteusage {
   measure: total_users {
   label: "# Users (Total)"
   description: "Total number of people who clicked on an item"
-  type: count
-  sql: ${partyid} ;;
+  type: number
+  sql: count(${partyid}) ;;
   }
 
   measure: percent_of_activations {

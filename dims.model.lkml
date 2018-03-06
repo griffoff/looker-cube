@@ -7,7 +7,15 @@
 #
 #
 
-include: "*.view.lkml"         # include all views in this project
+include: "dim_*.view.lkml"         # include all views in this project
+include: "fact_*.view.lkml"
+include: "stg_clts.olr_courses.view.lkml"
+include: "location.view.lkml"
+include: "UPLOADS.mindtap_lp_activity_tags.view.lkml"
+include: "stg_clts.products.view.lkml"
+include: "*facts.view.lkml"
+include: "courseinstructor.view.lkml"
+
 #include: "*.dashboard.lookml"  # include all dashboards in this project
 
 case_sensitive: no
