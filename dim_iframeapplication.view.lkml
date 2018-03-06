@@ -38,9 +38,11 @@ view: dim_iframeapplication {
 
     sql_trigger_value: select count(*) from DW_GA.dim_iframeapplication ;;
   }
+  set: curated_fields_WL {fields:[displayname]}
 
   dimension: displayname {
     label: "Display Name"
+    description: "Display name of the app on the dock"
     type: string
     #sql: COALESCE(${TABLE}.DISPLAYNAME, ${iframeapplicationname}) ;;
     sql: COALESCE(${TABLE}.BESTDISPLAYNAME, ${iframeapplicationname}) ;;

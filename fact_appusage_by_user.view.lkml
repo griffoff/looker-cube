@@ -62,6 +62,8 @@ view: fact_appusage_by_user {
       sql_trigger_value: select count(*) from dw_ga.fact_appusage ;;
   }
 
+  set: curated_fields_WL{ fields:[] }
+
   dimension: pk {
     hidden: yes
     sql: ${TABLE}.pk ;;
