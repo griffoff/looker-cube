@@ -481,6 +481,17 @@ view: fact_siteusage {
     can_filter: no
     hidden: yes
   }
+
+  dimension: session_number {
+    label: "Session Number"
+    sql: ${TABLE}.SESSIONNUMBER ;;
+  }
+
+  measure: count_session {
+    label: "# Sessions"
+    type: count_distinct
+    sql: ${TABLE}.SESSIONNUMBER ;;
+  }
 }
 #- measure: count
 #  label: 'No. of page view records'
