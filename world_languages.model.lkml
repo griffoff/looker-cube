@@ -105,14 +105,17 @@ join: dim_eventaction  {
   }
 
   join: fact_appusage_by_user {
+    view_label: ""
     sql_on: (${WL_usage.courseid},${WL_usage.userid}) = (${fact_appusage_by_user.courseid},${fact_appusage_by_user.userid}) ;;
     relationship: one_to_many
+    fields: [curated_fields_WL*]
 #     type: inner
   }
 
   join: dim_iframeapplication {
     sql_on: ${fact_appusage_by_user.iframeapplicationid} = ${dim_iframeapplication.iframeapplicationid};;
     relationship: many_to_one
+    fields: [curated_fields_WL*]
   }
 
   join: dim_iframeapplication_map {
