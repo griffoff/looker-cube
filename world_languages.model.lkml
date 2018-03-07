@@ -112,27 +112,27 @@ join: dim_eventaction  {
 #     type: inner
   }
 
-  join: dim_iframeapplication {
-    sql_on: ${fact_appusage_by_user.iframeapplicationid} = ${dim_iframeapplication.iframeapplicationid};;
-    relationship: many_to_one
-    fields: [curated_fields_WL*]
-  }
+  # join: dim_iframeapplication {
+  #   sql_on: ${fact_appusage_by_user.iframeapplicationid} = ${dim_iframeapplication.iframeapplicationid};;
+  #   relationship: many_to_one
+  #   fields: [curated_fields_WL*]
+  # }
 
-  join: dim_iframeapplication_map {
-    from: dim_iframeapplication
-    fields: [dim_iframeapplication_map.iframeapplicationid]
-    sql_on: ${dim_iframeapplication.iframeapplicationid} = ${dim_iframeapplication_map.iframeapplicationid_group};;
-    relationship: many_to_one
-  }
+  # join: dim_iframeapplication_map {
+  #   from: dim_iframeapplication
+  #   fields: [dim_iframeapplication_map.iframeapplicationid]
+  #   sql_on: ${dim_iframeapplication.iframeapplicationid} = ${dim_iframeapplication_map.iframeapplicationid_group};;
+  #   relationship: many_to_one
+  # }
 
-  join: fact_appusage {
-    sql_on: (${fact_appusage_by_user.courseid}, ${fact_appusage_by_user.userid}, ${dim_iframeapplication_map.iframeapplicationid}) = (${fact_appusage.courseid}, ${fact_appusage.userid}, ${fact_appusage.iframeapplicationid})  ;;
-    relationship: one_to_many
-    fields: [curated_fields_WL*]
-  }
+  # join: fact_appusage {
+  #   sql_on: (${fact_appusage_by_user.courseid}, ${fact_appusage_by_user.userid}, ${dim_iframeapplication_map.iframeapplicationid}) = (${fact_appusage.courseid}, ${fact_appusage.userid}, ${fact_appusage.iframeapplicationid})  ;;
+  #   relationship: one_to_many
+  #   fields: [curated_fields_WL*]
+  # }
 
   join: dim_deviceplatform {
-    sql_on: ${fact_appusage.deviceplatformid} = ${dim_deviceplatform.deviceplatformid} ;;
+    sql_on: ${WL_usage.deviceplatformid} = ${dim_deviceplatform.deviceplatformid} ;;
     relationship: many_to_one
   }
 
