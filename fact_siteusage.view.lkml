@@ -330,6 +330,25 @@ view: fact_siteusage {
     value_format_name: duration_hms
   }
 
+#   measure: pageviewtime_dailyaverage_by_student {
+#     group_label: "Time in product"
+#     label: "Time in product (avg time per page)"
+#     type: number
+#     sql: sum(${pageviewtime}) over (partition by ${userid}) / count(distinct ${eventdate_date}) over (partition by ${userid});;
+#     value_format_name: duration_hms
+#     hidden: yes
+#   }
+#
+#   dimension: pageview_time_daily_tier {
+#     label: "Time in product (daily avg per student)"
+#     group_label: "Time in product"
+#     type: tier
+#     style: relational
+#     tiers: [0.04166666667,  0.08333333333,  0.2083333333]
+#     sql: ${pageviewtime_dailyaverage_by_student} ;;
+#     value_format_name: duration_hms
+#   }
+
   measure: pageviewtime_useraverage {
     group_label: "Time in product"
     label: "Time in Mindtap (avg per student)"
