@@ -309,17 +309,38 @@ view: fact_activityoutcome {
   dimension: takestartdate {
     label: "Activity Take Start Date"
     type: date
-    sql: ${TABLE}.TAKESTARTTIME::date ;;
-    hidden: no
+
+    hidden: yes
   }
 
-  dimension_group: takestarttime {
-    label: "Take Start Time"
+  dimension_group: takestarttime {group_label: "Take Start Time"
     type: time
-    hidden: yes
-    timeframes: [time, date, week, month]
+    hidden: no
+    timeframes: [
+      date,
+      week,
+      month,
+      month_name,
+      year,
+      day_of_week,
+      day_of_year
+      #quarter_of_year,
+#       fiscal_year,
+#       fiscal_quarter,
+#       fiscal_quarter_of_year,
+#       fiscal_month_num
+    ]
+    label: "Take Start"
     sql: ${TABLE}.TAKESTARTTIME ;;
   }
+
+#   dimension_group: takestarttime {
+#     label: "Take Start Time"
+#     type: time
+#     hidden: yes
+#     timeframes: [time, date, week, month]
+#     sql: ${TABLE}.TAKESTARTTIME ;;
+#   }
 
   dimension: timeduration {
     type: number

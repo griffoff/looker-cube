@@ -263,7 +263,7 @@ explore: fact_siteusage {
   extends: [dim_user, dim_course, dim_pagedomain, dim_learningpath]
 
   join: dim_date {
-    view_label: "Date - Date of activity"
+    from: dim_activity_date
     sql_on: ${fact_siteusage.eventdatekey} = ${dim_date.datekey} ;;
     relationship: many_to_one
   }

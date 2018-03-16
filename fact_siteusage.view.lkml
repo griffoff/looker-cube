@@ -180,9 +180,10 @@ view: fact_siteusage {
 
   dimension_group: eventdate {
     group_label: "Date of Activity"
+    label: "Event Time"
     type: time
     hidden: no
-    timeframes: [time, hour, minute, date, week, month, raw]
+    timeframes: [time, hour, minute, raw]
     sql: ${TABLE}.EVENTDATE ;;
   }
 
