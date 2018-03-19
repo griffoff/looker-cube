@@ -9,7 +9,6 @@ view: activity_usage_facts {
       column: no_of_unique_activities { field: dim_learningpath.lowest_level_count_distinct }
       column: courseid { field: fact_siteusage.courseid }
       column: partyid { field: fact_siteusage.partyid }
-#       column: productid {field: fact_siteusage.productid}
       sort: {field: fact_siteusage.courseid}
     }
     datagroup_trigger: fact_siteusage_datagroup
