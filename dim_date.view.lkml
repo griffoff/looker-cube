@@ -1,7 +1,7 @@
 view: dim_date {
   label: "Date"
   sql_table_name: DW_GA.DIM_DATE ;;
-  set: curated_fields {fields:[datevalue_date,datevalue_week,datevalue_month,datevalue_month_name,datevalue_year,datevalue_day_of_week,fiscalyear]}
+  set: curated_fields {fields:[datevalue_date,datevalue_month,datevalue_month_name,datevalue_year,datevalue_day_of_week,fiscalyear]}
 
   dimension: datevalue {
     label: "Date"
@@ -101,8 +101,6 @@ view: dim_date {
     type: time
     timeframes: [
       date,
-      week,
-      week_of_year,
       month,
       month_name,
       year,
@@ -116,9 +114,9 @@ view: dim_date {
     ]
     convert_tz: no
     sql: ${TABLE}.DATEVALUE ;;
-    label: ""
+    label: "Calendar"
     description: "Standard calendar"
-    hidden: yes
+    hidden: no
   }
 
   dimension: dayofweekid {
@@ -419,6 +417,37 @@ view: dim_activation_date {
 #       fiscal_month_num
     ]}
   dimension: isweekendname {hidden:yes group_label: "Activation Date"}
+}
+
+view: dim_activity_date {
+  extends: [dim_date]
+  label: "Learning Path - Usage Data"
+
+  dimension: fiscalyear {
+    hidden: no
+#     sql: ${TABLE}.fiscalyearvalue
+    group_label: "Date of Activity"}
+  dimension: governmentdefinedacademicterm {group_label: "Date of Activity"}
+  dimension: governmentdefinedacademictermofyear {group_label: "Date of Activity"}
+  dimension: governmentdefinedacademictermyear {group_label: "Date of Activity"}
+  dimension_group: datevalue {group_label: "Date of Activity"
+    type: time
+    hidden: no
+    timeframes: [
+      date,
+      week,
+      month,
+      month_name,
+      year,
+      day_of_week,
+      day_of_year
+      #quarter_of_year,
+#       fiscal_year,
+#       fiscal_quarter,
+#       fiscal_quarter_of_year,
+#       fiscal_month_num
+    ]}
+  dimension: isweekendname {hidden:yes group_label: "Date of Activity"}
 }
 
 view: dim_master_first_used_date {

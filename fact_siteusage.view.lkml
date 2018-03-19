@@ -180,9 +180,10 @@ view: fact_siteusage {
 
   dimension_group: eventdate {
     group_label: "Date of Activity"
+    label: "Event Time"
     type: time
     hidden: no
-    timeframes: [time, hour, minute, date, week, month, raw]
+    timeframes: [time, hour, minute, raw]
     sql: ${TABLE}.EVENTDATE ;;
   }
 
@@ -329,6 +330,25 @@ view: fact_siteusage {
     sql: ${pageviewtime_sum} / nullif(${usercount}, 0) / nullif(${daycount}, 0);;
     value_format_name: duration_hms
   }
+
+#   measure: pageviewtime_dailyaverage_by_student {
+#     group_label: "Time in product"
+#     label: "Time in product (avg time per page)"
+#     type: number
+#     sql: sum(${pageviewtime}) over (partition by ${userid}) / count(distinct ${eventdate_date}) over (partition by ${userid});;
+#     value_format_name: duration_hms
+#     hidden: yes
+#   }
+#
+#   dimension: pageview_time_daily_tier {
+#     label: "Time in product (daily avg per student)"
+#     group_label: "Time in product"
+#     type: tier
+#     style: relational
+#     tiers: [0.04166666667,  0.08333333333,  0.2083333333]
+#     sql: ${pageviewtime_dailyaverage_by_student} ;;
+#     value_format_name: duration_hms
+#   }
 
   measure: pageviewtime_useraverage {
     group_label: "Time in product"
