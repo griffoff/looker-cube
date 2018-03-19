@@ -108,6 +108,7 @@ view: fact_appusage_by_user {
 
   measure: user_count {
     label: "# of Users"
+    description: "Number of unique users who have clicked on the app"
     type: count_distinct
     sql: case when ${appclicks_base} > 0 then ${userid} end ;;
     drill_fields: [dim_iframeapplication.displayname,dim_institution.institutionname,dim_course.is_lms_integrated,courseinstructor.instructorid,dim_course.count,fact_siteusage.percent_of_activations]

@@ -41,6 +41,7 @@ view: fact_appusage {
 
   measure: clickcount {
     label: "# of Clicks"
+    description: "Total Number of clicks on the App"
     type: sum
     sql: ${TABLE}.CLICKCOUNT ;;
   }

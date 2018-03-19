@@ -19,7 +19,8 @@ explore: Pat_usage {
     ,-user_facts.gradable_activities_completed_by_user,-user_facts.activities_completed_by_user
     ,-dim_learningpath.node_id,-lp_node_map.snapshotid,-dim_learningpath.snapshot_status
     ,-dim_activity_view_uri.path,-dim_activity.estimated_minutes,-dim_activity.activityid
-    ,-mindtap_lp_activity_tags.total_activity_activations]
+    ,-mindtap_lp_activity_tags.total_activity_activations
+    ,-Pat_usage.usercount,-Pat_usage.total_users]
 
 
   join: dim_course {
