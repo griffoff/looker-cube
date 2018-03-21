@@ -6,7 +6,7 @@ include: "*.dashboard.lookml"  # include all dashboards in this project
 include: "dims*"
 
 explore: Pat_usage {
-  label: "Usage Data"
+  label: "Usage Data -  Apps in MindTap Learning Path"
   from: fact_siteusage
   description: "Explore Start point for learning path usage from the student persepctive including application usage information collected via google analytics."
   extends: [dim_user, dim_course, dim_pagedomain, dim_learningpath]
@@ -138,7 +138,7 @@ explore: Pat_usage {
 
 explore:  fact_appusage_by_user {
   extends: [dim_course, dim_user, dim_learningpath]
-  label: "App dock usage - Mindtap"
+  label: "Usage Data - App Dock"
   description: "
   Usage metrics about mindapps accessed via the Mindtap app dock
   Does not include usage of apps accessed via inline activities (from the learning path)
