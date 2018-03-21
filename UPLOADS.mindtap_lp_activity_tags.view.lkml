@@ -260,7 +260,10 @@ dimension: activity_usage_facts_grouping {
     url: "/explore/cube/fact_siteusage?fields=mindtap_lp_activity_tags.activity_usage_facts_grouping,dim_activity.status,fact_siteusage.percent_of_activations,
     &f[mindtap_lp_activity_tags.activity_usage_facts_grouping]={{ value }},&f[dim_product.productfamily_edition]={{_filters['dim_product.productfamily_edition'] | url_encode}}"
   }
-
+  link: {
+    label: "Activity Type Dashboard"
+    url: "/dashboards/212?ActivityType_SubType={{ value }}&FiscalYear={{_filters['dim_date.fiscalyear'] | url_encode}}&ProductFamily_Edition={{_filters['dim_product.productfamily_edition'] | url_encode}}"
+  }
 }
 
 measure: learning_path_activity_title_count {
