@@ -22,6 +22,12 @@ view: ga_data_parsed {
     sql: ${TABLE}.ACTIVITYURI ;;
   }
 
+  dimension: activityid {
+    description: "mindtap activity | node id"
+    type: number
+    sql: try_cast(split_part(${activityuri}, ':', -1) as integer) ;;
+  }
+
   dimension: cendocid {
     type: string
     sql: ${TABLE}.CENDOCID ;;
@@ -84,12 +90,12 @@ view: ga_data_parsed {
 
   dimension: eventaction {
     type: string
-    sql: ${TABLE}.EVENTACTION ;;
+    sql: upper(${TABLE}.EVENTACTION) ;;
   }
 
   dimension: eventcategory {
     type: string
-    sql: ${TABLE}.EVENTCATEGORY ;;
+    sql: upper(${TABLE}.EVENTCATEGORY) ;;
   }
 
   dimension: eventlabel {
@@ -108,6 +114,9 @@ view: ga_data_parsed {
   }
 
   dimension_group: hit {
+    description: "
+    Server hit time - i.e. the time at the server when the user did something.
+    This is not the same as user local time, but could be if the user is in the same timezone as the server"
     type: time
     timeframes: [
       raw,
@@ -143,7 +152,7 @@ view: ga_data_parsed {
   }
 
   dimension_group: localtime_timestamp_tz {
-    group_label: "Local Time"
+    group_label: "User Local Time"
     label: ""
     type: time
     timeframes: [raw,time, date, hour_of_day, day_of_week, time_of_day, month, year, week_of_year]
