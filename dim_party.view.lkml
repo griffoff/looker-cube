@@ -131,6 +131,14 @@ view: dim_party {
     {% endif %}  ;;
   }
 
+  dimension: guid_raw {
+    label: "SSO Guid"
+    group_label: "PII"
+    type: string
+    sql: ${TABLE}.GUID ;;
+    hidden: yes
+  }
+
   dimension: lastname {
     label: "Last name"
     group_label: "PII"

@@ -19,7 +19,7 @@ explore: fact_siteusage_dev {
   }
 
   join: ga_data_parsed {
-    sql_on: ${dim_party.guid} = ${ga_data_parsed.userssoguid}
+    sql_on: ${dim_party.guid_raw} = ${ga_data_parsed.userssoguid}
         and ${dim_course.olr_course_key} = ${ga_data_parsed.coursekey}
         and ${lp_node_map.nodeid} = ${ga_data_parsed.activityid};;
     relationship: one_to_many

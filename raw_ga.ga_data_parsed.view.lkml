@@ -367,6 +367,7 @@ view: ga_data_parsed {
   }
 
   measure: count {
+    label: "# Events Captured"
     type: count
     drill_fields: [ga_data_parsed_id, hostname]
   }
