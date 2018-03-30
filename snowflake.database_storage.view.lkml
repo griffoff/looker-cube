@@ -28,8 +28,8 @@ view: database_storage {
   }
 
   measure: credit_usage {
-    type:sum
-    sql:${daily_total_Tbytes} / 28;;
+    type:number
+    sql:${average_daily_Tbytes};;
     value_format_name: decimal_2
   }
 
@@ -37,6 +37,12 @@ view: database_storage {
     type: number
     sql: 23 ;;
     hidden: yes
+  }
+
+  measure: storage_cost {
+    type: number
+    sql:  ${credit_usage} * ${storage_cost_per_credit} ;;
+    value_format_name: currency
   }
 
   measure: storage_cost_per_day {
