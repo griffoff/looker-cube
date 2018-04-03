@@ -1,5 +1,7 @@
 include: "/core/common.lkml"
 
+include: "/project_source/*.view.lkml"
+
 connection: "snowflake_prod"
 label:"Cube Data on Looker"
 

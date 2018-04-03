@@ -6,3 +6,7 @@ project_name: "cube"
 local_dependency: {
    project: "core"
  }
+
+local_dependency: {
+  project: "project_source"
+}
