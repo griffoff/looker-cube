@@ -149,7 +149,7 @@ view: warehouse_usage_detail {
 
   measure: warehouse_cost {
     type: number
-    sql: ${credit_usage} * ${warehouse_cost_per_credit} ;;
+    sql: coalesce(${credit_usage} * ${warehouse_cost_per_credit}, ${warehouse_usage.warehouse_cost}) ;;
     value_format_name: currency
     drill_fields: [query_details*]
   }
