@@ -2,7 +2,7 @@ connection: "snowflake_prod"
 
 include: "*.view.lkml"
 include: "*.dashboard.lookml"  # include all dashboards in this project
-include: "dims.model.lkml"     #include definitions from main model
+include: "dims.lkml"     #include definitions from main model
 
 label: "Qualtrics Surveys"
 

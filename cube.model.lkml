@@ -14,7 +14,7 @@ datagroup: fact_activityoutcome_datagroup {
 }
 
 #include dims model
-include: "dims.model.lkml"
+include: "dims.lkml"
 # include all the views
 include: "*.view"
 

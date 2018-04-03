@@ -2,7 +2,7 @@ connection: "snowflake_prod"
 label:"Experimental / Data Science"
 
 #include dims model
-include: "dims.model.lkml"
+include: "dims.lkml"
 # include all the views
 include: "*.view"
 

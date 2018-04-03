@@ -1,5 +1,5 @@
 connection: "snowflake_prod"
-include: "dims.model.lkml"
+include: "dims.lkml"
 include: "/core/common.lkml"
 
 label:"Item Analysis"
