@@ -19,13 +19,19 @@ explore: warehouse_usage {
     sql_on: (${warehouse_usage.warehouse_name}, ${warehouse_usage.start_time_key}) = (${warehouse_usage_total_time.warehouse_name}, ${warehouse_usage_total_time.start_time_key})  ;;
     relationship: one_to_one
   }
-  join: database_storage {
-    sql_on: ${warehouse_usage.start_date} = ${database_storage.usage_date};;
-    relationship: many_to_one
-  }
+#   join: database_storage {
+#     sql_on: ${warehouse_usage.start_date} = ${database_storage.usage_date};;
+#     relationship: many_to_one
+#   }
+#   join: warehouse_usage_detail {
+#     sql_on: (${warehouse_usage.warehouse_name}, ${warehouse_usage.start_time_key}, ${database_storage.usage_date}) = (${warehouse_usage_detail.warehouse_name}, ${warehouse_usage_detail.start_time_key}, ${warehouse_usage_detail.start_date})  ;;
+#     relationship: one_to_many
+#   }
   join: warehouse_usage_detail {
-    sql_on: (${warehouse_usage.warehouse_name}, ${warehouse_usage.start_time_key}, ${database_storage.usage_date}) = (${warehouse_usage_detail.warehouse_name}, ${warehouse_usage_detail.start_time_key}, ${warehouse_usage_detail.start_date})  ;;
+    sql_on: (${warehouse_usage.warehouse_name}, ${warehouse_usage.start_time_key}) = (${warehouse_usage_detail.warehouse_name}, ${warehouse_usage_detail.start_time_key})  ;;
     relationship: one_to_many
   }
 
 }
+
+explore: database_storage {}
