@@ -149,7 +149,10 @@ explore:  fact_appusage_by_user {
   ,-fact_appusage.click_per_user_buckets,-fact_appusage.filterflag,-fact_appusage.app_rank_user,-fact_appusage.app_rank
   ,-dim_user.productsactivated,-dim_user.numberofvisits
   ,-dim_activity_view_uri.ref_id,-dim_activity_view_uri.view_uri
-  ,-dim_learningpath.snapshot_status,-lp_node_map.snapshotid]
+  ,-dim_learningpath.snapshot_status,-lp_node_map.snapshotid
+  ,-dim_party.count
+  ,-user_facts.activities_completed_by_user,-user_facts.gradable_activities_completed_by_user
+  ,- dim_iframeapplication.iframeapplicationname]
 
   join: dim_course {
     sql_on: ${fact_appusage_by_user.courseid} = ${dim_course.courseid} ;;
