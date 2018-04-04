@@ -187,6 +187,13 @@ view: fact_siteusage {
     sql: ${TABLE}.EVENTDATE ;;
   }
 
+  dimension: eventdatetimeStamp {
+#     group_label: "Date of Activity"
+    label: "Event Timestamp"
+    type: date_second
+    sql: ${TABLE}.EVENTDATE ;;
+  }
+
   measure: firsteventdate {
     label: "First Event Date"
     type: date_time
