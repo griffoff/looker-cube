@@ -1,5 +1,6 @@
 connection: "snowflake_prod"
 
+include: "/core/common.lkml"
 include: "*.view.lkml"         # include all views in this project
 include: "*.dashboard.lookml"  # include all dashboards in this project
 
@@ -20,8 +21,9 @@ explore: Pat_usage {
     ,-dim_learningpath.node_id,-lp_node_map.snapshotid,-dim_learningpath.snapshot_status
     ,-dim_activity_view_uri.path,-dim_activity.estimated_minutes,-dim_activity.activityid
     ,-mindtap_lp_activity_tags.total_activity_activations
-    ,-Pat_usage.usercount,-Pat_usage.total_users]
-
+    ,-Pat_usage.usercount,-Pat_usage.total_users
+    ,-fact_activityoutcome.score_to_final_score_correlation
+    ,-Pat_usage.time_on_task_to_final_score_correlation]
 
   join: dim_course {
     sql_on: ${Pat_usage.courseid} = ${dim_course.courseid} ;;

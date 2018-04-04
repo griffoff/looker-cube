@@ -1,5 +1,6 @@
 connection: "snowflake_prod"
 
+include: "/core/common.lkml"
 include: "*.view.lkml"
 include: "*.dashboard.lookml"  # include all dashboards in this project
 include: "dims.lkml"     #include definitions from main model
@@ -8,6 +9,7 @@ label: "Qualtrics Surveys"
 
 explore: magellandatagj {
   extends: [dim_course]
+  fields: [ALL_FIELDS*, -fact_siteusage.time_on_task_to_final_score_correlation]
   label: "Gaurav Upload"
   join: dim_institution {
     sql_on: ${magellandatagj.entity_number} = ${dim_institution.entity_no};;

@@ -100,6 +100,7 @@ explore: fact_activity {
   label: "Learning Path - MT Instructor Modifications"
   description: "Starting point for learning path analysis from the instructor perspective (e.g. What has the instructor changed?  What has the instructor added?)"
   extends: [dim_course, dim_learningpath]
+  fields: [ALL_FIELDS*, -dim_activity.percent_usage, -fact_siteusage.time_on_task_to_final_score_correlation]
 
   join: dim_eventtype {
     sql_on: ${fact_activity.eventtypeid} = ${dim_eventtype.eventtypeid} ;;
@@ -147,10 +148,10 @@ explore: fact_activity {
     relationship: many_to_many
   }
 
-#   join:  fact_activityoutcome {
-#     sql_on: (${dim_course.courseid}, ${dim_activity.activityid}) = (${fact_activityoutcome.courseid}, ${fact_activityoutcome.activityid}) ;;
-#     relationship: one_to_many
-#   }
+#    join:  fact_activityoutcome {
+#      sql_on: (${dim_course.courseid}, ${dim_activity.activityid}) = (${fact_activityoutcome.courseid}, ${fact_activityoutcome.activityid}) ;;
+#      relationship: one_to_many
+#    }
 
   join:  fact_siteusage {
     sql_on: (${fact_activity.courseid}, ${fact_activity.learningpathid}) = (${fact_siteusage.courseid}, ${fact_siteusage.learningpathid}) ;;
@@ -381,6 +382,7 @@ explore: LP_Analysis_PSR_Limited_View {
   from: fact_siteusage
   description: "TEST Explore Start point for learning path usage from the student persepctive including application usage information collected via google analytics."
   extends: [dim_user, dim_course, dim_pagedomain, dim_learningpath, dim_product]
+  fields: [ALL_FIELDS*, -dim_activity.percent_usage, -fact_activityoutcome.score_to_final_score_correlation, -LP_Analysis_PSR_Limited_View.time_on_task_to_final_score_correlation]
 
   join: dim_date {
     view_label: "Date - Date of activity"
@@ -507,6 +509,7 @@ explore: LP_Analysis_PSR_Limited_View {
 #       course_section_facts.curated_fields*,user_facts.curated_fields*,dim_activity_view_uri.curated_field*,mindtap_lp_activity_tags.curated_fields*]
     description: "Explore Start point for learning path usage from the student persepctive including application usage information collected via google analytics."
     extends: [dim_user, dim_course, dim_pagedomain, dim_learningpath]
+    fields: [ALL_FIELDS*, -dim_activity.percent_usage, -fact_activityoutcome.score_to_final_score_correlation, -LP_Siteusage_Analysis.time_on_task_to_final_score_correlation]
 
     join: dim_course {
       sql_on: ${LP_Siteusage_Analysis.courseid} = ${dim_course.courseid} ;;

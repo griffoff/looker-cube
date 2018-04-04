@@ -1,9 +1,10 @@
 connection: "snowflake_prod"
 
+include: "/core/common.lkml"
 include: "*.view.lkml"         # include all views in this project
 include: "*.dashboard.lookml"  # include all dashboards in this project
 
-include: "dims*"
+include: "dims.lkml"
 
 # # Select the views that should be a part of this model,
 # # and define the joins that connect them together.
@@ -27,6 +28,7 @@ explore: WL_usage {
   extends: [dim_user, dim_course, dim_pagedomain, dim_learningpath]
 #   fields: [dim_eventaction.eventactionid,WL_usage.usercount,WL_usage.total_users,WL_usage.pageviewtime_useraverage,
 #             WL_usage.pageviewtime_sum,dim_cla_item*,dim_product.curated_fields*,WL_usage.eventdatekey]
+  fields: [ALL_FIELDS*, -dim_activity.percent_usage, -fact_activityoutcome.score_to_final_score_correlation, -WL_usage.time_on_task_to_final_score_correlation]
 join: dim_eventaction  {
   sql_on: ${dim_eventaction.eventactionid} = ${WL_usage.eventactionid} ;;
   relationship: one_to_many
@@ -163,6 +165,7 @@ explore: WL_activity {
   label: "WL Learning Path Modifictaions"
   description: "Starting point for learning path analysis from the instructor perspective (e.g. What has the instructor changed?  What has the instructor added?)"
   extends: [dim_course, dim_learningpath]
+  fields: [ALL_FIELDS*, -dim_activity.percent_usage, -fact_siteusage.time_on_task_to_final_score_correlation]
 
   join: dim_eventtype {
     sql_on: ${WL_activity.eventtypeid} = ${dim_eventtype.eventtypeid} ;;

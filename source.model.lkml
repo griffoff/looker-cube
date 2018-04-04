@@ -200,16 +200,19 @@ explore: problem {
 
    join:  membership {
      sql_on: ${course.guid} = ${membership.context_guid} ;;
+     relationship: one_to_many
    }
    join: instructor {
      from: membership
      view_label: "Instructors"
      sql_on: course.guid = instructor.context_guid and instructor.role_guid = 'ROLE041651A500E908EF3A1E80000000' ;;
+    relationship: one_to_many
    }
    join:  apliauser {
      sql_on: ${membership.user_guid} = ${apliauser.guid}
      AND user_id not like '%aplia.com'
      AND user_id not like  '%cengage.com';;
+     relationship: many_to_one
    }
 
    join: student {
@@ -217,6 +220,7 @@ explore: problem {
      view_label: "Students"
      sql_on: course.guid = student.context_guid and student.role_guid = 'ROLE041651A500E908EE3FFE80000000' ;;
      # count(student) > 2 - filter internal data
+     relationship: one_to_many
    }
 
   join: dim_course {

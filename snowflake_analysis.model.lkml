@@ -5,20 +5,26 @@ include: "*.dashboard.lookml"  # include all dashboards in this project
 include: "/core/common.lkml"
 
 explore:warehouse_usage_detail  {
+  fields: [ALL_FIELDS*, -warehouse_usage_detail.warehouse_cost, -warehouse_usage_detail.credit_usage]
   hidden: yes
   join: database_storage {
     sql_on: ${warehouse_usage_detail.database_name} = ${database_storage.database_name}
       and ${warehouse_usage_detail.start_date} = ${database_storage.usage_date};;
       relationship: many_to_one
   }
+  join: warehouse_usage_total_time {
+    sql_on: (${warehouse_usage_detail.warehouse_name}, ${warehouse_usage_detail.start_time_key}) = (${warehouse_usage_total_time.warehouse_name}, ${warehouse_usage_total_time.start_time_key})  ;;
+    relationship: one_to_one
+  }
+#   join: warehouse_usage {
+#     sql_on: (${warehouse_usage_detail.warehouse_name}, ${warehouse_usage_detail.start_time_key}) = (${warehouse_usage.warehouse_name}, ${warehouse_usage.start_time_key})   ;;
+#     relationship: many_to_one
+#   }
 }
 
 explore: warehouse_usage {
   extends: [warehouse_usage_detail]
-  join: warehouse_usage_total_time {
-    sql_on: (${warehouse_usage.warehouse_name}, ${warehouse_usage.start_time_key}) = (${warehouse_usage_total_time.warehouse_name}, ${warehouse_usage_total_time.start_time_key})  ;;
-    relationship: one_to_one
-  }
+  fields: [ALL_FIELDS*]
 #   join: database_storage {
 #     sql_on: ${warehouse_usage.start_date} = ${database_storage.usage_date};;
 #     relationship: many_to_one
@@ -30,6 +36,10 @@ explore: warehouse_usage {
   join: warehouse_usage_detail {
     sql_on: (${warehouse_usage.warehouse_name}, ${warehouse_usage.start_time_key}) = (${warehouse_usage_detail.warehouse_name}, ${warehouse_usage_detail.start_time_key})  ;;
     relationship: one_to_many
+  }
+  join: warehouse_usage_total_time {
+    sql_on: (${warehouse_usage.warehouse_name}, ${warehouse_usage.start_time_key}) = (${warehouse_usage_total_time.warehouse_name}, ${warehouse_usage_total_time.start_time_key})  ;;
+    relationship: one_to_one
   }
 
 }

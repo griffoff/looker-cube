@@ -22,6 +22,7 @@ view: warehouse_usage_detail {
       year
     ]
     sql: ${TABLE}.END_TIME ;;
+    hidden: yes
   }
 
   dimension: query_id {
@@ -56,13 +57,17 @@ view: warehouse_usage_detail {
   }
 
   dimension_group: start {
-    label: "Query Start"
+    label: "Query"
     type: time
     timeframes: [
       raw,
       time,
+      hour_of_day,
       hour,
+      hour3,
+      hour6,
       date,
+      day_of_month,
       week,
       month,
       quarter,
@@ -147,9 +152,18 @@ view: warehouse_usage_detail {
     hidden: yes
   }
 
-  measure: warehouse_cost {
+  measure: warehouse_cost_raw {
     type: number
-    sql: coalesce(${credit_usage} * ${warehouse_cost_per_credit}, ${warehouse_usage.warehouse_cost}) ;;
+    sql: ${credit_usage} * ${warehouse_cost_per_credit} ;;
+    value_format_name: currency
+    drill_fields: [query_details*]
+    hidden: yes
+  }
+
+  measure: warehouse_cost {
+    label:"Warehouse Cost"
+    type: number
+    sql: coalesce(${warehouse_cost_raw}, ${warehouse_usage.warehouse_cost}) ;;
     value_format_name: currency
     drill_fields: [query_details*]
   }

@@ -14,6 +14,7 @@ view: warehouse_usage {
       year
     ]
     sql: ${TABLE}.END_TIME ;;
+    hidden: yes
   }
 
   dimension: start_time_key {
@@ -28,6 +29,7 @@ view: warehouse_usage {
   }
 
   dimension_group: start {
+    label: "Usage"
     type: time
     timeframes: [
       raw,
@@ -89,6 +91,13 @@ view: warehouse_usage {
   measure: warehouse_cost {
     type: number
     sql: ${credits_used} * ${warehouse_cost_per_credit} ;;
+    value_format_name: currency
+  }
+
+  measure: warehouse_cost_mtd {
+    required_fields: [warehouse_name, start_date, start_month]
+    type: number
+    sql: sum(${warehouse_cost}) over (partition by ${warehouse_name}, ${start_month} order by ${start_date} rows unbounded preceding) ;;
     value_format_name: currency
   }
 }

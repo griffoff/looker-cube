@@ -3,8 +3,6 @@ include: "cube.model.lkml"
 #connection: "snowflake_prod"
 label:"DEV - Cube Data on Looker"
 
-explore: activity_usage_facts {}
-
 explore: fact_siteusage_dev {
   extends: [fact_siteusage]
   label: "DEV site usage extend"
