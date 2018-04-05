@@ -67,6 +67,7 @@ view: warehouse_usage_detail {
       hour3,
       hour6,
       date,
+      day_of_week,
       day_of_month,
       week,
       month,
@@ -166,6 +167,24 @@ view: warehouse_usage_detail {
     sql: coalesce(${warehouse_cost_raw}, ${warehouse_usage.warehouse_cost}) ;;
     value_format_name: currency
     drill_fields: [query_details*]
+  }
+
+  measure: warehouse_cost_monthly {
+    label:"Warehouse Cost (1 month at this rate)"
+    type: number
+    sql: ${warehouse_cost} * 24 * 365 / 12;;
+    value_format_name: currency
+    drill_fields: [query_details*]
+    required_fields: [start_hour]
+  }
+
+  measure: warehouse_cost_monthly_6 {
+    label:"Warehouse Cost (1 month at the last 6 hours avg rate)"
+    type: number
+    sql: sum(${warehouse_cost}) over (order by ${start_hour} rows between 6 preceding and current row) * 4 * 365 / 12;;
+    value_format_name: currency
+    drill_fields: [query_details*]
+    required_fields: [start_hour]
   }
 
   measure: storage_cost {
