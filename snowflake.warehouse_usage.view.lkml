@@ -100,4 +100,37 @@ view: warehouse_usage {
     sql: sum(${warehouse_cost}) over (partition by ${warehouse_name}, ${start_month} order by ${start_date} rows unbounded preceding) ;;
     value_format_name: currency
   }
+
+  measure: warehouse_cost_monthly_day {
+    label:"Warehouse Cost (1 month at this daily rate)"
+    type: number
+    sql: ${warehouse_cost} * 365 / 12;;
+    value_format_name: currency
+    required_fields: [start_date]
+  }
+
+  measure: warehouse_cost_monthly_day_2 {
+    label:"Warehouse Cost (1 month at the last 2 days avg daily rate)"
+    type: number
+    sql: sum(${warehouse_cost}) over (order by ${start_date} rows between 2 preceding and current row) * 365 / 24 ;;
+    value_format_name: currency
+    required_fields: [start_date]
+  }
+
+  measure: warehouse_cost_monthly_hour {
+    label:"Warehouse Cost (1 month at this hourly rate)"
+    type: number
+    sql: ${warehouse_cost} * 24 * 365 / 12;;
+    value_format_name: currency
+    required_fields: [start_hour]
+  }
+
+  measure: warehouse_cost_monthly_6 {
+    label:"Warehouse Cost (1 month at the last 6 hours avg rate)"
+    type: number
+    sql: sum(${warehouse_cost}) over (order by ${start_hour} rows between 6 preceding and current row) * 4 * 365 / 12;;
+    value_format_name: currency
+    required_fields: [start_hour]
+  }
+
 }
