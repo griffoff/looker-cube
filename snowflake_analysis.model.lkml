@@ -16,6 +16,7 @@ explore:warehouse_usage_detail  {
     sql_on: (${warehouse_usage_detail.warehouse_name}, ${warehouse_usage_detail.start_time_key}) = (${warehouse_usage_total_time.warehouse_name}, ${warehouse_usage_total_time.start_time_key})  ;;
     relationship: one_to_one
   }
+
 #   join: warehouse_usage {
 #     sql_on: (${warehouse_usage_detail.warehouse_name}, ${warehouse_usage_detail.start_time_key}) = (${warehouse_usage.warehouse_name}, ${warehouse_usage.start_time_key})   ;;
 #     relationship: many_to_one

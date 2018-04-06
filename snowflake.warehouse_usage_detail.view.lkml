@@ -88,7 +88,7 @@ view: warehouse_usage_detail {
     case: {
       when: {
         #sql: ${query_type} in ('SELECT', 'UPDATE', 'INSERT', 'DELETE', 'COPY', 'MERGE');;
-        sql: ${query_type} not in ('DESCRIBE', 'SHOW', 'CREATE_TABLE', 'ALTER SESSION', 'COPY', 'MERGE', 'USE');;
+        sql: ${query_type} not in ('DESCRIBE', 'SHOW', 'CREATE_TABLE', 'ALTER SESSION', 'COPY', 'MERGE', 'USE', 'DROP', 'CREATE CONSTRAINT', 'ALTER USER');;
         label: "Uses Credits"
         }
       else: "No Credit Usage"
@@ -103,7 +103,7 @@ view: warehouse_usage_detail {
   dimension: warehouse_name {
     type: string
     sql: ${TABLE}.WAREHOUSE_NAME ;;
-    hidden: yes
+    hidden: no
   }
 
   dimension: warehouse_size {
@@ -185,6 +185,13 @@ view: warehouse_usage_detail {
     value_format_name: currency
     drill_fields: [query_details*]
     required_fields: [start_hour]
+  }
+
+  measure: warehouse_cost_mtd {
+    required_fields: [start_date, start_month]
+    type: number
+    sql: sum(${warehouse_cost}) over (partition by ${start_month} order by ${start_date} rows unbounded preceding) ;;
+    value_format_name: currency
   }
 
   measure: storage_cost {

@@ -95,9 +95,9 @@ view: warehouse_usage {
   }
 
   measure: warehouse_cost_mtd {
-    required_fields: [warehouse_name, start_date, start_month]
+    required_fields: [start_date, start_month]
     type: number
-    sql: sum(${warehouse_cost}) over (partition by ${warehouse_name}, ${start_month} order by ${start_date} rows unbounded preceding) ;;
+    sql: sum(${warehouse_cost}) over (partition by ${start_month} order by ${start_date} rows unbounded preceding) ;;
     value_format_name: currency
   }
 
@@ -110,9 +110,9 @@ view: warehouse_usage {
   }
 
   measure: warehouse_cost_monthly_day_2 {
-    label:"Warehouse Cost (1 month at the last 2 days avg daily rate)"
+    label:"Warehouse Cost (1 month at the last 7 days avg daily rate)"
     type: number
-    sql: sum(${warehouse_cost}) over (order by ${start_date} rows between 2 preceding and current row) * 365 / 24 ;;
+    sql: sum(${warehouse_cost}) over (order by ${start_date} rows between 7 preceding and current row) * 365 / 12 / 7 ;;
     value_format_name: currency
     required_fields: [start_date]
   }

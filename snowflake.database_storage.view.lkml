@@ -47,13 +47,13 @@ view: database_storage {
 
   measure: storage_cost_per_day {
     type: number
-    sql: ${credit_usage} * ${storage_cost_per_credit} ;;
+    sql: ${credit_usage} * ${storage_cost_per_credit}  / (365/12) ;;
     value_format_name: currency
   }
 
   measure: storage_cost_per_hour {
     type: number
-    sql: (${credit_usage} * ${storage_cost_per_credit}) / 24;;
+    sql: (${storage_cost_per_day}) / 24;;
     value_format_name: currency
   }
 
