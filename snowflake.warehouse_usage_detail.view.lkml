@@ -96,7 +96,7 @@ view: warehouse_usage_detail {
   }
 
   dimension: uses_compute {
-      type: string
+      type: yesno
       sql:${uses_credits}='Uses Credits' ;;
   }
 

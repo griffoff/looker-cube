@@ -4,6 +4,8 @@ include: "snowflake.*"         # include all views in this project
 include: "*.dashboard.lookml"  # include all dashboards in this project
 include: "/core/common.lkml"
 
+case_sensitive: no
+
 explore:warehouse_usage_detail  {
   fields: [ALL_FIELDS*, -warehouse_usage_detail.warehouse_cost, -warehouse_usage_detail.credit_usage]
   hidden: yes
