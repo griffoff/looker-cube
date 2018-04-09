@@ -39,6 +39,7 @@ view: dim_party {
     from dw_ga.dim_party p
     left join tu on p.guid = tu.guid
     left join dw_ga.dim_user user on p.partyid = user.mainpartyid
+    where p.partyID != 8063483 --null record
     order by p.partyid
     ;;
     sql_trigger_value: select count(*) from dw_ga.dim_party ;;
