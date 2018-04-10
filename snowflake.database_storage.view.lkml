@@ -9,51 +9,59 @@ view: database_storage {
   dimension: average_database_bytes {
     type: number
     sql: ${TABLE}.AVERAGE_DATABASE_BYTES ;;
+    hidden: yes
+  }
+
+  dimension: days_in_month {
+    type: number
+    sql:  EXTRACT(day FROM LAST_DAY(${usage_raw}));;
+    hidden: yes
   }
 
   dimension: average_failsafe_bytes {
     type: number
     sql: ${TABLE}.AVERAGE_FAILSAFE_BYTES ;;
+    hidden: yes
   }
 
   dimension: daily_total_Tbytes {
-    sql:(${average_database_bytes} + ${average_failsafe_bytes}) / 1024 / 1024 / 1024 / 1024;;
-    value_format_name: decimal_2
+    sql:(${average_database_bytes} + ${average_failsafe_bytes}) / power(1024, 4);;
+    value_format_name: TB_1
   }
 
-  measure: average_daily_Tbytes {
-    type: average
-    sql:${daily_total_Tbytes} ;;
-    value_format_name: decimal_2
+  dimension: hourly_total_Tbytes {
+    sql:(${daily_total_Tbytes}) / 12;;
+    value_format_name: TB_1
   }
 
   measure: credit_usage {
-    type:number
-    sql:${average_daily_Tbytes};;
+    type: sum
+    sql:${daily_total_Tbytes};;
+    value_format_name: TB_1
+  }
+
+  measure: credit_usage_per_hour {
+    type: sum
+    sql:${hourly_total_Tbytes};;
     value_format_name: decimal_2
   }
 
-  measure: storage_cost_per_credit {
+  dimension: storage_rate {
     type: number
-    sql: 23 ;;
+    sql: 23 / ${days_in_month};;
     hidden: yes
   }
 
   measure: storage_cost {
-    type: number
-    sql:  ${credit_usage} * ${storage_cost_per_credit} ;;
-    value_format_name: currency
-  }
-
-  measure: storage_cost_per_day {
-    type: number
-    sql: ${credit_usage} * ${storage_cost_per_credit}  / (365/12) ;;
+    type: sum
+    sql:  ${daily_total_Tbytes} * ${storage_rate} ;;
     value_format_name: currency
   }
 
   measure: storage_cost_per_hour {
-    type: number
-    sql: (${storage_cost_per_day}) / 24;;
+    type: sum
+    required_fields: [usage_date]
+    sql:${hourly_total_Tbytes} * ${storage_rate} ;;
     value_format_name: currency
   }
 

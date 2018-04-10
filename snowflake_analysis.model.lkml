@@ -47,4 +47,10 @@ explore: warehouse_usage {
 
 }
 
-explore: database_storage {}
+explore: database_storage {
+  join: warehouse_usage {
+    fields: [warehouse_usage.warehouse_cost]
+    sql_on: ${database_storage.usage_date} = ${warehouse_usage.start_date}  ;;
+    relationship: many_to_many
+  }
+}
