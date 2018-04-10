@@ -47,6 +47,7 @@ view: dim_party {
     left join tu on p.guid = tu.guid
     left join dw_ga.dim_user user on p.partyid = user.mainpartyid
     left join ${internal_user_email_filters.SQL_TABLE_NAME} internal on rlike(p.mainpartyemail, internal.rlike_filter, 'i')
+    where p.partyID != 8063483 --null record
     order by p.partyid
     ;;
     sql_trigger_value: select count(*) from dw_ga.dim_party ;;
