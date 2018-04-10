@@ -1,3 +1,4 @@
+include: "/core/internal_user_filters.view.lkml"
 view: dim_party {
   label: "User"
   #sql_table_name: DW_GA.DIM_PARTY ;;
@@ -5,40 +6,47 @@ view: dim_party {
     sql:
     with tu as (
       select distinct source_id as guid
-  from stg_mindtap.user u
-  inner join stg_mindtap.user_org_profile uop on u.id = uop.user_id
-  inner join stg_mindtap.org o on uop.org_id = o.id
-  inner join stg_mindtap.org o1 on o.parent_id = o1.id
-  where upper(o1.name) like '%TEST%'
-  or upper(o1.name) like '%DEMO%'
+      from mindtap.prod_nb.user u
+      inner join mindtap.prod_nb.user_org_profile uop on u.id = uop.user_id
+      inner join mindtap.prod_nb.org o on uop.org_id = o.id
+      inner join mindtap.prod_nb.org o1 on o.parent_id = o1.id
+      inner join ${internal_org_filters.SQL_TABLE_NAME} internal on o1.external_id = internal.org_external_id
+      --where upper(o1.name) like '%TEST%'
+      --or upper(o1.name) like '%DEMO%'
 --  or o.id = 501
     )
-    select
+    select distinct
       p.*
       ,user.mainpartyrole
       ,case
         when tu.guid is not null then true
-        when upper(p.mainpartyemail) like '%CENGA%E%'
-            or upper(p.mainpartyemail) like '%DEMO%'
-            or upper(p.mainpartyemail) like '%TEST%'
-            or upper(p.mainpartyemail) like '%QAI%'
-            or upper(p.mainpartyemail) like '%TESTACCOUNT%'
-            or upper(p.mainpartyemail) like '%DEVELOPMENT%'
-            or upper(p.mainpartyemail) like '%SWLEARNING%'
-            or upper(p.mainpartyemail) like '%LUNARLOGIC.COM'
-            or upper(p.mainpartyemail) like '%MTX%.COM'
-            or upper(p.mainpartyemail) like '%HENLEY.COM'
-            or upper(p.mainpartyemail) like '%CONCENTRICSKY%'
-            or upper(p.mainpartyemail) like '%NG.COM'
-            or upper(p.mainpartyemail) like '%QA4U.COM'
-            or upper(p.mainpartyemail) like '%APLIA.COM'
-            or p.mainpartyemail in ('inst1_gateway_130514@yahoo.com','01_gtwy_instructor_30042015@gmail.com','i1_instructor_16052014@gmail.com','i9_instructor_040814@gmail.com','i19_instructor_091014@gmail.com')
-        then true
+        when internal.rlike_filter is not null then true
         else false
-        end as Is_Internal
+        end as is_internal
+        ,case
+          when tu.guid is not null then true
+          when upper(p.mainpartyemail) like '%CENGA%E%'
+              or upper(p.mainpartyemail) like '%DEMO%'
+              or upper(p.mainpartyemail) like '%TEST%'
+              or upper(p.mainpartyemail) like '%QAI%'
+              or upper(p.mainpartyemail) like '%TESTACCOUNT%'
+              or upper(p.mainpartyemail) like '%DEVELOPMENT%'
+              or upper(p.mainpartyemail) like '%SWLEARNING%'
+              or upper(p.mainpartyemail) like '%LUNARLOGIC.COM'
+              or upper(p.mainpartyemail) like '%MTX%.COM'
+              or upper(p.mainpartyemail) like '%HENLEY.COM'
+              or upper(p.mainpartyemail) like '%CONCENTRICSKY%'
+              or upper(p.mainpartyemail) like '%NG.COM'
+              or upper(p.mainpartyemail) like '%QA4U.COM'
+              or upper(p.mainpartyemail) like '%APLIA.COM'
+              or p.mainpartyemail in ('inst1_gateway_130514@yahoo.com','01_gtwy_instructor_30042015@gmail.com','i1_instructor_16052014@gmail.com','i9_instructor_040814@gmail.com','i19_instructor_091014@gmail.com')
+          then true
+          else false
+          end as is_internal_old
     from dw_ga.dim_party p
     left join tu on p.guid = tu.guid
     left join dw_ga.dim_user user on p.partyid = user.mainpartyid
+    left join ${internal_user_email_filters.SQL_TABLE_NAME} internal on rlike(p.mainpartyemail, internal.rlike_filter, 'i')
     order by p.partyid
     ;;
     sql_trigger_value: select count(*) from dw_ga.dim_party ;;
@@ -67,7 +75,12 @@ view: dim_party {
   dimension: is_internal {
     label: "Internal User"
     type: yesno
-    sql: ${TABLE}.is_internal;;
+  }
+
+  dimension: is_internal_old {
+    label: "Internal User (Old)"
+    type: yesno
+    hidden: yes
   }
 
   dimension: is_external {
