@@ -22,7 +22,6 @@ view: dim_party {
       ,p.FIRSTNAME
       ,p.LASTNAME
       ,p.SOURCE
-      ,user.MAINPARTYROLE
       ,case
         when tu.guid is not null then true
         when internal.rlike_filter is not null then true
@@ -50,12 +49,21 @@ view: dim_party {
           end as is_internal_old
           ,array_agg(distinct internal.rlike_filter) as user_matches
           ,array_agg(distinct tu.external_id) as org_matches
+          ,array_agg(distinct replace(user.MAINPARTYROLE, '_', '')) as roles
+          ,array_position('STUDENT'::variant, roles) is not null as has_student_role
+          ,case
+            when is_internal then 'Cengage/Internal'
+            when has_student_role then 'Student'
+            when array_position('INSTRUCTOR'::variant, roles) is not null then 'Instructor'
+            when array_position('TEACHING ASSISTANT'::variant, roles) is not null then 'TA'
+            else 'Other'
+            end as mainpartyrole
     from dw_ga.dim_party p
     left join tu on p.guid = tu.guid
     left join dw_ga.dim_user user on p.partyid = user.mainpartyid
     left join ${internal_user_email_filters.SQL_TABLE_NAME} internal on rlike(p.mainpartyemail, internal.rlike_filter, 'i')
     where p.partyID != 8063483 --null record
-    group by 1, 2, 3, 4, 5, 6, 7, 8, 9
+    group by 1, 2, 3, 4, 5, 6, 7, 8
     order by p.partyid
     ;;
     sql_trigger_value: select count(*) from dw_ga.dim_party ;;
@@ -104,13 +112,13 @@ view: dim_party {
     label: "User Role"
     description: "distinguishes between Instructors, Students, TA's and Others"
     type: string
-    sql:
-        CASE
-          WHEN ${TABLE}.mainpartyrole = 'INSTRUCTOR' THEN 'Instructor'
-          WHEN ${TABLE}.mainpartyrole = 'STUDENT' THEN 'Student'
-          WHEN ${TABLE}.mainpartyrole in ('TEACHING_ASSISTANT', 'TEACHING ASSISTANT') THEN 'TA'
-          ELSE 'Other'
-        END ;;
+#     sql:
+#         CASE
+#           WHEN ${TABLE}.mainpartyrole = 'INSTRUCTOR' THEN 'Instructor'
+#           WHEN ${TABLE}.mainpartyrole = 'STUDENT' THEN 'Student'
+#           WHEN ${TABLE}.mainpartyrole in ('TEACHING_ASSISTANT', 'TEACHING ASSISTANT') THEN 'TA'
+#           ELSE 'Other'
+#         END ;;
   }
 
   dimension: firstname {
@@ -118,7 +126,7 @@ view: dim_party {
     group_label: "PII"
     type: string
     sql:
-    CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' or ${is_internal} or ${TABLE}.mainpartyrole != 'STUDENT' THEN
+    CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' or ${is_internal} or ${TABLE}.mainpartyrole != 'Student' THEN
     ${TABLE}.FIRSTNAME
     ELSE
     MD5(${TABLE}.FIRSTNAME || 'salt')
@@ -138,7 +146,7 @@ view: dim_party {
     group_label: "PII"
     type: string
     sql:
-    CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' or ${TABLE}.mainpartyrole != 'STUDENT' THEN
+    CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' or ${TABLE}.mainpartyrole != 'Student' THEN
     ${TABLE}.GUID
     ELSE
     MD5(${TABLE}.GUID || 'salt')
@@ -167,7 +175,7 @@ view: dim_party {
     type: string
     #sql: ${TABLE}.LASTNAME ;;
     sql:
-     CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' or ${TABLE}.mainpartyrole != 'STUDENT' THEN
+     CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' or ${TABLE}.mainpartyrole != 'Student' THEN
         ${TABLE}.LASTNAME
      ELSE
         MD5(${TABLE}.LASTNAME || 'salt')
@@ -187,7 +195,7 @@ view: dim_party {
     label: "E-mail Address"
     type: string
     sql:
-    CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' or ${TABLE}.mainpartyrole != 'STUDENT' THEN
+    CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' or ${TABLE}.mainpartyrole != 'Student' THEN
     ${TABLE}.MAINPARTYEMAIL
     ELSE
     MD5(${TABLE}.MAINPARTYEMAIL || 'salt')
