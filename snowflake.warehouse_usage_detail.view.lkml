@@ -1,28 +1,40 @@
-view: warehouse_usage_detail {
-  sql_table_name: ZPG.WAREHOUSE_USAGE_DETAIL ;;
-
+view: warehouse_usage {
+  label: "Warehouse Usage"
+  #sql_table_name: ZPG.WAREHOUSE_USAGE_DETAIL ;;
+  derived_table: {
+    sql:
+      select
+        wu.warehouse_name
+        ,coalesce(wud.start_time, wu.start_time) as start_time
+        ,wu.credits_used as total_credits_used
+        ,wud.query_id
+        ,wud.database_name
+        ,wud.schema_name
+        ,wud.query_type
+        ,wud.user_name
+        ,wud.role_name
+        ,wud.warehouse_size
+        ,wud.total_elapsed_time as total_elapsed_time_ms
+        ,case when query_type not in ('DROP_CONSTRAINT', 'ALTER_TABLE_MODIFY_COLUMN', 'ALTER_TABLE_ADD_COLUMN', 'ALTER_TABLE_DROP_COLUMN', 'RENAME_COLUMN', 'DESCRIBE', 'SHOW', 'CREATE_TABLE', 'ALTER_SESSION', 'USE', 'DROP', 'CREATE CONSTRAINT', 'ALTER USER')
+              then total_elapsed_time_ms
+              when query_id is not null
+              then 0
+              end as total_elapsed_time_credit_use_ms
+        ,wud.query_text
+        ,total_elapsed_time_credit_use_ms / nullif(sum(total_elapsed_time_credit_use_ms) over (partition by wu.start_time, wu.warehouse_name), 0) as credits_used_percent
+        ,coalesce(credits_used_percent, 1) * total_credits_used as credits_used
+    from ZPG.WAREHOUSE_USAGE wu
+    left join ZPG.WAREHOUSE_USAGE_DETAIL wud on wu.warehouse_name = wud.warehouse_name
+                                            and wu.start_time = wud.start_hour;;
+    sql_trigger_value: select count(*) from ZPG.WAREHOUSE_USAGE_DETAIL  ;;
+  }
 
   set: query_details {
-    fields: [start_time, query_text, query_type, warehouse_name, database_name, schema_name, role_name, user_name, total_elapsed_time_compute_only, warehouse_cost]
+    fields: [start_time, query_text, query_type, warehouse_name, database_name, schema_name, role_name, user_name, total_elapsed_time, warehouse_cost]
   }
   dimension: database_name {
     type: string
     sql: ${TABLE}.DATABASE_NAME ;;
-  }
-
-  dimension_group: end {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.END_TIME ;;
-    hidden: yes
   }
 
   dimension: query_id {
@@ -51,11 +63,6 @@ view: warehouse_usage_detail {
     sql: ${TABLE}.SCHEMA_NAME ;;
   }
 
-  dimension: start_time_key {
-    sql: ${TABLE}.start_hour ;;
-    hidden: yes
-  }
-
   dimension_group: start {
     label: "Query"
     type: time
@@ -82,24 +89,6 @@ view: warehouse_usage_detail {
     sql: ${TABLE}.USER_NAME ;;
   }
 
-  dimension: uses_credits {
-    type: string
-    #sql:${TABLE}.USES_COMPUTE=1 ;;
-    case: {
-      when: {
-        #sql: ${query_type} in ('SELECT', 'UPDATE', 'INSERT', 'DELETE', 'COPY', 'MERGE');;
-        sql: ${query_type} not in ('DESCRIBE', 'SHOW', 'CREATE_TABLE', 'ALTER SESSION', 'COPY', 'MERGE', 'USE', 'DROP', 'CREATE CONSTRAINT', 'ALTER USER');;
-        label: "Uses Credits"
-        }
-      else: "No Credit Usage"
-    }
-  }
-
-  dimension: uses_compute {
-      type: yesno
-      sql:${uses_credits}='Uses Credits' ;;
-  }
-
   dimension: warehouse_name {
     type: string
     sql: ${TABLE}.WAREHOUSE_NAME ;;
@@ -113,36 +102,30 @@ view: warehouse_usage_detail {
 
   measure: count {
     type: count
-    drill_fields: [database_name, schema_name, user_name, role_name, warehouse_name]
+    drill_fields: [query_details*]
   }
 
   measure: total_elapsed_time {
     type: sum
-    sql: ${TABLE}.TOTAL_ELAPSED_TIME / 1000 / 3600 / 24 ;;
+    sql: ${TABLE}.TOTAL_ELAPSED_TIME_MS / 3600 / 24 ;;
     value_format_name: duration_hms
     drill_fields: [query_details*]
   }
 
-  measure: total_elapsed_time_compute_only {
+  measure: total_elapsed_time_credit_use {
     type: sum
-    sql: ${TABLE}.TOTAL_ELAPSED_TIME / 1000 / 3600 / 24;;
-    filters: {
-      field: uses_compute
-      value: "Yes"
-    }
+    sql: ${TABLE}.total_elapsed_time_credit_use_ms / 2600 / 24 ;;
     value_format_name: duration_hms
     drill_fields: [query_details*]
   }
 
-  measure: credit_usage_percent {
-    type: number
-    sql: (${warehouse_usage_detail.total_elapsed_time_compute_only} / nullif(${warehouse_usage_total_time.total_elapsed_time_compute_only}, 0));;
+  measure: credits_used_percent {
+    type: sum
     value_format_name: percent_2
   }
 
-  measure: credit_usage {
-    type: number
-    sql: (${credit_usage_percent}) * ${warehouse_usage.credits_used};;
+  measure: credits_used {
+    type: sum
     value_format_name: decimal_2
     drill_fields: [query_details*]
   }
@@ -153,18 +136,10 @@ view: warehouse_usage_detail {
     hidden: yes
   }
 
-  measure: warehouse_cost_raw {
-    type: number
-    sql: ${credit_usage} * ${warehouse_cost_per_credit} ;;
-    value_format_name: currency
-    drill_fields: [query_details*]
-    hidden: yes
-  }
-
   measure: warehouse_cost {
     label:"Warehouse Cost"
     type: number
-    sql: coalesce(${warehouse_cost_raw}, ${warehouse_usage.warehouse_cost}) ;;
+    sql: ${credits_used} * ${warehouse_cost_per_credit} ;;
     value_format_name: currency
     drill_fields: [query_details*]
   }
@@ -176,6 +151,14 @@ view: warehouse_usage_detail {
     value_format_name: currency
     drill_fields: [query_details*]
     required_fields: [start_hour]
+  }
+
+  measure: warehouse_cost_monthly_day_2 {
+    label:"Warehouse Cost (1 month at the last 7 days avg daily rate)"
+    type: number
+    sql: sum(${warehouse_cost}) over (order by ${start_date} rows between 7 preceding and current row) * 365 / 12 / 7 ;;
+    value_format_name: currency
+    required_fields: [start_date]
   }
 
   measure: warehouse_cost_monthly_6 {
@@ -194,9 +177,4 @@ view: warehouse_usage_detail {
     value_format_name: currency
   }
 
-  measure: storage_cost {
-    type: number
-    sql: ${database_storage.storage_cost_per_hour} * count(distinct ${start_hour}) ;;
-    value_format_name: currency
-  }
 }

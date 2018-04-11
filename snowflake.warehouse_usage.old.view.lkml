@@ -1,4 +1,4 @@
-view: warehouse_usage {
+view: warehouse_usage_old{
   view_label: "Warehouse Usage"
   sql_table_name: ZPG.WAREHOUSE_USAGE ;;
 
