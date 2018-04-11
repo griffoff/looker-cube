@@ -153,10 +153,10 @@ view: warehouse_usage {
   measure: warehouse_cost_monthly {
     label:"Warehouse Cost (1 month at this rate)"
     type: number
-    sql: ${warehouse_cost} * 24 * 365 / 12;;
+    sql: ${warehouse_cost} * 365 / 12;;
     value_format_name: currency
     drill_fields: [query_details*]
-    required_fields: [start_hour]
+    required_fields: [start_date]
   }
 
   measure: warehouse_cost_monthly_day_2 {
