@@ -15,9 +15,13 @@ view: dim_party {
       --or upper(o1.name) like '%DEMO%'
 --  or o.id = 501
     )
-    select distinct
-      p.*
-      ,user.mainpartyrole
+    select
+      p.PARTYID
+      ,p.MAINPARTYEMAIL
+      ,p.GUID
+      ,p.FIRSTNAME
+      ,p.LASTNAME
+      ,p.SOURCE
       ,case
         when tu.guid is not null then true
         when internal.rlike_filter is not null then true
@@ -43,11 +47,14 @@ view: dim_party {
           then true
           else false
           end as is_internal_old
+          ,array_agg(distinct internal.rlike_filter) as user_matches
+          ,array_agg(distinct tu.external_id) as org_matches
     from dw_ga.dim_party p
     left join tu on p.guid = tu.guid
     left join dw_ga.dim_user user on p.partyid = user.mainpartyid
-    left join ${internal_user_email_filters.SQL_TABLE_NAME} internal on rlike(p.mainpartyemail, internal.rlike_filter, 'i')
+    left join internal_email_filter internal on rlike(p.mainpartyemail, internal.rlike_filter, 'i')
     where p.partyID != 8063483 --null record
+    group by 1, 2, 3, 4, 5, 6, 7, 8
     order by p.partyid
     ;;
     sql_trigger_value: select count(*) from dw_ga.dim_party ;;
