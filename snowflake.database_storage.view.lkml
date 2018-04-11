@@ -1,5 +1,15 @@
 view: database_storage {
-  sql_table_name: ZPG.DATABASE_STORAGE ;;
+  #sql_table_name: ZPG.DATABASE_STORAGE ;;
+  derived_table: {
+    sql:
+      select
+          *
+          ,(average_database_bytes + average_failsafe_bytes) / power(1024, 4) as db_tb
+          ,sum(db_tb) over (partition by usage_date) as total_tb
+      FROM ZPG.DATABASE_STORAGE  AS database_storage
+      ;;
+      sql_trigger_value: select count(*) from zpg.database_storage ;;
+  }
 
   dimension: pk {
     sql: ${database_name} || ${usage_date} ;;
@@ -24,44 +34,28 @@ view: database_storage {
     hidden: yes
   }
 
-  dimension: daily_total_Tbytes {
-    sql:(${average_database_bytes} + ${average_failsafe_bytes}) / power(1024, 4);;
-    value_format_name: TB_1
-  }
-
-  dimension: hourly_total_Tbytes {
-    sql:(${daily_total_Tbytes}) / 12;;
-    value_format_name: TB_1
-  }
-
   measure: credit_usage {
-    type: sum
-    sql:${daily_total_Tbytes};;
+    type: number
+     sql:
+      {% if database_storage.database_name._in_query %}
+        avg(${TABLE}.db_tb)
+      {% else %}
+        avg(${TABLE}.total_tb)
+      {% endif %}
+      ;;
     value_format_name: TB_1
-  }
-
-  measure: credit_usage_per_hour {
-    type: sum
-    sql:${hourly_total_Tbytes};;
-    value_format_name: decimal_2
   }
 
   dimension: storage_rate {
     type: number
-    sql: 23 / ${days_in_month};;
+    sql: 23;;
+    #/ ${days_in_month};;
     hidden: yes
   }
 
   measure: storage_cost {
-    type: sum
-    sql:  ${daily_total_Tbytes} * ${storage_rate} ;;
-    value_format_name: currency
-  }
-
-  measure: storage_cost_per_hour {
-    type: sum
-    required_fields: [usage_date]
-    sql:${hourly_total_Tbytes} * ${storage_rate} ;;
+    type: number
+    sql:  ${credit_usage} * ${storage_rate} ;;
     value_format_name: currency
   }
 
@@ -85,8 +79,4 @@ view: database_storage {
     sql: ${TABLE}.USAGE_DATE ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: [database_name]
-  }
 }
