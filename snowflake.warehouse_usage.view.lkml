@@ -23,6 +23,7 @@ view: warehouse_usage {
         ,wud.query_text
         ,total_elapsed_time_credit_use_ms / nullif(sum(total_elapsed_time_credit_use_ms) over (partition by wu.start_time, wu.warehouse_name), 0) as credits_used_percent
         ,coalesce(credits_used_percent, 1) * total_credits_used as credits_used
+        ,row_number() over (order by (wud.start_time, wu.start_time), wu.warehouse_name) as id
     from ZPG.WAREHOUSE_USAGE wu
     left join ZPG.WAREHOUSE_USAGE_DETAIL wud on wu.warehouse_name = wud.warehouse_name
                                             and wu.start_time = wud.start_hour;;
@@ -37,10 +38,15 @@ view: warehouse_usage {
     sql: ${TABLE}.DATABASE_NAME ;;
   }
 
+  dimension: id {
+    type: number
+    primary_key: yes
+    hidden: yes
+  }
+
   dimension: query_id {
     type: string
     sql: ${TABLE}.QUERY_ID ;;
-    primary_key: yes
   }
 
   dimension: query_text {
