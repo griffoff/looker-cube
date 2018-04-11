@@ -5,7 +5,7 @@ view: dim_party {
   derived_table: {
     sql:
     with tu as (
-      select distinct source_id as guid
+      select distinct source_id as guid, o1.external_id
       from mindtap.prod_nb.user u
       inner join mindtap.prod_nb.user_org_profile uop on u.id = uop.user_id
       inner join mindtap.prod_nb.org o on uop.org_id = o.id
@@ -22,6 +22,7 @@ view: dim_party {
       ,p.FIRSTNAME
       ,p.LASTNAME
       ,p.SOURCE
+      ,user.MAINPARTYROLE
       ,case
         when tu.guid is not null then true
         when internal.rlike_filter is not null then true
@@ -52,9 +53,9 @@ view: dim_party {
     from dw_ga.dim_party p
     left join tu on p.guid = tu.guid
     left join dw_ga.dim_user user on p.partyid = user.mainpartyid
-    left join internal_email_filter internal on rlike(p.mainpartyemail, internal.rlike_filter, 'i')
+    left join ${internal_user_email_filters.SQL_TABLE_NAME} internal on rlike(p.mainpartyemail, internal.rlike_filter, 'i')
     where p.partyID != 8063483 --null record
-    group by 1, 2, 3, 4, 5, 6, 7, 8
+    group by 1, 2, 3, 4, 5, 6, 7, 8, 9
     order by p.partyid
     ;;
     sql_trigger_value: select count(*) from dw_ga.dim_party ;;
