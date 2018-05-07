@@ -178,10 +178,6 @@ explore: fact_activity {
     relationship: many_to_one
   }
 
-#   join: dim_activity_view_uri {
-#     sql_on: ${fact_activity.id} = ${dim_activity_view_uri.id};;
-#     relationship: one_to_one
-#   }
 }
 
 explore:  fact_appusage_by_user {

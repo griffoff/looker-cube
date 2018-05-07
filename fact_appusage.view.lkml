@@ -16,7 +16,7 @@ view: fact_appusage {
       ,r2 AS (
         SELECT a.iframeapplicationid, r.clickrank, r.userrank
         FROM r
-        INNER JOIN looker_workshop.dim_iframeapplication a ON r.bestdisplayname = a.bestdisplayname
+        INNER JOIN ${dim_iframeapplication.SQL_TABLE_NAME} a ON r.bestdisplayname = a.bestdisplayname
       )
       select f.*, r2.clickrank, r2.userrank
       from dw_ga.fact_appusage f
