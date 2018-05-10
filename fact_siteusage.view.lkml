@@ -200,6 +200,12 @@ view: fact_siteusage {
     sql:  MIN(${TABLE}.EVENTDATE);;
   }
 
+  measure: firsteventmonth {
+    label: "First Event Month"
+    type: date_month
+    sql:  MIN(${TABLE}.EVENTDATE);;
+  }
+
   measure: lasteventdate {
     label: "Last Event Date"
     type: date_time
@@ -432,6 +438,12 @@ view: fact_siteusage {
     hidden: yes
     type: string
     sql: ${TABLE}.USERID ;;
+  }
+
+  measure: usercount_isbn{
+    label: "users test"
+    type: count_distinct
+    sql: ${dim_party.concat_SSO} ;;
   }
 
   measure: usercount {
