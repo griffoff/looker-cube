@@ -2,7 +2,7 @@ view: fact_activityoutcome {
   label: "Learning Path - Usage Data"
   sql_table_name: DW_GA.FACT_ACTIVITYOUTCOME ;;
 
-  set: curated_fields {fields:[completed,completed_activities,score_avg,usercount_withscore,usercount]}
+  set: curated_fields {fields:[completed,completed_activities,score_avg,score_dev_lower,score_dev_upper,usercount_withscore,usercount]}
 
   dimension: rowid {
     type: number
