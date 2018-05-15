@@ -66,10 +66,10 @@ view: fact_siteusage {
 
   measure: app_firstusage {
     label: "First Time Application Usage"
-    description: "Count of unique users per isbn who have used an application for the first time.
+    description: "Count of unique users per isbn / course section who have used an application for the first time.
     n.b. Must be filtered or sliced by activity application "
     type: count_distinct
-    sql: case when ${prev_applicationusagedate} is null then array_construct(${userid}, ${productid}) end ;;
+    sql: case when ${prev_applicationusagedate} is null then array_construct(${userid}, ${productid}, ${courseid}) end ;;
   }
 
   dimension: pk {
