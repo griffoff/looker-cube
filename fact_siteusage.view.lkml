@@ -34,6 +34,9 @@ view: fact_siteusage {
   set: wl_fields {
     fields: [usercount,total_users]
   }
+
+
+
   #sql_table_name: DW_GA.FACT_SITEUSAGE ;;
   derived_table: {
     sql:
@@ -46,13 +49,27 @@ view: fact_siteusage {
               WHEN fsu.PAGEVIEWTIME>=1000
                 THEN fsu.PAGEVIEWTIME /1000.0/86400.0
               END as pageviewtime_days
+            ,LAG(fsu.eventdate) over (partition by fsu.userid, fsu.productid, a.applicationname order by fsu.eventdate) as prev_applicationusagedate
       from dw_ga.fact_siteusage fsu
       inner join dw_ga.dim_course c on fsu.courseid = c.courseid
       left join ${map_course_versions.SQL_TABLE_NAME} v on c.coursekey = v.context_id
                                                                   and fsu.eventdate between v.effective_from and v.effective_to
+      left join ${dim_activity.SQL_TABLE_NAME} a on fsu.activityid = a.activityid
       order by courseid, new_relative_days_from_start, userid;;
 
       sql_trigger_value: select count(*) from dw_ga.fact_siteusage;;
+  }
+
+  dimension: prev_applicationusagedate {
+    hidden: yes
+  }
+
+  measure: app_firstusage {
+    label: "First Time Application Usage"
+    description: "Count of unique users per isbn who have used an application for the first time.
+    n.b. Must be filtered or sliced by activity application "
+    type: count_distinct
+    sql: case when ${prev_applicationusagedate} is null then array_construct(${userid}, ${productid}) end ;;
   }
 
   dimension: pk {
@@ -463,7 +480,6 @@ view: fact_siteusage {
 
 
   }
-
   measure: usercount_for_partnership{
     label: "# Unique Users"
     description: "This is the number of unique users that have activity related to the current context
