@@ -353,6 +353,20 @@ view: fact_siteusage {
     </div>;;
   }
 
+  measure: sessionviewtime_avg {
+    group_label: "Time in product"
+    label: "Time in product (avg time per session)"
+    type: number
+    sql: ${pageviewtime_sum} / ${session_count};;
+    value_format_name: duration_hms
+    html:
+    <div style="width:100%;">
+      <div title="max: {{pageviewtime_max._rendered_value}}" style="width: {{pageviewtime_percent._rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">
+        {{rendered_value}}
+      </div>
+    </div>;;
+  }
+
   measure: pageviewtime_dailyaverage {
     group_label: "Time in product"
     label: "Time in product (daily avg per student)"
