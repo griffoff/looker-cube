@@ -333,7 +333,7 @@ view: fact_siteusage {
 
   measure: pageviewtime_max {
     group_label: "Time in product"
-    label: "Time in product (max time per page)"
+    label: "Time in product (max time per screen)"
     type: max
     sql: ${pageviewtime};;
     value_format_name: duration_hms
@@ -341,7 +341,7 @@ view: fact_siteusage {
 
   measure: pageviewtime_avg {
     group_label: "Time in product"
-    label: "Time in product (avg time per page)"
+    label: "Time in product (avg time per screen)"
     type: average
     sql: ${pageviewtime};;
     value_format_name: duration_hms
@@ -351,6 +351,22 @@ view: fact_siteusage {
         {{rendered_value}}
       </div>
     </div>;;
+  }
+
+  measure: sessionviewtime_avg {
+    group_label: "Time in product"
+    label: "Time in product (avg time per session)"
+    type: number
+    sql: ${pageviewtime_sum} / ${session_count};;
+    value_format_name: duration_hms
+  }
+
+  measure: activityviewtime_avg {
+    group_label: "Time in product"
+    label: "Time in product (avg time per activity per session)"
+    type: number
+    sql: ${pageviewtime_sum} / ${session_activity_count};;
+    value_format_name: duration_hms
   }
 
   measure: pageviewtime_dailyaverage {
@@ -422,7 +438,15 @@ view: fact_siteusage {
   measure: session_count {
     label: "# Sessions"
     type: count_distinct
-    sql: ${TABLE}.sessionnumber ;;
+    sql: ${session_number} ;;
+    value_format: "#,##0"
+    hidden: yes
+  }
+
+  measure: session_activity_count {
+    label: "# Activities"
+    type: count_distinct
+    sql: array_construct(${session_number}, ${activityid}) ;;
     value_format: "#,##0"
     hidden: yes
   }
