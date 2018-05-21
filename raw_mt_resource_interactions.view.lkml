@@ -55,8 +55,16 @@ view: raw_mt_resource_interactions {
     sql: ${TABLE}.EVENT_CATEGORY ;;
   }
 
-  dimension: event_local_time {
-    type: date
+  dimension_group: event_local_time {
+    type: time
+    timeframes: [
+      date,
+      month,
+      month_name,
+      year,
+      day_of_week,
+      day_of_year
+      ]
     sql: ${TABLE}.EVENT_LOCAL_TIME ;;
   }
 
