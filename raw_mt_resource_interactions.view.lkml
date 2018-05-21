@@ -56,7 +56,7 @@ view: raw_mt_resource_interactions {
   }
 
   dimension: event_local_time {
-    type: string
+    type: date
     sql: ${TABLE}.EVENT_LOCAL_TIME ;;
   }
 
