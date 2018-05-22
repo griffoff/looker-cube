@@ -4,14 +4,11 @@ view: dim_eventtype {
   set: curated_fields {fields:[major_changes]}
 
 
-  measure: removed_count {
-    label: "# Activities Removed"
-    type: count
-    filters: {
-      field: eventtypename
-      value: "Item Removed"
-    }
-  }
+#   measure: removed_count {
+#     label: "# Activities Removed"
+#     type: count
+#     sql: case when ${eventtypename} = 'Item Removed' then 1 end ;;
+#   }
 
   measure: removed_from_course_count {
     view_label: "Learning Path"
