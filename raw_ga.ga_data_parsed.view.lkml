@@ -93,9 +93,19 @@ view: ga_data_parsed {
     sql: upper(${TABLE}.EVENTACTION) ;;
   }
 
+  dimension: actionlabel {
+    hidden: yes
+    sql: ${eventlabel} ;;
+  }
+
+  measure: all_eventactions {
+    label:  "Actions"
+    sql: listagg(distinct ${actionlabel}, ',') within group (order by ${actionlabel}) ;;
+  }
+
   dimension: eventcategory {
     type: string
-    sql: upper(${TABLE}.EVENTCATEGORY) ;;
+    sql: upper(nullif(trim(${TABLE}.EVENTCATEGORY), '')) ;;
   }
 
   dimension: eventlabel {
@@ -358,12 +368,12 @@ view: ga_data_parsed {
 
   measure: visits_per_student {
     type: number
-    sql: ${visit_count} / ${visitor_count} ;;
+    sql: ${visit_count} / nullif(${visitor_count}, 0) ;;
   }
 
   measure: hits_per_student {
     type:  number
-    sql: ${count} / ${visitor_count} ;;
+    sql: ${count} / nullif(${visitor_count}, 0) ;;
   }
 
   measure: count {
@@ -390,6 +400,12 @@ view: ga_data_parsed {
     sql: count(${reading_page_view}) ;;
   }
 
+  measure: pages_read_list {
+    label: "Pages Viewed"
+    type: string
+    sql: listagg(distinct ${reading_page_view}, ',') within group (order by ${reading_page_view})  ;;
+  }
+
   measure: pages_in_books {
     label: "Total Pages Available to Read"
     type: sum_distinct
@@ -405,7 +421,7 @@ view: ga_data_parsed {
   measure: reading_page_percent {
     label: "% of total pages read"
     type: number
-    sql: ${pages_read} / ${pages_in_books} ;;
+    sql: ${pages_read} / nullif(${pages_in_books}, 0) ;;
     value_format_name: percent_1
   }
 

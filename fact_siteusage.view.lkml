@@ -576,7 +576,7 @@ view: fact_siteusage {
     type: number
     sql: CORR(${user_final_scores.final_score}, ${pageviewtime}) ;;
     value_format_name: decimal_3
-    hidden: yes
+    hidden: no
   }
 
   measure: time_on_task_to_final_score_correlation_rank_by_product_family {
