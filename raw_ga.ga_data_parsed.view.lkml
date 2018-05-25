@@ -6,6 +6,9 @@ view: ga_data_parsed {
   label: "User Event Data"
   sql_table_name: DEV.RAW_GA.GA_DATA_PARSED ;;
 
+  set: events {
+    fields: [hit_time, duration_from_visit_start, duration_to_next_hit, duration, eventcategory, eventaction, eventvalue, datalayer_json]
+  }
   dimension: ga_data_parsed_id {
     primary_key: yes
     type: number
@@ -76,11 +79,13 @@ view: ga_data_parsed {
   dimension: duration_to_next_hit {
     type: number
     sql: ${TABLE}.DURATION_TO_NEXT_HIT ;;
+    value_format_name: duration_hms
   }
 
   dimension: duration_from_visit_start {
     type: number
     sql: ${TABLE}.DURATION_FROM_VISIT_START ;;
+    value_format_name: duration_hms
   }
 
   dimension: environment {
@@ -95,12 +100,7 @@ view: ga_data_parsed {
 
   dimension: actionlabel {
     hidden: yes
-    sql: ${eventlabel} ;;
-  }
-
-  measure: all_eventactions {
-    label:  "Actions"
-    sql: listagg(distinct ${actionlabel}, ',') within group (order by ${actionlabel}) ;;
+    sql: ${eventcategory} ;;
   }
 
   dimension: eventcategory {
@@ -379,7 +379,7 @@ view: ga_data_parsed {
   measure: count {
     label: "# Events Captured"
     type: count
-    drill_fields: [ga_data_parsed_id, hostname]
+    drill_fields: [events*]
   }
 
   dimension: reading_page_view {
@@ -400,28 +400,56 @@ view: ga_data_parsed {
     sql: count(${reading_page_view}) ;;
   }
 
+  measure: pages_read_unique {
+    label: "Unique Reader Pages Viewed"
+    type: number
+    sql: count(distinct ${reading_page_view}) ;;
+  }
+
   measure: pages_read_list {
     label: "Pages Viewed"
     type: string
-    sql: listagg(distinct ${reading_page_view}, ',') within group (order by ${reading_page_view})  ;;
+    #         {% if dim_party.guid._in_query %}
+#
+#         {% else %}
+#         {% endif %}
+    #listagg(distinct ${reading_page_view}, ',') --within group (order by ${hit_time})
+    sql:
+          listagg(distinct ${reading_page_view}, ',') within group (order by ${reading_page_view})
+        ;;
+    drill_fields: [events*]
+  }
+
+  measure: all_eventactions {
+    label:  "Actions"
+    sql: listagg(distinct ${actionlabel}, ',') within group (order by ${actionlabel}) ;;
+    drill_fields: [events*]
   }
 
   measure: pages_in_books {
     label: "Total Pages Available to Read"
-    type: sum_distinct
+    #type: sum_distinct
+    type: max
     sql: ${reading_page_count} ;;
   }
 
   measure: reading_page_max {
     label: "Max Page Viewed"
-    type: max
-    sql: ${reading_page_view} ;;
+    type: number
+    sql: max(${reading_page_view}) over (partition by ${activityid}) ;;
   }
 
   measure: reading_page_percent {
     label: "% of total pages read"
     type: number
     sql: ${pages_read} / nullif(${pages_in_books}, 0) ;;
+    value_format_name: percent_1
+  }
+
+  measure: reading_book_percent {
+    label: "% of book read"
+    type: number
+    sql: ${pages_read_unique} / nullif(${pages_in_books}, 0) ;;
     value_format_name: percent_1
   }
 
@@ -433,6 +461,12 @@ view: ga_data_parsed {
 
   measure: duration_to_next_hit_avg {
     type: average
+    sql: ${duration_to_next_hit} ;;
+    value_format_name: duration_hms
+  }
+
+  measure: duration {
+    type: sum
     sql: ${duration_to_next_hit} ;;
     value_format_name: duration_hms
   }

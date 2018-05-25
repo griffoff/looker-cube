@@ -35,7 +35,9 @@ view: fact_siteusage {
     fields: [usercount,total_users]
   }
 
-
+  set: events {
+    fields: [session_number, eventdate_time, pageviewtime, pageviewcount, session_activity_count, clickcount]
+  }
 
   #sql_table_name: DW_GA.FACT_SITEUSAGE ;;
   derived_table: {
@@ -329,6 +331,7 @@ view: fact_siteusage {
     type: number
     sql: ${TABLE}.PageViewTime_days;;
     hidden: yes
+    value_format_name: duration_hms
   }
 
   measure: pageviewtime_max {
@@ -402,6 +405,7 @@ view: fact_siteusage {
     type: number
     sql: ${pageviewtime_sum} / nullif(${usercount}, 0);;
     value_format: "d \d\a\y\s h \h\r\s m \m\i\n\s"
+    drill_fields: [events*]
   }
 
   measure: daycount {
