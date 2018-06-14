@@ -213,6 +213,11 @@ view: fact_siteusage {
     sql: ${TABLE}.EVENTDATE ;;
   }
 
+  dimension: eventhour {
+    label: "Hour event occured"
+    type: date_hour_of_day
+    sql: ${TABLE}.EVENTDATE ;;
+  }
   measure: firsteventdate {
     label: "First Event Date"
     type: date_time
