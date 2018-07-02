@@ -490,12 +490,6 @@ view: fact_siteusage {
     sql: ${TABLE}.USERID ;;
   }
 
-  measure: usercount_isbn{
-    label: "users test"
-    type: count_distinct
-    sql: ${dim_party.concat_SSO} ;;
-  }
-
   measure: usercount {
     label: "# Users (Distinct)"
     description: "This is the number of unique users that have activity related to the current context
