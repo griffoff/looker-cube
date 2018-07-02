@@ -515,7 +515,7 @@ view: fact_siteusage {
     if there are 10 chapters and the user visited every chapter, the sum total would be 10, but the total # Users is just 1."
     type: count_distinct
     sql: ${partyid} ;;
-    hidden: no
+    hidden: yes
 #     drill_fields: [dim_product.productfamily, dim_institution.institutionname, mindtap_lp_activity_tags.chapter, mindtap_lp_activity_tags.learning_path_activity_title, usercount, percent_of_activations]
 
 #     drill_fields: [mindtap_lp_activity_tags.activity_type,mindtap_lp_activity_tags.learning_path_activity_title_count]
