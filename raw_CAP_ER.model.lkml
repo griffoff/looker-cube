@@ -1,4 +1,4 @@
-connection: "snowflake_cap_er"
+connection: "snowflake_dev"
 
 include: "*.view.lkml"         # include all views in this project
 include: "*.dashboard.lookml"  # include all dashboards in this project
@@ -18,6 +18,7 @@ include: "*.dashboard.lookml"  # include all dashboards in this project
 #   }
 # }
 
-explore: raw_mt_resource_interactions {
+explore: ga_dashboarddata_temp {
+  label: "CU Dashboard Events"
 
 }
