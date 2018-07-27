@@ -19,6 +19,7 @@ view: fact_appusage {
         INNER JOIN ${dim_iframeapplication.SQL_TABLE_NAME} a ON r.bestdisplayname = a.bestdisplayname
       )
       select f.*, r2.clickrank, r2.userrank
+      ,LAG(f.eventdatekey) over (partition by f.userid,f.productid,f.iframeapplicationid order by f.eventdatekey) as prev_applicationusagedate
       from dw_ga.fact_appusage f
       inner join r2 on f.iframeapplicationid = r2.iframeapplicationid
       order by f.courseid, f.userid, f.iframeapplicationid
@@ -38,6 +39,19 @@ view: fact_appusage {
     sql: ${TABLE}.ACTIVITYID ;;
     hidden: yes
   }
+
+  dimension: prev_applicationusagedate {
+    hidden: yes
+  }
+
+  measure: app_firstusage {
+    label: "First Time Application Usage in the App Dock"
+    description: "Count of unique users per isbn / course section who have used an application for the first time.
+    n.b. Must be filtered or sliced by app dock display name "
+    type: count_distinct
+    sql: case when ${prev_applicationusagedate} is null then array_construct(${userid}) end ;;
+  }
+
 
   measure: clickcount {
     label: "# of Clicks"
