@@ -94,7 +94,7 @@ view: dim_course {
 
     link: {
       label: "View Account in Magellan"
-      url: "http://magellan.cengage.com/Magellan2/#/Contacts/{{ olr_courses.mag_acct_id._value }}"
+      url: "http://magellan.cengage.com/Magellan2/#/Contacts/{{ mag_acct_id._value }}"
     }
 
     link: {
