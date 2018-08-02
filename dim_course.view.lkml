@@ -102,20 +102,20 @@ view: dim_course {
       url: "https://analytics-tools.cengage.info/diagnostictool/#/course/view/production/course-key/{{value}}"
     }
 
-    link: {
-      label: "Engagement Toolkit (Looker)"
-      url: "https://cengage.looker.com/dashboards/test::engagement_toolkit?filter_course={{value}}"
-    }
+    # link: {
+    #   label: "Engagement Toolkit (Looker)"
+    #   url: "https://cengage.looker.com/dashboards/test::engagement_toolkit?filter_course={{value}}"
+    # }
 
-    link: {
-      label: "Engagement Toolkit"
-      url: "http://dashboard.cengage.info/engtoolkit/{{value}}"
-    }
+    # link: {
+    #   label: "Engagement Toolkit"
+    #   url: "http://dashboard.cengage.info/engtoolkit/{{value}}"
+    # }
 
-    link: {
-      label: "Engagement Toolkit - Discipline"
-      url: "http://dashboard.cengage.info/engtoolkit/discipline/{{dim_product.hed_discipline._value}}"
-    }
+    # link: {
+    #   label: "Engagement Toolkit - Discipline"
+    #   url: "http://dashboard.cengage.info/engtoolkit/discipline/{{dim_product.hed_discipline._value}}"
+    # }
   }
 
   dimension: coursename {
