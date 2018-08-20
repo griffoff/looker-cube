@@ -16,10 +16,10 @@ datagroup: fact_activityoutcome_datagroup {
 #include dims model
 include: "dims.lkml"
 # include all the views
-include: "*.view"
+include: "/cube/*.view"
 
 # include all the dashboards
-include: "*.dashboard"
+include: "/cube/*dashboard.lookml*"
 
 explore: fact_activation {
   label: "Activations"
