@@ -25,7 +25,7 @@ view: fact_siteusage {
   label: "Learning Path - Usage Data"
   #sql_table_name: DW_GA.FACT_SITEUSAGE ;;
   set:  curated_fields {
-    fields: [percent_of_activations,percent_of_all_activations,session_count,usercount]
+    fields: [percent_of_activations,percent_of_all_activations,session_count,usercount,sourcedata]
     }
   set:  curated_fields_for_instructor_mod{
     fields: [session_count,usercount]
@@ -36,7 +36,7 @@ view: fact_siteusage {
   }
 
   set: events {
-    fields: [session_number, eventdate_time, pageviewtime, pageviewcount, session_activity_count, clickcount]
+    fields: [session_number, eventdate_time, pageviewtime, pageviewcount, session_activity_count, clickcount,sourcedata]
   }
 
   #sql_table_name: DW_GA.FACT_SITEUSAGE ;;
