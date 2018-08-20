@@ -23,7 +23,7 @@ view: fact_activation {
         where organization is not null
         and latest
         --and in_actv_flg = 1
-        group by 1, 2
+        group by 1, 2, 4
       )
       select a.*, coalesce(orgs.organization, 'UNKNOWN') as organization, cu_flg
       from DW_GA.FACT_ACTIVATION a
