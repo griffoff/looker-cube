@@ -687,3 +687,9 @@ explore: LP_Activity_Analysis {
   }
 
 }
+
+# MT Mobile Data
+
+explore: ga_mobiledata {
+  label: "MT Mobile GA Data"
+}
