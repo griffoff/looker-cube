@@ -2,7 +2,7 @@ connection: "snowflake_prod"
 
 include: "/core/common.lkml"
 include: "*.view.lkml"         # include all views in this project
-include: "*.dashboard.lookml"  # include all dashboards in this project
+# include: "*.dashboard.lookml"  # include all dashboards in this project
 
 include: "dims*"
 
