@@ -200,6 +200,7 @@ view: ga_mobiledata {
     type: number
     value_format_name: id
     sql: ${TABLE}."USERID" ;;
+    hidden: yes
   }
 
   dimension: userrole {
