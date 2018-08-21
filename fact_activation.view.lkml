@@ -9,6 +9,7 @@ view: fact_activation {
             ,organization
             ,'OLR' as registrationtype
             ,cu_flg
+            ,user_guid
         from stg_clts.activations_olr
         where organization is not null
         and latest
@@ -19,13 +20,14 @@ view: fact_activation {
             ,organization
             ,'Non_OLR'
             ,cu_flg
+            ,unique_user_id
         from stg_clts.activations_non_olr
         where organization is not null
         and latest
         --and in_actv_flg = 1
-        group by 1, 2, 4
+        group by 1, 2, 4, 5
       )
-      select a.*, coalesce(orgs.organization, 'UNKNOWN') as organization, cu_flg
+      select a.*, coalesce(orgs.organization, 'UNKNOWN') as organization, cu_flg, user_guid
       from DW_GA.FACT_ACTIVATION a
       left join orgs on (a.registrationtype, a.activationid) = (orgs.registrationtype, orgs.activationid)
       order by courseid, activationdatekey, activationregionid;;
@@ -49,6 +51,11 @@ view: fact_activation {
   dimension: cu_flg {
     label: "CU Flag"
     description: "Flag to identify Cengage Unlimited Subscription based activation"
+  }
+
+  dimension: user_guid {
+    label: "User Guid"
+    description: "User SSO GUID from the activations feed"
   }
 
   dimension: HED_filter {
