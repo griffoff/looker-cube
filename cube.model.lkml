@@ -19,7 +19,7 @@ include: "dims.lkml"
 include: "/cube/*.view"
 
 # include all the dashboards
-include: "/cube/*dashboard.lookml*"
+# include: "/cube/*dashboard.lookml*"
 
 explore: fact_activation {
   label: "Activations"

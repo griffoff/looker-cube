@@ -3,7 +3,7 @@ label:"Source Data on Snowflake"
 include: "/core/common.lkml"
 
 include: "*.view.lkml"         # include all views in this project
-include: "*.dashboard.lookml"  # include all dashboards in this project
+# include: "*.dashboard.lookml"  # include all dashboards in this project
 include: "dims.lkml"
 include: "/project_source/*.view.lkml"
 # # Select the views that should be a part of this model,

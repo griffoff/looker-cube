@@ -8,7 +8,7 @@ include: "dims.lkml"
 include: "*.view"
 
 # include all the dashboards
-include: "*.dashboard"
+# include: "*.dashboard"
 
 explore: magellan_data {
   label: "Magellan export"
