@@ -693,3 +693,7 @@ explore: LP_Activity_Analysis {
 explore: ga_mobiledata {
   label: "MT Mobile GA Data"
 }
+
+
+explore: olr_nonolr_combined_user_activations {}
+explore: olr_nonolr_combined_user_activations_wkly {}
