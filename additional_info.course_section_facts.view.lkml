@@ -135,6 +135,7 @@ view: course_section_facts {
     type: string
     description: "Date Gran Test"
     sql: ${TABLE}.date_granularity ;;
+    hidden: yes
   }
 
   dimension: productplatformid{
