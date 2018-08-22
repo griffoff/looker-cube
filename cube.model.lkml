@@ -692,4 +692,11 @@ explore: LP_Activity_Analysis {
 
 explore: ga_mobiledata {
   label: "MT Mobile GA Data"
+  extends: [dim_course]
+
+join: dim_course {
+  sql_on: ${ga_mobiledata.coursekey} = ${dim_course.coursekey} ;;
+  relationship: many_to_one
+  type: full_outer
+}
 }
