@@ -2,6 +2,8 @@ include: "/core/common.lkml"
 
 include: "/project_source/*.view.lkml"
 
+include: "/cengage_unlimited/*.view.lkml"
+
 connection: "snowflake_prod"
 label:"Cube Data on Looker"
 
@@ -699,6 +701,17 @@ join: dim_course {
   relationship: many_to_one
   type: full_outer
 }
+
+  join: raw_subscription_event {
+    sql_on: ${ga_mobiledata.userssoguid}= ${raw_subscription_event.user_sso_guid} ;;
+    type: left_outer
+    relationship: many_to_one
+  }
+# join: cu_user_info {
+#   sql_on: ${ga_mobiledata.userssoguid} = ${cu_user_info.guid} ;;
+#   relationship: many_to_one
+# }
+
 }
 
 
