@@ -707,6 +707,13 @@ join: dim_course {
     type: left_outer
     relationship: many_to_one
   }
+
+  join: raw_olr_provisioned_product {
+    sql_on: ${ga_mobiledata.userssoguid}= ${raw_olr_provisioned_product.user_sso_guid} ;;
+    type: left_outer
+    relationship: many_to_one
+  }
+
 # join: cu_user_info {
 #   sql_on: ${ga_mobiledata.userssoguid} = ${cu_user_info.guid} ;;
 #   relationship: many_to_one
