@@ -19,3 +19,5 @@ include: "*.view.lkml"                       # include all views in this project
 # }
 
 explore: wacarp_student_responses {}
+
+explore: wacarp_class_performance_classification {}
