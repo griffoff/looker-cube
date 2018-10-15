@@ -2,7 +2,8 @@ include: "/core/common.lkml"
 
 include: "/project_source/*.view.lkml"
 
-include: "/cengage_unlimited/*.view.lkml"
+include: "/cengage_unlimited/raw_subscription_event.view.lkml"
+include: "/cengage_unlimited/raw_olr_provisioned_product.view.lkml"
 
 connection: "snowflake_prod"
 label:"Cube Data on Looker"
