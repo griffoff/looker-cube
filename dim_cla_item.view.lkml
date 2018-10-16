@@ -2,15 +2,15 @@ view: dim_cla_item {
   label: "CLA Events"
   derived_table: {
     sql: with alltables as (
-          select metadata_Item_type,CGI,ASSESSMENT_TYPE,SUB_FOLDER_1::String as Folder from UPLOADS.wl_metadata_atelier_master.MASTER_CGIDESC
+        /*  select metadata_Item_type,CGI,ASSESSMENT_TYPE,SUB_FOLDER_1::String as Folder from UPLOADS.wl_metadata_atelier_master.MASTER_CGIDESC
           UNION ALL
           select metadata_Item_type,CGI,ASSESSMENT_TYPE,SUB_FOLDER_1::String from UPLOADS.wl_metadata_rutas_master.MASTER_CGIDESC
           UNION ALL
           select metadata_Item_type,CGI,ASSESSMENT_TYPE,FOLDER_1::String from UPLOADS.wl_metadata_plazas_master.MASTER_CGIDESC
           UNION ALL
           select metadata_Item_type,CGI,ASSESSMENT_TYPE,FOLDER_1::String from UPLOADS.wl_metadata_juntos_master.MASTER_CGIDESC
-          UNION ALL
-          select metadata_Item_type,CGI,ASSESSMENT_TYPE,FOLDER_1::String from UPLOADS.WL_METADATA_PLAZAS_MASTER_NEW.MASTER_PLAZAS
+          UNION ALL */
+          select metadata_Item_type,CGI,ASSESSMENT_TYPE,FOLDER_1::String as Folder,Description from UPLOADS.WL_METADATA_PLAZAS_MASTER_NEW.MASTER_PLAZAS
          )
          Select * from alltables a
          left join PROD.DW_GA.DIM_CLA_ITEM i
@@ -36,6 +36,11 @@ view: dim_cla_item {
   dimension: folder {
     type: string
     sql: ${TABLE}.FOLDER ;;
+  }
+
+  dimension: description {
+    type: string
+    sql: ${TABLE}.description ;;
   }
 
   dimension: activitycgi {
