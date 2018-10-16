@@ -10,7 +10,7 @@ view: dim_cla_item {
           UNION ALL
           select metadata_Item_type,CGI,ASSESSMENT_TYPE,FOLDER_1::String from UPLOADS.wl_metadata_juntos_master.MASTER_CGIDESC
           UNION ALL
-          select metadata_Item_type,CGI,ASSESSMENT_TYPE,FOLDER_1::String from UPLOADS.wl_metadata_horizons_master.MASTER_CGIDESC
+          select metadata_Item_type,CGI,ASSESSMENT_TYPE,FOLDER_1::String from UPLOADS.WL_METADATA_PLAZAS_MASTER_NEW.MASTER_PLAZAS
          )
          Select * from alltables a
          left join PROD.DW_GA.DIM_CLA_ITEM i
