@@ -7,7 +7,26 @@ view: mindtap_lp_activity_tags {
         select
           lower(regexp_replace(LEARNING_PATH_ACTIVITY_TITLE, '[\\W\\s]', '')) as activity_title_key
           ,Product_Family || Edition || LEARNING_PATH_ACTIVITY_TITLE as full_key
-          ,*
+          ,_ROW
+          ,_FIVETRAN_SYNCED
+          ,DISCIPLINE
+          ,PRODUCT_FAMILY_EDITION
+          ,COURSE_AREA
+          ,CHAPTER_TOPIC
+          ,ACTIVITY_SUB_TYPE
+          ,ACTIVITY_TOPIC
+          ,LEARNING_PATH_ACTIVITY_TITLE
+          ,CHAPTER
+          ,ACTIVITY_TYPE
+          ,PRODUCT_FAMILY
+          ,EDITION
+          ,ACTIVITY_GROUP
+          ,SECTION_NAME
+          ,EDITION_TYPE
+          --,UNIT_NUMBER::string as unit_number
+          --,UNIT_TOPIC::string as unit_topic
+          ,SECTION_NUMBER
+          ,SUB_CHAPTER
           ,row_number() over (partition by product_family, edition, activity_title_key
                                           order by _fivetran_synced desc, case when activity_type is null then 1 else 0 end, length(LEARNING_PATH_ACTIVITY_TITLE)) as n
         from UPLOADS.LEARNINGPATH_METADATA.TAGS_COMBINED
