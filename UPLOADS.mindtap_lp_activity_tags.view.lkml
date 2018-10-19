@@ -23,8 +23,6 @@ view: mindtap_lp_activity_tags {
           ,ACTIVITY_GROUP
           ,SECTION_NAME
           ,EDITION_TYPE
-          --,UNIT_NUMBER::string as unit_number
-          --,UNIT_TOPIC::string as unit_topic
           ,SECTION_NUMBER
           ,SUB_CHAPTER
           ,row_number() over (partition by product_family, edition, activity_title_key
