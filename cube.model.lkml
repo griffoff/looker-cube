@@ -2,9 +2,6 @@ include: "/core/common.lkml"
 
 include: "/project_source/*.view.lkml"
 
-include: "/cengage_unlimited/raw_subscription_event.view.lkml"
-include: "/cengage_unlimited/raw_olr_provisioned_product.view.lkml"
-
 connection: "snowflake_prod"
 label:"Cube Data on Looker"
 
@@ -688,37 +685,6 @@ explore: LP_Activity_Analysis {
   join: dim_product {
     fields: [dim_product.curated_fields*]
   }
-
-}
-
-# MT Mobile Data
-
-explore: ga_mobiledata {
-  label: "MT Mobile GA Data"
-  extends: [dim_course]
-
-join: dim_course {
-  sql_on: ${ga_mobiledata.coursekey} = ${dim_course.coursekey} ;;
-  relationship: many_to_one
-  type: full_outer
-}
-
-  join: raw_subscription_event {
-    sql_on: ${ga_mobiledata.userssoguid}= ${raw_subscription_event.user_sso_guid} ;;
-    type: left_outer
-    relationship: many_to_one
-  }
-
-  join: raw_olr_provisioned_product {
-    sql_on: ${ga_mobiledata.userssoguid}= ${raw_olr_provisioned_product.user_sso_guid} ;;
-    type: left_outer
-    relationship: many_to_one
-  }
-
-# join: cu_user_info {
-#   sql_on: ${ga_mobiledata.userssoguid} = ${cu_user_info.guid} ;;
-#   relationship: many_to_one
-# }
 
 }
 
