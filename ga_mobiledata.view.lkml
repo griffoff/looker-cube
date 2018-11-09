@@ -58,6 +58,12 @@ view: ga_mobiledata {
     hidden: yes
   }
 
+  dimension: primary {
+    type: string
+    sql: CONCAT(CONCAT(${fullvisitorid},${visitid}),${hits_hitnumber}) ;;
+    primary_key: yes
+  }
+
   dimension: geonetwork_country {
     type: string
     sql: ${TABLE}."GEONETWORK_COUNTRY" ;;
@@ -266,13 +272,13 @@ view: ga_mobiledata {
     label: "# attendance completed"
     description: "The number of times a user or other grouping (by instituion, trial user, etc.) completed attendance"
     type: sum
-    sql: case when eventaction like 'Attendance event completed'  then 1 else 0 end   ;;
+    sql: case when ga_mobiledata.eventaction like 'Attendance event completed'  then 1 else 0 end   ;;
   }
   measure: flashcard_events{
     label: "# flashcard events"
     description: "The number of times a user or other grouping (by instituion, trial user, etc.) carried out a flashcard event"
-    type: sum
-    sql: case when eventaction ilike 'flashcard%'  then 1 else 0 end   ;;
+    type: count_distinct
+    sql: case when ${TABLE}."EVENTACTION" ilike 'flashcard%'  then 1 else 0 end   ;;
   }
 
 }
