@@ -14,6 +14,7 @@ view: ga_mobiledata {
   dimension: browser {
     type: string
     sql: ${TABLE}."BROWSER" ;;
+    hidden: yes
   }
 
   dimension: browserversion {
@@ -54,56 +55,67 @@ view: ga_mobiledata {
   dimension: fullvisitorid {
     type: string
     sql: ${TABLE}."FULLVISITORID" ;;
+    hidden: yes
   }
 
   dimension: geonetwork_country {
     type: string
     sql: ${TABLE}."GEONETWORK_COUNTRY" ;;
+    hidden: yes
   }
 
   dimension: geonetwork_metro {
     type: string
     sql: ${TABLE}."GEONETWORK_METRO" ;;
+    hidden: yes
   }
 
   dimension: geonetwork_region {
     type: string
     sql: ${TABLE}."GEONETWORK_REGION" ;;
+    hidden: yes
   }
 
   dimension: hits_hitnumber {
     type: number
     sql: ${TABLE}."HITS_HITNUMBER" ;;
+    hidden: yes
   }
 
   dimension: hits_hour {
     type: number
     sql: ${TABLE}."HITS_HOUR" ;;
+    hidden: yes
   }
 
   dimension: hits_minute {
     type: number
     sql: ${TABLE}."HITS_MINUTE" ;;
+    hidden: yes
   }
 
   dimension: hits_time {
     type: number
     sql: ${TABLE}."HITS_TIME" ;;
+    hidden: yes
   }
 
   dimension: hits_type {
     type: string
     sql: ${TABLE}."HITS_TYPE" ;;
+    hidden: yes
   }
 
   dimension: hostname {
     type: string
     sql: ${TABLE}."HOSTNAME" ;;
+    hidden: yes
   }
 
   dimension: ismobile {
     type: string
     sql: ${TABLE}."ISMOBILE" ;;
+    hidden: yes
   }
 
   dimension_group: ldts {
@@ -153,11 +165,13 @@ view: ga_mobiledata {
   dimension: pagepath {
     type: string
     sql: ${TABLE}."PAGEPATH" ;;
+    hidden: yes
   }
 
   dimension: pagetitle {
     type: string
     sql: ${TABLE}."PAGETITLE" ;;
+    hidden: yes
   }
 
   dimension: rsrc {
@@ -179,21 +193,25 @@ view: ga_mobiledata {
   dimension: totals_hits {
     type: number
     sql: ${TABLE}."TOTALS_HITS" ;;
+    hidden: yes
   }
 
   dimension: totals_pageviews {
     type: number
     sql: ${TABLE}."TOTALS_PAGEVIEWS" ;;
+    hidden: yes
   }
 
   dimension: totals_timeonsite {
     type: number
     sql: ${TABLE}."TOTALS_TIMEONSITE" ;;
+    hidden: yes
   }
 
   dimension: totals_visits {
     type: number
     sql: ${TABLE}."TOTALS_VISITS" ;;
+    hidden: yes
   }
 
   dimension: userid {
@@ -229,6 +247,7 @@ view: ga_mobiledata {
   dimension: visitstarttime {
     type: number
     sql: ${TABLE}."VISITSTARTTIME" ;;
+    hidden: yes
   }
 
   measure: count_clicks {
@@ -242,4 +261,18 @@ view: ga_mobiledata {
     type: count
     drill_fields: [hostname]
   }
+
+  measure: attendance_events{
+    label: "# attendance completed"
+    description: "The number of times a user or other grouping (by instituion, trial user, etc.) completed attendance"
+    type: sum
+    sql: case when eventaction like 'Attendance event completed'  then 1 else 0 end   ;;
+  }
+  measure: flashcard_events{
+    label: "# flashcard events"
+    description: "The number of times a user or other grouping (by instituion, trial user, etc.) carried out a flashcard event"
+    type: sum
+    sql: case when eventaction ilike 'flashcard%'  then 1 else 0 end   ;;
+  }
+
 }
