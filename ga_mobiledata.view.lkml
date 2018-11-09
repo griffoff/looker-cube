@@ -139,18 +139,10 @@ view: ga_mobiledata {
     hidden: yes
   }
 
-  dimension_group: localtime {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}."LOCALTIME" ;;
+  dimension: eventdate{
+    label: "Event Date"
+    type: date
+    sql: TO_DATE(TO_TIMESTAMP(((VISITSTARTTIME*1000) + HITS_TIME)/1000));;
   }
 
   dimension: mobiledevicebranding {
@@ -260,12 +252,13 @@ view: ga_mobiledata {
     label: " # Users"
     type: count_distinct
     sql: ${TABLE}."USERSSOGUID"  ;;
-    drill_fields: [userssoguid,localtime_date]
+    drill_fields: [userssoguid,eventdate]
   }
 
   measure: count {
     type: count
     drill_fields: [hostname]
+    hidden: yes
   }
 
   measure: attendance_events{
