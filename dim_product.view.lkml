@@ -199,9 +199,7 @@ view: dim_product {
       WHEN row_number() over (order by SUM(noofactivations) desc)
       <80 THEN '20-80'
       ELSE '>80'
-      END
-
-      ;;
+      END;;
     hidden: yes
   }
 

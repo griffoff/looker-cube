@@ -156,12 +156,7 @@ view: fact_activation {
 
   measure: total_noofactivations {
     label: "Total Activations"
-    description: "Represents the total number of activations associated with the query structure set up in Looker and the selected filtering criteria.
-
-      Example: if you set up Looker to look at completed learning path activities, the measure 'Total Activations' will indicated how many accounts completed a given activity
-      and NOT how many accounts 'saw' or could have completed a given activity.
-
-      Meaning, 'Total Activations' cannot be used as a denominator for any '% of activation' calculations."
+    description: "Represents the total number of activations associated with the query structure set up in Looker and the selected filtering criteria. Example: if you set up Looker to look at completed learning path activities, the measure 'Total Activations' will indicated how many accounts completed a given activity and NOT how many accounts 'saw' or could have completed a given activity. Meaning, 'Total Activations' cannot be used as a denominator for any '% of activation' calculations."
     type: sum
     sql: ${noofactivations_base} ;;
     drill_fields: [coursedetails*]
@@ -227,9 +222,7 @@ view: fact_activation {
 
   measure: user_count {
     label: "# Users Activated"
-    description: "Distinct count of users (GUIDs) with at least 1 activations based on user-selected filtering criteria.
-      This number should be less than or equal to the total activations measure as users may have more than one activation
-      for the user-selected filtering criteria (e.g. they use MindTap for multiple courses)"
+    description: "Distinct count of users (GUIDs) with at least 1 activations based on user-selected filtering criteria. This number should be less than or equal to the total activations measure as users may have more than one activation for the user-selected filtering criteria (e.g. they use MindTap for multiple courses)"
     type: count_distinct
     sql:${userid} ;;
   }
@@ -243,16 +236,14 @@ view: fact_activation {
 
   measure: institution_count {
     label: "# Institutions with activations"
-    description: "Distinct count of institutions with at least 1 activation based on user-selected filtering criteria.
-      Useful as a high-level measure."
+    description: "Distinct count of institutions with at least 1 activation based on user-selected filtering criteria. Useful as a high-level measure."
     type: count_distinct
     sql: case when ${TABLE}.NOOFACTIVATIONS > 0 then ${dim_institution.institutionid} end ;;
   }
 
   measure: course_count_including_no_activations {
     label: "# Course sections"
-    description: "Distinct count of course keys regardless of number of activations based on user-selected filtering criteria.
-    Useful as a high-level measure."
+    description: "Distinct count of course keys regardless of number of activations based on user-selected filtering criteria. Useful as a high-level measure."
     type: count_distinct
     sql: ${courseid} ;;
   }
@@ -265,16 +256,14 @@ view: fact_activation {
 
   measure: course_count {
     label: "# Course sections with activations"
-    description: "Distinct count of course keys with at least 1 activation based on user-selected filtering criteria.
-      Useful as a high-level measure."
+    description: "Distinct count of course keys with at least 1 activation based on user-selected filtering criteria. Useful as a high-level measure."
     type: count_distinct
     sql: ${courseid} ;;
   }
 
   measure: course_count_minimum_activations {
     label: "# Course sections with at least 5 activations"
-    description: "Distinct count of course keys with at least 5 activation based on user-selected filtering criteria.
-    Useful as a high-level measure."
+    description: "Distinct count of course keys with at least 5 activation based on user-selected filtering criteria. Useful as a high-level measure."
     type: count_distinct
     sql: case when ${activations_per_course} >= 5 then ${courseid} end ;;
   }

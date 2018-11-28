@@ -113,14 +113,7 @@ view: dim_institution {
     label: "Enrollment level (est)"
     type: tier
     hidden: yes
-    tiers: [
-      50,
-      100,
-      500,
-      1000,
-      5000,
-      10000
-    ]
+    tiers: [50, 100, 500, 1000, 5000, 10000]
     style: integer
     sql: ${TABLE}.ESTIMATEDENROLLMENTLEVEL ;;
   }
