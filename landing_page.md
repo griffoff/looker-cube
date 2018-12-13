@@ -102,5 +102,5 @@
     </div>
   </div>
   <div style="text-align: left; font-size: 17px;">
-      <p style="font-weight: 300; margin-top: 17px;"><i>**Coming in 2018: Item level data for Aplia, CNOW, CXP, etc.</i></p>
-    </div>
+    <a href="https://cengage.looker.com/projects/cengage_unlimited/files/CU_landing_page.md">CU Data</a>
+  </div>
