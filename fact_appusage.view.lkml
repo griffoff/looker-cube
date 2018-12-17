@@ -94,6 +94,7 @@ view: fact_appusage {
   dimension: filterflag {
     type: string
     sql: ${TABLE}.FILTERFLAG ;;
+    hidden: yes
   }
 
   dimension: iframeapplicationid {
