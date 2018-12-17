@@ -142,6 +142,7 @@ view: course_section_facts {
     type: string
     description: "productplatformid Test"
     sql: ${TABLE}.productplatformid ;;
+    hidden: yes
   }
 
 #   measure: total_noofactivationstest {
