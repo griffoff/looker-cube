@@ -83,6 +83,15 @@ view: dim_product {
     label: "Assigned Group"
     description: ""
     sql: uniform(1, {% parameter no_of_groups %}, random()) ;;
+    # calculation to make this number the same for a given guid
+    # Both versions require a known GUID field, the examples use a hard coded one which will need to be changed
+    # VERSION 1
+    # this version based on the guid itself, so may not be evenly distributed
+    # sql: (mod(abs(hash("olr_courses.instructor_guid")), {% parameter no_of_groups %})) + 1
+
+    # VERSION 2
+    # this version should be evenly distributed but will need to be a measure
+    # sql: mod(dense_rank() over (order by "olr_courses.instructor_guid"), {% parameter no_of_groups %}) + 1
     view_label: "** MODELLING TOOLS **"
   }
 
