@@ -53,6 +53,39 @@ view: dim_product {
     sql_trigger_value: select count(*) from dw_ga.dim_product ;;
   }
 
+  parameter: no_of_groups {
+    label: "Select a number of groups"
+    description: "Select a number of groups to split the records into
+    the Assigned Group dimension will display a number between 1 and the number of groups chosen for every record in your dataset"
+    type: unquoted
+    allowed_value: {
+      label: "No split, all records in the same group"
+      value: "1"
+    }
+    allowed_value: {
+      label: "Split the dataset into 2 different groups"
+      value: "2"
+    }
+    allowed_value: {
+      label: "Split the dataset into 3 different groups"
+      value: "3"
+    }
+    allowed_value: {
+      label: "Split the dataset into 4 different groups"
+      value: "4"
+    }
+    default_value: "1"
+    view_label: "** MODELLING TOOLS **"
+    required_fields: [assigned_group]
+  }
+
+  dimension: assigned_group {
+    label: "Assigned Group"
+    description: ""
+    sql: uniform(1, {% parameter no_of_groups %}, random()) ;;
+    view_label: "** MODELLING TOOLS **"
+  }
+
   set: curated_fields {fields:[course,edition,productfamily, coursearea, discipline, product, title, count,productfamily_edition,minorsubjectmatter,iac_isbn,isbn10,isbn13,pac_isbn,mindtap_isbn]}
 
   dimension: course {
