@@ -181,7 +181,7 @@ explore: dim_learningpath {
   }
 
   join: mindtap_lp_activity_tags {
-    sql_on: (${dim_product.productfamily},${dim_product.edition_number},${dim_learningpath.activity_title_key})=(${mindtap_lp_activity_tags.product_family},${mindtap_lp_activity_tags.edition_number},${mindtap_lp_activity_tags.activity_title_key});;
+    sql_on: (UPPER(${dim_product.productfamily}),${dim_product.edition_number},${dim_learningpath.activity_title_key})=(UPPER(${mindtap_lp_activity_tags.product_family}),${mindtap_lp_activity_tags.edition_number},${mindtap_lp_activity_tags.activity_title_key});;
     relationship: many_to_many
   }
 }
