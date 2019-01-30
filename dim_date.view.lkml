@@ -372,6 +372,7 @@ view: dim_app_usage_date {
     hidden: no
     type: time
     timeframes: [
+      time,
       date,
       week,
       month,
