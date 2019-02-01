@@ -12,7 +12,6 @@ view: dim_party {
       inner join mindtap.prod_nb.org o1 on o.parent_id = o1.id
       inner join ${internal_org_filters.SQL_TABLE_NAME} internal on o1.external_id = internal.org_external_id
       --where upper(o1.name) like '%TEST%'
-      --or upper(o1.name) like '%DEMO%'
 --  or o.id = 501
     )
     select
