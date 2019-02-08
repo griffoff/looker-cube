@@ -1,6 +1,6 @@
 view: activities_per_week {
   view_label: "Activities per week of course"
-  sql_table_name: ZPG.ACTIVITIES_PER_WEEK ;;
+  sql_table_name: marketing_analytics.ACTIVITIES_PER_WEEK ;;
 
   dimension: activated {
     type: yesno
