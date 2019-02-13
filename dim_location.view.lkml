@@ -11,8 +11,10 @@ view: dim_location {
 
   dimension: country {
     type: string
+    label: "Geographical Country"
+    description: "Country from where the product was accessed"
     sql: ${TABLE}.COUNTRY ;;
-    hidden: yes
+    hidden: no
   }
 
   dimension: countrycode {
