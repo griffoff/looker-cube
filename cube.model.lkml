@@ -1,6 +1,6 @@
-include: "/core/common.lkml"
+include: "//core/common.lkml"
 
-include: "/project_source/*.view.lkml"
+include: "//project_source/*.view.lkml"
 
 connection: "snowflake_prod"
 label:"Cube Data on Looker"
@@ -20,6 +20,10 @@ include: "/cube/*.view"
 
 # include all the dashboards
 # include: "/cube/*dashboard.lookml*"
+
+explore: activities_per_week {
+  label: "Trial Period Abuse"
+}
 
 explore: fact_activation {
   label: "Activations"
