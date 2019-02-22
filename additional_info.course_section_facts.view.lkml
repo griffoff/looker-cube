@@ -97,6 +97,7 @@ view: course_section_facts {
     label: "CU Flag"
     description: "Flag from the activations feed indicating their CU status"
     sql: ${TABLE}.cu_flg ;;
+    hidden: yes
   }
 
 
