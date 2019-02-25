@@ -132,7 +132,7 @@ view: dim_product {
   #   view_label: "** MODELLING TOOLS **"
   # }
 
-  set: curated_fields {fields:[course,edition,productfamily, coursearea, discipline, product, title, count,productfamily_edition,minorsubjectmatter,iac_isbn,isbn10,isbn13,pac_isbn,mindtap_isbn]}
+  set: curated_fields {fields:[course,edition,productfamily, coursearea, discipline, discipline_rank_6m, discipline_rank, family_rank_6m, family_rank, product, title, count,productfamily_edition,minorsubjectmatter,iac_isbn,isbn10,isbn13,pac_isbn,mindtap_isbn]}
 
   dimension: discipline_rank {description: "Discipline rank by total activations (all time)" type:number group_label:"Product Ranking"}
   dimension: family_rank {description: "Product family rank by total activations (all time)" type:number group_label:"Product Ranking"}
