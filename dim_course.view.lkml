@@ -8,6 +8,8 @@ view: dim_course {
           context_id
           ,organization
           ,count(*) as cnt
+          ,SUM(CASE WHEN cu_flg ilike 'Y' then 1 ELSE 0 END ) as cu_ct
+          ,SUM(CASE WHEN cu_flg ilike 'N' then 1 ELSE 0 END ) as noncu_ct
       from prod.stg_clts.activations_olr
       where organization is not null
       and in_actv_flg = 1
@@ -17,6 +19,8 @@ view: dim_course {
       select
          context_id
          ,organization
+         ,cu_ct
+         ,noncu_ct
          ,row_number() over (partition by context_id order by cnt desc) as r
       from course_orgs
     )
@@ -25,6 +29,8 @@ view: dim_course {
           ,c."#CONTEXT_ID" as olr_context_id
           ,c.mag_acct_id
           ,orgs.organization
+          ,orgs.cu_ct
+          ,orgs.noncu_ct
           ,to_char(dc.STARTDATE, 'YYYYMMDD')::int as startdatekey_new
           ,dc.enddate < current_date() as course_complete
     from prod.dw_ga.dim_course dc
@@ -53,7 +59,7 @@ view: dim_course {
     sql: ${organization} = 'Higher Ed' ;;
   }
 
-  set: curated_fields {fields: [courseid, coursename, is_lms_integrated, count]}
+  set: curated_fields {fields: [courseid, coursename, is_lms_integrated, count,cu_ct,noncu_ct]}
 
 
   dimension: mag_acct_id {
@@ -142,6 +148,19 @@ view: dim_course {
       label: "Engagement Toolkit - Discipline"
       url: "http://dashboard.cengage.info/engtoolkit/discipline/{{dim_product.hed_discipline._value}}"
     }
+  }
+
+  dimension: cu_ct {
+    label: "# CU Students"
+    description: "No of CU students activated for a particular course key"
+    sql: ${TABLE}.cu_ct ;;
+  }
+
+
+  dimension: noncu_ct {
+    label: "# Non CU Students"
+    description: "No of Non-CU students activated for a particular course key"
+    sql: ${TABLE}.noncu_ct ;;
   }
 
   dimension: dw_ldid {
