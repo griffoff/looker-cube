@@ -2,54 +2,91 @@ view: dim_product {
   label: "Product"
   #sql_table_name: DW_GA.DIM_PRODUCT ;;
   derived_table: {
-    sql: select *,
-          CASE
-               WHEN p.PUBLICATIONGROUP in ('Career Ed', 'SWEP') THEN
-                    CASE
-                        WHEN p.MINORSUBJECTMATTER = 'Office Management' THEN 'Course Tech Office Management'
-                        WHEN p.MINORSUBJECTMATTER = 'Health Admin and Management' THEN 'Health Information Management'
-                        ELSE p.MINORSUBJECTMATTER
-                        END
-               WHEN p.PRODUCTFAMILY = 'MT CRMS Literature' THEN 'Literature'
-               WHEN p.PUBLICATIONSERIES in ('CT-Networking', 'CT-Prog/PC/HD', 'CT-Revealed Series') THEN 'Creative and Technical'
-                --??
-               WHEN p.PUBLICATIONSERIES = 'CPG-Networking Security' then 'Creative and Technical'
-                --??
-               WHEN p.PUBLICATIONSERIES like 'CT-%' THEN 'Computing'
-               WHEN p.PUBLICATIONSERIES like '%History%'
-                  OR p.COURSEAREA = 'History: U.S. Survey' THEN 'History'
-               WHEN p.PUBLICATIONSERIES = 'Composition' THEN 'English'
-               WHEN p.PUBLICATIONSERIES like 'Biology%' THEN 'Biology'
-               WHEN p.PUBLICATIONSERIES = 'Human Resources Management' THEN 'Management'
-               WHEN p.PUBLICATIONSERIES = 'Health Sciences' THEN 'Sports/Health/Recreat/Leisure'
-               WHEN p.PUBLICATIONSERIES = 'Intro Poli Sci' THEN 'Political Science'
-               WHEN p.PUBLICATIONSERIES = 'FreshmanOrient/College Success' THEN 'Freshman Orientation/College'
-               WHEN p.PUBLICATIONSERIES = 'Nutrition' THEN 'Life Sciences'
-               WHEN p.PUBLICATIONSERIES = 'General Business' THEN 'Business'
-               WHEN p.PUBLICATIONSERIES = 'Not Specified' THEN
-                    p.MAJORSUBJECTMATTER
-                    /*
-                    CASE
-                    WHEN p.MAJORSUBJECTMATTER = 'Accross Cengage Disciplines' THEN 'Other ' || p.PUBLICATIONGROUP
-                    ELSE p.MAJORSUBJECTMATTER
-                    END
-                    */
-               WHEN p.PUBLICATIONSERIES = 'Applied Math' THEN 'Applied Math-SMT'
-               WHEN p.PUBLICATIONSERIES = 'Earth Science' THEN 'Earth Sciences'
-               WHEN p.PUBLICATIONSERIES = 'Milady - Cosmetology' THEN 'Cosmetology'
-               WHEN p.PUBLICATIONSERIES = 'UNKNOWN' THEN 'Not Specified'
-               WHEN p.PUBLICATIONSERIES in ('Civil Engineering', 'General Engineering') then 'PGR 142-' || p.PUBLICATIONSERIES
-               WHEN p.PUBLICATIONSERIES = 'Religion' then 'Religion & Phenomena'
-               WHEN p.PUBLICATIONSERIES = 'Mass Communication' then 'Communication Arts'
-               WHEN p.PUBLICATIONSERIES = 'Literature/Upper Level English' then 'Literature'
-               ELSE p.PUBLICATIONSERIES
-        END
-        as discipline_rollup
-      ,nullif(edition, '-')::int as edition_number
-      ,dense_rank() over (partition by productfamily order by edition_number desc) as latest
-      ,concat(concat(productfamily,' - '),edition) as productfamily_edition
-    from prod.dw_ga.dim_product p
-    order by productid;;
+    sql:
+    with products as (
+      select *,
+            CASE
+                 WHEN p.PUBLICATIONGROUP in ('Career Ed', 'SWEP') THEN
+                      CASE
+                          WHEN p.MINORSUBJECTMATTER = 'Office Management' THEN 'Course Tech Office Management'
+                          WHEN p.MINORSUBJECTMATTER = 'Health Admin and Management' THEN 'Health Information Management'
+                          ELSE p.MINORSUBJECTMATTER
+                          END
+                 WHEN p.PRODUCTFAMILY = 'MT CRMS Literature' THEN 'Literature'
+                 WHEN p.PUBLICATIONSERIES in ('CT-Networking', 'CT-Prog/PC/HD', 'CT-Revealed Series') THEN 'Creative and Technical'
+                  --??
+                 WHEN p.PUBLICATIONSERIES = 'CPG-Networking Security' then 'Creative and Technical'
+                  --??
+                 WHEN p.PUBLICATIONSERIES like 'CT-%' THEN 'Computing'
+                 WHEN p.PUBLICATIONSERIES like '%History%'
+                    OR p.COURSEAREA = 'History: U.S. Survey' THEN 'History'
+                 WHEN p.PUBLICATIONSERIES = 'Composition' THEN 'English'
+                 WHEN p.PUBLICATIONSERIES like 'Biology%' THEN 'Biology'
+                 WHEN p.PUBLICATIONSERIES = 'Human Resources Management' THEN 'Management'
+                 WHEN p.PUBLICATIONSERIES = 'Health Sciences' THEN 'Sports/Health/Recreat/Leisure'
+                 WHEN p.PUBLICATIONSERIES = 'Intro Poli Sci' THEN 'Political Science'
+                 WHEN p.PUBLICATIONSERIES = 'FreshmanOrient/College Success' THEN 'Freshman Orientation/College'
+                 WHEN p.PUBLICATIONSERIES = 'Nutrition' THEN 'Life Sciences'
+                 WHEN p.PUBLICATIONSERIES = 'General Business' THEN 'Business'
+                 WHEN p.PUBLICATIONSERIES = 'Not Specified' THEN
+                      p.MAJORSUBJECTMATTER
+                      /*
+                      CASE
+                      WHEN p.MAJORSUBJECTMATTER = 'Accross Cengage Disciplines' THEN 'Other ' || p.PUBLICATIONGROUP
+                      ELSE p.MAJORSUBJECTMATTER
+                      END
+                      */
+                 WHEN p.PUBLICATIONSERIES = 'Applied Math' THEN 'Applied Math-SMT'
+                 WHEN p.PUBLICATIONSERIES = 'Earth Science' THEN 'Earth Sciences'
+                 WHEN p.PUBLICATIONSERIES = 'Milady - Cosmetology' THEN 'Cosmetology'
+                 WHEN p.PUBLICATIONSERIES = 'UNKNOWN' THEN 'Not Specified'
+                 WHEN p.PUBLICATIONSERIES in ('Civil Engineering', 'General Engineering') then 'PGR 142-' || p.PUBLICATIONSERIES
+                 WHEN p.PUBLICATIONSERIES = 'Religion' then 'Religion & Phenomena'
+                 WHEN p.PUBLICATIONSERIES = 'Mass Communication' then 'Communication Arts'
+                 WHEN p.PUBLICATIONSERIES = 'Literature/Upper Level English' then 'Literature'
+                 ELSE p.PUBLICATIONSERIES
+          END
+          as discipline_rollup
+        ,nullif(edition, '-')::int as edition_number
+        ,dense_rank() over (partition by productfamily order by edition_number desc) as latest
+        ,concat(concat(productfamily,' - '),edition) as productfamily_edition
+      from prod.dw_ga.dim_product p
+    )
+    ,ranking_d as (
+      SELECT
+        p.discipline_rollup
+        ,COALESCE(SUM(fact_activation.NOOFACTIVATIONS), 0) AS discipline_activations
+        ,COALESCE(SUM(CASE WHEN  d.datevalue >= dateadd(month, -6, CURRENT_DATE()) THEN fact_activation.NOOFACTIVATIONS END), 0) AS discipline_activations_6m
+      FROM products p
+      LEFT JOIN ${fact_activation.SQL_TABLE_NAME} AS fact_activation ON p.PRODUCTID = fact_activation.PRODUCTID
+      LEFT JOIN ${dim_date.SQL_TABLE_NAME} d on fact_activation.activationdatekey = d.datekey
+      GROUP BY 1
+    )
+    ,ranking_f as (
+      SELECT
+        p.productfamily
+        ,COALESCE(SUM(fact_activation.NOOFACTIVATIONS), 0) AS family_activations
+        ,COALESCE(SUM(CASE WHEN  d.datevalue >= dateadd(month, -6, CURRENT_DATE()) THEN fact_activation.NOOFACTIVATIONS END), 0) AS family_activations_6m
+      FROM products p
+      LEFT JOIN ${fact_activation.SQL_TABLE_NAME} AS fact_activation ON p.PRODUCTID = fact_activation.PRODUCTID
+      LEFT JOIN ${dim_date.SQL_TABLE_NAME} d on fact_activation.activationdatekey = d.datekey
+      GROUP BY 1
+    )
+    select
+      p.*
+      ,rf.family_activations
+      ,rf.family_activations_6m
+      ,rd.discipline_activations
+      ,rd.discipline_activations_6m
+      ,DENSE_RANK() OVER (ORDER BY rd.discipline_activations DESC) AS discipline_rank
+      ,DENSE_RANK() OVER (ORDER BY rf.family_activations DESC) AS family_rank
+      ,DENSE_RANK() OVER (ORDER BY rd.discipline_activations_6m DESC) AS discipline_rank_6m
+      ,DENSE_RANK() OVER (ORDER BY rf.family_activations_6m DESC) AS family_rank_6m
+    from products p
+    left join ranking_d rd on p.discipline_rollup = rd.discipline_rollup
+    left join ranking_f rf on p.productfamily = rf.productfamily
+    order by productid
+    ;;
     sql_trigger_value: select count(*) from dw_ga.dim_product ;;
   }
 
@@ -96,6 +133,28 @@ view: dim_product {
   # }
 
   set: curated_fields {fields:[course,edition,productfamily, coursearea, discipline, product, title, count,productfamily_edition,minorsubjectmatter,iac_isbn,isbn10,isbn13,pac_isbn,mindtap_isbn]}
+
+  dimension: discipline_rank {description: "Discipline rank by total activations (all time)" type:number group_label:"Product Ranking"}
+  dimension: family_rank {description: "Product family rank by total activations (all time)" type:number group_label:"Product Ranking"}
+  dimension: discipline_rank_6m {description: "Discipline rank by total activations in the last 6 months" type:number group_label:"Product Ranking"}
+  dimension: family_rank_6m {description: "Product family rank by total activations in the last 6 months" type:number group_label:"Product Ranking"}
+
+#   measure: discipline_rank {
+#     label: "Discipline - Rank"
+#     group_label: "Categories"
+#     type: string
+#     sql: row_number() over (order by SUM(noofactivations) desc) ;;
+#     hidden: yes
+#   }
+#
+#   dimension: discipline_rank_tier  {
+#     label: "Discipline - Rank (tiers)"
+#     group_label: "Categories"
+#     type: tier
+#     style: interval
+#     tiers: [10, 20, 50]
+#     sql: row_number() over (order by SUM(noofactivations) desc) ;;
+#   }
 
   dimension: course {
     label: "Course Name"
@@ -212,23 +271,6 @@ view: dim_product {
 
     drill_fields: [productfamily]
   }
-
-  measure: discipline_rank {
-    label: "Discipline - Rank"
-    group_label: "Categories"
-    type: string
-    sql: row_number() over (order by SUM(noofactivations) desc) ;;
-    hidden: yes
-  }
-#
-#   dimension: discipline_rank_tier  {
-#     label: "Discipline - Rank (tiers)"
-#     group_label: "Categories"
-#     type: tier
-#     style: interval
-#     tiers: [10, 20, 50]
-#     sql: row_number() over (order by SUM(noofactivations) desc) ;;
-#   }
 
   measure: discipline_rank_2 {
     label: "Discipline - Rank 2"
