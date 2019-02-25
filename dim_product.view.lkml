@@ -57,8 +57,10 @@ view: dim_product {
         p.discipline_rollup
         ,COALESCE(SUM(fact_activation.NOOFACTIVATIONS), 0) AS discipline_activations
         ,COALESCE(SUM(CASE WHEN  d.datevalue >= dateadd(month, -6, CURRENT_DATE()) THEN fact_activation.NOOFACTIVATIONS END), 0) AS discipline_activations_6m
+        ,COALESCE(SUM(CASE WHEN  UPPER(platform.productplatform) = 'MINDTAP' THEN fact_activation.NOOFACTIVATIONS END), 0) AS discipline_activations_mt
       FROM products p
       LEFT JOIN ${fact_activation.SQL_TABLE_NAME} AS fact_activation ON p.PRODUCTID = fact_activation.PRODUCTID
+      LEFT JOIN ${dim_productplatform.SQL_TABLE_NAME} AS platform ON fact_activation.PRODUCTPLATFORMID = platform.PRODUCTPLATFORMID
       LEFT JOIN ${dim_date.SQL_TABLE_NAME} d on fact_activation.activationdatekey = d.datekey
       GROUP BY 1
     )
@@ -67,8 +69,10 @@ view: dim_product {
         p.productfamily
         ,COALESCE(SUM(fact_activation.NOOFACTIVATIONS), 0) AS family_activations
         ,COALESCE(SUM(CASE WHEN  d.datevalue >= dateadd(month, -6, CURRENT_DATE()) THEN fact_activation.NOOFACTIVATIONS END), 0) AS family_activations_6m
+        ,COALESCE(SUM(CASE WHEN  UPPER(platform.productplatform) = 'MINDTAP' THEN fact_activation.NOOFACTIVATIONS END), 0) AS family_activations_mt
       FROM products p
       LEFT JOIN ${fact_activation.SQL_TABLE_NAME} AS fact_activation ON p.PRODUCTID = fact_activation.PRODUCTID
+      LEFT JOIN ${dim_productplatform.SQL_TABLE_NAME} AS platform ON fact_activation.PRODUCTPLATFORMID = platform.PRODUCTPLATFORMID
       LEFT JOIN ${dim_date.SQL_TABLE_NAME} d on fact_activation.activationdatekey = d.datekey
       GROUP BY 1
     )
@@ -76,12 +80,16 @@ view: dim_product {
       p.*
       ,rf.family_activations
       ,rf.family_activations_6m
+      ,rf.family_activations_mt
       ,rd.discipline_activations
       ,rd.discipline_activations_6m
+      ,rd.discipline_activations_mt
       ,DENSE_RANK() OVER (ORDER BY rd.discipline_activations DESC) AS discipline_rank
       ,DENSE_RANK() OVER (ORDER BY rf.family_activations DESC) AS family_rank
       ,DENSE_RANK() OVER (ORDER BY rd.discipline_activations_6m DESC) AS discipline_rank_6m
       ,DENSE_RANK() OVER (ORDER BY rf.family_activations_6m DESC) AS family_rank_6m
+      ,DENSE_RANK() OVER (ORDER BY rd.discipline_activations_mt DESC) AS discipline_rank_mt
+      ,DENSE_RANK() OVER (ORDER BY rf.family_activations_mt DESC) AS family_rank_mt
     from products p
     left join ranking_d rd on p.discipline_rollup = rd.discipline_rollup
     left join ranking_f rf on p.productfamily = rf.productfamily
@@ -132,12 +140,14 @@ view: dim_product {
   #   view_label: "** MODELLING TOOLS **"
   # }
 
-  set: curated_fields {fields:[course,edition,productfamily, coursearea, discipline, discipline_rank_6m, discipline_rank, family_rank_6m, family_rank, product, title, count,productfamily_edition,minorsubjectmatter,iac_isbn,isbn10,isbn13,pac_isbn,mindtap_isbn]}
+  set: curated_fields {fields:[course,edition,productfamily, coursearea, discipline, discipline_rank_6m, discipline_rank, discipline_rank_mt, family_rank_6m, family_rank, family_rank_mt, product, title, count,productfamily_edition,minorsubjectmatter,iac_isbn,isbn10,isbn13,pac_isbn,mindtap_isbn]}
 
   dimension: discipline_rank {description: "Discipline rank by total activations (all time)" type:number group_label:"Product Ranking"}
   dimension: family_rank {description: "Product family rank by total activations (all time)" type:number group_label:"Product Ranking"}
   dimension: discipline_rank_6m {description: "Discipline rank by total activations in the last 6 months" type:number group_label:"Product Ranking"}
   dimension: family_rank_6m {description: "Product family rank by total activations in the last 6 months" type:number group_label:"Product Ranking"}
+  dimension: discipline_rank_mt {description: "Discipline rank by total activations in MindTap" type:number group_label:"Product Ranking"}
+  dimension: family_rank_mt {description: "Product family rank by total activations in MindTap" type:number group_label:"Product Ranking"}
 
 #   measure: discipline_rank {
 #     label: "Discipline - Rank"
