@@ -587,6 +587,11 @@ explore: LP_Analysis_PSR_Limited_View {
       relationship: many_to_many
       fields: [activity_chapter_usage_facts.curated_fields*]
     }
+    join: paid_users {
+      view_label: "User"
+      sql_on: (${LP_Siteusage_Analysis.courseid}, ${LP_Siteusage_Analysis.userid}) = (${paid_users.courseid}, ${paid_users.userid}) ;;
+      relationship: many_to_one
+    }
     join: course_section_facts {
       fields: [course_section_facts.curated_fields*]
     }

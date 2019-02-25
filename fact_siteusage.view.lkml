@@ -14,6 +14,10 @@ derived_table: {
     hidden: yes
   }
 
+  set:  curated_fields{
+    fields: [cu_user,paidcategory]
+  }
+
   dimension: cu_user {
     label: "CU user flag"
     type: string
