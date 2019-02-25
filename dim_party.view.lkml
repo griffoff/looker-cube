@@ -60,7 +60,6 @@ view: dim_party {
           ,act.cu_flg
     from dw_ga.dim_party p
     left join tu on p.guid = tu.guid
-    left join ${fact_activation.SQL_TABLE_NAME} act on act.user_guid = p.guid
     left join dw_ga.dim_user user on p.partyid = user.mainpartyid
     left join ${internal_user_email_filters.SQL_TABLE_NAME} internal on rlike(p.mainpartyemail, internal.rlike_filter, 'i')
     where p.partyID != 8063483 --null record
@@ -69,7 +68,7 @@ view: dim_party {
     ;;
     sql_trigger_value: select count(*) from dw_ga.dim_party ;;
   }
-  set: curated_fields {fields:[guid,is_external,mainpartyrole,mainpartyemail,firstname,lastname,cu_flg]}
+  set: curated_fields {fields:[guid,is_external,mainpartyrole,mainpartyemail,firstname,lastname]}
 
   set: curated_fields_for_instructor_mod {fields:[is_external]}
 
@@ -81,12 +80,6 @@ view: dim_party {
     type: string
     sql: ${TABLE}.DW_LDID ;;
     hidden: yes
-  }
-
-  dimension: cu_flg {
-    type: string
-    sql: ${TABLE}.cu_flg ;;
-    description: "Flag to identify Cengage Unlimited Subscription based activation"
   }
 
   dimension_group: dw_ldts {
