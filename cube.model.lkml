@@ -517,6 +517,12 @@ explore: LP_Analysis_PSR_Limited_View {
       type: full_outer
       fields: [dim_course.curated_fields*]
     }
+
+    join: user_activity_buckets {
+      sql_on: ${LP_Siteusage_Analysis.userid} = ${user_activity_buckets.userid}
+      and ${LP_Siteusage_Analysis.courseid} = ${user_activity_buckets.courseid};;
+      relationship: many_to_one
+    }
 #
 #     join: dim_product {
 #       sql_on: ${LP_Siteusage_Analysis.productid} = ${dim_product.productid} ;;
