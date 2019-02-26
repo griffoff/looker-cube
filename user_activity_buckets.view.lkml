@@ -22,7 +22,7 @@ view: user_activity_buckets {
     label: "Logged In Tiers"
     sql: count_eventdate ;;
     style: integer
-    tiers: [1,3,5,7]
+    tiers: [1,2,4,6]
   }
 
   dimension: userid {
