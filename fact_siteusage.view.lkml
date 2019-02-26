@@ -1,8 +1,8 @@
 view: paid_users {
 derived_table: {
   sql:
-    select distinct courseid, userid
-    from dw_ga.fact_activation;;
+    select distinct courseid, userid,cu_flg
+      from ${fact_activation.SQL_TABLE_NAME};;
   sql_trigger_value: SELECT COUNT(*) FROM dw_ga.fact_activation  ;;
   }
 
@@ -12,6 +12,17 @@ derived_table: {
     type: yesno
     sql: ${userid} is not null;;
     hidden: yes
+  }
+
+  set:  curated_fields{
+    fields: [cu_user,paidcategory]
+  }
+
+  dimension: cu_user {
+    label: "CU user flag"
+    type: string
+    sql: CASE WHEN ${TABLE}.cu_flg ilike 'Y' THEN 'CU User' ELSE 'Non CU user' END ;;
+    description: "data field to identify CU vs Non CU users based on the activations feed"
   }
 
   dimension: paidcategory {

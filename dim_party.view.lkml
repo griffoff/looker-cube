@@ -1,4 +1,4 @@
-include: "/core/internal_user_filters.view.lkml"
+include: "//core/internal_user_filters.view.lkml"
 view: dim_party {
   label: "User"
   #sql_table_name: DW_GA.DIM_PARTY ;;
