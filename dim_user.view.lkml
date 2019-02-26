@@ -134,7 +134,7 @@ view: dim_user {
 
   dimension: productsactivated {
     label: "No. of products activated"
-    description: "Number of products activated by an user"
+    description: "Number of products activated by an user (buckets)"
     type: tier
     tiers: [1, 2, 3, 5, 10]
     style: integer

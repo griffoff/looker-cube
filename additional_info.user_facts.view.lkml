@@ -14,7 +14,9 @@ view: user_facts {
         ,avg(CASE WHEN assigned = 1 THEN ATTEMPTS end) AS avg_gradable_attempts
         ,avg(CASE WHEN assigned != 1 THEN ATTEMPTS end) AS avg_nongradable_attempts
         ,count(distinct sessionNumber) AS logins_by_user
+        ,COALESCE(COUNT(distinct CASE WHEN d.datevalue > DATEADD(month, -6, CURRENT_DATE()) THEN s.courseid END), 0) as courses_6m
       FROM dw_ga.FACT_ACTIVITYOUTCOMESUMMARY s
+      INNER JOIN ${dim_date.SQL_TABLE_NAME} d ON s.createddatekey = d.datekey
       INNER JOIN dw_ga.DIM_ACTIVITY a ON s.ACTIVITYID = a.ACTIVITYID
       INNER JOIN dw_ga.FACT_SESSION f ON s.USERID = f.USERID
       inner join dw_ga.dim_user u on s.userid = u.userid
@@ -25,7 +27,7 @@ view: user_facts {
       sql_trigger_value: select * from dw_ga.fact_activityoutcome ;;
   }
   set: curated_fields{
-    fields: [activities_completed,activities_completed_by_user,gradable_activities_completed,gradable_activities_completed_by_user,overall_score,logins_by_user]
+    fields: [activities_completed,activities_completed_by_user,gradable_activities_completed,gradable_activities_completed_by_user,overall_score,logins_by_user, courses_tier]
   }
 
   dimension: userid {
@@ -50,6 +52,16 @@ view: user_facts {
     type: number
     sql: ${TABLE}.logins_by_user ;;
     hidden: yes
+  }
+
+  dimension: courses_6m {hidden:yes type: number}
+  dimension: courses_tier {
+    label: "# Courses"
+    description: "# Courses with activity in the last 6 months"
+    type: tier
+    tiers: [0, 1, 2, 3, 5]
+    style: integer
+    sql: COALESCE(${courses_6m}, 0) ;;
   }
 
   dimension: user_score_category {
