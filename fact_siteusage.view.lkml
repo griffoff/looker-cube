@@ -460,6 +460,14 @@ view: fact_siteusage {
     hidden: yes
   }
 
+  measure: activity_count {
+    label: "# Activities"
+    type: count_distinct
+    sql:  ${activityid} ;;
+    value_format: "#,##0"
+    hidden: no
+  }
+
   dimension: partyid {
     hidden: yes
     type: string
