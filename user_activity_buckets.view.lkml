@@ -5,6 +5,7 @@ view: user_activity_buckets {
       column: courseid {}
       column: total_users {}
       column: count_eventdate {}
+      column: relative_weeks {field:dim_relative_to_start_date.weeksname}
     }
   }
 
@@ -19,9 +20,9 @@ view: user_activity_buckets {
   dimension: loggedin_bucket{
     type: tier
     label: "Logged In Tiers"
-    sql: total_users ;;
+    sql: count_eventdate ;;
     style: integer
-    tiers: [2,5,10,20,30,40]
+    tiers: [1,2,4,6]
   }
 
   dimension: userid {
@@ -30,5 +31,9 @@ view: user_activity_buckets {
 
   dimension: courseid {
     hidden: yes
+  }
+
+  dimension: relative_weeks {
+    type: number
   }
 }
