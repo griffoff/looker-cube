@@ -16,7 +16,8 @@ view: dim_relativedate {
   }
 
   dimension: daysname {
-    label: "Days Relative to Course Start Date"
+    label: "Day of Course"
+    description: "Days Relative to Course Start Date"
     hidden: no
     type: number
     sql: ${days} ;;
@@ -47,7 +48,8 @@ view: dim_relativedate {
   }
 
   dimension: monthsname {
-    label: "Relative Months"
+    label: "Month of Course"
+    description: "No. of Months from Course Start Date"
     hidden: yes
     type: string
     sql: ${TABLE}.MONTHSNAME ;;
@@ -72,14 +74,16 @@ view: dim_relativedate {
   }
 
   dimension: weeks {
-    label: "Week No. Relative to Course Start Date"
+    label: "Week No."
+    description: "Week No. relative to Course Start Date"
     type: number
     hidden: yes
     sql: ${TABLE}.WEEKS ;;
   }
 
   dimension: weeksname {
-    label: "Weeks Relative to Course Start Date"
+    label: "Week of Course"
+    description: "Weeks Relative to Course Start Date"
     type: number
     sql: ${TABLE}.WEEKS ;;
     value_format: "\W\e\e\k 0"

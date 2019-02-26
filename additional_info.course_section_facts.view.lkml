@@ -42,7 +42,6 @@ view: course_section_facts {
     ,a as (
       select
           a.courseid
-          ,a.cu_flg
           ,c.productplatformid
           ,p.productfamily
           ,p.edition
@@ -59,7 +58,7 @@ view: course_section_facts {
       inner join c on a.courseid = c.courseid
       inner join dw_ga.dim_product p on c.productid = p.productid
       where a.institutionID != -1  and a.organization != 'UNKNOWN'
-      group by 1,2,3,4,5,6,7,8
+      group by 1,2,3,4,5,6,7
     )
     select distinct
       a.*
@@ -83,7 +82,7 @@ view: course_section_facts {
   }
 
   set: curated_fields {
-    fields:[total_noofactivations,institution_count,total_users,course_count,cu_flag]
+    fields:[total_noofactivations,institution_count,total_users,course_count]
   }
 
   dimension: courseid {
@@ -93,12 +92,14 @@ view: course_section_facts {
     sql: ${TABLE}.COURSEID ;;
   }
 
-  dimension: cu_flag {
-    label: "CU Flag"
-    description: "Flag from the activations feed indicating their CU status"
-    sql: ${TABLE}.cu_flg ;;
-    hidden: yes
-  }
+  # this flag should be from the courses table indicating that the course is a CU institutional flag - i.e. covered by CUI
+#   dimension: cu_flag {
+#     label: "CUI Course"
+#     type:  yesno
+#     description: "Flag from the activations feed indicating their CU status"
+#     sql: ${TABLE}.cu_flg = 'Y' ;;
+#     hidden: yes
+#   }
 
 
   dimension: institutionid {
