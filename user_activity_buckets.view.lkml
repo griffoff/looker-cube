@@ -19,9 +19,9 @@ view: user_activity_buckets {
   dimension: loggedin_bucket{
     type: tier
     label: "Logged In Tiers"
-    sql: total_users ;;
+    sql: count_eventdate ;;
     style: integer
-    tiers: [2,5,10,20,30,40]
+    tiers: [1,3,5,7]
   }
 
   dimension: userid {

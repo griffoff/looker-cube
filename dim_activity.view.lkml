@@ -55,7 +55,7 @@ view: dim_activity {
       ;;
       sql_trigger_value: select count(*) from dw_ga.dim_activity ;;
   }
-  set: curated_fields {fields:[gradable_percent,practice_percent,notscorable_percent,unassigned_percent,APPLICATIONNAME,count_gradable,status]}
+  set: curated_fields {fields:[gradable_percent,practice_percent,notscorable_percent,unassigned_percent,APPLICATIONNAME,count_gradable,status,cengage_app,activity_app_type]}
 
   set: curated_fields_PM {fields:[APPLICATIONNAME,count_gradable,status]}
   set: curated_fields_WL {fields:[APPLICATIONNAME,count_gradable,status,estimated_minutes,activitysubcategory,activityid]}
@@ -131,6 +131,39 @@ view: dim_activity {
 #           ;;
 
   }
+
+  dimension: cengage_app {
+    label: "first party app category"
+    sql: CASE WHEN ${TABLE}.APPLICATIONNAME IN ('ADAPTIVE','APLIA','APLIAMOBILE','CNOW.HW','SAM.APPIFICATION.PROD','WEBASSIGN','WEBVIDEO.APP')
+          OR ${TABLE}.APPLICATIONNAME ILIKE 'CENGAGE.%' OR ${TABLE}.APPLICATIONNAME ILIKE 'MILADY.%' OR ${TABLE}.APPLICATIONNAME ILIKE 'MINDAPP%'
+          THEN 'yes'
+          ELSE 'no'
+          END;;
+  }
+
+  dimension: activity_app_type {
+    label: "activity app category"
+    sql: CASE WHEN ${TABLE}.APPLICATIONNAME  IN ('ADAPTIVE','APLIA','APLIAMOBILE','CNOW.HW','SAM.APPIFICATION.PROD','WEBASSIGN','CENGAGE.ASSIGNMENT','CENGAGE.MINDTAPCASACTIVITYPLAYER')
+          THEN 'Assessment'
+           WHEN ${TABLE}.APPLICATIONNAME  IN ('CENGAGE.FLASHCARD','CENGAGE.READER','CENGAGE.READER.MT4','CENGAGE.RSSFEED','FLASHNOTES','CENGAGE.RSSFEED') OR ${TABLE}.APPLICATIONNAME ilike 'DLMT%'
+          THEN 'Narrative'
+           WHEN ${TABLE}.APPLICATIONNAME  IN ('WEBVIDEO.APP','MOBLABGAMES','CENGAGE.MEDIA','COGLAB')
+          THEN 'Media'
+          ELSE 'Unknown'
+          END;;
+  }
+#
+#   dimension: _app_type {
+#     label: "first party app category"
+#     sql: CASE WHEN ${APPLICATIONNAME} IN ('ADAPTIVE','APLIA','APLIAMOBILE','CNOW.HW','SAM.APPIFICATION.PROD','WEBASSIGN','WEBVIDEO.APP','CENGAGE.ASSIGNMENT','CENGAGE.MINDTAPCASACTIVITYPLAYER')
+#           THEN 'Assessment'
+#           CASE WHEN ${APPLICATIONNAME} IN ('CENGAGE.FLASHCARD','CENGAGE.READER','CENGAGE.READER.MT4','CENGAGE.RSSFEED','FLASHNOTES','CENGAGE.RSSFEED') OR ${APPLICATIONNAME} ilike 'DLMT%'
+#           THEN 'Narrative'
+#           CASE WHEN ${APPLICATIONNAME} IN ('WEBVIDEO.APP','MOBLABGAMES','CENGAGE.MEDIA','COGLAB')
+#           THEN 'Media'
+#           ELSE 'Unknown'
+#           END;;
+#   }
 
   dimension: gradable {
     group_label: "Gradable"
