@@ -4,6 +4,7 @@ view: user_activity_buckets {
       column: userid {}
       column: courseid {}
       column: total_users {}
+      column: count_eventdate {}
     }
   }
 
@@ -13,6 +14,14 @@ view: user_activity_buckets {
     sql: total_users ;;
     style: classic
     tiers: [0,10,20,30,40]
+  }
+
+  dimension: loggedin_bucket{
+    type: tier
+    label: "Logged In Tiers"
+    sql: total_users ;;
+    style: integer
+    tiers: [2,5,10,20,30,40]
   }
 
   dimension: userid {

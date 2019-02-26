@@ -217,6 +217,12 @@ view: fact_siteusage {
     sql: ${TABLE}.EVENTDATE ;;
   }
 
+  measure: count_eventdate {
+    label: "# days logged in"
+    sql: COUNT(DISTINCT ${eventdatekey});;
+    type: number
+  }
+
   dimension: eventdatetimeStamp {
 #     group_label: "Date of Activity"
     label: "Event Timestamp"
