@@ -63,6 +63,10 @@ view: fact_siteusage {
                 THEN fsu.PAGEVIEWTIME /1000.0/86400.0
               END as pageviewtime_days
             ,LAG(fsu.eventdate) over (partition by fsu.userid, fsu.productid, a.applicationname order by fsu.eventdate) as prev_applicationusagedate
+            ,DENSE_RANK() OVER (PARTITION BY fsu.userid, fsu.courseid, fsu.learningpathid ORDER BY fsu.eventdate::DATE) AS activity_sequence_day
+            ,DENSE_RANK() OVER (PARTITION BY fsu.userid, fsu.courseid, fsu.learningpathid ORDER BY floor(new_relative_days_from_start / 7)) AS activity_sequence_week
+            ,DENSE_RANK() OVER (PARTITION BY fsu.userid, fsu.courseid, fsu.learningpathid ORDER BY floor(new_relative_days_from_start / 14)) AS activity_sequence_week2
+            ,DENSE_RANK() OVER (PARTITION BY fsu.userid, fsu.courseid, fsu.learningpathid ORDER BY floor(new_relative_days_from_start / 28)) AS activity_sequence_week4
       from dw_ga.fact_siteusage fsu
       inner join dw_ga.dim_course c on fsu.courseid = c.courseid
       left join ${map_course_versions.SQL_TABLE_NAME} v on c.coursekey = v.context_id
@@ -107,7 +111,37 @@ view: fact_siteusage {
     hidden: no
     type: string
     sql: ${TABLE}.sourcedata  ;;
+  }
 
+  dimension: activity_sequence_day {hidden:yes}
+  dimension: activity_sequence_week {
+    label: "Weeks Revisited"
+    description: "How many times has this activity been revisited by a student (revisit is counted if the activity is opened in a different week)"
+    type:tier
+    tiers: [1, 2, 3]
+    value_format: "\V\i\s\i\t 0"
+    style: integer
+    sql: CASE WHEN ${learningpathid} = -1 THEN NULL ELSE ${TABLE}.activity_sequence_week END ;;
+    }
+
+  dimension: activity_sequence_week2 {
+    label: "Weeks Revisited 2"
+    description: "How many times has this activity been revisited by a student (revisit is counted if the activity is opened in a different 2 week section of the course)"
+    type:tier
+    tiers: [1, 2, 3]
+    value_format: "\V\i\s\i\t 0"
+    style: integer
+    sql: CASE WHEN ${learningpathid} = -1 THEN NULL ELSE ${TABLE}.activity_sequence_week2 END ;;
+  }
+
+  dimension: activity_sequence_week4 {
+    label: "Weeks Revisited 4"
+    description: "How many times has this activity been revisited by a student (revisit is counted if the activity is opened in a different 4 week section of the course)"
+    type:tier
+    tiers: [1, 2, 3]
+    value_format: "\V\i\s\i\t 0"
+    style: integer
+    sql: CASE WHEN ${learningpathid} = -1 THEN NULL ELSE ${TABLE}.activity_sequence_week4 END ;;
   }
 
   measure: clickcount_avg {

@@ -516,13 +516,13 @@ view: dim_learningpath {
     description: "Activity Title displayed on the Learning Path"
     type: string
     sql:COALESCE (${mindtap_lp_activity_tags.learning_path_activity_title}, ${TABLE}.lowest_level) ;;
-    order_by_field: lowest_level_sort_by_data
+    #order_by_field: lowest_level_sort_by_usage
 
 
-    link: {
-      label: "Explore Aplia question level data this activity"
-      url: "/explore/source/problem?fields=problem.problem_title,answer.avg_score,answer.count,assignment.count,course.count&f[assignment.mindlink_guid]={{ ref_id._value }}"
-    }
+#     link: {
+#       label: "Explore Aplia question level data this activity"
+#       url: "/explore/source/problem?fields=problem.problem_title,answer.avg_score,answer.count,assignment.count,course.count&f[assignment.mindlink_guid]={{ ref_id._value }}"
+#     }
   }
 
   dimension:  lowest_level_category {
