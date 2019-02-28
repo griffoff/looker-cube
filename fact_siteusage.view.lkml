@@ -430,9 +430,9 @@ view: fact_siteusage {
 
   measure: pageviewtime_dailyaverage {
     group_label: "Time in product"
-    label: "Time in product (daily avg per student)"
+    label: "Time in product (daily avg per person per course)"
     type: number
-    sql: ${pageviewtime_sum} / nullif(${usercount}, 0) / nullif(${daycount}, 0);;
+    sql: ${pageviewtime_sum} / nullif(${usercoursecount}, 0) / nullif(${daycount}, 0);;
     value_format_name: duration_hms
   }
 
@@ -457,17 +457,11 @@ view: fact_siteusage {
 
   measure: pageviewtime_useraverage {
     group_label: "Time in product"
-    label: "Time in Mindtap (avg per student)"
+    label: "Time in Mindtap (avg per person per course)"
     type: number
-    sql: ${pageviewtime_sum} / nullif(${usercount}, 0);;
+    sql: ${pageviewtime_sum} / nullif(${usercoursecount}, 0);;
     value_format: "d \d\a\y\s h \h\r\s m \m\i\n\s"
     drill_fields: [events*]
-  }
-
-  measure: daycount {
-    hidden: yes
-    type: count_distinct
-    sql: ${eventdate_date} ;;
   }
 
   measure: pageviewtime_percent {
@@ -547,6 +541,25 @@ view: fact_siteusage {
     hidden: yes
     type: string
     sql: ${TABLE}.USERID ;;
+  }
+
+  measure: daycount {
+    hidden: yes
+    type: count_distinct
+    #sql: ${eventdate_date} ;;
+    sql: ${dim_relative_to_start_date.days} ;;
+  }
+
+  measure: coursecount {
+    type: count_distinct
+    sql: ${courseid} ;;
+    hidden: yes
+  }
+
+  measure: usercoursecount {
+    type: count_distinct
+    sql: HASH(${courseid}, ${userid}) ;;
+    hidden:  yes
   }
 
   measure: usercount {
