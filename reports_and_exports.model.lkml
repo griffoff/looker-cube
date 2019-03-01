@@ -1,7 +1,7 @@
 connection: "snowflake_prod"
 label:"DEV - Reports / Exports"
 
-include: "/core/common.lkml"
+include: "//core/common.lkml"
 #include dims model
 include: "dims.lkml"
 # include all the views
