@@ -115,8 +115,8 @@ view: fact_siteusage {
 
   dimension: activity_sequence_day {hidden:yes}
   dimension: activity_sequence_week {
-    label: "Weeks Revisited"
-    description: "How many times has this activity been revisited by a student (revisit is counted if the activity is opened in a different week)"
+    label: "Weeks visited"
+    description: "How many times has this activity been visited by a student (revisit is counted if the activity is opened in a different week)"
     type:tier
     tiers: [1, 2, 3]
     value_format: "\V\i\s\i\t 0"
@@ -125,8 +125,8 @@ view: fact_siteusage {
     }
 
   dimension: activity_sequence_week2 {
-    label: "Weeks Revisited 2"
-    description: "How many times has this activity been revisited by a student (revisit is counted if the activity is opened in a different 2 week section of the course)"
+    label: "Weeks visited 2"
+    description: "How many times has this activity been visited by a student (revisit is counted if the activity is opened in a different 2 week section of the course)"
     type:tier
     tiers: [1, 2, 3]
     value_format: "\V\i\s\i\t 0"
@@ -135,8 +135,8 @@ view: fact_siteusage {
   }
 
   dimension: activity_sequence_week4 {
-    label: "Weeks Revisited 4"
-    description: "How many times has this activity been revisited by a student (revisit is counted if the activity is opened in a different 4 week section of the course)"
+    label: "Weeks visited 4"
+    description: "How many times has this activity been visited by a student (revisit is counted if the activity is opened in a different 4 week section of the course)"
     type:tier
     tiers: [1, 2, 3]
     value_format: "\V\i\s\i\t 0"
