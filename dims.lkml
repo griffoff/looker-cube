@@ -17,7 +17,7 @@ include: "*facts.view.lkml"
 include: "courseinstructor.view.lkml"
 
 # include all views from project source in this model
-include: "/project_source/*.view.lkml"
+include: "//project_source/*.view.lkml"
 
 
 #include: "*.dashboard.lookml"  # include all dashboards in this project
