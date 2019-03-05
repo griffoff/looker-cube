@@ -432,7 +432,7 @@ view: fact_siteusage {
     group_label: "Time in product"
     label: "Time in product (daily avg per person per course)"
     type: number
-    sql: ${pageviewtime_sum} / nullif(${usercoursecount}, 0) / nullif(${daycount}, 0);;
+    sql:  ${pageviewtime_sum} / nullif(${usercoursedaycount}, 0) ;;
     value_format_name: duration_hms
   }
 
@@ -544,7 +544,7 @@ view: fact_siteusage {
   }
 
   measure: daycount {
-    hidden: no
+    hidden: yes
     type: count_distinct
     #sql: ${eventdate_date} ;;
     sql: ${dim_relative_to_start_date.days} ;;
@@ -553,13 +553,19 @@ view: fact_siteusage {
   measure: coursecount {
     type: count_distinct
     sql: ${courseid} ;;
-    hidden: no
+    hidden: yes
   }
 
   measure: usercoursecount {
     type: count_distinct
     sql: HASH(${courseid}, ${userid}) ;;
-    hidden:  no
+    hidden:  yes
+  }
+
+  measure: usercoursedaycount {
+    type: count_distinct
+    sql: HASH(${courseid}, ${userid}, ${dim_relative_to_start_date.days}) ;;
+    hidden:  yes
   }
 
   measure: usercount {
