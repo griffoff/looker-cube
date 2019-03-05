@@ -416,7 +416,7 @@ view: fact_siteusage {
     group_label: "Time in product"
     label: "Time in product (avg time per session)"
     type: number
-    sql: ${pageviewtime_sum} / ${session_count};;
+    sql: ${pageviewtime_sum} / nullif(${session_count}, 0);;
     value_format_name: duration_hms
   }
 
@@ -424,7 +424,7 @@ view: fact_siteusage {
     group_label: "Time in product"
     label: "Time in product (avg time per activity per session)"
     type: number
-    sql: ${pageviewtime_sum} / ${session_activity_count};;
+    sql: ${pageviewtime_sum} / nullif(${session_activity_count}, 0);;
     value_format_name: duration_hms
   }
 
@@ -466,7 +466,7 @@ view: fact_siteusage {
 
   measure: pageviewtime_percent {
     type: number
-    sql: ${pageviewtime_avg}/${pageviewtime_max} ;;
+    sql: ${pageviewtime_avg}/nullif(${pageviewtime_max}, 0) ;;
     value_format_name: percent_1
     hidden:  yes
   }
@@ -544,7 +544,7 @@ view: fact_siteusage {
   }
 
   measure: daycount {
-    hidden: yes
+    hidden: no
     type: count_distinct
     #sql: ${eventdate_date} ;;
     sql: ${dim_relative_to_start_date.days} ;;
@@ -553,13 +553,13 @@ view: fact_siteusage {
   measure: coursecount {
     type: count_distinct
     sql: ${courseid} ;;
-    hidden: yes
+    hidden: no
   }
 
   measure: usercoursecount {
     type: count_distinct
     sql: HASH(${courseid}, ${userid}) ;;
-    hidden:  yes
+    hidden:  no
   }
 
   measure: usercount {
