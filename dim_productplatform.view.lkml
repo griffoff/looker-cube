@@ -25,7 +25,7 @@ view: dim_productplatform {
     label: "Platform name"
     description: "MindTap, Aplia, CNOW, etc."
     type: string
-    sql: ${TABLE}.PRODUCTPLATFORM ;;
+    sql: COALESCE(${TABLE}.PRODUCTPLATFORM, 'UNKNOWN') ;;
   }
 
   dimension: includeinactivationsreport {
