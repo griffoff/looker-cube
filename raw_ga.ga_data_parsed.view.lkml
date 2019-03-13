@@ -4,7 +4,7 @@ map_layer: cities {
 
 view: ga_data_parsed {
   label: "User Event Data"
-  sql_table_name: DEV.RAW_GA.GA_DATA_PARSED ;;
+  sql_table_name: PROD.RAW_GA.GA_DATA_PARSED ;;
 
   set: events {
     fields: [hit_time, duration_from_visit_start, duration_to_next_hit, duration, eventcategory, eventaction, eventvalue, datalayer_json]
