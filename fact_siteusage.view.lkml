@@ -90,9 +90,11 @@ view: fact_siteusage {
   }
 
   dimension: pk {
+    label: "Primary Key"
     sql: ${TABLE}.id ;;
-    hidden: yes
+    hidden: no
     primary_key: yes
+    required_access_grants: [can_view_cube_dev]
   }
 
   dimension: activityid {
@@ -434,6 +436,15 @@ view: fact_siteusage {
     type: number
     sql:  ${pageviewtime_sum} / nullif(${usercoursedaycount}, 0) ;;
     value_format_name: duration_hms
+  }
+
+  measure: activityviewtime {
+    group_label: "Time in product"
+    label: "Time in Activity"
+    type: number
+    sql: ${pageviewtime_sum};;
+    value_format_name: duration_hms
+    required_access_grants: [can_view_cube_dev]
   }
 
 #   measure: pageviewtime_dailyaverage_by_student {
