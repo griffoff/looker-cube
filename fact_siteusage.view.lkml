@@ -1,3 +1,5 @@
+include: "//core/access_grants_file.view"
+
 view: paid_users {
 derived_table: {
   sql:
