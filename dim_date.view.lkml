@@ -481,7 +481,32 @@ view: dim_master_first_used_date {
 
 view: dim_end_date {
   extends: [dim_date]
-  label: "Date - Course End Date"
+#   label: "Date - Course End Date"
+  label: "Course / Section Details"
+  dimension: fiscalyear {
+    hidden: no
+#     sql: ${TABLE}.fiscalyearvalue
+    group_label: "Course End Date"}
+  dimension: governmentdefinedacademicterm {group_label: "Course End Date"}
+  dimension: governmentdefinedacademictermofyear {group_label: "Course End Date"}
+  dimension: governmentdefinedacademictermyear {group_label: "Course End Date"}
+  dimension_group: datevalue {group_label: "Course End Date"
+    hidden: no
+    type: time
+    timeframes: [
+      date,
+      week,
+      month,
+      month_name,
+      year,
+      day_of_week,
+      #quarter_of_year,
+#       fiscal_year,
+#       fiscal_quarter,
+#       fiscal_quarter_of_year,
+#       fiscal_month_num
+    ]}
+  dimension: date { sql: ${TABLE}.datevalue;; group_label: "Course End Date"}
 }
 
 view: dim_created_date {

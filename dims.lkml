@@ -65,10 +65,10 @@ explore: dim_course {
     relationship: many_to_one
   }
 
-#   join: dim_end_date {
-#     sql_on: ${dim_course.enddatekey} = ${dim_end_date.datekey} ;;
-#     relationship: many_to_one
-#   }
+  join: dim_end_date {
+    sql_on: ${dim_course.enddatekey} = ${dim_end_date.datekey} ;;
+    relationship: many_to_one
+  }
 
   join: dim_product {
     relationship: many_to_one
