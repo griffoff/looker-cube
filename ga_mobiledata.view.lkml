@@ -258,7 +258,6 @@ view: ga_mobiledata {
   measure: total_clicks {
     label: " # clicks"
     type: count
-    sql: ${TABLE}."USERSSOGUID"  ;;
     drill_fields: [userssoguid,eventdate]
   }
 
