@@ -58,7 +58,7 @@
               <td style="border: 0px; padding: 0px; padding-right: 2px; width: 50%;"><a style="background-color: #3774d6; border-radius: 5px; text-align: center; color: white; text-decoration: none; display: inline-block; width: 100%; padding: 8px 8px; line-height: 1.5; font-size: 20px;" href="https://cengage.looker.com/dashboards/419"> CU Above the courseware usage</a></td>
             </tr>
             <tr>
-              <td style="border: 0px; padding: 10px; padding-left: 0px; width: 50%;"><a style="background-color: white; border-radius: 5px; text-align: center; color: black; text-decoration: none; display: inline-block; width: 100%; padding: 8px 8px; line-height: 1.5; font-size: 20px;" href="https://cengage.looker.com/dashboards/116" target="_blank"> <img style="height: 100px; padding: 0px 0px 0px 0px;" src="http://www.iconarchive.com/download/i79780/hamzasaleem/stock/Time-Machine.ico">
+              <td style="border: 0px; padding: 10px; padding-left: 0px; width: 50%;"><a style="background-color: white; border-radius: 5px; text-align: center; color: black; text-decoration: none; display: inline-block; width: 100%; padding: 8px 8px; line-height: 1.5; font-size: 20px;" href="https://cengage.looker.com/explore/cengage_unlimited/session_analysis" target="_blank"> <img style="height: 100px; padding: 0px 0px 0px 0px;" src="http://www.iconarchive.com/download/i79780/hamzasaleem/stock/Time-Machine.ico">
               </a>
                 <a style="border-radius: 5px; border-color: white; display: block;  text-align: center; color: black; text-decoration: none; font-size: 13px; line-height: 1.2;">
                   <p style="text-align:center;font-size: 15px;"><i><u>CU adhoc analysis</u></i></p>
