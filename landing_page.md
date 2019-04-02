@@ -98,6 +98,6 @@
       <p style="font-weight: 300; margin-top: 17px;">Link to Looker's support site</p>
     </div>
   </div>
-  <div style="text-align: left; font-size: 17px;">
+   <!-- <div style="text-align: left; font-size: 17px;">
     <a href="https://cengage.looker.com/projects/cengage_unlimited/files/CU_landing_page.md">CU Data</a>
-  </div>
+  </div> -->
