@@ -1,5 +1,5 @@
 <div style="width: 100%; text-align: center; overflow: hidden;">
-  <h1 style="background-color: #fff; padding: 30px 0 15px;font-weight:500; margin-bottom: 0; font-weight: 600;">Welcome to Looker! Home to Mindtap Activity Level Usage Data</h1>
+  <h1 style="background-color: #fff; padding: 30px 0 15px;font-weight:500; margin-bottom: 0; font-weight: 600;">Welcome to Looker! Home to Platform Analytics Usage Data</h1>
 </div>
 
 <table style="border: 0px;">
