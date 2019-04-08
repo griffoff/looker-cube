@@ -154,6 +154,7 @@ view: dim_course {
     label: "# CU Students"
     description: "No of CU students activated for a particular course key"
     sql: ${TABLE}.cu_ct ;;
+    hidden: yes
   }
 
 
@@ -161,6 +162,7 @@ view: dim_course {
     label: "# Non CU Students"
     description: "No of Non-CU students activated for a particular course key"
     sql: ${TABLE}.noncu_ct ;;
+    hidden: yes
   }
 
   dimension: dw_ldid {
