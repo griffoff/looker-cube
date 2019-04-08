@@ -620,7 +620,7 @@ view: fact_siteusage {
 
 
   measure: total_users {
-  label: "# Users (Total)"
+  label: "# Users (Total Clicked)"
   description: "Total number of people who clicked on an item"
   type: number
   sql: count(${partyid}) ;;
