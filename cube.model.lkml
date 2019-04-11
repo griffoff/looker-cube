@@ -102,7 +102,7 @@ join: lifespan {
 
 
 explore: fact_activity {
-  label: "Learning Path - MT Instructor Modifications"
+  label: "Learning Path - MT Instructor Modifications DEV"
   description: "Starting point for learning path analysis from the instructor perspective (e.g. What has the instructor changed?  What has the instructor added?)"
   extends: [dim_course, dim_learningpath]
   fields: [ALL_FIELDS*, -dim_activity.percent_usage, -fact_siteusage.time_on_task_to_final_score_correlation]
@@ -262,7 +262,7 @@ explore:  fact_appusage_by_user {
 
 
 explore: fact_siteusage {
-  label: "Learning Path - MT Usage Data"
+  label: "Learning Path - MT Usage Data DEV"
   description: "Start point for learning path usage from the student persepctive including application usage information collected via google analytics."
   extends: [dim_user, dim_course, dim_pagedomain, dim_learningpath]
 
