@@ -29,6 +29,8 @@ view: dim_institution {
   }
   set: curated_fields {fields:[HED_filter,country,institutionname,postalcode,city]}
 
+  set: marketing_fields { fields:[dim_institution.entity_no, dim_institution.country, dim_institution.institutionname, dim_institution.city, dim_institution.region, dim_institution.source,] }
+
 #   sql_table_name: DW_GA.DIM_INSTITUTION ;;
 
   dimension: HED {

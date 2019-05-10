@@ -142,6 +142,8 @@ view: dim_product {
 
   set: curated_fields {fields:[course,edition,productfamily, coursearea, discipline, discipline_rank_6m, discipline_rank, discipline_rank_mt, family_rank_6m, family_rank, family_rank_mt, product, title, count,productfamily_edition,minorsubjectmatter,iac_isbn,isbn10,isbn13,pac_isbn,mindtap_isbn]}
 
+  set: marketing_fields {fields:[dim_product.coursearea, dim_product.discipline, dim_product.iac_isbn, dim_product.isbn13, dim_product.authors, dim_product.course, dim_product.titleshort, dim_product.productfamily, dim_product.count]}
+
   dimension: discipline_rank {description: "Discipline rank by total activations (all time)" type:number group_label:"Product Ranking"}
   dimension: family_rank {description: "Product family rank by total activations (all time)" type:number group_label:"Product Ranking"}
   dimension: discipline_rank_6m {description: "Discipline rank by total activations in the last 6 months" type:number group_label:"Product Ranking"}
