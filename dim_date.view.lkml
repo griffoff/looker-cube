@@ -358,6 +358,8 @@ view: dim_start_date {
   dimension: date { sql: ${TABLE}.datevalue;; group_label: "Course Start Date"}
   dimension: isweekendname {group_label: "Course Start Date"}
 
+  set: marketing_fields {fields:[date,governmentdefinedacademicterm]}
+
 }
 
 view: dim_app_usage_date {
