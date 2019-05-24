@@ -355,7 +355,7 @@ view: dim_start_date {
 #       fiscal_month_num
     ]}
 
-  dimension: date { sql: ${TABLE}.datevalue;; group_label: "Course Start Date"}
+  dimension: date { sql: ${TABLE}.datevalue;; group_label: "Course Start Date" type: date}
   dimension: isweekendname {group_label: "Course Start Date"}
 
   set: marketing_fields {fields:[date,governmentdefinedacademicterm]}
