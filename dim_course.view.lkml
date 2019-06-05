@@ -27,7 +27,7 @@ view: dim_course {
     select dc.*
           ,c.course_key as olr_course_key
           ,c."#CONTEXT_ID" as olr_context_id
-          ,c.mag_acct_id
+          --,c.mag_acct_id
           ,orgs.organization
           ,orgs.cu_ct
           ,orgs.noncu_ct
@@ -64,9 +64,9 @@ view: dim_course {
   set: curated_fields {fields: [courseid, coursename, is_lms_integrated, count,cu_ct,noncu_ct]}
 
 
-  dimension: mag_acct_id {
-    hidden: yes
-  }
+#   dimension: mag_acct_id {
+#     hidden: yes
+#   }
 
   dimension: courseid {
     type: string
