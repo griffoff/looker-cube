@@ -142,22 +142,22 @@ view: dim_party {
 
   dimension: guid {
     label: "SSO Guid"
-    group_label: "PII"
+#     group_label: "PII"
     type: string
-    sql:
-    CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' or ${TABLE}.mainpartyrole != 'Student' THEN
-    ${TABLE}.GUID
-    ELSE
-    MD5(${TABLE}.GUID || 'salt')
-    END ;;
-    html:
-    {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
-    {{ value }}
-    {%elsif mainpartyrole._value != 'Student' %}
-    {{ value }}
-    {% else %}
-    [Masked]
-    {% endif %}  ;;
+    sql: ${TABLE}.GUID ;;
+#    CASE WHEN '{{ _user_attributes["pii_visibility_enabled"] }}' = 'yes' or ${TABLE}.mainpartyrole != 'Student' THEN
+#    ${TABLE}.GUID
+#    ELSE
+#    MD5(${TABLE}.GUID || 'salt')
+#    END ;;
+#     html:
+#     {% if _user_attributes["pii_visibility_enabled"]  == 'yes' %}
+#     {{ value }}
+#     {%elsif mainpartyrole._value != 'Student' %}
+#     {{ value }}
+#     {% else %}
+#     [Masked]
+#     {% endif %}  ;;
   }
 
   dimension: guid_raw {
