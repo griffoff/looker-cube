@@ -7,9 +7,9 @@ view: user_facts {
         ,sum(POINTS_EARNED) / nullif(sum(POINTS_POSSIBLE), 0) AS overall_score
         ,sum(CASE WHEN a.assigned = 1 THEN POINTS_EARNED END) / nullif(sum(CASE WHEN a.ASSIGNED = 1 THEN POINTS_POSSIBLE END), 0) AS gradable_score
         ,sum(CASE WHEN a.assigned != 1 THEN POINTS_EARNED END) / nullif(sum(CASE WHEN a.ASSIGNED != 1 THEN POINTS_POSSIBLE END), 0) AS nongradable_score
-        ,count(CASE WHEN a.ASSIGNED = 1 THEN 1 end) AS gradable_activities_completed
-        ,count(CASE WHEN a.ASSIGNED != 1 THEN 1 end) AS nongradable_activities_completed
-        ,count(*) AS activities_completed
+        ,count(DISTINCT CASE WHEN a.ASSIGNED = 1 THEN s.ACTIVITYID end) AS gradable_activities_completed
+        ,count(DISTINCT CASE WHEN a.ASSIGNED != 1 THEN s.ACTIVITYID end) AS nongradable_activities_completed
+        ,count(DISTINCT s.ACTIVITYID) AS activities_completed
         ,avg(ATTEMPTS) AS avg_attempts
         ,avg(CASE WHEN assigned = 1 THEN ATTEMPTS end) AS avg_gradable_attempts
         ,avg(CASE WHEN assigned != 1 THEN ATTEMPTS end) AS avg_nongradable_attempts
@@ -33,7 +33,7 @@ view: user_facts {
   dimension: userid {
     type: string
     sql: ${TABLE}.USERID ;;
-    hidden: yes
+#     hidden: yes
     primary_key: yes
   }
 
@@ -111,7 +111,7 @@ view: user_facts {
     label: "# Gradable activities completed"
     type: number
     sql: ${TABLE}.GRADABLE_ACTIVITIES_COMPLETED ;;
-    hidden: yes
+#     hidden: yes
   }
 
   dimension: nongradable_activities_completed {
