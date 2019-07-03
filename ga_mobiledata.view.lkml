@@ -6,6 +6,12 @@ view: ga_mobiledata {
     sql: ${TABLE}."ACTIVITYID" ;;
   }
 
+  measure: count_activity {
+    label: "# Activities"
+    type: count_distinct
+    sql: ${TABLE}."ACTIVITYID" ;;
+  }
+
   dimension: activitytype {
     type: string
     sql: ${TABLE}."ACTIVITYTYPE" ;;
