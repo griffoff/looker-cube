@@ -27,7 +27,7 @@ view: dim_course {
     select dc.*
           ,c.course_key as olr_course_key
           ,c."#CONTEXT_ID" as olr_context_id
-          --,c.mag_acct_id
+          ,c.mag_acct_id
           ,orgs.organization
           ,orgs.cu_ct
           ,orgs.noncu_ct
@@ -42,7 +42,7 @@ view: dim_course {
     sql_trigger_value: select count(*) from dw_ga.dim_course ;;
   }
 
-  set: marketing_fields {fields:[dim_course.coursename, dim_course.enddatekey, dim_course.startdatekey, dim_course.coursekey]}
+  set: marketing_fields {fields:[dim_course.coursename, dim_course.enddatekey, dim_course.startdatekey, dim_course.coursekey, dim_course.mag_acct_id]}
 
   # Attempt to classify courses into organizations (like higher ed, but activations don't always have a coursekey...
   # So this is no good
@@ -64,9 +64,9 @@ view: dim_course {
   set: curated_fields {fields: [courseid, coursename, is_lms_integrated, count,cu_ct,noncu_ct]}
 
 
-#   dimension: mag_acct_id {
-#     hidden: yes
-#   }
+   dimension: mag_acct_id {
+     hidden: yes
+   }
 
   dimension: courseid {
     type: string
