@@ -561,6 +561,9 @@ explore: LP_Analysis_PSR_Limited_View {
       fields: [dim_user.curated_fields*]
     }
 
+    # Can we join in guid_cohot view for custom cohort creation here??
+    # Jia request
+
    join: dim_pagedomain {
       sql_on: ${LP_Siteusage_Analysis.pagedomainid} = ${dim_pagedomain.pagedomainid} ;;
       relationship: many_to_one
