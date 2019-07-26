@@ -15,7 +15,7 @@ view: dim_date {
     description: "April 1st to March 31st"
     type: string
     sql: ${TABLE}.fiscalyearvalue ;;
-    hidden: yes
+    hidden: no
   }
 
   dimension: calendarmonthid {
@@ -107,7 +107,7 @@ view: dim_date {
       day_of_week,
       day_of_year,
       #quarter_of_year,
-      fiscal_year
+#       fiscal_year
 #       fiscal_quarter,
 #       fiscal_quarter_of_year,
 #       fiscal_month_num
