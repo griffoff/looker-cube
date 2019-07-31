@@ -43,6 +43,7 @@ view: dim_course {
   }
 
   set: marketing_fields {fields:[dim_course.coursename, dim_course.enddatekey, dim_course.startdatekey, dim_course.coursekey, dim_course.mag_acct_id]}
+  set: cu_explore_fields {fields:[dim_course.coursename, dim_course.enddatekey, dim_course.startdatekey, dim_course.coursekey, dim_course.mag_acct_id]}
 
   # Attempt to classify courses into organizations (like higher ed, but activations don't always have a coursekey...
   # So this is no good

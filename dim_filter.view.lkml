@@ -16,7 +16,9 @@ view: dim_filter {
   #
   #     - measure: count
   #       type: count
-
+  set: ALL_FIELDS {
+    fields: [filterflag,filtersort,filterdesc,is_external]
+  }
 
   derived_table: {
     sql: select 0 as filterflag, 'Real Course' as filterdesc, 0 as filtersort
