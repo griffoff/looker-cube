@@ -8,7 +8,7 @@ view: courseinstructor {
         on ci.partyid = p.partyid
   ),instr as (
     Select distinct instructor_guid, olr_course_key,is_new_customer,is_returning_customer
-  from prod.cu_user_analysis_dev.user_courses
+    from prod.cu_user_analysis.user_courses
   )
     Select * from courseintr a
         left join instr b
