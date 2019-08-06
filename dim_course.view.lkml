@@ -42,7 +42,7 @@ view: dim_course {
     sql_trigger_value: select count(*) from dw_ga.dim_course ;;
   }
 
-  set: marketing_fields {fields:[dim_course.coursename, dim_course.enddatekey, dim_course.startdatekey, dim_course.coursekey, dim_course.mag_acct_id, active_course_sections, course_complete]}
+  set: marketing_fields {fields:[dim_course.coursename, dim_course.enddatekey, dim_course.startdatekey, dim_course.coursekey, dim_course.mag_acct_id, dim_course.active_course_sections, dim_course.course_complete]}
   set: cu_explore_fields {fields:[dim_course.coursename, dim_course.enddatekey, dim_course.startdatekey, dim_course.coursekey, dim_course.mag_acct_id]}
 
   # Attempt to classify courses into organizations (like higher ed, but activations don't always have a coursekey...

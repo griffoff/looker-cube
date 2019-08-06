@@ -2,6 +2,7 @@ view: dim_date {
   label: "Date"
   sql_table_name: DW_GA.DIM_DATE ;;
   set: curated_fields {fields:[datevalue_date,datevalue_month,datevalue_month_name,datevalue_year,datevalue_day_of_week,fiscalyear]}
+  set: marketing_fields {fields:[curated_fields*]}
 
   dimension: datevalue {
     label: "Date"
