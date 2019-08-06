@@ -18,6 +18,12 @@ view: courseinstructor {
 
   set: marketing_fields {fields:[instructoremail,is_new_customer,is_returning_customer,instructor_guid]}
 
+  dimension: pk {
+    primary_key: yes
+    sql: hash(${coursekey}, ${instructor_guid}) ;;
+    hidden: yes
+  }
+
   dimension: coursekey {
     label: "Course Key"
     type: string
