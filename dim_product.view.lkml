@@ -276,10 +276,10 @@ view: dim_product {
    sql: ${TABLE}.discipline_rollup;;
     #sql: ${publicationseries};;
 
-    link: {
-      label: "Engagement Toolkit"
-      url: "http://dashboard.cengage.info/engtoolkit/discipline/{{value}}"
-    }
+    # link: {
+    #   label: "Engagement Toolkit"
+    #   url: "http://dashboard.cengage.info/engtoolkit/discipline/{{value}}"
+    # }
 
     drill_fields: [productfamily]
   }
@@ -307,10 +307,6 @@ view: dim_product {
     group_label: "Categories"
     sql: ${TABLE}.DISCIPLINE ;;
 
-   link: {
-      label: "Engagement Toolkit"
-      url: "http://dashboard.cengage.info/engtoolkit/discipline/{{hed_discipline._value}}"
-    }
   }
 
   dimension: coursearea_pt {
