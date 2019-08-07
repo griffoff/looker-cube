@@ -2,12 +2,18 @@ view: dim_date {
   label: "Date"
   sql_table_name: DW_GA.DIM_DATE ;;
   set: curated_fields {fields:[datevalue_date,datevalue_month,datevalue_month_name,datevalue_year,datevalue_day_of_week,fiscalyear]}
+  set: marketing_fields {fields:[date, governmentdefinedacademicterm]}
 
   dimension: datevalue {
     label: "Date"
     type: date
     sql: ${TABLE}.datevalue ;;
     hidden: yes
+  }
+
+  dimension: date {
+    sql: ${TABLE}.datevalue;;
+    type: date
   }
 
   dimension: fiscalyear {
@@ -355,10 +361,8 @@ view: dim_start_date {
 #       fiscal_month_num
     ]}
 
-  dimension: date { sql: ${TABLE}.datevalue;; group_label: "Course Start Date" type: date}
+  dimension: date { group_label: "Course Start Date" }
   dimension: isweekendname {group_label: "Course Start Date"}
-
-  set: marketing_fields {fields:[date,governmentdefinedacademicterm]}
 
 }
 
@@ -508,7 +512,7 @@ view: dim_end_date {
 #       fiscal_quarter_of_year,
 #       fiscal_month_num
     ]}
-  dimension: date { sql: ${TABLE}.datevalue;; group_label: "Course End Date"}
+  dimension: date { group_label: "Course End Date"}
 }
 
 view: dim_created_date {

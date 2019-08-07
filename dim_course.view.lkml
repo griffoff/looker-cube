@@ -42,7 +42,7 @@ view: dim_course {
     sql_trigger_value: select count(*) from dw_ga.dim_course ;;
   }
 
-  set: marketing_fields {fields:[dim_course.coursename, dim_course.enddatekey, dim_course.startdatekey, dim_course.coursekey, dim_course.mag_acct_id]}
+  set: marketing_fields {fields:[dim_course.coursename, dim_course.enddatekey, dim_course.startdatekey, dim_course.coursekey, dim_course.mag_acct_id, dim_course.active_course_sections, dim_course.course_complete]}
   set: cu_explore_fields {fields:[dim_course.coursename, dim_course.enddatekey, dim_course.startdatekey, dim_course.coursekey, dim_course.mag_acct_id]}
 
   # Attempt to classify courses into organizations (like higher ed, but activations don't always have a coursekey...
@@ -242,6 +242,13 @@ view: dim_course {
   dimension: course_complete {
     label: "Is Course Finished?"
     type: yesno
+  }
+
+  measure: active_course_sections {
+    label: "# Currently Active Course Sections"
+    description: "# Course sections with an end date in the future"
+    type: count_distinct
+    sql: CASE WHEN NOT course_complete THEN ${coursekey} END ;;
   }
 
   measure: count {
