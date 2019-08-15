@@ -28,6 +28,14 @@ view: dim_productplatform {
     sql: COALESCE(${TABLE}.PRODUCTPLATFORM, 'UNKNOWN') ;;
   }
 
+  dimension: newproductplatform {
+    label: "New Platform name"
+    description: "MindTap, Aplia, CNOW, etc."
+    type: string
+#     sql: COALESCE(${TABLE}.PRODUCTPLATFORM, 'UNKNOWN') ;;
+    sql: CASE WHEN ${TABLE}.PRODUCTPLATFORM = 'UNKNOWN' THEN ' ' ELSE ${TABLE}.PRODUCTPLATFORM END ;;
+  }
+
   dimension: includeinactivationsreport {
     label: "Included in Activations report"
     type: yesno
