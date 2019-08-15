@@ -7,29 +7,39 @@ view: dim_institution {
   derived_table: {
     sql:
     with Inst_rank as (
-    SELECT
-      DISTINCT
-      ROW_NUMBER() OVER(Partition BY InstitutionID order by NoOFactivations DESC) as institution_rank
-      ,InstitutionID
-      ,Organization
-      ,NoOfActivations
-    FROM ${fact_activation.SQL_TABLE_NAME} -- looker_scratch.LR$JJ1J9IMSWA6J99O7DN51G_fact_activation
-    WHERE InstitutionID != -1 and courseID != -1
-    AND Organization !='UNKNOWN'
-    order by 1,2,3 desc
+      SELECT
+        DISTINCT
+        ROW_NUMBER() OVER(Partition BY InstitutionID order by NoOFactivations DESC) as institution_rank
+        ,InstitutionID
+        ,Organization
+        ,NoOfActivations
+      FROM ${fact_activation.SQL_TABLE_NAME} -- looker_scratch.LR$JJ1J9IMSWA6J99O7DN51G_fact_activation
+      WHERE InstitutionID != -1 and courseID != -1
+      AND Organization !='UNKNOWN'
+      order by 1,2,3 desc
     )
-        select
-          i.*
-          ,case when insti.Organization = 'Higher Ed' then 'HED' else 'Not HED' end as HED
-        from dw_ga.dim_institution i
-        left join (SELECT * FROM Inst_rank WHERE institution_rank = 1 ) insti ON insti.institutionID = i.InstitutionID
-       -- left join (select distinct entity_no from looker_workshop.magellan_hed_entities) h on i.entity_no = h.entity_no
-        ;;
-        sql_trigger_value: select count(*) from dw_ga.dim_institution ;;
+    ,cui AS (
+      SELECT
+          DISTINCT entity_no, deal_type, deal_type IN ('Full School','All CL Courses') AS full_cui
+          --note: some schools are CUI only for certain departments, so some students at those schools may have CUI redemptions and others regular CU - shouldn't boot out in this case or message or will create confusing experience
+        FROM strategy.misc.cui_institutions_20190813
+        WHERE institution_nm NOT IN ('TEXAS A&M UNIVERSITY SAN ANTONIO','LAKE LAND COLLEGE') --did not renew CU in FY20
+    )
+    SELECT
+      i.*
+      ,CASE WHEN insti.Organization = 'Higher Ed' THEN 'HED' ELSE 'Not HED' END as HED
+      ,cui.deal_type
+      ,cui.full_cui
+    FROM dw_ga.dim_institution i
+    LEFT JOIN (SELECT * FROM Inst_rank WHERE institution_rank = 1 ) insti ON insti.institutionID = i.InstitutionID
+    LEFT JOIN cui ON i.entity_no::STRING = cui.entity_no::STRING
+   -- left join (select distinct entity_no from looker_workshop.magellan_hed_entities) h on i.entity_no = h.entity_no
+    ;;
+    sql_trigger_value: select count(*) from dw_ga.dim_institution ;;
   }
   set: curated_fields {fields:[HED_filter,country,institutionname,postalcode,city]}
 
-  set: marketing_fields { fields:[dim_institution.entity_no, dim_institution.country, dim_institution.institutionname, dim_institution.city, dim_institution.region, dim_institution.source,HED,country,HED_filter] }
+  set: marketing_fields { fields:[dim_institution.entity_no, dim_institution.country, dim_institution.institutionname, dim_institution.city, dim_institution.region, dim_institution.source,dim_institution.HED,dim_institution.country,dim_institution.HED_filter,dim_institution.deal_type, dim_instituion.cui, dim_instituion.full_cui] }
   set: CU_fields { fields:[dim_institution.entity_no, dim_institution.country, institutionname, dim_institution.city, dim_institution.region, dim_institution.source,HED,country] }
 
 #   sql_table_name: DW_GA.DIM_INSTITUTION ;;
@@ -154,6 +164,24 @@ view: dim_institution {
     description: "distinguishes between CLTS,Activation & OLR Courses"
     type: string
     sql: ${TABLE}.SOURCE ;;
+  }
+
+  dimension: deal_type {
+    group_label: "Institutional Access"
+    label: "CUI Deal type"
+  }
+
+  dimension: cui {
+    group_label: "Institutional Access"
+    type: yesno
+    label: "CUI"
+    sql: ${deal_type} IS NOT NULL ;;
+  }
+
+  dimension: full_cui {
+    group_label: "Institutional Access"
+    type: yesno
+    label: "CUI Full Coverage"
   }
 
   measure: count {
