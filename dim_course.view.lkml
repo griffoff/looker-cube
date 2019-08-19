@@ -33,6 +33,7 @@ view: dim_course {
           ,orgs.noncu_ct
           ,to_char(dc.STARTDATE, 'YYYYMMDD')::int as startdatekey_new
           ,dc.enddate < current_date() as course_complete
+          ,c.product_type
     from prod.dw_ga.dim_course dc
     left join prod.stg_clts.olr_courses c on dc.coursekey = c."#CONTEXT_ID"
     left join orgs on dc.coursekey = orgs.context_id
@@ -42,8 +43,8 @@ view: dim_course {
     sql_trigger_value: select count(*) from dw_ga.dim_course ;;
   }
 
-  set: marketing_fields {fields:[dim_course.coursename, dim_course.enddatekey, dim_course.startdatekey, dim_course.coursekey, dim_course.mag_acct_id, dim_course.active_course_sections, dim_course.course_complete]}
-  set: cu_explore_fields {fields:[dim_course.coursename, dim_course.enddatekey, dim_course.startdatekey, dim_course.coursekey, dim_course.mag_acct_id]}
+  set: cu_explore_fields {fields:[dim_course.coursename, dim_course.enddatekey, dim_course.startdatekey, dim_course.coursekey, dim_course.mag_acct_id, dim_course.active_course_sections, dim_course.course_complete, dim_course.product_type]}
+  set: marketing_fields {fields:[cu_explore_fields*]}
 
   # Attempt to classify courses into organizations (like higher ed, but activations don't always have a coursekey...
   # So this is no good
@@ -125,6 +126,10 @@ view: dim_course {
     #   label: "Engagement Toolkit - Discipline"
     #   url: "http://dashboard.cengage.info/engtoolkit/discipline/{{dim_product.hed_discipline._value}}"
     # }
+  }
+
+  dimension: product_type {
+
   }
 
   dimension: coursename {
