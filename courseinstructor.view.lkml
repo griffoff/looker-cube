@@ -101,6 +101,8 @@ view: courseinstructor {
 
 
   measure: count {
+    label: "# Instructors on course"
+    hidden: yes
     type: count
     drill_fields: []
   }
