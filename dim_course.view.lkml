@@ -34,6 +34,7 @@ view: dim_course {
           ,to_char(dc.STARTDATE, 'YYYYMMDD')::int as startdatekey_new
           ,dc.enddate < current_date() as course_complete
           ,c.product_type
+          ,c.begindate::DATE <= CURRENT_DATE() AND c.enddate >= CURRENT_DATE()::DATE AS active
     from prod.dw_ga.dim_course dc
     left join prod.stg_clts.olr_courses c on dc.coursekey = c."#CONTEXT_ID"
     left join orgs on dc.coursekey = orgs.context_id
@@ -246,6 +247,12 @@ view: dim_course {
 
   dimension: course_complete {
     label: "Is Course Finished?"
+    type: yesno
+  }
+
+  dimension: active {
+    description: "If the course has started and has not finished, it is active"
+    label: "Course Active"
     type: yesno
   }
 
