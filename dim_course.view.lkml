@@ -91,6 +91,14 @@ view: dim_course {
     hidden:  yes
   }
 
+#   measure: context_ids {
+#     label: "Context IDs"
+#     sql: LISTAGG(${TABLE}.olr_context_id) ;;
+#     #sql: ${TABLE}.coursekey ;;
+#     hidden:  no
+#   }
+
+
   dimension: coursekey {
     label: "Context ID"
     type: string
