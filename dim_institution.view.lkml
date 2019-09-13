@@ -39,8 +39,23 @@ view: dim_institution {
   }
   set: curated_fields {fields:[HED_filter,country,institutionname,postalcode,city]}
 
-  set: marketing_fields { fields:[dim_institution.entity_no, dim_institution.country, dim_institution.institutionname, dim_institution.city, dim_institution.region, dim_institution.source,dim_institution.HED,dim_institution.country,dim_institution.HED_filter,dim_institution.deal_type, dim_instituion.cui, dim_instituion.full_cui] }
-  set: CU_fields { fields:[dim_institution.entity_no, dim_institution.country, institutionname, dim_institution.city, dim_institution.region, dim_institution.source,HED,country] }
+  set: marketing_fields { fields:[
+        dim_institution.entity_no
+        ,dim_institution.country
+        ,dim_institution.institutionname
+        ,dim_institution.city
+        ,dim_institution.region
+        ,dim_institution.source
+        ,dim_institution.HED
+        ,dim_institution.country
+        ,dim_institution.HED_filter
+        ,dim_institution.deal_type
+        ,dim_institution.cui
+        ,dim_institution.full_cui
+        ,dim_institution.marketsegmentmajor
+        ,dim_institution.marketsegmentminor] }
+
+  set: CU_fields { fields:[marketing_fields*] }
 
 #   sql_table_name: DW_GA.DIM_INSTITUTION ;;
 
@@ -148,21 +163,22 @@ view: dim_institution {
     label: "Market Segment - Major"
     group_label: "Market Segment"
     type: string
-    hidden: yes
-    sql: ${TABLE}.MARKETSEGMENTMAJOR ;;
+    hidden: no
+    sql: COALESCE(${TABLE}.MARKETSEGMENTMAJOR, 'UNKNOWN') ;;
   }
 
   dimension: marketsegmentminor {
     label: "Market Segment - Minor"
     group_label: "Market Segment"
-    hidden: yes
+    hidden: no
     type: string
-    sql: ${TABLE}.MARKETSEGMENTMINOR ;;
+    sql: COALESCE(${TABLE}.MARKETSEGMENTMINOR, 'UNKNOWN') ;;
   }
 
   dimension: source {
     description: "distinguishes between CLTS,Activation & OLR Courses"
     type: string
+    hidden: yes
     sql: ${TABLE}.SOURCE ;;
   }
 
