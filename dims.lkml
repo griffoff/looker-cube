@@ -48,6 +48,8 @@ explore:  dim_product {
   }
 }
 
+
+
 explore: dim_course {
   label: "Course"
   extension: required
