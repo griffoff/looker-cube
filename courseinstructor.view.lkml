@@ -99,6 +99,13 @@ view: courseinstructor {
     sql:  ${TABLE}."IS_RETURNING_CUSTOMER" ;;
   }
 
+  measure: instructor_count {
+    label: "# Instructors"
+    description: "uique count of instructor guids"
+    hidden: no
+    type: count_distinct
+    sql: ${instructor_guid} ;;
+  }
 
   measure: count {
     label: "# Instructors on course"
