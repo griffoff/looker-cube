@@ -48,6 +48,10 @@ view: fact_activation {
     label: "Organization"
   }
 
+  dimension: registrationtype {
+    label: "Registration type"
+  }
+
   dimension: cu_flg {
     label: "CU Flag"
     description: "Flag to identify Cengage Unlimited Subscription based activation"
