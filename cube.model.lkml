@@ -704,8 +704,40 @@ explore: LP_Activity_Analysis {
   join: dim_product {
     fields: [dim_product.curated_fields*]
   }
+}
+
+# explore: guided_course_setup_instructor_vs_dss {
+#   from: mt_courses_gcs_setup_status
+#   label: "Guided Course Setup"
+
+#   join: guided_course_setup {
+#     sql_on: ${guided_course_setup_instructor_vs_dss.course_key} = ${guided_course_setup.course_key} ;;
+#     relationship: one_to_many
+#   }
+
+#   join: mt_courses_fall2020 {
+#     sql_on:  ${guided_course_setup_instructor_vs_dss.course_key} =  ${mt_courses_fall2020.course_key};;
+#   }
+#   }
+
+explore: mt_courses_fall2020 {
+  label: "Guided Course Setup"
+
+    join: mt_courses_gcs_setup_status {
+      sql_on: ${mt_courses_fall2020.course_key} = ${mt_courses_gcs_setup_status.course_key};;
+    }
+
+  join: guided_course_setup {
+    sql_on: ${mt_courses_gcs_setup_status.course_key} = ${guided_course_setup.course_key} ;;
+    relationship: one_to_many
 
 }
+}
+
+
+
+
+
 
 
 explore: olr_nonolr_combined_user_activations {}
