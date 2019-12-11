@@ -27,6 +27,7 @@ view: dim_institution {
     )
     SELECT
       i.*
+      ,insti.Organization AS organization
       ,CASE WHEN insti.Organization = 'Higher Ed' THEN 'HED' ELSE 'Not HED' END as HED
       ,cui.deal_type
       ,cui.full_cui
@@ -53,7 +54,8 @@ view: dim_institution {
         ,dim_institution.cui
         ,dim_institution.full_cui
         ,dim_institution.marketsegmentmajor
-        ,dim_institution.marketsegmentminor] }
+        ,dim_institution.marketsegmentminor
+        ,dim_institution.organization] }
 
   set: CU_fields { fields:[marketing_fields*] }
 
@@ -136,6 +138,13 @@ view: dim_institution {
     type: string
     sql: ${TABLE}.ENTITY_NO ;;
   }
+
+  dimension: organization {
+    label: "Organization"
+    type: string
+    sql: ${TABLE}.organization ;;
+  }
+
 
   dimension: estimatedenrollmentlevel {
     label: "Enrollment level (est)"

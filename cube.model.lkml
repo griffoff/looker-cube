@@ -735,7 +735,12 @@ explore: mt_courses_fall2020 {
 }
 
 
-
+# explore: fact_appusage {
+#   label: "App Usage Troubleshoot"
+#   join: dim_iframeapplication  {
+#     sql_on: ${fact_appusage.iframeapplicationid} = ${dim_iframeapplication.iframeapplicationid} ;;
+#   }
+# }
 
 
 

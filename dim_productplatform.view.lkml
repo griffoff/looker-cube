@@ -28,6 +28,21 @@ view: dim_productplatform {
     sql: COALESCE(${TABLE}.PRODUCTPLATFORM, 'UNKNOWN') ;;
   }
 
+
+#   dimension: productplatform_other {
+#     label: "Platform name (other)"
+#     description: "MindTap, Aplia, CNOW, etc."
+#     type: string
+#     sql: CASE
+#           WHEN COALESCE(${TABLE}.PRODUCTPLATFORM, 'UNKNOWN')
+#           IN ('MindTap', 'WebAssign', 'MindTap Reader', 'Aplia', 'OWL V2', 'SAM', 'Quia', 'Cengage Unlimited')
+#           THEN COALESCE(${TABLE}.PRODUCTPLATFORM, 'UNKNOWN')
+#           WHEN COALESCE(${TABLE}.PRODUCTPLATFORM, 'UNKNOWN') ILIKE '%4LTR%' THEN '4LTR'
+#           WHEN COALESCE(${TABLE}.PRODUCTPLATFORM, 'UNKNOWN') ILIKE '%CNOW%' THEN 'CNOW'
+#           ELSE 'Other' END
+#           ;;
+#   }
+
   dimension: newproductplatform {
     label: "New Platform name"
     description: "MindTap, Aplia, CNOW, etc."

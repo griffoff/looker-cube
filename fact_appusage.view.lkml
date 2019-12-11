@@ -4,13 +4,13 @@ view: fact_appusage {
     sql:
       with r as (
         SELECT a.bestdisplayname
-              ,DENSE_RANK() OVER (ORDER BY sum(CLICKCOUNT)  DESC) as clickrank
-              ,DENSE_RANK() OVER (ORDER BY count(distinct userid)  DESC) as userrank
+              ,DENSE_RANK() OVER (ORDER BY sum(CASE WHEN f.eventdatekey >= to_char(dateadd(YEAR, -1, CURRENT_DATE), 'yyyymmdd')::int THEN CLICKCOUNT END)  DESC) as clickrank
+              ,DENSE_RANK() OVER (ORDER BY count(distinct CASE WHEN f.eventdatekey >= to_char(dateadd(YEAR, -1, CURRENT_DATE), 'yyyymmdd')::int THEN userid END)  DESC) as userrank
         FROM dw_ga.FACT_APPUSAGE f
         inner join ${dim_iframeapplication.SQL_TABLE_NAME} a on  f.iframeapplicationid = a.iframeapplicationid
-        INNER JOIN dw_ga.dim_date ON f.eventdatekey = dim_date.datekey
-        where dim_date.fiscalyearvalue = 'FY16'
-        --where f.eventdatekey >= to_char(dateadd(YEAR, -1, CURRENT_DATE), 'yyyymmdd')::int
+        --INNER JOIN dw_ga.dim_date ON f.eventdatekey = dim_date.datekey
+        --where dim_date.fiscalyearvalue = 'FY18'
+         --where f.eventdatekey >= to_char(dateadd(YEAR, -1, CURRENT_DATE), 'yyyymmdd')::int
         GROUP BY 1
       )
       ,r2 AS (
@@ -29,7 +29,10 @@ view: fact_appusage {
   #sql_table_name: DW_GA.FACT_APPUSAGE ;;
   set: curated_fields_WL {fields:[]}
   dimension:  pk {
-    sql: ${TABLE}.pageinstanceid || ${TABLE}.eventdatekey || ${TABLE}.timekey || ${TABLE}.iframeapplicationid ;;
+#     sql: ${TABLE}.pageinstanceid || ${TABLE}.eventdatekey || ${TABLE}.timekey || ${TABLE}.iframeapplicationid ;;
+    sql: pageinstanceid || ${TABLE}.eventdatekey || ${TABLE}.timekey
+    || ${TABLE}.iframeapplicationid || ${TABLE}.EVENTACTIONID
+          || ${TABLE}.learningpathid || ${TABLE}.activityid || ${TABLE}.sourcedata || ${TABLE}.partyid ;;
     hidden:  yes
     primary_key: yes
   }
