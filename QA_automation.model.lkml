@@ -16,5 +16,5 @@ explore: ebook_usage_v{
 }
 
 explore: cap_eventing_v{
-  label: "EBook_Usage"
+  label: "CAP_Eventing"
 }
