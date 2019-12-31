@@ -14,3 +14,7 @@ explore: sap_subscription_v{
 explore: ebook_usage_v{
   label: "EBook_Usage"
 }
+
+explore: cap_eventing_v{
+  label: "EBook_Usage"
+}
