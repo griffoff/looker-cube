@@ -1,3 +1,4 @@
+include: "//project_source/*.view.lkml"
 connection: "snowflake_prod"
 label:"QA-DATAPROFILING"
 
