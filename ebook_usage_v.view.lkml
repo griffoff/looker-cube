@@ -16,7 +16,7 @@ view: ebook_usage_v {
 
 
   measure: Activity_Count {
-    label: "# event_count"
+    label: "#activity_count"
     type: sum
     sql: ${TABLE}.activity_count;;
   }
