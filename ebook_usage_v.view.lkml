@@ -1,9 +1,9 @@
 view: ebook_usage_v {
    sql_table_name:prod.unlimited.cu_ebook_usage;;
 
-  dimension_group: event_time {
+  dimension_group: activity_date {
   type: time
-  label:"Date"
+  label:"activity_date"
   timeframes: [raw, year, month, month_name, week, week_of_year, date, time, hour, hour_of_day, minute]
 }
 
