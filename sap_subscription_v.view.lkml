@@ -1,30 +1,17 @@
 view: sap_subscription_v {
-    derived_table: {
-      sql: SELECT EVENT_TIME::date as date, 'SAP-SUBSCRIPTION' as DATASET
-          FROM SUBSCRIPTION.PROD.SAP_SUBSCRIPTION_EVENT
-          GROUP BY 1
-          ORDER BY 1 DESC
-       ;;
-    }
+  label: "SAP_SUBSCRIPTION_EVENT"
+  sql_table_name: SUBSCRIPTION.PROD.SAP_SUBSCRIPTION_EVENT ;;
 
-    dimension: date {
-      type: date
-      sql: ${TABLE}."DATE" ;;
-    }
+  dimension_group: event_time {
+    type: time
+    label:"Event"
+    timeframes: [raw, year, month, month_name, week, week_of_year, date, time, hour, hour_of_day, minute]
+  }
 
 
-    dimension: dataset {
-      type: string
-      sql: ${TABLE}."DATASET" ;;
-    }
-
-    set: detail {
-      fields: [date, count, dataset]
-    }
   measure: count {
-    label: "# Activity Count"
+    label: "# event_count"
     type: count
-    sql: ${TABLE}.date ;;
   }
   }
 #   }
