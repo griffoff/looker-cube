@@ -1,27 +1,24 @@
 view: ebook_usage_v {
-    derived_table: {
-      sql:select ACTIVITY_DATE::date as date,sum(ACTIVITY_COUNT) as ACTIVITY_COUNT from prod.unlimited.cu_ebook_usage
-group by 1
-order by 1 desc
- ;;
-    }
+   sql_table_name:prod.unlimited.cu_ebook_usage;;
 
-    measure: count {
-      type: count
-      drill_fields: [detail*]
-    }
+  dimension_group: event_time {
+  type: time
+  label:"Date"
+  timeframes: [raw, year, month, month_name, week, week_of_year, date, time, hour, hour_of_day, minute]
+}
 
-    dimension: date {
-      type: date
-      sql: ${TABLE}."DATE" ;;
-    }
+  dimension: activity_count {
+    description: "The total number of orders for each user"
+    type: number
+    sql: ${TABLE}.activity_count ;;
+  }
 
-    dimension: activity_count {
-      type: number
-      sql: ${TABLE}."ACTIVITY_COUNT" ;;
-    }
 
-    set: detail {
-      fields: [date, activity_count]
-    }
+
+  measure: Activity_Count {
+    label: "# event_count"
+    type: sum
+    sql: ${TABLE}.activity_count;;
+  }
+
   }
