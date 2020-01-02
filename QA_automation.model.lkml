@@ -16,6 +16,6 @@ explore: ebook_usage_v{
   label: "EBook_Usage"
 }
 
-explore: Cafe_client_activity_v {
-  label: "CAP_Eventing"
+explore: cafe_eventing_client_activity_event{
+  label: "CAP_Eventing_Client_Activity"
 }
