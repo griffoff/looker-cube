@@ -1,6 +1,6 @@
 view: sap_subscription_v {
     derived_table: {
-      sql: SELECT DISTINCT EVENT_TIME::date as date,count(*) as count, 'SAP-SUBSCRIPTION' as DATASET
+      sql: SELECT DISTINCT EVENT_TIME::date as date, 'SAP-SUBSCRIPTION' as DATASET
           FROM SUBSCRIPTION.PROD.SAP_SUBSCRIPTION_EVENT
           GROUP BY 1
           ORDER BY 1 DESC
@@ -12,10 +12,6 @@ view: sap_subscription_v {
       sql: ${TABLE}."DATE" ;;
     }
 
-    dimension: count {
-      type: number
-      sql: ${TABLE}."COUNT" ;;
-    }
 
     dimension: dataset {
       type: string
@@ -25,6 +21,10 @@ view: sap_subscription_v {
     set: detail {
       fields: [date, count, dataset]
     }
+  measure: count {
+    label: "# Activity Count"
+    type: count
+  }
   }
 #   }
 #
