@@ -23,3 +23,6 @@ explore: cafe_eventing_client_activity_event{
 explore: cafe_eventing_server_activity_event{
   label: "CAP_Eventing_Server_Activity"
 }
+explore:iam_v{
+  label: "IAM_Events"
+}
