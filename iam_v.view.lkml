@@ -1,11 +1,11 @@
 view: iam_v {
   derived_table: {
     sql: select EVENT_TIME,
-              COUNT(*) AS COUNT, message_type as source from IAM.PROD.USER_MUTATION
+              COUNT(*) AS COUNT, message_type from IAM.PROD.USER_MUTATION
  group by 1,3
  union all
  select EVENT_TIME,
-              COUNT(*) AS COUNT, message_type as source from IAM.PROD.credentials_used
+              COUNT(*) AS COUNT, message_type from IAM.PROD.credentials_used
  group by 1,3
  order by 1 desc
  ;;
