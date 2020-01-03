@@ -1,15 +1,22 @@
 view: iam_v {
+#   derived_table: {
+#     sql: select EVENT_TIME::date as date,
+#               COUNT(*) AS COUNT, message_type as source from IAM.PROD.USER_MUTATION
+#  group by 1,3
+#  union all
+#  select EVENT_TIME::date as date,
+#               COUNT(*) AS COUNT, message_type as source from IAM.PROD.credentials_used
+#  group by 1,3
+#  order by 1 desc
+#  ;;
+#   }
   derived_table: {
-    sql: select EVENT_TIME::date as date,
-              COUNT(*) AS COUNT, message_type as source from IAM.PROD.USER_MUTATION
- group by 1,3
+    sql: select * from IAM.PROD.USER_MUTATION
  union all
- select EVENT_TIME::date as date,
-              COUNT(*) AS COUNT, message_type as source from IAM.PROD.credentials_used
- group by 1,3
- order by 1 desc
+ select * from IAM.PROD.credentials_used
  ;;
   }
+
 
   dimension_group: event_time {
     type: time
