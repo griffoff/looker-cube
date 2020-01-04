@@ -26,3 +26,6 @@ explore: cafe_eventing_server_activity_event{
 explore:iam_v{
   label: "IAM_Events"
 }
+explore:ipm_v{
+  label: "IPM_Events"
+}
