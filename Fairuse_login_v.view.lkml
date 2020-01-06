@@ -4,7 +4,7 @@ view: fairuse_login_v {
       sql: select LOCAL_TIME,
       COUNT(*) AS COUNT from FAIRUSE.PROD.RAW_LOGINS
       group by 1,2
-      order by 1 desc
+      order by 1 desc;;
       }
 
     dimension_group: local_time {
