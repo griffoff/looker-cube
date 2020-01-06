@@ -4,7 +4,7 @@ view: fairuse_login_v {
 
     dimension_group: LOCAL_TIME {
       type: time
-      label:"activity_date"
+      label:"LOCAL_TIME"
       timeframes: [raw, year, month, month_name, week, week_of_year, date, time, hour, hour_of_day, minute]
     }
 
