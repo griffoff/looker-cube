@@ -3,7 +3,7 @@ view: fairuse_login_v {
      derived_table: {
       sql: select LOCAL_TIME,
       COUNT(*) AS COUNT from FAIRUSE.PROD.RAW_LOGINS
-      group by 1,2
+      group by 1
       order by 1 desc;;
       }
 
