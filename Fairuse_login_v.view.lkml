@@ -1,6 +1,11 @@
 view: fairuse_login_v {
   # # You can specify the table name if it's different from the view name:
-    sql_table_name:FAIRUSE.PROD.RAW_LOGINS;;
+     derived_table: {
+      sql: select LOCAL_TIME,
+      COUNT(*) AS COUNT from FAIRUSE.PROD.RAW_LOGINS
+      group by 1,2
+      order by 1 desc
+      }
 
     dimension_group: local_time {
       type: time
