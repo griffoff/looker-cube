@@ -25,11 +25,11 @@ view: olr_activations_v {
 
   measure: count {
     type: count
-    drill_fields: [detail*]
+#     drill_fields: [detail*]
   }
  dimension_group: localtime {
   type: time
-  label:"Event_Time"
+  label:"localtime"
   timeframes: [raw, year, month, month_name, week, week_of_year, date, time, hour, hour_of_day, minute]
 }
 
@@ -38,9 +38,9 @@ view: olr_activations_v {
     sql: ${TABLE}."MESSAGE_TYPE" ;;
   }
 
-  set: detail {
-    fields: [localtime, message_type]
-  }
+#   set: detail {
+#     fields: [localtime, message_type]
+#   }
 }
 
 #   }
