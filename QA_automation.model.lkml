@@ -29,3 +29,6 @@ explore:iam_v{
 explore:ipm_v{
   label: "IPM_Events"
 }
+explore: fairuse_login_v {
+  label: "Fairuse_Login_Events"
+}
