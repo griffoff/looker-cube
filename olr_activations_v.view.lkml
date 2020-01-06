@@ -19,7 +19,6 @@ view: olr_activations_v {
       select event_time as localtime,message_type from OLR.PROD.ENTERPRISE_LICENSE
       group by 1,2
       order by 1 desc
-      limit 5
        ;;
   }
 
@@ -27,10 +26,14 @@ view: olr_activations_v {
     type: count
 #     drill_fields: [detail*]
   }
- dimension_group: localtime {
-  type: time
-  label:"localtime"
-  timeframes: [raw, year, month, month_name, week, week_of_year, date, time, hour, hour_of_day, minute]
+#  dimension_group: localtime {
+#   type: time
+#   label:"localtime"
+#   timeframes: [raw, year, month, month_name, week, week_of_year, date, time, hour, hour_of_day, minute]
+# }
+
+dimension: localtime {
+  type: date
 }
 
   dimension: message_type {
