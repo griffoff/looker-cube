@@ -33,5 +33,5 @@ explore: fairuse_login_v {
   label: "Fairuse_Login_Events"
 }
 explore: olr_activations_v {
-  label: "Fairuse_Login_Events"
+  label: "OLR_ACTIVATIONS"
 }
