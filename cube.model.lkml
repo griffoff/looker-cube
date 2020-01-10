@@ -722,21 +722,12 @@ explore: LP_Activity_Analysis {
 
 
 
-explore: gcs {
-  from:  mt_courses_fall2020
-  label: "Guided Course Setup (product info)"
+  explore: mt_courses_gcs_setup_status {
+    label: "Guided Course Setup (product info)"
 
-  join: mt_courses_gcs_setup_status {
-    sql_on: ${gcs.course_key} = ${mt_courses_gcs_setup_status.course_key};;
-  }
-  join: dim_course {
-    sql_on: ${dim_course.coursekey} = ${mt_courses_gcs_setup_status.course_key} ;;
-  }
-
-  join: dim_product {
-    relationship: many_to_one
-    sql_on: ${dim_course.productid} = ${dim_product.productid} ;;
-  }
+    join: dim_product {
+      sql_on: ${mt_courses_gcs_setup_status.isbn} = ${dim_product.isbn13} ;;
+    }
   }
 
 explore: mt_courses_fall2020 {
