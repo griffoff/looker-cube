@@ -48,14 +48,15 @@ view: mt_courses_gcs_setup_status {
           ,U.LNAME AS Instructor_Last_Name
           ,U.EMAIL AS Instructor_EMAIL
           ,U.SOURCE_ID AS Instructor_GUID
-          ,DATE_TRUNC('month', TO_TIMESTAMP_NTZ(TO_DECIMAL(o1.created_date/1000))::DATE) AS created_at
+          ,DATE_TRUNC('day', TO_TIMESTAMP_NTZ(TO_DECIMAL(o1.created_date/1000))::DATE) AS created_at
+          ,DATE_TRUNC('day', TO_TIMESTAMP_NTZ(TO_DECIMAL(o1.LAST_MODIFIED_DATE/1000))::DATE) AS modified_at
       FROM mindtap.prod_nb.SNAPSHOT S
       JOIN USERS U ON S.CREATED_BY=U.ID
       JOIN mindtap.prod_nb.ORG O1 ON S.ORG_ID=O1.ID
       JOIN mindtap.prod_nb.ORG O2 ON O1.PARENT_ID = O2.ID
       JOIN mindtap.prod_nb.COURSE C ON C.ORG_ID=O1.ID
       WHERE TO_TIMESTAMP_NTZ(TO_DECIMAL(o1.created_date/1000))::DATE >= '2018-08-01'
-      AND TO_TIMESTAMP_NTZ(TO_DECIMAL(o1.created_date/1000))::DATE <= '2019-09-30'
+      AND TO_TIMESTAMP_NTZ(TO_DECIMAL(o1.created_date/1000))::DATE <= CURRENT_TIMESTAMP()
       AND C.GCS_STATUS IS NOT NULL
        ;;
   }
@@ -145,10 +146,22 @@ view: mt_courses_gcs_setup_status {
     sql: ${TABLE}."CREATED_AT" ;;
   }
 
+
+  dimension: modified_at {
+    type: date
+    sql: ${TABLE}."MODIFIED_AT" ;;
+  }
+
   measure: course_count {
     label: "Course count"
     type: count_distinct
     sql: ${course_key} ;;
+  }
+
+  measure: instructor_count {
+    label: "User count"
+    type: count_distinct
+    sql: ${instructor_guid} ;;
   }
 
   set: detail {
