@@ -1,24 +1,31 @@
+include: "//project_source/*.view.lkml"
 connection: "snowflake_prod"
+label:"QA-DATAPROFILING"
 
-include: "*.view.lkml"         # include all views in this project
-# include: "*.dashboard.lookml"  # include all dashboards in this project
-
-# # Select the views that should be a part of this model,
-# # and define the joins that connect them together.
-#
-# explore: order_items {
-#   join: orders {
-#     relationship: many_to_one
-#     sql_on: ${orders.id} = ${order_items.order_id} ;;
-#   }
-#
-#   join: users {
-#     relationship: many_to_one
-#     sql_on: ${users.id} = ${orders.user_id} ;;
-#   }
-# }
+include: "*.view.lkml"
 
 explore: json_testreports_v {
   label: "QA Automation Reports"
 
+}
+explore: sap_subscription_v{
+  label: "Sap_Subscription"
+}
+
+explore: ebook_usage_v{
+  label: "EBook_Usage"
+}
+
+explore: cafe_eventing_client_activity_event{
+  label: "CAP_Eventing_Client_Activity"
+}
+
+explore: cafe_eventing_server_activity_event{
+  label: "CAP_Eventing_Server_Activity"
+}
+explore:iam_v{
+  label: "IAM_Events"
+}
+explore:ipm_v{
+  label: "IPM_Events"
 }
