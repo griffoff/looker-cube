@@ -3,18 +3,26 @@ view: courseinstructor {
 #   sql_table_name: DW_GA.COURSEINSTRUCTOR ;;
   derived_table: {
     sql:
-      with courseintr as (
+    with courseintr as (
         Select ci.*,p.guid
         from prod.dw_ga.courseinstructor ci
               left join  prod.dw_ga.dim_party p
               on ci.partyid = p.partyid
-      ),instr as (
-          Select c.instructor_guid, c.olr_course_key,c.course_start_date, c.is_new_customer,c.is_returning_customer, e.email, ROW_NUMBER() OVER (PARTITION BY instructor_guid ORDER BY IFF(email is null, 0, 1), e._ldts DESC) = 1 as preferred
+      )
+      ,instr as (
+          Select
+                c.instructor_guid
+                , c.olr_course_key
+                ,c.course_start_date
+                , c.is_new_customer
+                ,c.is_returning_customer
+                , e.email, ROW_NUMBER() OVER (PARTITION BY instructor_guid ORDER BY IFF(email is null, 0, 1), e._ldts DESC) = 1 as preferred
           from prod.cu_user_analysis.user_courses c
           left join prod.datavault.hub_user u on c.instructor_guid = u.uid
           left join prod.datavault.sat_user_pii e on u.hub_user_key = e.hub_user_key
                   and active
       )
+      ,instr_pref AS (SELECT * FROM instr WHERE preferred)
       Select
         COALESCE(a.coursekey, b.olr_course_key) AS coursekey
         ,a.snapshot_id
@@ -26,10 +34,37 @@ view: courseinstructor {
         ,row_number() OVER (PARTITION BY guid ORDER BY b.course_start_date) = 1 AS first_course_section
         ,hash(coursekey, instructor_guid) as pk
       from courseintr a
-      FULL join instr b on b.instructor_guid = a.guid
+      FULL join instr_pref b on b.instructor_guid = a.guid
                         and b.olr_course_key = a.coursekey
-                        and preferred
-  ;;
+    ;;
+#     sql:
+#       with courseintr as (
+#         Select ci.*,p.guid
+#         from prod.dw_ga.courseinstructor ci
+#               left join  prod.dw_ga.dim_party p
+#               on ci.partyid = p.partyid
+#       ),instr as (
+#           Select c.instructor_guid, c.olr_course_key,c.course_start_date, c.is_new_customer,c.is_returning_customer, e.email, ROW_NUMBER() OVER (PARTITION BY instructor_guid ORDER BY IFF(email is null, 0, 1), e._ldts DESC) = 1 as preferred
+#           from prod.cu_user_analysis.user_courses c
+#           left join prod.datavault.hub_user u on c.instructor_guid = u.uid
+#           left join prod.datavault.sat_user_pii e on u.hub_user_key = e.hub_user_key
+#                   and active
+#       )
+#       Select
+#         COALESCE(a.coursekey, b.olr_course_key) AS coursekey
+#         ,a.snapshot_id
+#         ,a.org_id
+#         ,a.partyid
+#         ,COALESCE(a.instructoremail, b.email) AS instructoremail
+#         ,COALESCE(a.ROLE, 'INSTRUCTOR') AS ROLE
+#         ,COALESCE(a.guid, b.instructor_guid) AS guid
+#         ,row_number() OVER (PARTITION BY guid ORDER BY b.course_start_date) = 1 AS first_course_section
+#         ,hash(coursekey, instructor_guid) as pk
+#       from courseintr a
+#       FULL join instr b on b.instructor_guid = a.guid
+#                         and b.olr_course_key = a.coursekey
+#                         and preferred
+#   ;;
     persist_for: "24 hours"
   }
 
