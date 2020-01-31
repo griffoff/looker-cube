@@ -1,5 +1,4 @@
 include: "//core/common.lkml"
-
 include: "//project_source/*.view.lkml"
 include: "//core/access_grants_file.view"
 
@@ -18,6 +17,9 @@ datagroup: fact_activityoutcome_datagroup {
 include: "dims.lkml"
 # include all the views
 include: "/cube/*.view"
+
+
+
 
 # include all the dashboards
 # include: "/cube/*dashboard.lookml*"
@@ -98,6 +100,13 @@ join: lifespan {
   sql_on: (${dim_institution.entity_no}, ${products.prod_family_cd}) = (${lifespan.entity_no}, ${lifespan.prod_family_cd}) ;;
   relationship: many_to_one
   }
+
+join: gateway_institution {
+  view_label: "Institution"
+  sql_on: ${dim_institution.entity_no}  = ${gateway_institution.entity_no};;
+  relationship: many_to_one
+}
+
 }
 
 
