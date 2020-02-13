@@ -61,6 +61,11 @@ view: ga_data_parsed {
     sql: ${TABLE}.DATALAYER_JSON ;;
   }
 
+  dimension: appId {
+    type: string
+    sql: ${TABLE}."DATALAYER_JSON":"appId" ;;
+  }
+
   dimension: datasetid {
     type: string
     sql: ${TABLE}.DATASETID ;;
