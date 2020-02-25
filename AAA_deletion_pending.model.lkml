@@ -31,3 +31,5 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 #     relationship: many_to_one
 #   }
 # }
+
+# explore: new_mt_gtm_events {}

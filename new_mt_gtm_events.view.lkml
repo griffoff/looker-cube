@@ -1,4 +1,4 @@
-explore: new_mt_gtm_events {}
+
 view: new_mt_gtm_events {
   derived_table: {
     sql: Select *,TO_DATE(TO_TIMESTAMP(((VISITSTARTTIME*1000) + HITS_TIME)/1000)) AS ACTIVITY_DATE from PROD.RAW_GA.GA_DATA_PARSED
