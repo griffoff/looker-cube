@@ -171,49 +171,6 @@ connection: "snowflake_prod"
 
 
 
-# explore: ga_data_parsed {
-#   label: "Google Analytics Data"
-#   extends: [dim_course]
-#   join: user_facts {
-#     relationship: many_to_one
-#     sql_on: ${ga_data_parsed.userssoguid} = ${user_facts.guid} ;;
-#   }
-#   join: user_final_scores {
-#     sql_on: (${dim_course.courseid}, ${ga_data_parsed.userssoguid}) = (${user_final_scores.courseid}, ${user_final_scores.sso_guid}) ;;
-#     relationship: many_to_one
-#   }
-#   join: olr_courses {
-#     fields: []
-#     relationship: many_to_one
-#     sql_on: split_part(${ga_data_parsed.courseuri}, ':', -1) = ${olr_courses.cgi} ;;
-#   }
-#   join: dim_course {
-#     relationship: many_to_one
-#     sql_on: COALESCE(${olr_courses.context_id}, ${ga_data_parsed.coursekey}) = ${dim_course.coursekey} ;;
-#   }
-#   join: dim_product_1 {
-#     fields: []
-#     from: dim_product
-#     sql_on: ${dim_course.productid} = ${dim_product_1.productid}   ;;
-#     relationship: many_to_one
-#   }
-#   join: dim_product_2 {
-#     fields: []
-#     from: dim_product
-#     sql_on: ${ga_data_parsed.coretextisbn} = ${dim_product_2.isbn13}
-#       and ${dim_product_1.isbn13} IS NULL;;
-#     relationship: one_to_many
-#   }
-#   join: dim_product {
-#     sql_on: COALESCE(${dim_product_1.productid}, ${dim_product_2.productid}) = ${dim_product.productid} ;;
-#     relationship: one_to_one
-#   }
-#   join: dim_relative_to_start_date {
-#     relationship: many_to_one
-#     sql_on: datediff(days, ${olr_courses.begin_date_date}, ${ga_data_parsed.hit_date}) = ${dim_relative_to_start_date.days} ;;
-#   }
-# }
-
 # explore: activities_per_week {
 #   label: "Trial Period Abuse"
 # }
