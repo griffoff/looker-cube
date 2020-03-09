@@ -345,7 +345,9 @@ view: dim_start_date {
     group_label: "Course Start Date"}
   dimension: governmentdefinedacademicterm {group_label: "Course Start Date"}
   dimension: governmentdefinedacademictermofyear {group_label: "Course Start Date"}
-  dimension: governmentdefinedacademictermyear {group_label: "Course Start Date"}
+  dimension: governmentdefinedacademictermyear {
+    description: "YYYY"
+    group_label: "Course Start Date"}
   dimension_group: datevalue {group_label: "Course Start Date"
     hidden: no
     type: time
@@ -363,8 +365,12 @@ view: dim_start_date {
 #       fiscal_month_num
     ]}
 
-  dimension: date { group_label: "Course Start Date" }
-  dimension: isweekendname {group_label: "Course Start Date"}
+  dimension: date {
+    description: "YYYY-MM-DD"
+    group_label: "Course Start Date" }
+  dimension: isweekendname {
+    description: "Course started on weekend / weekday"
+    group_label: "Course Start Date"}
 
 }
 

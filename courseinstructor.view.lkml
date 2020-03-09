@@ -113,6 +113,7 @@ view: courseinstructor {
 
   dimension: role {
     group_label: "Instructor"
+    description: "Instructor"
     label: "Instructor Role"
     type: string
     sql: ${TABLE}.ROLE ;;
@@ -127,6 +128,7 @@ view: courseinstructor {
 
   dimension: instructor_guid {
     group_label: "Instructor"
+    description: "Instructor user ID.  ID may represent a coordinator based on how the course was set up."
     type: string
     sql: ${TABLE}."GUID" ;;
   }

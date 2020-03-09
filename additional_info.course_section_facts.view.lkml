@@ -129,6 +129,7 @@ view: course_section_facts {
   }
 
   dimension: instructor_is_new {
+    description: "Instructor's first day = course start date"
     view_label: "Course / Section Details"
     label: "Instructor is new?"
     type: yesno

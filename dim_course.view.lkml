@@ -143,6 +143,7 @@ view: dim_course {
 
   dimension: coursename {
     label: "Course Name"
+    description: "Name of provisioned course"
     type: string
     sql: ${TABLE}.COURSENAME ;;
 
@@ -255,6 +256,7 @@ view: dim_course {
 
   dimension: course_complete {
     label: "Is Course Finished?"
+    description: "Course end date has passed"
     type: yesno
   }
 
