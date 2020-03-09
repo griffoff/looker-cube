@@ -28,6 +28,8 @@ view: courseinstructor {
         ,a.snapshot_id
         ,a.org_id
         ,a.partyid
+        ,b.is_new_customer
+        ,b.is_returning_customer
         ,COALESCE(a.instructoremail, b.email) AS instructoremail
         ,COALESCE(a.ROLE, 'INSTRUCTOR') AS ROLE
         ,COALESCE(a.guid, b.instructor_guid) AS guid
@@ -135,12 +137,14 @@ view: courseinstructor {
 
   dimension: new_or_returning {
     type: string
+    description: "Not instructor's first term?"
     group_label: "Instructor"
     sql: CASE WHEN ${TABLE}.first_course_section THEN 'New to Cengage' ELSE 'Returning' END ;;
   }
 
   dimension: is_new_customer {
     group_label: "Instructor"
+    description: "Instructor's first term?"
     label: "Is New Instructor"
     type: string
     sql:  ${TABLE}."IS_NEW_CUSTOMER" ;;
@@ -148,6 +152,7 @@ view: courseinstructor {
 
   dimension: is_returning_customer {
     group_label: "Instructor"
+    description: "Not instructor's first term?"
     label: "Is Returning Instructor"
     type: string
     sql:  ${TABLE}."IS_RETURNING_CUSTOMER" ;;
