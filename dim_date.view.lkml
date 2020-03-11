@@ -282,6 +282,7 @@ view: dim_date {
   }
 
   dimension: isweekendname {
+      description: "Weekend / Weekday"
     type: string
     sql: ${TABLE}.ISWEEKENDNAME ;;
     label: "Is Weekend"

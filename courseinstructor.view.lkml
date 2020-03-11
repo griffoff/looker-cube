@@ -160,7 +160,7 @@ view: courseinstructor {
 
   measure: instructor_count {
     label: "# Instructors"
-    description: "uique count of instructor guids"
+    description: "Unique count of instructor guids"
     hidden: no
     type: count_distinct
     sql: ${instructor_guid} ;;
