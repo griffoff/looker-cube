@@ -346,7 +346,7 @@ view: dim_start_date {
   dimension: governmentdefinedacademicterm {group_label: "Course Start Date"}
   dimension: governmentdefinedacademictermofyear {group_label: "Course Start Date"}
   dimension: governmentdefinedacademictermyear {
-    description: "YYYY"
+    description: "August 1st to July 31st"
     group_label: "Course Start Date"}
   dimension_group: datevalue {group_label: "Course Start Date"
     hidden: no
@@ -366,7 +366,7 @@ view: dim_start_date {
     ]}
 
   dimension: date {
-    description: "YYYY-MM-DD"
+    description: "Course Start Date"
     group_label: "Course Start Date" }
   dimension: isweekendname {
     description: "Course started on weekend / weekday"
@@ -503,7 +503,9 @@ view: dim_end_date {
     group_label: "Course End Date"}
   dimension: governmentdefinedacademicterm {group_label: "Course End Date"}
   dimension: governmentdefinedacademictermofyear {group_label: "Course End Date"}
-  dimension: governmentdefinedacademictermyear {group_label: "Course End Date"}
+  dimension: governmentdefinedacademictermyear {
+    group_label: "Course End Date"
+    description: "August 1st to July 31st"}
   dimension_group: datevalue {group_label: "Course End Date"
     hidden: no
     type: time
@@ -520,7 +522,9 @@ view: dim_end_date {
 #       fiscal_quarter_of_year,
 #       fiscal_month_num
     ]}
-  dimension: date { group_label: "Course End Date"}
+  dimension: date {
+    description: "Course End Date"
+    group_label: "Course End Date"}
 }
 
 view: dim_created_date {
