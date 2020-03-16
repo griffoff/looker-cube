@@ -247,7 +247,7 @@ view: dim_course {
   }
 
   dimension: is_lms_integrated {
-    description: "LMS Integrated Y/N"
+    description: "Learning Management System integrated Y/N"
     label: "LMS Integrated"
     type: yesno
     sql: length(split_part(dim_course.coursekey, '-', 1)) > 15

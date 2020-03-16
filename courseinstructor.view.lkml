@@ -137,7 +137,7 @@ view: courseinstructor {
 
   dimension: new_or_returning {
     type: string
-    description: "Not instructor's first term?"
+    description: "New to Cengage / Returning"
     group_label: "Instructor"
     sql: CASE WHEN ${TABLE}.first_course_section THEN 'New to Cengage' ELSE 'Returning' END ;;
   }
