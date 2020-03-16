@@ -263,7 +263,7 @@ view: dim_product {
     label: "Course Area"
 #     group_label: "Categories"
     sql: ${TABLE}.COURSEAREA ;;
-    description: "Subject matter, etc."
+    description: "Subject matter: Building Trade, Clinical Psychology, Personal Finance, etc."
   }
 
   dimension: publicationseries {
@@ -273,7 +273,7 @@ view: dim_product {
     sql: ${TABLE}.PUBLICATIONSERIES ;;
   }
   dimension: discipline {
-    description: "Subject matter, etc."
+    description: "Subject matter: Art, Philosophy, Criminal Justice, etc."
     type: string
     label: "Discipline"
 #    group_label: "Categories"
