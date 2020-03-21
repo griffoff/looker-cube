@@ -35,6 +35,8 @@ view: dim_course {
           ,dc.enddate < current_date() as course_complete
           ,c.product_type
           ,dc.startdate::DATE <= CURRENT_DATE() AND dc.enddate >= CURRENT_DATE()::DATE AS active
+          ,c.entity_id_sub
+          ,c.entity_name_course
     from prod.dw_ga.dim_course dc
     left join prod.stg_clts.olr_courses c on dc.coursekey = c."#CONTEXT_ID"
     left join orgs on dc.coursekey = orgs.context_id
@@ -82,6 +84,18 @@ view: dim_course {
     hidden: yes
     type: string
     sql: ${TABLE}.olr_course_key ;;
+  }
+
+  dimension: course_institution {
+    hidden: no
+    type: string
+    sql: ${TABLE}.entity_name_course ;;
+  }
+
+  dimension: course_entity_id {
+    hidden: no
+    type: string
+    sql: ${TABLE}.entity_id_sub ;;
   }
 
   dimension: context_id {
