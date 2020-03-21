@@ -152,7 +152,7 @@ view: dim_course {
   }
 
   dimension: product_type {
-
+    description: "Course product type (4LT, APPLIA, CNOW, etc.)"
   }
 
   dimension: coursename {
@@ -261,6 +261,7 @@ view: dim_course {
   }
 
   dimension: is_lms_integrated {
+    description: "Learning Management System integrated Y/N"
     label: "LMS Integrated"
     type: yesno
     sql: length(split_part(dim_course.coursekey, '-', 1)) > 15
