@@ -87,7 +87,7 @@ view: courseinstructor {
   dimension: instructoremail {
     group_label: "Instructor"
     label: "Instructor Email"
-    description: " Please use this Email ID to identify the instructor linked to a course. We do not have an instructor name field yet"
+    description: "Please use this Email ID to identify the instructor linked to a course. We do not have an instructor name field yet"
     type: string
     sql: ${TABLE}.INSTRUCTOREMAIL ;;
   }
@@ -129,8 +129,9 @@ view: courseinstructor {
   }
 
   dimension: instructor_guid {
+    label: "Other instructor GUID"
     group_label: "Instructor"
-    description: "Instructor user ID.  ID may represent a coordinator based on how the course was set up."
+    description: "May be multiple instructor GUID for adjunct prof. etc."
     type: string
     sql: ${TABLE}."GUID" ;;
   }

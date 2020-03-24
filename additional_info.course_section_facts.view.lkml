@@ -168,12 +168,8 @@ view: course_section_facts {
 
 
   measure: total_noofactivations {
-    label: "Total activations"
-    description: "
-    The total number of activations for courses in this context
-    e.g.
-    at item level it will represent the no. of activations
-    on courses where this item appears
+    label: "# Total activations"
+    description: "The total number of activations for courses in this context e.g. at item level it will represent the no. of activations on courses where this item appears
     "
     type: sum_distinct
     sql: ${noofactivations_base} ;;
@@ -189,13 +185,8 @@ view: course_section_facts {
   }
 
   measure: total_users {
-    label: "Total # Users"
-    description: "
-    The total number of users who have logged in at least once for courses in this context, regardless of activation status
-    e.g.
-    at item level it will represent the no. of users who have registered some activity
-    on courses where this item appears
-    "
+    label: "# Total Users"
+    description: "The total number of users who have logged in at least once for courses in this context, regardless of activation status e.g. at item level it will represent the no. of users who have registered some activity on courses where this item appears"
     type: sum_distinct
     sql: ${noofusers_base} ;;
     sql_distinct_key: ${courseid} ;;
