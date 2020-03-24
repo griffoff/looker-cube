@@ -359,6 +359,7 @@ view: dim_start_date {
       month_name,
       year,
       day_of_week,
+      week_of_year
       #quarter_of_year,
 #       fiscal_year,
 #       fiscal_quarter,
