@@ -145,7 +145,7 @@ view: courseinstructor {
 
   dimension: is_new_customer {
     group_label: "Instructor"
-    description: "Instructor's first term?"
+    description: "Instructor's first term is the current term"
     label: "Is New Instructor"
     type: string
     sql:  ${TABLE}."IS_NEW_CUSTOMER" ;;
@@ -153,7 +153,7 @@ view: courseinstructor {
 
   dimension: is_returning_customer {
     group_label: "Instructor"
-    description: "Not instructor's first term?"
+    description: "Instructor first term is not the current term and instructor has course in the current term"
     label: "Is Returning Instructor"
     type: string
     sql:  ${TABLE}."IS_RETURNING_CUSTOMER" ;;
