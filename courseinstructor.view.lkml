@@ -137,6 +137,7 @@ view: courseinstructor {
   }
 
   dimension: new_or_returning {
+    label: "Course Setion Instructor New / Returning"
     type: string
     description: "New to Cengage / Returning"
     group_label: "Instructor"
@@ -146,7 +147,7 @@ view: courseinstructor {
   dimension: is_new_customer {
     group_label: "Instructor"
     description: "Instructor's first term is the current term"
-    label: "Is New Instructor"
+    label: "Course Section Has New Instructor"
     type: string
     sql:  ${TABLE}."IS_NEW_CUSTOMER" ;;
   }
@@ -154,14 +155,14 @@ view: courseinstructor {
   dimension: is_returning_customer {
     group_label: "Instructor"
     description: "Instructor first term is not the current term and instructor has course in the current term"
-    label: "Is Returning Instructor"
+    label: "Course Section Has Returning Instructor"
     type: string
     sql:  ${TABLE}."IS_RETURNING_CUSTOMER" ;;
   }
 
   measure: instructor_count {
-    label: "# Instructors"
-    description: "Unique count of instructor guids"
+    label: "# Course Section Instructors"
+    description: "Unique count of instructor guids on related course sections"
     hidden: no
     type: count_distinct
     sql: ${instructor_guid} ;;
