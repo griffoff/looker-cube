@@ -13,6 +13,7 @@ view: dim_date {
   }
 
   dimension: date {
+    hidden: yes
     sql: ${TABLE}.datevalue;;
     type: date
   }
