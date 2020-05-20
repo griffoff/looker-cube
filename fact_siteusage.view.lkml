@@ -251,9 +251,7 @@ view: fact_siteusage {
     label: "Event Time"
     type: time
     hidden: no
-    timeframes: [raw, time, hour, minute, date, week, month, quarter, quarter_of_year
-      , fiscal_year, fiscal_quarter, fiscal_quarter_of_year
-      ]
+    timeframes: [raw, time, hour, minute, date, week, month, quarter, quarter_of_year]
     sql: ${TABLE}.EVENTDATE ;;
   }
 
