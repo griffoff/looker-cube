@@ -108,6 +108,7 @@ view: dim_date {
   dimension_group: datevalue {
     type: time
     timeframes: [
+      raw,
       date,
       week,
       month,
