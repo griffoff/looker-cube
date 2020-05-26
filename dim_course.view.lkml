@@ -24,21 +24,41 @@ view: dim_course {
          ,row_number() over (partition by context_id order by cnt desc) as r
       from course_orgs
     )
-    select dc.*
-          ,c.course_key as olr_course_key
-          ,c."#CONTEXT_ID" as olr_context_id
+    select
+          dc.DW_LDID
+          ,dc.DW_LDTS
+          ,dc.COURSEID
+          ,dc.COURSEKEY
+          ,scs.course_name as COURSENAME
+          ,dc.INSTITUTIONID
+          ,dc.PRODUCTID
+          ,to_char(scs.begin_date, 'YYYYMMDD')::int as STARTDATEKEY
+          ,to_char(scs.end_date, 'YYYYMMDD')::int as ENDDATEKEY
+          ,dc.FILTERFLAG
+          ,dc.LEARNINGCOURSE
+          ,dc.LOADDATE
+          ,dc.PRODUCTPLATFORMID
+          ,dc.INSTRUCTORID
+          ,scs.course_cgi as CGI
+          ,scs.begin_date as STARTDATE
+          ,scs.end_date as ENDDATE
+          ,scs.course_key as olr_course_key
+          ,hcs.context_id as olr_context_id
           ,c.mag_acct_id
           ,orgs.organization
           ,orgs.cu_ct
           ,orgs.noncu_ct
-          ,to_char(dc.STARTDATE, 'YYYYMMDD')::int as startdatekey_new
-          ,dc.enddate < current_date() as course_complete
-          ,c.product_type
-          ,dc.startdate::DATE <= CURRENT_DATE() AND dc.enddate >= CURRENT_DATE()::DATE AS active
-          ,c.entity_id_sub
+          ,scs.end_date < current_date() as course_complete
+          ,scs.section_product_type as product_type
+          ,scs.begin_date::DATE <= CURRENT_DATE() AND scs.end_date >= CURRENT_DATE()::DATE AS active
+          ,COALESCE(scs.institution_id_override, scs.institution_id) as entity_no
           ,c.entity_name_course
+          ,scs.is_gateway_course
+          ,scs.is_demo
     from prod.dw_ga.dim_course dc
     left join prod.stg_clts.olr_courses c on dc.coursekey = c."#CONTEXT_ID"
+    left join prod.datavault.hub_coursesection hcs on dc.coursekey = hcs.context_id
+    left join prod.datavault.sat_coursesection scs on hcs.hub_coursesection_key = scs.hub_coursesection_key and scs._latest
     left join orgs on dc.coursekey = orgs.context_id
                   and orgs.r = 1
     order by olr_course_key
@@ -95,24 +115,15 @@ view: dim_course {
   dimension: course_entity_id {
     hidden: no
     type: string
-    sql: ${TABLE}.entity_id_sub ;;
+    sql: ${TABLE}.entity_no ;;
   }
 
   dimension: context_id {
     label: "Context ID"
     type: string
     sql: ${TABLE}.olr_context_id ;;
-    #sql: ${TABLE}.coursekey ;;
     hidden:  yes
   }
-
-#   measure: context_ids {
-#     label: "Context IDs"
-#     sql: LISTAGG(${TABLE}.olr_context_id) ;;
-#     #sql: ${TABLE}.coursekey ;;
-#     hidden:  no
-#   }
-
 
   dimension: coursekey {
     label: "Context ID"
@@ -212,7 +223,7 @@ view: dim_course {
 
   dimension: enddatekey {
     type: string
-    sql: ${TABLE}.ENDDATEKEY ;;
+    sql: ${TABLE}.enddatekey ;;
     hidden: yes
   }
 
@@ -256,7 +267,7 @@ view: dim_course {
 
   dimension: startdatekey {
     type: number
-    sql: ${TABLE}.startdatekey_new ;;
+    sql: ${TABLE}.startdatekey ;;
     hidden: yes
   }
 
@@ -264,9 +275,10 @@ view: dim_course {
     description: "Learning Management System integrated Y/N"
     label: "LMS Integrated"
     type: yesno
-    sql: length(split_part(dim_course.coursekey, '-', 1)) > 15
-        and array_size(split(dim_course.coursekey, '-')) >= 2
-        and ${productplatformid}= 26 ;;
+    sql: ${TABLE}.is_gateway_course ;;
+#     sql: length(split_part(dim_course.coursekey, '-', 1)) > 15
+#         and array_size(split(dim_course.coursekey, '-')) >= 2
+#         and ${productplatformid}= 26 ;;
   }
 
   dimension: course_complete {
@@ -291,7 +303,8 @@ view: dim_course {
   measure: count {
     label: "# Course Sections"
     description: "Count of course sections."
-    type: count
+    type: count_distinct
+    sql: ${coursekey} ;;
     drill_fields: [dim_institution.institutionname, coursekey, coursename, dim_start_date.calendarmonthname,mindtap_lp_activity_tags.learning_path_activity_title_count, course_section_facts.total_noofactivations]
   }
 }
