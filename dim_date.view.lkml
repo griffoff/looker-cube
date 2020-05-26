@@ -346,13 +346,26 @@ view: dim_start_date {
   dimension: fiscalyear {
      hidden: no
 #     sql: ${TABLE}.fiscalyearvalue
-    group_label: "Course Start Date"}
-  dimension: governmentdefinedacademicterm {group_label: "Course Start Date"}
-  dimension: governmentdefinedacademictermofyear {group_label: "Course Start Date"}
+    group_label: "Course Start Date"
+    group_item_label:"Course Start Fiscal Year"
+    }
+  dimension: governmentdefinedacademicterm {
+    group_label: "Course Start Date"
+    group_item_label: "Course Start Academic Term"
+    description: "e.g. Fall 2019, Spring 2017, etc. (specific to year)"
+    }
+  dimension: governmentdefinedacademictermofyear {
+    group_label: "Course Start Date"
+    group_item_label: "Course Start Academic Term of Year"
+    description: "e.g. Fall, Spring, etc. (independent of year)"
+    }
   dimension: governmentdefinedacademictermyear {
     description: "August 1st to July 31st"
-    group_label: "Course Start Date"}
+    group_label: "Course Start Date"
+    group_item_label: "Course Start Academic Year"
+    }
   dimension_group: datevalue {group_label: "Course Start Date"
+    label: "Course Start"
     hidden: no
     type: time
     timeframes: [
@@ -375,7 +388,8 @@ view: dim_start_date {
     group_label: "Course Start Date" }
   dimension: isweekendname {
     description: "Course started on weekend / weekday"
-    group_label: "Course Start Date"}
+    group_label: "Course Start Date"
+    group_item_label: "Course Start Is a Weekend"}
 
 }
 
@@ -505,13 +519,26 @@ view: dim_end_date {
   dimension: fiscalyear {
     hidden: no
 #     sql: ${TABLE}.fiscalyearvalue
-    group_label: "Course End Date"}
-  dimension: governmentdefinedacademicterm {group_label: "Course End Date"}
-  dimension: governmentdefinedacademictermofyear {group_label: "Course End Date"}
-  dimension: governmentdefinedacademictermyear {
     group_label: "Course End Date"
-    description: "August 1st to July 31st"}
+    group_item_label:"Course End Fiscal Year"
+  }
+  dimension: governmentdefinedacademicterm {
+    group_label: "Course End Date"
+    group_item_label: "Course End Academic Term"
+    description: "e.g. Fall 2019, Spring 2017, etc. (specific to year)"
+  }
+  dimension: governmentdefinedacademictermofyear {
+    group_label: "Course End Date"
+    group_item_label: "Course End Academic Term of Year"
+    description: "e.g. Fall, Spring, etc. (independent of year)"
+  }
+  dimension: governmentdefinedacademictermyear {
+    description: "August 1st to July 31st"
+    group_label: "Course End Date"
+    group_item_label: "Course End Academic Year"
+  }
   dimension_group: datevalue {group_label: "Course End Date"
+    label: "Course End"
     hidden: no
     type: time
     timeframes: [
@@ -521,15 +548,17 @@ view: dim_end_date {
       month_name,
       year,
       day_of_week,
+      week_of_year
       #quarter_of_year,
 #       fiscal_year,
 #       fiscal_quarter,
 #       fiscal_quarter_of_year,
 #       fiscal_month_num
     ]}
+
   dimension: date {
     description: "Course End Date"
-    group_label: "Course End Date"}
+    group_label: "Course End Date" }
 }
 
 view: dim_created_date {
