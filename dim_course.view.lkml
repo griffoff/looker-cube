@@ -136,30 +136,16 @@ view: dim_course {
       url: "/explore/cube/fact_siteusage?fields=dim_learningpath.lowest_level,dim_activity.activitysubcategory,fact_activityoutcome.score_avg,dim_user.count,&f[dim_course.coursekey]={{ value }}"
     }
 
-    link: {
-      label: "View Account in Magellan"
-#       url: "http://magellan.cengage.com/Magellan2/#/Contacts/{{ mag_acct_id._value }}"
-    }
+#     link: {
+#       label: "View Account in Magellan"
+#        url: "http://magellan.cengage.com/Magellan2/#/Contacts/{{ mag_acct_id._value }}"
+#     }
 
     link: {
       label:"View in Analytics Diagnostic Tool"
       url: "https://analytics-tools.cengage.info/diagnostictool/#/course/view/production/course-key/{{value}}"
     }
 
-    # link: {
-    #   label: "Engagement Toolkit (Looker)"
-    #   url: "https://cengage.looker.com/dashboards/test::engagement_toolkit?filter_course={{value}}"
-    # }
-
-    # link: {
-    #   label: "Engagement Toolkit"
-    #   url: "http://dashboard.cengage.info/engtoolkit/{{value}}"
-    # }
-
-    # link: {
-    #   label: "Engagement Toolkit - Discipline"
-    #   url: "http://dashboard.cengage.info/engtoolkit/discipline/{{dim_product.hed_discipline._value}}"
-    # }
   }
 
   dimension: product_type {
@@ -175,21 +161,6 @@ view: dim_course {
     link: {
       label:"View in Analytics Diagnostic Tool"
       url: "https://analytics-tools.cengage.info/diagnostictool/#/course/view/production/course-key/{{dim_course.coursekey._value}}"
-    }
-
-    link: {
-      label: "Engagement Toolkit Looker"
-      url: "https://cengage.looker.com/dashboards/test::engagement_toolkit?filter_course={{dim_course.coursekey._value}}"
-    }
-
-    link: {
-      label: "Engagement Toolkit"
-      url: "http://dashboard.cengage.info/engtoolkit/{{value}}"
-    }
-
-    link: {
-      label: "Engagement Toolkit - Discipline"
-      url: "http://dashboard.cengage.info/engtoolkit/discipline/{{dim_product.hed_discipline._value}}"
     }
   }
 
@@ -272,7 +243,7 @@ view: dim_course {
   }
 
   dimension: is_lms_integrated {
-    description: "Learning Management System integrated Y/N"
+    description: "Is this a Gateway course?"
     label: "LMS Integrated"
     type: yesno
     sql: ${TABLE}.is_gateway_course ;;
@@ -302,7 +273,7 @@ view: dim_course {
 
   measure: count {
     label: "# Course Sections"
-    description: "Count of course sections."
+    description: "Count of course sections (unique count of course key)"
     type: count_distinct
     sql: ${coursekey} ;;
     drill_fields: [dim_institution.institutionname, coursekey, coursename, dim_start_date.calendarmonthname,mindtap_lp_activity_tags.learning_path_activity_title_count, course_section_facts.total_noofactivations]
