@@ -88,7 +88,7 @@ view: dim_institution {
     group_label: "Location"
     label: "City"
     type: string
-    sql: ${TABLE}.CITY ;;
+    sql: InitCap(${TABLE}.CITY) ;;
     map_layer_name: cities
   }
 
@@ -97,6 +97,7 @@ view: dim_institution {
     type: string
 #     sql: ${TABLE}.COUNTRY ;;
     sql: CASE WHEN LOWER(${TABLE}.COUNTRY) IN ('us','united states') THEN 'UNITED STATES' ELSE UPPER(${TABLE}.COUNTRY) END ;;
+    map_layer_name: countries
   }
 
   dimension: postalcode {
