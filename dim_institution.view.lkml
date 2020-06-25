@@ -32,12 +32,12 @@ view: dim_institution {
       ,i.marketsegmentmajor
       ,i.marketsegmentminor, i.estimatedenrollmentlevel, i.enrollmentnumber, COALESCE(sis.iso_country, i.country) as country, i.city, i.postalcode, i.region
       ,COALESCE(hi.institution_id, i.entity_no) as entity_no
-     --,insti.Organization AS organization
-      --,CASE WHEN insti.Organization = 'Higher Ed' THEN 'HED' ELSE 'Not HED' END as HED
+     ,insti.Organization AS organization
+      ,CASE WHEN insti.Organization = 'Higher Ed' THEN 'HED' ELSE 'Not HED' END as HED
       ,cui.deal_type
       ,cui.full_cui
     FROM dw_ga.dim_institution i
-    --LEFT JOIN (SELECT * FROM Inst_rank WHERE institution_rank = 1 ) insti ON insti.institutionID = i.InstitutionID
+    LEFT JOIN (SELECT * FROM Inst_rank WHERE institution_rank = 1 ) insti ON insti.institutionID = i.InstitutionID
     FULL JOIN prod.datavault.hub_institution hi ON i.entity_no = hi.institution_id
     LEFT JOIN prod.datavault.sat_institution_saws sis on hi.hub_institution_key = sis.hub_institution_key and sis._latest
     LEFT JOIN cui ON COALESCE(hi.institution_id, i.entity_no)::STRING = cui.entity_no::STRING

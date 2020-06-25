@@ -44,6 +44,7 @@ view: dim_productplatform {
 #   }
 
   dimension: newproductplatform {
+    hidden: yes
     label: "New Platform name"
     description: "MindTap, Aplia, CNOW, etc."
     type: string
