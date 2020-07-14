@@ -130,9 +130,11 @@ view: course_section_facts {
   dimension: instructor_is_new {
     description: "Instructor's first day = course start date"
     view_label: "Course / Section Details"
-    label: "Primary Instructor is a new Cengage custoemr?"
+    group_label: "Instructor (Primary)"
+    label: "Primary Instructor is a new Cengage customer?"
     type: yesno
     sql: ${instructor_first_date_key} = ${dim_course.startdatekey} ;;
+    hidden: yes
   }
 
   dimension: noofactivations_base {
