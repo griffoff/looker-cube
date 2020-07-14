@@ -85,7 +85,7 @@ view: courseinstructor {
   }
 
   dimension: instructoremail {
-    group_label: "Instructor"
+    group_label: "Instructor(s)"
     label: "Instructor Email"
     description: "Please use this Email ID to identify the instructor linked to a course. We do not have an instructor name field yet"
     type: string
@@ -114,7 +114,7 @@ view: courseinstructor {
   }
 
   dimension: role {
-    group_label: "Instructor"
+    group_label: "Instructor(s)"
     description: "Instructor"
     label: "Instructor Role"
     type: string
@@ -130,7 +130,7 @@ view: courseinstructor {
 
   dimension: instructor_guid {
     label: "Other instructor GUID"
-    group_label: "Instructor"
+    group_label: "Instructor(s)"
     description: "May be multiple instructor GUID for adjunct prof. etc."
     type: string
     sql: ${TABLE}."GUID" ;;
@@ -140,24 +140,24 @@ view: courseinstructor {
     label: "Course Setion Instructor New / Returning"
     type: string
     description: "New to Cengage / Returning"
-    group_label: "Instructor"
+    group_label: "Instructor(s)"
     sql: CASE WHEN ${TABLE}.first_course_section THEN 'New to Cengage' ELSE 'Returning' END ;;
   }
 
   dimension: is_new_customer {
-    group_label: "Instructor"
+    group_label: "Instructor(s)"
     description: "Instructor's first term is the current term"
     label: "Course Section Has New Instructor"
-    type: string
-    sql:  ${TABLE}."IS_NEW_CUSTOMER" ;;
+    type: yesno
+    sql:  ${TABLE}."IS_NEW_CUSTOMER" = 1 ;;
   }
 
   dimension: is_returning_customer {
-    group_label: "Instructor"
+    group_label: "Instructor(s)"
     description: "Instructor first term is not the current term and instructor has course in the current term"
     label: "Course Section Has Returning Instructor"
-    type: string
-    sql:  ${TABLE}."IS_RETURNING_CUSTOMER" ;;
+    type: yesno
+    sql:  ${TABLE}."IS_RETURNING_CUSTOMER" = 1 ;;
   }
 
   measure: instructor_count {
