@@ -8,8 +8,9 @@ view: courseinstructor {
         ,ms.snapshot_id
         ,ms.org_id
         ,dp.partyid as partyid
-        ,lead(sc.course_key) over(partition by guid order by sc.begin_date) is null as is_new_customer
-        ,lead(sc.course_key) over(partition by guid order by sc.begin_date) is not null  as is_returning_customer
+        ,datediff(week, min(sc.begin_date) over(partition by guid), sc.begin_date) <= 12 as is_new_customer
+        --,lead(sc.course_key) over(partition by guid order by sc.begin_date) is null as is_new_customer
+        ,datediff(week, min(sc.begin_date) over(partition by guid), sc.begin_date) > 12 as is_returning_customer
         ,sup.email as instructoremail
         ,se.access_role as role
         ,coalesce(su.linked_guid, hu.uid) as guid
@@ -37,7 +38,7 @@ view: courseinstructor {
     persist_for: "24 hours"
   }
 
-  set: marketing_fields {fields:[instructoremail,is_new_customer,is_returning_customer,instructor_guid]}
+  set: marketing_fields {fields:[instructoremail,is_new_customer,instructor_guid]}
 
   dimension: pk {
     primary_key: yes
