@@ -55,12 +55,14 @@ view: dim_course {
           ,c.entity_name_course
           ,scs.is_gateway_course
           ,scs.is_demo
+          ,wl.language as default_language
     from prod.dw_ga.dim_course dc
     left join prod.stg_clts.olr_courses c on dc.coursekey = c."#CONTEXT_ID"
     left join prod.datavault.hub_coursesection hcs on dc.coursekey = hcs.context_id
     left join prod.datavault.sat_coursesection scs on hcs.hub_coursesection_key = scs.hub_coursesection_key and scs._latest
     left join orgs on dc.coursekey = orgs.context_id
                   and orgs.r = 1
+    left join uploads.course_section_metadata.wa_course_language wl on hcs.context_id = wl.context_id
     order by olr_course_key
     ;;
     sql_trigger_value: select count(*) from dw_ga.dim_course ;;
@@ -68,6 +70,8 @@ view: dim_course {
 
   set: cu_explore_fields {fields:[dim_course.coursename, dim_course.enddatekey, dim_course.startdatekey, dim_course.coursekey, dim_course.mag_acct_id, dim_course.active_course_sections, dim_course.course_complete, dim_course.product_type]}
   set: marketing_fields {fields:[cu_explore_fields*]}
+
+  dimension: default_language {description: "Course section default language"}
 
   # Attempt to classify courses into organizations (like higher ed, but activations don't always have a coursekey...
   # So this is no good
