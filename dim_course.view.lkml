@@ -71,7 +71,7 @@ view: dim_course {
   set: cu_explore_fields {fields:[dim_course.coursename, dim_course.enddatekey, dim_course.startdatekey, dim_course.coursekey, dim_course.mag_acct_id, dim_course.active_course_sections, dim_course.course_complete, dim_course.product_type]}
   set: marketing_fields {fields:[cu_explore_fields*]}
 
-  dimension: default_language {description: "Course section default language"}
+  dimension: default_language {description: "WebAssign course section default language"}
 
   # Attempt to classify courses into organizations (like higher ed, but activations don't always have a coursekey...
   # So this is no good
