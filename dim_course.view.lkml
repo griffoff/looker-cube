@@ -56,6 +56,7 @@ view: dim_course {
           ,scs.is_gateway_course
           ,scs.is_demo
           ,wl.language as default_language
+          ,g.lms_type
     from prod.dw_ga.dim_course dc
     left join prod.stg_clts.olr_courses c on dc.coursekey = c."#CONTEXT_ID"
     left join prod.datavault.hub_coursesection hcs on dc.coursekey = hcs.context_id
@@ -63,6 +64,7 @@ view: dim_course {
     left join orgs on dc.coursekey = orgs.context_id
                   and orgs.r = 1
     left join uploads.course_section_metadata.wa_course_language wl on hcs.context_id = wl.context_id
+    left join gateway.prod.course g on hcs.context_id = g.olr_context_id
     order by olr_course_key
     ;;
     sql_trigger_value: select count(*) from dw_ga.dim_course ;;
@@ -72,6 +74,15 @@ view: dim_course {
   set: marketing_fields {fields:[cu_explore_fields*]}
 
   dimension: default_language {description: "WebAssign course section default language"}
+
+  dimension: lms_type {
+    sql: case when ${TABLE}.lms_type is not null then ${TABLE}.lms_type
+              when ${TABLE}.is_gateway_course then 'UNKNOWN'
+              else 'NOT LMS INTEGRATED'
+        end
+     ;;
+    label: "LMS Type"
+  }
 
   # Attempt to classify courses into organizations (like higher ed, but activations don't always have a coursekey...
   # So this is no good
@@ -250,10 +261,7 @@ view: dim_course {
     description: "Is this a Gateway course?"
     label: "LMS Integrated"
     type: yesno
-    sql: ${TABLE}.is_gateway_course ;;
-#     sql: length(split_part(dim_course.coursekey, '-', 1)) > 15
-#         and array_size(split(dim_course.coursekey, '-')) >= 2
-#         and ${productplatformid}= 26 ;;
+    sql: CASE WHEN ${lms_type}='NOT LMS INTEGRATED' THEN false ELSE true END ;;
   }
 
   dimension: course_complete {
