@@ -51,7 +51,8 @@ view: dim_course {
           ,scs.end_date < current_date() as course_complete
           ,scs.section_product_type as product_type
           ,scs.begin_date::DATE <= CURRENT_DATE() AND scs.end_date >= CURRENT_DATE()::DATE AS active
-          ,COALESCE(scs.institution_id_override, scs.institution_id) as entity_no
+          --,COALESCE(scs.institution_id_override, scs.institution_id) as entity_no
+          ,c.entity_id_sub as entity_no
           ,c.entity_name_course
           ,scs.is_gateway_course
           ,scs.is_demo
