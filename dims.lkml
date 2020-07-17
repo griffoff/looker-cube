@@ -78,9 +78,14 @@ explore: dim_course {
   }
 
   join: dim_institution {
+    sql_on: ${dim_course.course_entity_id} = ${dim_institution.entity_no} ;;
     relationship: many_to_one
-    sql_on: ${dim_course.institutionid} = ${dim_institution.institutionid} ;;
   }
+
+  # join: dim_institution {
+  #   relationship: many_to_one
+  #   sql_on: ${dim_course.institutionid} = ${dim_institution.institutionid} ;;
+  # }
 
   join: dim_productplatform {
     relationship: many_to_one
