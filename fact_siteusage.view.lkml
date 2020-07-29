@@ -473,7 +473,7 @@ view: fact_siteusage {
     label: "Time in Mindtap (avg per person per course)"
     type: number
     sql: ${pageviewtime_sum} / nullif(${usercoursecount}, 0);;
-    value_format: "h \h\r\s m \m\i\n\s \s\e\c\s"
+    value_format: "h \h\r\s m \m\i\n\s s \s\e\c\s"
     drill_fields: [events*]
   }
 
