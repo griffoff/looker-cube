@@ -58,6 +58,8 @@ view: dim_course {
           ,scs.is_demo
           ,wl.language as default_language
           ,g.lms_type
+          ,g.lms_version
+          ,g.integration_type
     from prod.dw_ga.dim_course dc
     left join prod.stg_clts.olr_courses c on dc.coursekey = c."#CONTEXT_ID"
     left join prod.datavault.hub_coursesection hcs on dc.coursekey = hcs.context_id
@@ -83,6 +85,15 @@ view: dim_course {
         end
      ;;
     label: "LMS Type"
+  }
+
+  dimension: lms_integration_type {
+    sql: case when ${TABLE}.integration_type is not null then ${TABLE}.integration_type
+              when ${TABLE}.is_gateway_course then 'UNKNOWN'
+              else 'NOT LMS INTEGRATED'
+        end
+     ;;
+    label: "LMS Integration Type"
   }
 
   # Attempt to classify courses into organizations (like higher ed, but activations don't always have a coursekey...
