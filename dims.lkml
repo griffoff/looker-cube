@@ -94,7 +94,7 @@ explore: dim_course {
 
   join: dim_filter {
     relationship: many_to_one
-    sql_on: ${dim_course.filterflag} = ${dim_filter.filterflag} ;;
+    sql_on: ${dim_course.coursekey} = ${dim_filter.course_key} ;;
   }
 
   join:  course_section_facts {

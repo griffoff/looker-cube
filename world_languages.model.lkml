@@ -229,7 +229,7 @@ explore: WL_activity {
   }
 
   join: dim_filter {
-    sql_on: ${WL_activity.filterflag} = ${dim_filter.filterflag} ;;
+    sql_on: ${dim_course.coursekey} = ${dim_filter.course_key} ;;
     relationship: many_to_one
   }
   }

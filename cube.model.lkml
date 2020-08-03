@@ -1,7 +1,11 @@
 include: "//core/common.lkml"
 include: "//project_source/*.view.lkml"
 include: "//core/access_grants_file.view"
-include: "//cengage_finance/views/course_keys_filter_3.view"
+
+# include: "/views/*.view.lkml"
+# include: "/views/*.view"
+# include: "/views/course_keys_filter_3.view"
+
 
 connection: "snowflake_prod"
 label:"Cube Data on Looker"
@@ -187,7 +191,7 @@ explore: fact_activity {
   }
 
   join: dim_filter {
-    sql_on: ${fact_activity.filterflag} = ${dim_filter.filterflag} ;;
+    sql_on: ${dim_course.coursekey} = ${dim_filter.course_key} ;;
     relationship: many_to_one
   }
 
@@ -700,7 +704,7 @@ explore: LP_Activity_Analysis {
   }
 
   join: dim_filter {
-    sql_on: ${LP_Activity_Analysis.filterflag} = ${dim_filter.filterflag} ;;
+    sql_on: ${dim_course.coursekey} = ${dim_filter.course_key} ;;
     relationship: many_to_one
   }
   join: course_section_facts {
