@@ -10,3 +10,7 @@ local_dependency: {
 local_dependency: {
   project: "project_source"
 }
+
+local_dependency: {
+  project: "cengage_finance"
+}

@@ -1,6 +1,7 @@
 include: "//core/common.lkml"
 include: "//project_source/*.view.lkml"
 include: "//core/access_grants_file.view"
+include: "//cengage_finance/views/course_keys_filter_3.view"
 
 connection: "snowflake_prod"
 label:"Cube Data on Looker"
@@ -624,6 +625,12 @@ explore: LP_Analysis_PSR_Limited_View {
     join: dim_product {
       fields: [dim_product.curated_fields*]
     }
+#     join: course_keys_filter_3 {
+#       view_label: "**Custom Filters**"
+#       sql_on: ${olr_courses.course_key} = ${course_keys_filter_3.course_key} ;;
+#       type: full_outer
+#       relationship: many_to_one
+#     }
   }
 
 explore: LP_Activity_Analysis {
