@@ -35,3 +35,6 @@ explore: fairuse_login_v {
 explore: olr_activations_test_v {
   label: "OLR_ACTIVATIONS"
 }
+explore: datavault_dataquality_v {
+  label: "Datavault_DataQuality"
+}
