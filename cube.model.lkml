@@ -1,7 +1,11 @@
 include: "//core/common.lkml"
-
 include: "//project_source/*.view.lkml"
 include: "//core/access_grants_file.view"
+
+# include: "/views/*.view.lkml"
+# include: "/views/*.view"
+# include: "/views/course_keys_filter_3.view"
+
 
 connection: "snowflake_prod"
 label:"Cube Data on Looker"
@@ -19,12 +23,13 @@ include: "dims.lkml"
 # include all the views
 include: "/cube/*.view"
 
+
+
+
 # include all the dashboards
 # include: "/cube/*dashboard.lookml*"
 
-explore: activities_per_week {
-  label: "Trial Period Abuse"
-}
+
 
 explore: fact_activation {
   label: "Activations"
@@ -98,6 +103,13 @@ join: lifespan {
   sql_on: (${dim_institution.entity_no}, ${products.prod_family_cd}) = (${lifespan.entity_no}, ${lifespan.prod_family_cd}) ;;
   relationship: many_to_one
   }
+
+join: gateway_institution {
+  view_label: "Institution"
+  sql_on: ${dim_institution.entity_no}  = ${gateway_institution.entity_no};;
+  relationship: many_to_one
+}
+
 }
 
 
@@ -179,7 +191,7 @@ explore: fact_activity {
   }
 
   join: dim_filter {
-    sql_on: ${fact_activity.filterflag} = ${dim_filter.filterflag} ;;
+    sql_on: ${dim_course.coursekey} = ${dim_filter.course_key} ;;
     relationship: many_to_one
   }
 
@@ -617,6 +629,12 @@ explore: LP_Analysis_PSR_Limited_View {
     join: dim_product {
       fields: [dim_product.curated_fields*]
     }
+#     join: course_keys_filter_3 {
+#       view_label: "**Custom Filters**"
+#       sql_on: ${olr_courses.course_key} = ${course_keys_filter_3.course_key} ;;
+#       type: full_outer
+#       relationship: many_to_one
+#     }
   }
 
 explore: LP_Activity_Analysis {
@@ -686,7 +704,7 @@ explore: LP_Activity_Analysis {
   }
 
   join: dim_filter {
-    sql_on: ${LP_Activity_Analysis.filterflag} = ${dim_filter.filterflag} ;;
+    sql_on: ${dim_course.coursekey} = ${dim_filter.course_key} ;;
     relationship: many_to_one
   }
   join: course_section_facts {
@@ -720,6 +738,16 @@ explore: LP_Activity_Analysis {
 #   }
 #   }
 
+
+
+  explore: mt_courses_gcs_setup_status {
+    label: "Guided Course Setup (product info)"
+
+    join: dim_product {
+      sql_on: ${mt_courses_gcs_setup_status.isbn} = ${dim_product.isbn13} ;;
+    }
+  }
+
 explore: mt_courses_fall2020 {
   label: "Guided Course Setup"
 
@@ -730,9 +758,9 @@ explore: mt_courses_fall2020 {
   join: guided_course_setup {
     sql_on: ${mt_courses_gcs_setup_status.course_key} = ${guided_course_setup.course_key} ;;
     relationship: one_to_many
+}
+}
 
-}
-}
 
 
 # explore: fact_appusage {
@@ -741,6 +769,51 @@ explore: mt_courses_fall2020 {
 #     sql_on: ${fact_appusage.iframeapplicationid} = ${dim_iframeapplication.iframeapplicationid} ;;
 #   }
 # }
+
+
+explore: ga_data_parsed {
+  label: "Google Analytics Data"
+  extends: [dim_course]
+  join: user_facts {
+    relationship: many_to_one
+    sql_on: ${ga_data_parsed.userssoguid} = ${user_facts.guid} ;;
+  }
+  join: user_final_scores {
+    sql_on: (${dim_course.courseid}, ${ga_data_parsed.userssoguid}) = (${user_final_scores.courseid}, ${user_final_scores.sso_guid}) ;;
+    relationship: many_to_one
+  }
+  join: olr_courses {
+    fields: []
+    relationship: many_to_one
+    sql_on: split_part(${ga_data_parsed.courseuri}, ':', -1) = ${olr_courses.cgi} ;;
+  }
+  join: dim_course {
+    relationship: many_to_one
+    sql_on: COALESCE(${olr_courses.context_id}, ${ga_data_parsed.coursekey}) = ${dim_course.coursekey} ;;
+  }
+  join: dim_product_1 {
+    fields: []
+    from: dim_product
+    sql_on: ${dim_course.productid} = ${dim_product_1.productid}   ;;
+    relationship: many_to_one
+  }
+  join: dim_product_2 {
+    fields: []
+    from: dim_product
+    sql_on: ${ga_data_parsed.coretextisbn} = ${dim_product_2.isbn13}
+      and ${dim_product_1.isbn13} IS NULL;;
+    relationship: one_to_many
+  }
+  join: dim_product {
+    sql_on: COALESCE(${dim_product_1.productid}, ${dim_product_2.productid}) = ${dim_product.productid} ;;
+    relationship: one_to_one
+  }
+  join: dim_relative_to_start_date {
+    relationship: many_to_one
+    sql_on: datediff(days, ${olr_courses.begin_date_date}, ${ga_data_parsed.hit_date}) = ${dim_relative_to_start_date.days} ;;
+  }
+}
+
 
 
 

@@ -11,9 +11,8 @@ view: course_section_facts {
         ,case when length(split_part(c.coursekey, '-', 1)) > 15 and array_size(split(c.coursekey, '-')) >= 2 and c.productplatformid= 26 then 'yes' else 'no' end as is_lms_integrated
         ,COALESCE(d.fiscalyearvalue, 'UNKNOWN') as date_granularity
       from ${dim_course.SQL_TABLE_NAME} c
-      --left join dw_ga.dim_date d on case when c.startdatekey = -1 then c.enddatekey else c.startdatekey end = d.datekey
-      left join dw_ga.dim_date d on c.startdatekey_new = d.datekey
-      left join dw_ga.dim_institution i on c.institutionid = i.institutionid
+      left join ${dim_date.SQL_TABLE_NAME} d on c.startdatekey = d.datekey
+      left join ${dim_institution.SQL_TABLE_NAME} i on c.institutionid = i.institutionid
       where i.locationID != -1
       )
     ,i as (
@@ -36,7 +35,7 @@ view: course_section_facts {
     )
     ,u as (
       select courseid, count(distinct userid) as users
-      from dw_ga.fact_session
+      from ${fact_session.SQL_TABLE_NAME}
       group by 1
     )
     ,a as (
@@ -56,7 +55,7 @@ view: course_section_facts {
           --,sum(count(distinct a.courseid)) over (partition by p.productfamily, p.edition, c.is_lms_integrated, c.date_granularity) as activated_courses
       from ${fact_activation.SQL_TABLE_NAME} a
       inner join c on a.courseid = c.courseid
-      inner join dw_ga.dim_product p on c.productid = p.productid
+      inner join ${dim_product.SQL_TABLE_NAME} p on c.productid = p.productid
       where a.institutionID != -1  and a.organization != 'UNKNOWN'
       group by 1,2,3,4,5,6,7
     )
@@ -129,10 +128,13 @@ view: course_section_facts {
   }
 
   dimension: instructor_is_new {
+    description: "Instructor's first day = course start date"
     view_label: "Course / Section Details"
-    label: "Instructor is new?"
+    group_label: "Instructor (Primary)"
+    label: "Primary Instructor is a new Cengage customer?"
     type: yesno
     sql: ${instructor_first_date_key} = ${dim_course.startdatekey} ;;
+    hidden: yes
   }
 
   dimension: noofactivations_base {
@@ -167,12 +169,8 @@ view: course_section_facts {
 
 
   measure: total_noofactivations {
-    label: "Total activations"
-    description: "
-    The total number of activations for courses in this context
-    e.g.
-    at item level it will represent the no. of activations
-    on courses where this item appears
+    label: "# Total activations"
+    description: "The total number of activations for courses in this context e.g. at item level it will represent the no. of activations on courses where this item appears
     "
     type: sum_distinct
     sql: ${noofactivations_base} ;;
@@ -188,13 +186,8 @@ view: course_section_facts {
   }
 
   measure: total_users {
-    label: "Total # Users"
-    description: "
-    The total number of users who have logged in at least once for courses in this context, regardless of activation status
-    e.g.
-    at item level it will represent the no. of users who have registered some activity
-    on courses where this item appears
-    "
+    label: "# Total Users"
+    description: "The total number of users who have logged in at least once for courses in this context, regardless of activation status e.g. at item level it will represent the no. of users who have registered some activity on courses where this item appears"
     type: sum_distinct
     sql: ${noofusers_base} ;;
     sql_distinct_key: ${courseid} ;;

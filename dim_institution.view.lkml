@@ -25,15 +25,22 @@ view: dim_institution {
         FROM strategy.misc.cui_institutions_20190813
         WHERE institution_nm NOT IN ('TEXAS A&M UNIVERSITY SAN ANTONIO','LAKE LAND COLLEGE') --did not renew CU in FY20
     )
-    SELECT
-      i.*
-      ,insti.Organization AS organization
+   SELECT
+      i.dw_ldid, i.dw_ldts, COALESCE(i.institutionid, -1) as institutionid, i.locationid
+      ,COALESCE(sis.name, i.institutionname) as institutionname
+      ,sis.type as institutiontype
+      ,i.marketsegmentmajor
+      ,i.marketsegmentminor, i.estimatedenrollmentlevel, i.enrollmentnumber, COALESCE(sis.iso_country, i.country) as country, i.city, i.postalcode, i.region
+      ,COALESCE(hi.institution_id, i.entity_no) as entity_no
+     ,insti.Organization AS organization
       ,CASE WHEN insti.Organization = 'Higher Ed' THEN 'HED' ELSE 'Not HED' END as HED
       ,cui.deal_type
       ,cui.full_cui
     FROM dw_ga.dim_institution i
     LEFT JOIN (SELECT * FROM Inst_rank WHERE institution_rank = 1 ) insti ON insti.institutionID = i.InstitutionID
-    LEFT JOIN cui ON i.entity_no::STRING = cui.entity_no::STRING
+    FULL JOIN prod.datavault.hub_institution hi ON i.entity_no = hi.institution_id
+    LEFT JOIN prod.datavault.sat_institution_saws sis on hi.hub_institution_key = sis.hub_institution_key and sis._latest
+    LEFT JOIN cui ON COALESCE(hi.institution_id, i.entity_no)::STRING = cui.entity_no::STRING
    -- left join (select distinct entity_no from looker_workshop.magellan_hed_entities) h on i.entity_no = h.entity_no
     ;;
     sql_trigger_value: select count(*) from dw_ga.dim_institution ;;
@@ -81,7 +88,7 @@ view: dim_institution {
     group_label: "Location"
     label: "City"
     type: string
-    sql: ${TABLE}.CITY ;;
+    sql: InitCap(${TABLE}.CITY) ;;
     map_layer_name: cities
   }
 
@@ -90,6 +97,7 @@ view: dim_institution {
     type: string
 #     sql: ${TABLE}.COUNTRY ;;
     sql: CASE WHEN LOWER(${TABLE}.COUNTRY) IN ('us','united states') THEN 'UNITED STATES' ELSE UPPER(${TABLE}.COUNTRY) END ;;
+    map_layer_name: countries
   }
 
   dimension: postalcode {

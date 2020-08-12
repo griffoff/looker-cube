@@ -187,6 +187,7 @@ view: dim_product {
     label: "Edition"
     group_label: "Product Family"
     sql: ${TABLE}.EDITION ;;
+    description: "Product edition #"
   }
 
   dimension: edition_number {
@@ -199,6 +200,7 @@ view: dim_product {
     label: "Major Subject Matter"
     group_label: "Subject Matter"
     sql: ${TABLE}.MAJORSUBJECTMATTER ;;
+    description: "Subject matter (math, economics, science, etc.)"
   }
 
   dimension: minorsubjectmatter {
@@ -261,6 +263,7 @@ view: dim_product {
     label: "Course Area"
 #     group_label: "Categories"
     sql: ${TABLE}.COURSEAREA ;;
+    description: "Subject matter: Building Trade, Clinical Psychology, Personal Finance, etc."
   }
 
   dimension: publicationseries {
@@ -270,6 +273,7 @@ view: dim_product {
     sql: ${TABLE}.PUBLICATIONSERIES ;;
   }
   dimension: discipline {
+    description: "Subject matter: Art, Philosophy, Criminal Justice, etc."
     type: string
     label: "Discipline"
 #    group_label: "Categories"
@@ -330,6 +334,7 @@ view: dim_product {
     group_label: "Sales Division"
     type: string
     sql: ${TABLE}.DIVISION_CD ;;
+    description: "Sales division code"
   }
 
   dimension: division_de {
@@ -337,6 +342,7 @@ view: dim_product {
     label: "Division Description"
     group_label: "Sales Division"
     sql: ${TABLE}.DIVISION_DE ;;
+    description: "Sales division description (STM, Skills, K12, etc.)"
   }
 
   dimension: dw_ldid {
@@ -472,12 +478,14 @@ view: dim_product {
     label: "# Disciplines"
     type: count_distinct
     sql: ${discipline} ;;
+    description: "Count of distinct disciplines shown in a given view"
   }
 
   measure: count_product_family {
     label: "# Product Families"
     type: count_distinct
     sql: ${productfamily} ;;
+    description: "Count of distinct product families shown in a given view"
   }
 
   measure: count {

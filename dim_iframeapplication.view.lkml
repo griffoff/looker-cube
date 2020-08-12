@@ -34,9 +34,11 @@ view: dim_iframeapplication {
             from DW_GA.DIM_IFRAMEAPPLICATION a
             left join apps app on a.iframeapplicationid = app.id
             left join names n on a.iframeapplicationid = n.id
+
     ;;
 
-    sql_trigger_value: select count(*) from DW_GA.dim_iframeapplication ;;
+     sql_trigger_value: select count(*) from DW_GA.dim_iframeapplication ;;
+
   }
   set: curated_fields_WL {fields:[displayname]}
 

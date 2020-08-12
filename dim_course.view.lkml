@@ -24,21 +24,50 @@ view: dim_course {
          ,row_number() over (partition by context_id order by cnt desc) as r
       from course_orgs
     )
-    select dc.*
-          ,c.course_key as olr_course_key
-          ,c."#CONTEXT_ID" as olr_context_id
+    select
+          dc.DW_LDID
+          ,dc.DW_LDTS
+          ,dc.COURSEID
+          ,dc.COURSEKEY
+          ,scs.course_name as COURSENAME
+          ,dc.INSTITUTIONID
+          ,dc.PRODUCTID
+          ,to_char(scs.begin_date, 'YYYYMMDD')::int as STARTDATEKEY
+          ,to_char(scs.end_date, 'YYYYMMDD')::int as ENDDATEKEY
+          ,dc.FILTERFLAG
+          ,dc.LEARNINGCOURSE
+          ,dc.LOADDATE
+          ,dc.PRODUCTPLATFORMID
+          ,dc.INSTRUCTORID
+          ,scs.course_cgi as CGI
+          ,scs.begin_date as STARTDATE
+          ,scs.end_date as ENDDATE
+          ,scs.course_key as olr_course_key
+          ,hcs.context_id as olr_context_id
           ,c.mag_acct_id
           ,orgs.organization
           ,orgs.cu_ct
           ,orgs.noncu_ct
-          ,to_char(dc.STARTDATE, 'YYYYMMDD')::int as startdatekey_new
-          ,dc.enddate < current_date() as course_complete
-          ,c.product_type
-          ,dc.startdate::DATE <= CURRENT_DATE() AND dc.enddate >= CURRENT_DATE()::DATE AS active
+          ,scs.end_date < current_date() as course_complete
+          ,scs.section_product_type as product_type
+          ,scs.begin_date::DATE <= CURRENT_DATE() AND scs.end_date >= CURRENT_DATE()::DATE AS active
+          --,COALESCE(scs.institution_id_override, scs.institution_id) as entity_no
+          ,c.entity_id_sub as entity_no
+          ,c.entity_name_course
+          ,scs.is_gateway_course
+          ,scs.is_demo
+          ,wl.language as default_language
+          ,g.lms_type
+          ,g.lms_version
+          ,g.integration_type
     from prod.dw_ga.dim_course dc
     left join prod.stg_clts.olr_courses c on dc.coursekey = c."#CONTEXT_ID"
+    left join prod.datavault.hub_coursesection hcs on dc.coursekey = hcs.context_id
+    left join prod.datavault.sat_coursesection scs on hcs.hub_coursesection_key = scs.hub_coursesection_key and scs._latest
     left join orgs on dc.coursekey = orgs.context_id
                   and orgs.r = 1
+    left join uploads.course_section_metadata.wa_course_language wl on hcs.context_id = wl.context_id
+    left join gateway.prod.course g on hcs.context_id = g.olr_context_id
     order by olr_course_key
     ;;
     sql_trigger_value: select count(*) from dw_ga.dim_course ;;
@@ -46,6 +75,26 @@ view: dim_course {
 
   set: cu_explore_fields {fields:[dim_course.coursename, dim_course.enddatekey, dim_course.startdatekey, dim_course.coursekey, dim_course.mag_acct_id, dim_course.active_course_sections, dim_course.course_complete, dim_course.product_type]}
   set: marketing_fields {fields:[cu_explore_fields*]}
+
+  dimension: default_language {description: "WebAssign course section default language"}
+
+  dimension: lms_type {
+    sql: case when ${TABLE}.lms_type is not null then ${TABLE}.lms_type
+              when ${TABLE}.is_gateway_course then 'UNKNOWN'
+              else 'NOT LMS INTEGRATED'
+        end
+     ;;
+    label: "LMS Type"
+  }
+
+  dimension: lms_integration_type {
+    sql: case when ${TABLE}.integration_type is not null then ${TABLE}.integration_type
+              when ${TABLE}.is_gateway_course then 'UNKNOWN'
+              else 'NOT LMS INTEGRATED'
+        end
+     ;;
+    label: "LMS Integration Type"
+  }
 
   # Attempt to classify courses into organizations (like higher ed, but activations don't always have a coursekey...
   # So this is no good
@@ -84,21 +133,24 @@ view: dim_course {
     sql: ${TABLE}.olr_course_key ;;
   }
 
+  dimension: course_institution {
+    hidden: no
+    type: string
+    sql: ${TABLE}.entity_name_course ;;
+  }
+
+  dimension: course_entity_id {
+    hidden: no
+    type: string
+    sql: ${TABLE}.entity_no ;;
+  }
+
   dimension: context_id {
     label: "Context ID"
     type: string
     sql: ${TABLE}.olr_context_id ;;
-    #sql: ${TABLE}.coursekey ;;
     hidden:  yes
   }
-
-#   measure: context_ids {
-#     label: "Context IDs"
-#     sql: LISTAGG(${TABLE}.olr_context_id) ;;
-#     #sql: ${TABLE}.coursekey ;;
-#     hidden:  no
-#   }
-
 
   dimension: coursekey {
     label: "Context ID"
@@ -111,59 +163,31 @@ view: dim_course {
       url: "/explore/cube/fact_siteusage?fields=dim_learningpath.lowest_level,dim_activity.activitysubcategory,fact_activityoutcome.score_avg,dim_user.count,&f[dim_course.coursekey]={{ value }}"
     }
 
-    link: {
-      label: "View Account in Magellan"
-#       url: "http://magellan.cengage.com/Magellan2/#/Contacts/{{ mag_acct_id._value }}"
-    }
+#     link: {
+#       label: "View Account in Magellan"
+#        url: "http://magellan.cengage.com/Magellan2/#/Contacts/{{ mag_acct_id._value }}"
+#     }
 
     link: {
       label:"View in Analytics Diagnostic Tool"
       url: "https://analytics-tools.cengage.info/diagnostictool/#/course/view/production/course-key/{{value}}"
     }
 
-    # link: {
-    #   label: "Engagement Toolkit (Looker)"
-    #   url: "https://cengage.looker.com/dashboards/test::engagement_toolkit?filter_course={{value}}"
-    # }
-
-    # link: {
-    #   label: "Engagement Toolkit"
-    #   url: "http://dashboard.cengage.info/engtoolkit/{{value}}"
-    # }
-
-    # link: {
-    #   label: "Engagement Toolkit - Discipline"
-    #   url: "http://dashboard.cengage.info/engtoolkit/discipline/{{dim_product.hed_discipline._value}}"
-    # }
   }
 
   dimension: product_type {
-
+    description: "Course product type (4LT, APPLIA, CNOW, etc.)"
   }
 
   dimension: coursename {
     label: "Course Name"
+    description: "Name of provisioned course"
     type: string
     sql: ${TABLE}.COURSENAME ;;
 
     link: {
       label:"View in Analytics Diagnostic Tool"
       url: "https://analytics-tools.cengage.info/diagnostictool/#/course/view/production/course-key/{{dim_course.coursekey._value}}"
-    }
-
-    link: {
-      label: "Engagement Toolkit Looker"
-      url: "https://cengage.looker.com/dashboards/test::engagement_toolkit?filter_course={{dim_course.coursekey._value}}"
-    }
-
-    link: {
-      label: "Engagement Toolkit"
-      url: "http://dashboard.cengage.info/engtoolkit/{{value}}"
-    }
-
-    link: {
-      label: "Engagement Toolkit - Discipline"
-      url: "http://dashboard.cengage.info/engtoolkit/discipline/{{dim_product.hed_discipline._value}}"
     }
   }
 
@@ -197,7 +221,7 @@ view: dim_course {
 
   dimension: enddatekey {
     type: string
-    sql: ${TABLE}.ENDDATEKEY ;;
+    sql: ${TABLE}.enddatekey ;;
     hidden: yes
   }
 
@@ -241,20 +265,20 @@ view: dim_course {
 
   dimension: startdatekey {
     type: number
-    sql: ${TABLE}.startdatekey_new ;;
+    sql: ${TABLE}.startdatekey ;;
     hidden: yes
   }
 
   dimension: is_lms_integrated {
+    description: "Is this a Gateway course?"
     label: "LMS Integrated"
     type: yesno
-    sql: length(split_part(dim_course.coursekey, '-', 1)) > 15
-        and array_size(split(dim_course.coursekey, '-')) >= 2
-        and ${productplatformid}= 26 ;;
+    sql: CASE WHEN ${lms_type}='NOT LMS INTEGRATED' THEN false ELSE true END ;;
   }
 
   dimension: course_complete {
     label: "Is Course Finished?"
+    description: "Course end date has passed"
     type: yesno
   }
 
@@ -273,8 +297,9 @@ view: dim_course {
 
   measure: count {
     label: "# Course Sections"
-    description: "Count of course sections."
-    type: count
+    description: "Count of course sections (unique count of course key)"
+    type: count_distinct
+    sql: ${coursekey} ;;
     drill_fields: [dim_institution.institutionname, coursekey, coursename, dim_start_date.calendarmonthname,mindtap_lp_activity_tags.learning_path_activity_title_count, course_section_facts.total_noofactivations]
   }
 }

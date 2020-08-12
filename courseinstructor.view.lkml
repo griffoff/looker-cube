@@ -3,37 +3,42 @@ view: courseinstructor {
 #   sql_table_name: DW_GA.COURSEINSTRUCTOR ;;
   derived_table: {
     sql:
-      with courseintr as (
-        Select ci.*,p.guid
-        from prod.dw_ga.courseinstructor ci
-              left join  prod.dw_ga.dim_party p
-              on ci.partyid = p.partyid
-      ),instr as (
-          Select c.instructor_guid, c.olr_course_key,c.course_start_date, c.is_new_customer,c.is_returning_customer, e.email, ROW_NUMBER() OVER (PARTITION BY instructor_guid ORDER BY IFF(email is null, 0, 1), e._ldts DESC) = 1 as preferred
-          from prod.cu_user_analysis.user_courses c
-          left join prod.datavault.hub_user u on c.instructor_guid = u.uid
-          left join prod.datavault.sat_user_pii e on u.hub_user_key = e.hub_user_key
-                  and active
-      )
-      Select
-        COALESCE(a.coursekey, b.olr_course_key) AS coursekey
-        ,a.snapshot_id
-        ,a.org_id
-        ,a.partyid
-        ,COALESCE(a.instructoremail, b.email) AS instructoremail
-        ,COALESCE(a.ROLE, 'INSTRUCTOR') AS ROLE
-        ,COALESCE(a.guid, b.instructor_guid) AS guid
-        ,row_number() OVER (PARTITION BY guid ORDER BY b.course_start_date) = 1 AS first_course_section
-        ,hash(coursekey, instructor_guid) as pk
-      from courseintr a
-      FULL join instr b on b.instructor_guid = a.guid
-                        and b.olr_course_key = a.coursekey
-                        and preferred
-  ;;
+        select distinct
+        sc.course_key as coursekey
+        ,ms.snapshot_id
+        ,ms.org_id
+        ,dp.partyid as partyid
+        ,datediff(week, min(sc.begin_date) over(partition by guid), sc.begin_date) <= 12 as is_new_customer
+        --,lead(sc.course_key) over(partition by guid order by sc.begin_date) is null as is_new_customer
+        ,datediff(week, min(sc.begin_date) over(partition by guid), sc.begin_date) > 12 as is_returning_customer
+        ,sup.email as instructoremail
+        ,se.access_role as role
+        ,coalesce(su.linked_guid, hu.uid) as guid
+        ,lead(sc.course_key) over(partition by guid order by sc.begin_date) is null as first_course_section
+        ,hash(coursekey, guid) as pk
+    from prod.datavault.link_user_coursesection luc
+    inner join prod.datavault.sat_enrollment se on luc.hub_enrollment_key = se.hub_enrollment_key and se._latest
+    inner join prod.datavault.sat_coursesection sc on luc.hub_coursesection_key = sc.hub_coursesection_key
+    inner join prod.datavault.hub_user hu on luc.hub_user_key = hu.hub_user_key
+    inner join prod.datavault.sat_user_v2 su on luc.hub_user_key = su.hub_user_key and su._latest
+    inner join prod.datavault.sat_user_pii_v2 sup on luc.hub_user_key = sup.hub_user_key and sup._latest
+    left join (
+        select guid, any_value(partyid) as partyid
+        from prod.dw_ga.dim_party
+        group by 1
+        ) dp on coalesce(su.linked_guid, hu.uid) = dp.guid
+    left join (
+        select o.external_id, s.id as snapshot_id, s.org_id
+        from mindtap.prod_nb.org o
+        inner join mindtap.prod_nb.snapshot s on o.id = s.org_id
+            ) ms on sc.course_key = ms.external_id
+    where se.access_role != 'STUDENT'
+    ;;
+
     persist_for: "24 hours"
   }
 
-  set: marketing_fields {fields:[instructoremail,is_new_customer,is_returning_customer,instructor_guid]}
+  set: marketing_fields {fields:[instructoremail,is_new_customer,instructor_guid]}
 
   dimension: pk {
     primary_key: yes
@@ -48,9 +53,9 @@ view: courseinstructor {
   }
 
   dimension: instructoremail {
-    group_label: "Instructor"
+    group_label: "Instructor(s)"
     label: "Instructor Email"
-    description: " Please use this Email ID to identify the instructor linked to a course. We do not have an instructor name field yet"
+    description: "Please use this Email ID to identify the instructor linked to a course. We do not have an instructor name field yet"
     type: string
     sql: ${TABLE}.INSTRUCTOREMAIL ;;
   }
@@ -77,7 +82,8 @@ view: courseinstructor {
   }
 
   dimension: role {
-    group_label: "Instructor"
+    group_label: "Instructor(s)"
+    description: "Instructor"
     label: "Instructor Role"
     type: string
     sql: ${TABLE}.ROLE ;;
@@ -91,34 +97,40 @@ view: courseinstructor {
   }
 
   dimension: instructor_guid {
-    group_label: "Instructor"
+    label: "Instructor GUID"
+    group_label: "Instructor(s)"
+    description: "May be multiple instructor GUID for adjunct prof. etc."
     type: string
     sql: ${TABLE}."GUID" ;;
   }
 
   dimension: new_or_returning {
+    label: "Course Section Instructor New / Returning"
     type: string
-    group_label: "Instructor"
+    description: "Value representing whether the instructor is new to Cengage or returning"
+    group_label: "Instructor(s)"
     sql: CASE WHEN ${TABLE}.first_course_section THEN 'New to Cengage' ELSE 'Returning' END ;;
   }
 
   dimension: is_new_customer {
-    group_label: "Instructor"
-    label: "Is New Instructor"
-    type: string
-    sql:  ${TABLE}."IS_NEW_CUSTOMER" ;;
+    group_label: "Instructor(s)"
+    description: "Instructor's first term is the current term"
+    label: "Course Section Has New Instructor"
+    type: yesno
+    sql:  ${TABLE}."IS_NEW_CUSTOMER" = 1 ;;
   }
 
   dimension: is_returning_customer {
-    group_label: "Instructor"
-    label: "Is Returning Instructor"
-    type: string
-    sql:  ${TABLE}."IS_RETURNING_CUSTOMER" ;;
+    group_label: "Instructor(s)"
+    description: "Instructor first term is not the current term and instructor has course in the current term"
+    label: "Course Section Has Returning Instructor"
+    type: yesno
+    sql:  ${TABLE}."IS_RETURNING_CUSTOMER" = 1 ;;
   }
 
   measure: instructor_count {
-    label: "# Instructors"
-    description: "uique count of instructor guids"
+    label: "# Course Section Instructors"
+    description: "Unique count of instructor guids on related course sections"
     hidden: no
     type: count_distinct
     sql: ${instructor_guid} ;;

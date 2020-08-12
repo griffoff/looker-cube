@@ -43,10 +43,19 @@ view: guided_course_setup {
       sql_trigger_value: SELECT CURRENT_DATE() ;;
     }
 
-    measure: count {
-      type: count
-      drill_fields: [detail*]
+
+
+    dimension: pk {
+      primary_key: yes
+      sql: hash(${local_time},${userssoguid},${eventaction}) ;;
+      hidden:  yes
     }
+
+  measure: count {
+    type: count
+    drill_fields: [detail*]
+  }
+
 
     measure: user_count {
       type: count_distinct

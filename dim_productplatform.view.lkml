@@ -44,6 +44,7 @@ view: dim_productplatform {
 #   }
 
   dimension: newproductplatform {
+    hidden: yes
     label: "New Platform name"
     description: "MindTap, Aplia, CNOW, etc."
     type: string
@@ -57,6 +58,7 @@ view: dim_productplatform {
     sql: ${productplatform} in ('MindTap', 'Aplia','CNOW','SAM','4LTR Online','OWL V2')
               or ${productplatform} in ('Diet Analysis Plus', 'Write Experience', 'Insite', 'Speech Studio')
               or ${productplatform} in ('OWL','SAM', 'WebAssign', 'Quia') ;;
+  description: "Product platform = MindTap, Aplia, CNOW, SAM, 4LTR Online, OWL V2, Diet Analysis Plus, Write Experience, Insite, Speech Studio, OWL, SAM, WebAssign, Quia"
   }
 
   dimension: activationsreportplatform {
@@ -65,6 +67,7 @@ view: dim_productplatform {
     sql: case when ${productplatform} in ('Diet Analysis Plus', 'Write Experience', 'Insite', 'Speech Studio') then 'Other platforms'
               when ${productplatform} = '4LTR Online' then '4LTR'
               else ${productplatform} end;;
+  description: "Platform as it appears in Activations Report"
   }
 
   dimension: productplatformid {

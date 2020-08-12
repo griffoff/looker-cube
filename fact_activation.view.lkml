@@ -73,7 +73,7 @@ view: fact_activation {
   dimension: activationcode {
     type: string
     sql: ${TABLE}.ACTIVATIONCODE ;;
-    hidden: yes
+    hidden: no
   }
 
   dimension: activationcodeuser {
@@ -90,7 +90,7 @@ view: fact_activation {
   }
 
   dimension: activationtypeid {
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}.ACTIVATIONTYPEID ;;
   }

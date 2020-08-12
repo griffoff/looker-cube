@@ -19,11 +19,3 @@ include: "dims.lkml"
 #     sql_on: ${users.id} = ${orders.user_id} ;;
 #   }
 # }
-explore: engagementsource_marketing{
-    label: "engagement_marketing"
-    extends: [dim_course]
-    join:  dim_course {
-      sql_on: ${dim_course.coursekey} = ${engagementsource_marketing.coursekey} ;;
-      relationship: many_to_one
-    }
-}
