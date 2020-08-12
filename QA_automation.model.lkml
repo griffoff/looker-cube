@@ -27,7 +27,7 @@ explore:iam_v{
 explore:ipm_v{
   label: "IPM_Events"
 }
-<<<<<<< HEAD
+
 explore: fairuse_login_v {
   label: "Fairuse_Login_Events"
 }
@@ -36,8 +36,8 @@ explore: olr_activations_test_v {
 }
 explore: datavault_dataquality_v {
   label: "Datavault_DataQuality"
-=======
+ }
+
 explore: cafe_eventing_server_activity_event{
   label: "CAP_Eventing_Server_Activity"
->>>>>>> branch 'master' of git@lkrgit_github_050fc477331387631c224b6276ad0eb279f1ba4b:griffoff/looker-cube.git
 }
