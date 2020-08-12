@@ -1,5 +1,6 @@
 view: datavault_dataquality_v {
   sql_table_name: QA_TESTREPORTS.DATAVAULT_STATUS ;;
+  }
   # # You can specify the table name if it's different from the view name:
   # sql_table_name: my_schema_name.tester ;;
   #
@@ -28,7 +29,7 @@ view: datavault_dataquality_v {
   #   type: sum
   #   sql: ${lifetime_orders} ;;
   # }
-}
+
 
 # view: datavault_dataquality {
 #   # Or, you could make this view a derived table, like this:
