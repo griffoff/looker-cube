@@ -41,3 +41,7 @@ explore: datavault_dataquality_v {
 explore: cafe_eventing_server_activity_event{
   label: "CAP_Eventing_Server_Activity"
 }
+
+explore: rental_events_v{
+  label: "Rental_events"
+}
