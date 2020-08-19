@@ -1,6 +1,6 @@
 view: datavault_test_report {
   derived_table: {
-    sql: SELECT * FROM "QA_TESTREPORTS"."DATAVAULT_STATUS" LIMIT 10
+    sql: SELECT * FROM "QA_TESTREPORTS"."DATAVAULT_STATUS"
       ;;
   }
 
