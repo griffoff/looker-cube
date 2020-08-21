@@ -18,6 +18,10 @@ datagroup: fact_activityoutcome_datagroup {
   sql_trigger: SELECT COUNT(*) FROM dw_ga.fact_activityoutcome;;
 }
 
+datagroup: daily_refresh {
+  sql_trigger: SELECT CURRENT_DATE() ;;
+}
+
 #include dims model
 include: "dims.lkml"
 # include all the views
@@ -815,8 +819,9 @@ explore: ga_data_parsed {
 }
 
 
-
+explore: datavault_test_report {}
 
 
 explore: olr_nonolr_combined_user_activations {}
 explore: olr_nonolr_combined_user_activations_wkly {}
+explore: qa_rental_v {}
