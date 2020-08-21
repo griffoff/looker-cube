@@ -61,6 +61,8 @@ view: dim_course {
           ,scg.lms_type
           ,scg.lms_version
           ,scg.integration_type
+          ,g.lms_sync_course_scores
+          ,g.lms_sync_activity_scores
     from prod.dw_ga.dim_course dc
     left join prod.stg_clts.olr_courses c on dc.coursekey = c."#CONTEXT_ID"
     left join prod.datavault.hub_coursesection hcs on dc.coursekey = hcs.context_id
@@ -70,6 +72,7 @@ view: dim_course {
     left join uploads.course_section_metadata.wa_course_language wl on hcs.context_id = wl.context_id
     left join prod.datavault.link_coursesectiongateway_coursesection lcsg on hcs.hub_coursesection_key = lcsg.hub_coursesection_key
     left join prod.datavault.sat_coursesection_gateway scg on lcsg.hub_coursesectiongateway_key = scg.hub_coursesectiongateway_key and scg._latest
+    left join mindtap.prod_nb.gradebook g on dc.coursekey = g.external_id
     order by olr_course_key
     ;;
     sql_trigger_value: select count(*) from dw_ga.dim_course ;;
@@ -96,6 +99,12 @@ view: dim_course {
         end
      ;;
     label: "LMS Integration Type"
+  }
+
+  dimension: lms_grade_sync  {
+    label: "LMS Grade Sync"
+    description: "Type of grade sync for LMS integrated courses"
+    sql: case when ${TABLE}.lms_sync_course_scores then 'Course Level' when ${TABLE}.lms_sync_activity_scores then 'Activity Level' else 'None' end ;;
   }
 
   # Attempt to classify courses into organizations (like higher ed, but activations don't always have a coursekey...
