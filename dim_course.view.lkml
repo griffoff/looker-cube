@@ -102,8 +102,8 @@ view: dim_course {
   }
 
   dimension: lms_grade_sync  {
-    label: "LMS Grade Sync"
-    description: "Type of grade sync for LMS integrated courses"
+    label: "LMS Grade Sync (MindTap)"
+    description: "Type of grade sync for LMS integrated MindTap courses"
     sql: case when ${TABLE}.lms_sync_course_scores then 'Course Level' when ${TABLE}.lms_sync_activity_scores then 'Activity Level' else 'None' end ;;
   }
 
