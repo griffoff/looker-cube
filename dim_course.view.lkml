@@ -25,6 +25,7 @@ view: dim_course {
       from course_orgs
     )
     select
+          DISTINCT
           dc.DW_LDID
           ,dc.DW_LDTS
           ,dc.COURSEID
@@ -57,9 +58,9 @@ view: dim_course {
           ,scs.is_gateway_course
           ,scs.is_demo
           ,wl.language as default_language
-          ,g.lms_type
-          ,g.lms_version
-          ,g.integration_type
+          ,scg.lms_type
+          ,scg.lms_version
+          ,scg.integration_type
     from prod.dw_ga.dim_course dc
     left join prod.stg_clts.olr_courses c on dc.coursekey = c."#CONTEXT_ID"
     left join prod.datavault.hub_coursesection hcs on dc.coursekey = hcs.context_id
@@ -67,7 +68,8 @@ view: dim_course {
     left join orgs on dc.coursekey = orgs.context_id
                   and orgs.r = 1
     left join uploads.course_section_metadata.wa_course_language wl on hcs.context_id = wl.context_id
-    left join gateway.prod.course g on hcs.context_id = g.olr_context_id
+    left join prod.datavault.link_coursesectiongateway_coursesection lcsg on hcs.hub_coursesection_key = lcsg.hub_coursesection_key
+    left join prod.datavault.sat_coursesection_gateway scg on lcsg.hub_coursesectiongateway_key = scg.hub_coursesectiongateway_key and scg._latest
     order by olr_course_key
     ;;
     sql_trigger_value: select count(*) from dw_ga.dim_course ;;
