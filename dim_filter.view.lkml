@@ -7,7 +7,7 @@ view: dim_filter {
         , coalesce(try_cast(course_internal_flg as boolean),false) as is_internal
       from prod.stg_clts.olr_courses
     ;;
-    datagroup_trigger: daily_refresh
+    sql_trigger_value: SELECT COUNT(*) FROM prod.stg_clts.olr_courses;;
   }
 
   dimension: course_key {hidden: yes}
