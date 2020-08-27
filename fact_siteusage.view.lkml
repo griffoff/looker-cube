@@ -54,29 +54,38 @@ view: fact_siteusage {
 
   #sql_table_name: DW_GA.FACT_SITEUSAGE ;;
   derived_table: {
-    sql:
-      select
-            coalesce(datediff(day, v.start_date, fsu.eventdate), daysfromcoursestart) as new_relative_days_from_start
-            --,row_number() over (order by pageinstanceid, userid, learningpathid, eventdate, new_relative_days_from_start) as id
-            ,looker_scratch.fact_siteusageid.nextval as id
-            ,fsu.*
-            ,CASE
-              WHEN fsu.PAGEVIEWTIME>=1000
-                THEN fsu.PAGEVIEWTIME /1000.0/86400.0
-              END as pageviewtime_days
-            ,LAG(fsu.eventdate) over (partition by fsu.userid, fsu.productid, a.applicationname order by fsu.eventdate) as prev_applicationusagedate
-            ,DENSE_RANK() OVER (PARTITION BY fsu.userid, fsu.courseid, fsu.learningpathid ORDER BY fsu.eventdate::DATE) AS activity_sequence_day
-            ,DENSE_RANK() OVER (PARTITION BY fsu.userid, fsu.courseid, fsu.learningpathid ORDER BY floor(new_relative_days_from_start / 7)) AS activity_sequence_week
-            ,DENSE_RANK() OVER (PARTITION BY fsu.userid, fsu.courseid, fsu.learningpathid ORDER BY floor(new_relative_days_from_start / 14)) AS activity_sequence_week2
-            ,DENSE_RANK() OVER (PARTITION BY fsu.userid, fsu.courseid, fsu.learningpathid ORDER BY floor(new_relative_days_from_start / 28)) AS activity_sequence_week4
-      from dw_ga.fact_siteusage fsu
-      inner join dw_ga.dim_course c on fsu.courseid = c.courseid
-      left join ${map_course_versions.SQL_TABLE_NAME} v on c.coursekey = v.context_id
-                                                                  and fsu.eventdate between v.effective_from and v.effective_to
-      left join ${dim_activity.SQL_TABLE_NAME} a on fsu.activityid = a.activityid
-      order by courseid, new_relative_days_from_start, userid;;
+    create_process: {
+      sql_step:
+        create or replace transient table ${SQL_TABLE_NAME}
+        as
+        select
+          coalesce(datediff(day, v.start_date, fsu.eventdate), daysfromcoursestart) as new_relative_days_from_start
+          --,row_number() over (order by pageinstanceid, userid, learningpathid, eventdate, new_relative_days_from_start) as id
+          ,looker_scratch.fact_siteusageid.nextval as id
+          ,fsu.*
+          ,CASE
+          WHEN fsu.PAGEVIEWTIME>=1000
+          THEN fsu.PAGEVIEWTIME /1000.0/86400.0
+          END as pageviewtime_days
+          ,LAG(fsu.eventdate) over (partition by fsu.userid, fsu.productid, a.applicationname order by fsu.eventdate) as prev_applicationusagedate
+          ,DENSE_RANK() OVER (PARTITION BY fsu.userid, fsu.courseid, fsu.learningpathid ORDER BY fsu.eventdate::DATE) AS activity_sequence_day
+          ,DENSE_RANK() OVER (PARTITION BY fsu.userid, fsu.courseid, fsu.learningpathid ORDER BY floor(new_relative_days_from_start / 7)) AS activity_sequence_week
+          ,DENSE_RANK() OVER (PARTITION BY fsu.userid, fsu.courseid, fsu.learningpathid ORDER BY floor(new_relative_days_from_start / 14)) AS activity_sequence_week2
+          ,DENSE_RANK() OVER (PARTITION BY fsu.userid, fsu.courseid, fsu.learningpathid ORDER BY floor(new_relative_days_from_start / 28)) AS activity_sequence_week4
+        from dw_ga.fact_siteusage fsu
+        inner join dw_ga.dim_course c on fsu.courseid = c.courseid
+        left join ${map_course_versions.SQL_TABLE_NAME} v on c.coursekey = v.context_id
+                                                          and fsu.eventdate between v.effective_from and v.effective_to
+        left join ${dim_activity.SQL_TABLE_NAME} a on fsu.activityid = a.activityid
+        order by courseid, new_relative_days_from_start, userid;;
 
-      sql_trigger_value: select count(*) from dw_ga.fact_siteusage;;
+      sql_step: alter table ${SQL_TABLE_NAME} cluster by (courseid) ;;
+
+      sql_step: alter table ${SQL_TABLE_NAME} recluster ;;
+
+    }
+
+    sql_trigger_value: select count(*) from dw_ga.fact_siteusage;;
   }
 
   dimension: prev_applicationusagedate {
