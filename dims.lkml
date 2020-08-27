@@ -9,6 +9,7 @@
 
 include: "dim_*.view.lkml"         # include all views in this project
 include: "fact_*.view.lkml"
+include: "custom_filters.*.view.lkml"
 # include: "stg_clts.olr_courses.view.lkml"
 include: "location.view.lkml"
 include: "UPLOADS.mindtap_lp_activity_tags.view.lkml"
