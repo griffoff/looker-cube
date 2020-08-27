@@ -82,11 +82,6 @@ explore: dim_course {
     relationship: many_to_one
   }
 
-  # join: dim_institution {
-  #   relationship: many_to_one
-  #   sql_on: ${dim_course.institutionid} = ${dim_institution.institutionid} ;;
-  # }
-
   join: dim_productplatform {
     relationship: many_to_one
     sql_on: ${dim_course.productplatformid} = ${dim_productplatform.productplatformid} ;;
@@ -112,6 +107,16 @@ explore: dim_course {
     relationship: many_to_many
   }
 
+  join: course_keys_filter_1 {
+    sql_on: ${olr_courses.course_key} = ${course_keys_filter_1.course_key} ;;
+    #type: full_outer
+    relationship: one_to_one
+  }
+
+  join: course_keys_filter_2 {
+    sql_on: ${olr_courses.course_key} = ${course_keys_filter_2.course_key} ;;
+    relationship: one_to_one
+  }
 
 }
 
