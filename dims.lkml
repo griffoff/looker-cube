@@ -56,6 +56,8 @@ explore: dim_course {
   extension: required
   extends: [dim_institution, dim_product]
 
+  always_filter: {filters:[dim_filter.is_external: "Yes"]}
+
   join: olr_courses {
     fields: [olr_courses.curated_fields*]
     sql_on: ${dim_course.coursekey} = ${olr_courses.context_id};;
