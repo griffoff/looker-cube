@@ -81,7 +81,7 @@ view: dim_course {
            , scs.is_demo
            , wl.language AS default_language
            , scg.lms_type
-           , scg.lms_version
+           , 'v' || NULLIF(scg.lms_version, '') AS lms_version
            , scg.integration_type
            , g.lms_sync_course_scores
            , g.lms_sync_activity_scores
@@ -115,6 +115,7 @@ view: dim_course {
   dimension: default_language {description: "WebAssign course section default language"}
 
   dimension: lms_type {
+    group_label: "LMS Integration"
     sql: case when ${TABLE}.lms_type is not null then ${TABLE}.lms_type
               when ${TABLE}.is_gateway_course then 'UNKNOWN'
               else 'NOT LMS INTEGRATED'
@@ -124,6 +125,7 @@ view: dim_course {
   }
 
   dimension: lms_integration_type {
+    group_label: "LMS Integration"
     sql: case when ${TABLE}.integration_type is not null then ${TABLE}.integration_type
               when ${TABLE}.is_gateway_course then 'UNKNOWN'
               else 'NOT LMS INTEGRATED'
@@ -133,6 +135,7 @@ view: dim_course {
   }
 
   dimension: lms_grade_sync  {
+    group_label: "LMS Integration"
     label: "LMS Grade Sync (MindTap)"
     description: "Type of grade sync for LMS integrated MindTap courses"
     sql: case when ${TABLE}.lms_sync_course_scores then 'Course Level' when ${TABLE}.lms_sync_activity_scores then 'Activity Level' else 'None' end ;;
