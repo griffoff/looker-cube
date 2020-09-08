@@ -47,6 +47,11 @@ explore:  dim_product {
     fields: [products.prod_family_cd, products.available_dt*, products.copyright_yr, products.prod_family_cd_edition]
 
   }
+
+  join: dim_productplatform {
+    relationship: many_to_one
+    sql_on: ${products.platform} = ${dim_productplatform.productplatformkey} ;;
+  }
 }
 
 
@@ -83,11 +88,6 @@ explore: dim_course {
   join: dim_institution {
     sql_on: ${dim_course.course_entity_id} = ${dim_institution.entity_no} ;;
     relationship: many_to_one
-  }
-
-  join: dim_productplatform {
-    relationship: many_to_one
-    sql_on: ${dim_course.productplatformid} = ${dim_productplatform.productplatformid} ;;
   }
 
   join: dim_filter {
