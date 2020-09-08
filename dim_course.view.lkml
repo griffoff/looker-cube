@@ -71,7 +71,11 @@ view: dim_course {
            , scs.section_product_type AS product_type
            , scs.begin_date::DATE <= CURRENT_DATE() AND scs.end_date >= CURRENT_DATE()::DATE AS active
              --,COALESCE(scs.institution_id_override, scs.institution_id) as entity_no
-           , COALESCE(e.entity_no::STRING, e2.entity_no::STRING, en.entity_no::STRING, c.entity_id_sub::STRING, c.entity_no::STRING) AS entity_no
+           , COALESCE(e.entity_no::STRING
+                      , NULLIF(e2.entity_no, '-1')::STRING
+                      , en.entity_no::STRING
+                      , NULLIF(c.entity_id_sub, 'NOT FOUND')::STRING
+                      , c.entity_no::STRING) as entity_no
            , c.entity_name_course
            , scs.is_gateway_course
            , scs.is_demo
