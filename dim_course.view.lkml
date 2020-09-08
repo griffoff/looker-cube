@@ -71,7 +71,7 @@ view: dim_course {
            , scs.section_product_type AS product_type
            , scs.begin_date::DATE <= CURRENT_DATE() AND scs.end_date >= CURRENT_DATE()::DATE AS active
              --,COALESCE(scs.institution_id_override, scs.institution_id) as entity_no
-           , c.entity_id_sub AS entity_no
+           , COALESCE(e.entity_no::STRING, e2.entity_no::STRING, en.entity_no::STRING, c.entity_id_sub::STRING, c.entity_no::STRING) AS entity_no
            , c.entity_name_course
            , scs.is_gateway_course
            , scs.is_demo
@@ -81,10 +81,17 @@ view: dim_course {
            , scg.integration_type
            , g.lms_sync_course_scores
            , g.lms_sync_activity_scores
-           , el.cui
-           , el.ia
+           , COALESCE(el.cui, FALSE) as cui
+           , COALESCE(el.ia, FALSE) as ia
       FROM prod.dw_ga.dim_course dc
            LEFT JOIN prod.stg_clts.olr_courses c ON dc.coursekey = c."#CONTEXT_ID"
+           LEFT JOIN prod.stg_clts.entities e ON c.entity_id_sub = e.entity_no
+           LEFT JOIN prod.stg_clts.entities e2 ON c.entity_no = e2.entity_no
+           LEFT JOIN (
+                    SELECT
+                      institution_nm, entity_no, ROW_NUMBER() OVER (PARTITION BY institution_nm ORDER BY enrollment_no DESC) = 1 AS best
+                    FROM prod.stg_clts.entities
+                      ) en ON UPPER(c.entity_name_course) = UPPER(en.institution_nm)
            LEFT JOIN prod.datavault.hub_coursesection hcs ON dc.coursekey = hcs.context_id
            LEFT JOIN prod.datavault.sat_coursesection scs ON hcs.hub_coursesection_key = scs.hub_coursesection_key AND scs._latest
            LEFT JOIN orgs ON dc.coursekey = orgs.context_id AND orgs.r = 1
@@ -136,6 +143,27 @@ view: dim_course {
       else: "No License"
       }
     }
+
+  measure: course_count_cui {
+    group_label: "Institutional License"
+    label: "# CUI Course Sections"
+    type:count_distinct
+    sql: IFF(${cui}, ${coursekey}, NULL);;
+  }
+
+  measure: course_count_ia {
+    group_label: "Institutional License"
+    label: "# IA Course Sections"
+    type:count_distinct
+    sql: IFF(${ia}, ${coursekey}, NULL);;
+  }
+
+  measure: course_count_no_license {
+    group_label: "Institutional License"
+    label: "# Course Sections with No Institutional License"
+    type:count_distinct
+    sql: IFF(NOT (${cui} or ${ia}), ${coursekey}, NULL);;
+  }
 
   # Attempt to classify courses into organizations (like higher ed, but activations don't always have a coursekey...
   # So this is no good

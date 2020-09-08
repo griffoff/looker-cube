@@ -3,9 +3,14 @@ view: dim_filter {
 
   derived_table: {
     sql:
-      select "#CONTEXT_ID" as course_key
-        , coalesce(try_cast(course_internal_flg as boolean),false) as is_internal
-      from prod.stg_clts.olr_courses
+      SELECT
+        "#CONTEXT_ID" AS course_key
+        , COALESCE(TRY_CAST(course_internal_flg AS BOOLEAN), FALSE)
+          OR UPPER(entity_name_course) IN ('NGLSYNC TEST SCHOOL', 'TEST')
+          OR entity_name_course ilike 'CENGAGE%'
+          OR entity_name_course ilike 'SOUTHWESTERN PUBL%'
+        AS is_internal
+      FROM prod.stg_clts.olr_courses
     ;;
     sql_trigger_value: SELECT COUNT(*) FROM prod.stg_clts.olr_courses;;
   }
