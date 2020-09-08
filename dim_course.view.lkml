@@ -43,6 +43,25 @@ view: dim_course {
                                  --AND secsm._effective
                                  --AND NOT secsm.deleted
              )
+     , lms AS (
+              SELECT hcs.hub_coursesection_key
+                   , COALESCE(scg.lms_type, a.kind) AS lms_type
+                   , 'v' || NULLIF(scg.lms_version, '') AS lms_version
+                   , scg.integration_type
+                   , LEAD(1)
+                          OVER (PARTITION BY hcs.hub_coursesection_key ORDER BY COALESCE(scg.created_at, a.created_at) DESC) IS NULL AS latest
+              FROM prod.datavault.hub_coursesection hcs
+                   LEFT JOIN prod.datavault.link_coursesectiongateway_coursesection lcsg
+                             ON hcs.hub_coursesection_key = lcsg.hub_coursesection_key
+                   LEFT JOIN prod.datavault.sat_coursesection_gateway scg
+                             ON lcsg.hub_coursesectiongateway_key = scg.hub_coursesectiongateway_key AND scg._latest
+                   LEFT JOIN webassign.wa_app_v4net.sections s ON hcs.context_id = s.olr_context_id
+                   LEFT JOIN webassign.wa_app_v4net.courses crs ON crs.id = s.course
+                   LEFT JOIN webassign.wa_app_v4net.schools sch ON sch.id = crs.school
+                   LEFT JOIN webassign.wa_app_v4net.partner_applications a ON a.school_id = sch.id
+              WHERE scg.lms_type IS NOT NULL
+              OR a.kind IS NOT NULL
+             )
       SELECT DISTINCT
              dc.dw_ldid
            , dc.dw_ldts
@@ -80,11 +99,11 @@ view: dim_course {
            , scs.is_gateway_course
            , scs.is_demo
            , wl.language AS default_language
-           , scg.lms_type
-           , 'v' || NULLIF(scg.lms_version, '') AS lms_version
-           , scg.integration_type
-           , g.lms_sync_course_scores
-           , g.lms_sync_activity_scores
+           , UPPER(DECODE(lms.lms_type, 'BB', 'Blackboard', lms.lms_type)) as lms_type
+           , lms.lms_version
+           , lms.integration_type
+           , lms.lms_type IS NOT NULL AND g.lms_sync_course_scores AS lms_sync_course_scores
+           , lms.lms_type IS NOT NULL AND g.lms_sync_activity_scores AS lms_sync_activity_scores
            , COALESCE(el.cui, FALSE) as cui
            , COALESCE(el.ia, FALSE) as ia
       FROM prod.dw_ga.dim_course dc
@@ -100,8 +119,7 @@ view: dim_course {
            LEFT JOIN prod.datavault.sat_coursesection scs ON hcs.hub_coursesection_key = scs.hub_coursesection_key AND scs._latest
            LEFT JOIN orgs ON dc.coursekey = orgs.context_id AND orgs.r = 1
            LEFT JOIN uploads.course_section_metadata.wa_course_language wl ON hcs.context_id = wl.context_id
-           LEFT JOIN prod.datavault.link_coursesectiongateway_coursesection lcsg ON hcs.hub_coursesection_key = lcsg.hub_coursesection_key
-           LEFT JOIN prod.datavault.sat_coursesection_gateway scg ON lcsg.hub_coursesectiongateway_key = scg.hub_coursesectiongateway_key AND scg._latest
+           LEFT JOIN lms ON hcs.hub_coursesection_key = lms.hub_coursesection_key AND lms.latest
            LEFT JOIN mindtap.prod_nb.gradebook g ON dc.coursekey = g.external_id
            LEFT JOIN el ON dc.coursekey = el.context_id AND el.latest
       ORDER BY olr_course_key
