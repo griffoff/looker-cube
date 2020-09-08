@@ -141,6 +141,14 @@ view: dim_course {
     sql: case when ${TABLE}.lms_sync_course_scores then 'Course Level' when ${TABLE}.lms_sync_activity_scores then 'Activity Level' else 'None' end ;;
   }
 
+  dimension: is_lms_integrated {
+    group_label: "LMS Integration"
+    description: "Is this a Gateway course?"
+    label: "LMS Integrated"
+    type: yesno
+    sql: ${lms_type}!='NOT LMS INTEGRATED' ;;
+  }
+
   dimension: cui {group_label: "Institutional License" label: "CUI" type:yesno}
   dimension: ia {group_label: "Institutional License" label: "IA" type:yesno}
   dimension: institutional_license_type {group_label: "Institutional License" type:string
@@ -343,13 +351,6 @@ view: dim_course {
     type: number
     sql: ${TABLE}.startdatekey ;;
     hidden: yes
-  }
-
-  dimension: is_lms_integrated {
-    description: "Is this a Gateway course?"
-    label: "LMS Integrated"
-    type: yesno
-    sql: CASE WHEN ${lms_type}='NOT LMS INTEGRATED' THEN false ELSE true END ;;
   }
 
   dimension: course_complete {

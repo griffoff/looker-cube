@@ -200,19 +200,19 @@ view: dim_institution {
   }
 
   dimension: deal_type {
-    group_label: "Institutional Access"
+    group_label: "Institutional License"
     label: "CUI Deal type"
   }
 
   dimension: cui {
-    group_label: "Institutional Access"
+    group_label: "Institutional License"
     type: yesno
     label: "CUI"
     sql: ${deal_type} IS NOT NULL ;;
   }
 
   dimension: full_cui {
-    group_label: "Institutional Access"
+    group_label: "Institutional License"
     type: yesno
     label: "CUI Full Coverage"
   }
