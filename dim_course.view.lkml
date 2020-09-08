@@ -3,77 +3,97 @@ view: dim_course {
   #sql_table_name: DW_GA.DIM_COURSE ;;
   derived_table: {
     sql:
-    with course_orgs as (
-      select
-          context_id
-          ,organization
-          ,count(*) as cnt
-          ,SUM(CASE WHEN cu_flg ilike 'Y' then 1 ELSE 0 END ) as cu_ct
-          ,SUM(CASE WHEN cu_flg ilike 'N' then 1 ELSE 0 END ) as noncu_ct
-      from prod.stg_clts.activations_olr
-      where organization is not null
-      and in_actv_flg = 1
-      group by 1, 2
-    )
-    ,orgs as (
-      select
-         context_id
-         ,organization
-         ,cu_ct
-         ,noncu_ct
-         ,row_number() over (partition by context_id order by cnt desc) as r
-      from course_orgs
-    )
-    select
-          DISTINCT
-          dc.DW_LDID
-          ,dc.DW_LDTS
-          ,dc.COURSEID
-          ,dc.COURSEKEY
-          ,scs.course_name as COURSENAME
-          ,dc.INSTITUTIONID
-          ,dc.PRODUCTID
-          ,to_char(scs.begin_date, 'YYYYMMDD')::int as STARTDATEKEY
-          ,to_char(scs.end_date, 'YYYYMMDD')::int as ENDDATEKEY
-          ,dc.FILTERFLAG
-          ,dc.LEARNINGCOURSE
-          ,dc.LOADDATE
-          ,dc.PRODUCTPLATFORMID
-          ,dc.INSTRUCTORID
-          ,scs.course_cgi as CGI
-          ,scs.begin_date as STARTDATE
-          ,scs.end_date as ENDDATE
-          ,scs.course_key as olr_course_key
-          ,hcs.context_id as olr_context_id
-          ,c.mag_acct_id
-          ,orgs.organization
-          ,orgs.cu_ct
-          ,orgs.noncu_ct
-          ,scs.end_date < current_date() as course_complete
-          ,scs.section_product_type as product_type
-          ,scs.begin_date::DATE <= CURRENT_DATE() AND scs.end_date >= CURRENT_DATE()::DATE AS active
-          --,COALESCE(scs.institution_id_override, scs.institution_id) as entity_no
-          ,c.entity_id_sub as entity_no
-          ,c.entity_name_course
-          ,scs.is_gateway_course
-          ,scs.is_demo
-          ,wl.language as default_language
-          ,scg.lms_type
-          ,scg.lms_version
-          ,scg.integration_type
-          ,g.lms_sync_course_scores
-          ,g.lms_sync_activity_scores
-    from prod.dw_ga.dim_course dc
-    left join prod.stg_clts.olr_courses c on dc.coursekey = c."#CONTEXT_ID"
-    left join prod.datavault.hub_coursesection hcs on dc.coursekey = hcs.context_id
-    left join prod.datavault.sat_coursesection scs on hcs.hub_coursesection_key = scs.hub_coursesection_key and scs._latest
-    left join orgs on dc.coursekey = orgs.context_id
-                  and orgs.r = 1
-    left join uploads.course_section_metadata.wa_course_language wl on hcs.context_id = wl.context_id
-    left join prod.datavault.link_coursesectiongateway_coursesection lcsg on hcs.hub_coursesection_key = lcsg.hub_coursesection_key
-    left join prod.datavault.sat_coursesection_gateway scg on lcsg.hub_coursesectiongateway_key = scg.hub_coursesectiongateway_key and scg._latest
-    left join mindtap.prod_nb.gradebook g on dc.coursekey = g.external_id
-    order by olr_course_key
+      WITH course_orgs AS (
+                        SELECT context_id
+                             , organization
+                             , count(*) AS cnt
+                             , SUM(CASE WHEN cu_flg ILIKE 'Y' THEN 1 ELSE 0 END) AS cu_ct
+                             , SUM(CASE WHEN cu_flg ILIKE 'N' THEN 1 ELSE 0 END) AS noncu_ct
+                        FROM prod.stg_clts.activations_olr
+                        WHERE organization IS NOT NULL
+                          AND in_actv_flg = 1
+                        GROUP BY 1, 2
+                      )
+     , orgs AS (
+                 SELECT context_id
+                      , organization
+                      , cu_ct
+                      , noncu_ct
+                      , row_number() OVER (PARTITION BY context_id ORDER BY cnt DESC) AS r
+                 FROM course_orgs
+               )
+     , el AS (
+               SELECT context_id
+                    , (sel.cu_enabled OR iac_isbn13 IN ('0000357700006', '0000357700013', '0000357700020')) AS cui
+                    , NOT cui AS ia
+                    , ROW_NUMBER() OVER (PARTITION BY context_id ORDER BY sel.begin_date DESC) = 1 AS latest
+               FROM prod.datavault.hub_coursesection hcs
+                    INNER JOIN prod.datavault.sat_coursesection scs
+                               ON hcs.hub_coursesection_key = scs.hub_coursesection_key AND scs._latest
+                    INNER JOIN prod.datavault.link_el_to_section_mapping lecsm
+                               ON hcs.hub_coursesection_key = lecsm.hub_coursesection_key
+                    INNER JOIN prod.datavault.sat_enterpriselicense sel
+                               ON lecsm.hub_enterpriselicense_key = sel.hub_enterpriselicense_key
+                                 AND sel._latest
+                                 AND scs.begin_date BETWEEN sel.begin_date AND sel.end_date
+                                -- AND sel.end_date > current_date()
+                                -- AND sel.begin_date <= current_date()
+                    INNER JOIN prod.datavault.sat_el_to_section_mapping secsm
+                               ON lecsm.link_el_to_section_mapping_key = secsm.link_el_to_section_mapping_key
+                                 --AND secsm._effective
+                                 --AND NOT secsm.deleted
+             )
+      SELECT DISTINCT
+             dc.dw_ldid
+           , dc.dw_ldts
+           , dc.courseid
+           , dc.coursekey
+           , scs.course_name AS coursename
+           , dc.institutionid
+           , dc.productid
+           , to_char(scs.begin_date, 'YYYYMMDD')::INT AS startdatekey
+           , to_char(scs.end_date, 'YYYYMMDD')::INT AS enddatekey
+           , dc.filterflag
+           , dc.learningcourse
+           , dc.loaddate
+           , dc.productplatformid
+           , dc.instructorid
+           , scs.course_cgi AS cgi
+           , scs.begin_date AS startdate
+           , scs.end_date AS enddate
+           , scs.course_key AS olr_course_key
+           , hcs.context_id AS olr_context_id
+           , c.mag_acct_id
+           , orgs.organization
+           , orgs.cu_ct
+           , orgs.noncu_ct
+           , scs.end_date < current_date() AS course_complete
+           , scs.section_product_type AS product_type
+           , scs.begin_date::DATE <= CURRENT_DATE() AND scs.end_date >= CURRENT_DATE()::DATE AS active
+             --,COALESCE(scs.institution_id_override, scs.institution_id) as entity_no
+           , c.entity_id_sub AS entity_no
+           , c.entity_name_course
+           , scs.is_gateway_course
+           , scs.is_demo
+           , wl.language AS default_language
+           , scg.lms_type
+           , scg.lms_version
+           , scg.integration_type
+           , g.lms_sync_course_scores
+           , g.lms_sync_activity_scores
+           , el.cui
+           , el.ia
+      FROM prod.dw_ga.dim_course dc
+           LEFT JOIN prod.stg_clts.olr_courses c ON dc.coursekey = c."#CONTEXT_ID"
+           LEFT JOIN prod.datavault.hub_coursesection hcs ON dc.coursekey = hcs.context_id
+           LEFT JOIN prod.datavault.sat_coursesection scs ON hcs.hub_coursesection_key = scs.hub_coursesection_key AND scs._latest
+           LEFT JOIN orgs ON dc.coursekey = orgs.context_id AND orgs.r = 1
+           LEFT JOIN uploads.course_section_metadata.wa_course_language wl ON hcs.context_id = wl.context_id
+           LEFT JOIN prod.datavault.link_coursesectiongateway_coursesection lcsg ON hcs.hub_coursesection_key = lcsg.hub_coursesection_key
+           LEFT JOIN prod.datavault.sat_coursesection_gateway scg ON lcsg.hub_coursesectiongateway_key = scg.hub_coursesectiongateway_key AND scg._latest
+           LEFT JOIN mindtap.prod_nb.gradebook g ON dc.coursekey = g.external_id
+           LEFT JOIN el ON dc.coursekey = el.context_id AND el.latest
+      ORDER BY olr_course_key
     ;;
     sql_trigger_value: select count(*) from dw_ga.dim_course ;;
   }
@@ -106,6 +126,16 @@ view: dim_course {
     description: "Type of grade sync for LMS integrated MindTap courses"
     sql: case when ${TABLE}.lms_sync_course_scores then 'Course Level' when ${TABLE}.lms_sync_activity_scores then 'Activity Level' else 'None' end ;;
   }
+
+  dimension: cui {group_label: "Institutional License" label: "CUI" type:yesno}
+  dimension: ia {group_label: "Institutional License" label: "IA" type:yesno}
+  dimension: institutional_license_type {group_label: "Institutional License" type:string
+    case: {
+      when: {sql: ${cui};; label: "CUI"}
+      when: {sql: ${ia};; label: "IA"}
+      else: "No License"
+      }
+    }
 
   # Attempt to classify courses into organizations (like higher ed, but activations don't always have a coursekey...
   # So this is no good
