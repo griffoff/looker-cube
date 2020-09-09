@@ -135,7 +135,7 @@ view: dim_course {
   dimension: lms_type {
     group_label: "LMS Integration"
     sql: case when ${TABLE}.lms_type is not null then ${TABLE}.lms_type
-              when ${TABLE}.is_gateway_course then 'UNKNOWN'
+              when ${TABLE}.is_gateway_course then 'UNKNOWN LMS'
               else 'NOT LMS INTEGRATED'
         end
      ;;
@@ -145,7 +145,7 @@ view: dim_course {
   dimension: lms_integration_type {
     group_label: "LMS Integration"
     sql: case when ${TABLE}.integration_type is not null then ${TABLE}.integration_type
-              when ${TABLE}.is_gateway_course then 'UNKNOWN'
+              when ${TABLE}.is_gateway_course then 'UNKNOWN LMS'
               else 'NOT LMS INTEGRATED'
         end
      ;;
@@ -156,7 +156,13 @@ view: dim_course {
     group_label: "LMS Integration"
     label: "LMS Grade Sync (MindTap)"
     description: "Type of grade sync for LMS integrated MindTap courses"
-    sql: case when ${TABLE}.lms_sync_course_scores then 'Course Level' when ${TABLE}.lms_sync_activity_scores then 'Activity Level' else 'None' end ;;
+    case: {
+      when: {sql:NOT ${is_lms_integrated};; label:"N/A"}
+      when: {sql:${TABLE}.lms_sync_course_scores;; label:"Course Level"}
+      when: {sql:${TABLE}.lms_sync_activity_scores;; label:"Activity Level"}
+      when: {sql:NOT ${TABLE}.lms_sync_activity_scores AND NOT ${TABLE}.lms_sync_course_scores ;; label:"No score sync"}
+      else: "Non Mindtap LMS"
+    }
   }
 
   dimension: is_lms_integrated {
