@@ -145,6 +145,7 @@ view: dim_course {
   dimension: lms_integration_type {
     group_label: "LMS Integration"
     sql: case when ${TABLE}.integration_type is not null then ${TABLE}.integration_type
+              when ${TABLE}.lms_type is not null then 'UNKNOWN INTEGRATION TYPE'
               when ${TABLE}.is_gateway_course then 'UNKNOWN LMS'
               else 'NOT LMS INTEGRATED'
         end
