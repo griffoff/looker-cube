@@ -59,7 +59,7 @@ explore:  dim_product {
 explore: dim_course {
   label: "Course"
   extension: required
-  extends: [dim_institution, dim_product]
+  extends: [dim_institution, dim_product, course_keys_filter_all]
 
   join: olr_courses {
     fields: [olr_courses.curated_fields*]
@@ -108,14 +108,9 @@ explore: dim_course {
     relationship: many_to_many
   }
 
-  join: course_keys_filter_1 {
+  join: course_keys_filter_all {
     sql_on: ${olr_courses.course_key} = ${course_keys_filter_1.course_key} ;;
     #type: full_outer
-    relationship: one_to_one
-  }
-
-  join: course_keys_filter_2 {
-    sql_on: ${olr_courses.course_key} = ${course_keys_filter_2.course_key} ;;
     relationship: one_to_one
   }
 
