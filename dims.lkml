@@ -109,7 +109,7 @@ explore: dim_course {
   }
 
   join: course_keys_filter_all {
-    sql_on: ${olr_courses.course_key} = ${course_keys_filter_1.course_key} ;;
+    sql_on: ${olr_courses.course_key} = ${course_keys_filter_all.course_key} ;;
     #type: full_outer
     relationship: one_to_one
   }
