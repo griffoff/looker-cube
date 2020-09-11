@@ -12,8 +12,8 @@ explore: course_keys_filter_all {
     relationship: one_to_one
   }
 
-  join: course_keys_filter_09112020 {
-    sql_on: ${course_keys_filter_all.course_key} = ${course_keys_filter_09112020.course_key} ;;
+  join: course_keys_filter_flash {
+    sql_on: ${course_keys_filter_all.course_key} = ${course_keys_filter_flash.course_key} ;;
     relationship: one_to_one
   }
 
@@ -83,11 +83,11 @@ view: course_keys_filter_2 {
 
 }
 
-view: course_keys_filter_09112020 {
+view: course_keys_filter_flash {
   extends: [course_keys_filter]
 
   sql_table_name: dw.dw.EXT_COURSE_KEYS_FILTER_09112020 ;;
 
-  dimension: included {label: "Included in Filter File 09112020"}
+  dimension: included {label: "Included in Filter File (Flash)"}
 
 }
