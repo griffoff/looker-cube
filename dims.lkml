@@ -28,6 +28,7 @@ case_sensitive: no
 explore:  dim_product {
   label: "Product"
   extension: required
+  hidden:  no
 
 #   join: activations_dashboard_20170330 {
 #     sql_on: ${dim_product.discipline} = ${activations_dashboard_20170330.discipline}   ;;
@@ -57,6 +58,7 @@ explore:  dim_product {
 
 
 explore: dim_course {
+  hidden: no
   label: "Course"
   extension: required
   extends: [dim_institution, dim_product, course_keys_filter_all]
@@ -118,6 +120,7 @@ explore: dim_course {
 
 explore: dim_date {
   extension: required
+  hidden:  no
   extends: [fact_session, fact_siteusage]
 
   join: fact_session {
@@ -163,14 +166,17 @@ explore: dim_institution {
 
 explore: dim_deviceplatform {
   extension: required
+  hidden:  no
 }
 
 explore: dim_eventtype {
   extension: required
+  hidden:  no
 }
 
 explore: dim_learningpath {
   extension: required
+  hidden:  no
 
   join: dim_master_first_used_date {
     view_label: "Learning Path"
@@ -196,6 +202,7 @@ explore: dim_learningpath {
 
 explore: dim_location {
   extension: required
+  hidden:  no
 
   join: location {
     type: left_outer
@@ -206,6 +213,7 @@ explore: dim_location {
 
 explore: dim_pagedomain {
   extension: required
+  hidden:  no
 
   join: dim_productplatform {
     sql_on: ${dim_pagedomain.productplatformid} = ${dim_productplatform.productplatformid} ;;
@@ -217,6 +225,7 @@ explore: dim_pagedomain {
 
 explore:  dim_user {
   extension: required
+  hidden:  no
 
   join: dim_party {
     sql_on: ${dim_user.mainpartyid} = ${dim_party.partyid} ;;
