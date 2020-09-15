@@ -44,7 +44,7 @@ view: dim_productplatform {
     label: "Platform name"
     description: "MindTap, Aplia, CNOW, etc."
     type: string
-    sql: COALESCE(NULLIF(${TABLE}.PRODUCTPLATFORM, ''), 'UNKNOWN') ;;
+    sql: COALESCE(NULLIF(COALESCE(NULLIF(${dim_course.product_platform}, 'UNKNOWN'), ${TABLE}.PRODUCTPLATFORM), ''), 'UNKNOWN') ;;
     alias: [newproductplatform]
   }
 

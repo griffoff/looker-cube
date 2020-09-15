@@ -174,6 +174,33 @@ view: dim_course {
     sql: ${lms_type}!='NOT LMS INTEGRATED' ;;
   }
 
+  dimension: product_platform {
+    hidden: yes
+    type: string
+    case: {
+      when: { sql: ${product_type} = 'MTC';; label: "MindTap"}
+      when: { sql: ${product_type} = 'APLIA';; label: "Aplia"}
+      when: { sql: ${product_type} = 'WA';; label: "WebAssign"}
+      when: { sql: ${product_type} = 'MTS';; label: "MindTap Schools"}
+      when: { sql: ${product_type} = 'CNOW';; label: "CNOW"}
+      when: { sql: ${product_type} = 'CNOWV8';; label: "CNOW"}
+      when: { sql: ${product_type} = 'OWL';; label: "OWL V2"}
+      when: { sql: ${product_type} = 'SAM';; label: "SAM"}
+      when: { sql: ${product_type} = 'NATGEO';; label: "National Geographic"}
+      when: { sql: ${product_type} = '' OR ${product_type} IS NULL;; label: "UNKNOWN"}
+      when: { sql: ${product_type} = '4LT';; label: "4LTR Online"}
+      when: { sql: ${product_type} = 'WA3P';; label: "WebAssign"}
+      when: { sql: ${product_type} =  'DEV-MATH';; label: "Dev-Math"}
+      when: { sql: ${product_type} = '4LTV1';; label: "4LTR Online"}
+      when: { sql: ${product_type} = 'LO-OPENNOW';; label: "OpenNow"}
+      when: { sql: ${product_type} = 'CSFI';; label: "CSFI"}
+      when: { sql: ${product_type} = 'MT4';; label: "MindTap"}
+      when: { sql: ${product_type} = 'LO';; label: "Learning Objects"}
+      when: { sql: ${product_type} = 'MALCOLM';; label: "Middle Product"}
+      else: "Other"
+    }
+  }
+
   dimension: cui {group_label: "Institutional License" label: "CUI" type:yesno}
   dimension: ia {group_label: "Institutional License" label: "IA" type:yesno}
   dimension: institutional_license_type {group_label: "Institutional License" type:string
