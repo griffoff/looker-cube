@@ -21,14 +21,15 @@ explore: course_keys_filter_all {
 
 view: course_keys_filter_all {
   derived_table: {
-#     sql: SELECT DISTINCT ${dim_course.olr_course_key} as course_key FROM ${dim_course.SQL_TABLE_NAME} ;;
-      sql:  SELECT 1 ;;
+      sql: SELECT DISTINCT olr_course_key as course_key FROM ${dim_course.SQL_TABLE_NAME} ;;
+#       sql:  SELECT 1 ;;
+
   }
 
   dimension: course_key {
     hidden: yes
     primary_key: yes
-    sql: ${olr_courses.course_key};;
+
   }
 }
 
