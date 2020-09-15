@@ -303,7 +303,7 @@ view: dim_course {
   dimension: cu_ct {
     label: "# CU Students"
     description: "No of CU students activated for a particular course key"
-    sql: ${TABLE}.cu_ct ;;
+    sql: COALESCE(${TABLE}.cu_ct, 0) ;;
     hidden: yes
   }
 
@@ -311,8 +311,21 @@ view: dim_course {
   dimension: noncu_ct {
     label: "# Non CU Students"
     description: "No of Non-CU students activated for a particular course key"
-    sql: ${TABLE}.noncu_ct ;;
+    sql: COALESCE(${TABLE}.noncu_ct, 0) ;;
     hidden: yes
+  }
+
+  dimension: class_size {
+    type: number
+    sql: ${cu_ct} + ${noncu_ct} ;;
+  }
+
+  dimension: class_size_bucket {
+    label: "Class size (buckets)"
+    type: tier
+    tiers: [10, 30, 50, 100, 200, 500, 1000]
+    style: relational
+    sql: ${class_size} ;;
   }
 
   dimension: dw_ldid {
