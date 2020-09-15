@@ -1,5 +1,6 @@
 view: product_facts {
-  label: "Activations"
+  #   view label is set to "" to to effectively hide the view without altering existing joins. the activation data from this view was deemed inaccurate and should not be used
+  label: ""
   derived_table: {
     sql:
           select by_product_fk
