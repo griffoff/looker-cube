@@ -1,7 +1,17 @@
 view: dim_date {
   label: "Date"
-  sql_table_name: prod.dm_common.dim_date_legacy_cube ;;
+
+  derived_table: {
+    sql: select *
+      ,row_number() over (partition by GOVERNMENTDEFINEDACADEMICTERM order by DATEVALUE) as day_of_term
+      ,ceil(day_of_term/7) as week_of_term
+    from prod.dm_common.dim_date_legacy_cube;;
+    persist_for: "8 hours"
+  }
+
+#   sql_table_name: prod.dm_common.dim_date_legacy_cube ;;
 #   sql_table_name: DW_GA.DIM_DATE ;;
+
   set: curated_fields {fields:[datevalue_date,datevalue_month,datevalue_month_name,datevalue_year,datevalue_day_of_week,fiscalyear]}
   set: marketing_fields {fields:[date, governmentdefinedacademicterm]}
 
@@ -171,6 +181,18 @@ view: dim_date {
      label: "Academic Term of year"
 #      group_label: "Calendar - Government Defined Academic Calendar"
      order_by_field: governmentdefinedacademictermofyearid
+  }
+
+  dimension: day_of_term {
+    type: string
+    description: "Day number of academic term [Fall = August (8/1) - December (12/31).  Spring = January (1/1) - June (6/30).  Summer = July (7/1-7/31)]"
+    label: "Day of Academic Term"
+  }
+
+  dimension: week_of_term {
+    type: string
+    description: "Week number of academic term [Fall = August (8/1) - December (12/31).  Spring = January (1/1) - June (6/30).  Summer = July (7/1-7/31)]"
+    label: "Week of Academic Term"
   }
 
   dimension: governmentdefinedacademicterm_description {
