@@ -386,6 +386,14 @@ view: dim_start_date {
     group_label: "Course Start Date"
     group_item_label: "Course Start Academic Year"
     }
+  dimension: day_of_term {
+    group_label: "Course Start Date"
+    group_item_label: "Course Start Day of Term"
+  }
+  dimension: week_of_term {
+    group_label: "Course Start Date"
+    group_item_label: "Course Start Week of Term"
+  }
   dimension_group: datevalue {group_label: "Course Start Date"
     label: "Course Start"
     hidden: no
@@ -559,6 +567,14 @@ view: dim_end_date {
     description: "August 1st to July 31st"
     group_label: "Course End Date"
     group_item_label: "Course End Academic Year"
+  }
+  dimension: day_of_term{
+    group_label: "Course End Date"
+    group_item_label: "Course End Day of Term"
+  }
+  dimension: week_of_term {
+    group_label: "Course End Date"
+    group_item_label: "Course End Week of Term"
   }
   dimension_group: datevalue {group_label: "Course End Date"
     label: "Course End"
