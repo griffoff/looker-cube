@@ -288,6 +288,12 @@ view: dim_course {
     hidden:  yes
   }
 
+  dimension: has_olr_context_id{
+    sql: coalesce(${context_id} is not null,false) ;;
+    label: "OLR Context Id Exists"
+    type: yesno
+  }
+
   dimension: coursekey {
     label: "Context ID"
     type: string
