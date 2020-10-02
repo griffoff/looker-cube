@@ -99,6 +99,7 @@ view: dim_course {
            , c.entity_name_course
            , scs.is_gateway_course
            , scs.is_demo
+           , scs.course_master
            , coalesce(scs.deleted,false) as deleted
            , wl.language AS default_language
            , UPPER(DECODE(lms.lms_type, 'BB', 'Blackboard', lms.lms_type)) as lms_type
@@ -135,6 +136,11 @@ view: dim_course {
   dimension: deleted {
     description: "OLR course section has been deleted"
     type: yesno
+  }
+
+  dimension: course_master {
+    description: "Is a Master Course"
+    type: string
   }
 
   dimension: isbn {
