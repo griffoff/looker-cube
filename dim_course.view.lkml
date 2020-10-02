@@ -134,6 +134,7 @@ view: dim_course {
 
   dimension: deleted {
     description: "OLR course section has been deleted"
+    type: yesno
   }
 
   dimension: isbn {
