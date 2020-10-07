@@ -1,6 +1,6 @@
 view: course_section_facts {
 #   view label is set to "" to to effectively hide the view without altering existing joins. the activation data from this view was deemed inaccurate and should not be used
-  view_label: ""
+  view_label: "Course Section Facts (do not use)"
   derived_table: {
     sql:
     with c as (
