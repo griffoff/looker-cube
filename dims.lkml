@@ -25,10 +25,11 @@ include: "//project_source/*.view.lkml"
 
 case_sensitive: no
 
-explore:  dim_product {
+explore: dim_product {
   label: "Product"
   extension: required
   hidden:  no
+  fields: [ALL_FIELDS*,-dim_productplatform.productplatform_all]
 
 #   join: activations_dashboard_20170330 {
 #     sql_on: ${dim_product.discipline} = ${activations_dashboard_20170330.discipline}   ;;
@@ -214,6 +215,7 @@ explore: dim_location {
 explore: dim_pagedomain {
   extension: required
   hidden:  no
+  fields: [ALL_FIELDS*,-dim_productplatform.productplatform_all]
 
   join: dim_productplatform {
     sql_on: ${dim_pagedomain.productplatformid} = ${dim_productplatform.productplatformid} ;;

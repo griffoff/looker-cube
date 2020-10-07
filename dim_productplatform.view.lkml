@@ -48,6 +48,12 @@ view: dim_productplatform {
     alias: [newproductplatform]
   }
 
+  dimension: productplatform_all {
+    label: "Platform name"
+    description: "MindTap, Aplia, CNOW, etc."
+    type: string
+    sql: COALESCE(NULLIF(${TABLE}.PRODUCTPLATFORM, ''), 'UNKNOWN') ;;
+  }
 
 #   dimension: productplatform_other {
 #     label: "Platform name (other)"

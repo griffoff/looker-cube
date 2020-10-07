@@ -35,6 +35,7 @@ explore: fact_activation {
   label: "Activations"
   description: "Starting point for specific activations-related questions (e.g. how many activations do we have per product by institution?)."
   extends: [dim_course]
+  fields: [ALL_FIELDS*,-dim_productplatform.productplatform_all]
 
   join: course_section_facts {
     fields: []
