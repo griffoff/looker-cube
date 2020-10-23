@@ -288,7 +288,7 @@ view: dim_course {
   }
 
   dimension: olr_course_key {
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}.olr_course_key ;;
   }
@@ -310,12 +310,6 @@ view: dim_course {
     type: string
     sql: ${TABLE}.olr_context_id ;;
     hidden:  yes
-  }
-
-  dimension: has_olr_context_id{
-    sql: coalesce(${context_id} is not null,false) ;;
-    label: "OLR Context Id Exists"
-    type: yesno
   }
 
   dimension: coursekey {
