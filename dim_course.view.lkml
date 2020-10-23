@@ -82,6 +82,7 @@ view: dim_course {
            , scs.end_date AS enddate
            , scs.course_key AS olr_course_key
            , hcs.context_id AS olr_context_id
+           , scs.created_on as createddate
            , c.mag_acct_id
            , c.isbn
            , orgs.organization
@@ -99,6 +100,7 @@ view: dim_course {
            , c.entity_name_course
            , scs.is_gateway_course
            , scs.is_demo
+           , scs.course_master
            , coalesce(scs.deleted,false) as deleted
            , wl.language AS default_language
            , UPPER(DECODE(lms.lms_type, 'BB', 'Blackboard', lms.lms_type)) as lms_type
@@ -132,9 +134,20 @@ view: dim_course {
   set: cu_explore_fields {fields:[dim_course.coursename, dim_course.enddatekey, dim_course.startdatekey, dim_course.coursekey, dim_course.mag_acct_id, dim_course.active_course_sections, dim_course.course_complete, dim_course.product_type]}
   set: marketing_fields {fields:[cu_explore_fields*]}
 
+  dimension_group: created {
+    type: time
+    timeframes: [raw, date, week, month, year]
+
+    sql: ${TABLE}.createddate ;;
+  }
   dimension: deleted {
     description: "OLR course section has been deleted"
     type: yesno
+  }
+
+  dimension: course_master {
+    description: "Is a Master Course"
+    type: string
   }
 
   dimension: isbn {
