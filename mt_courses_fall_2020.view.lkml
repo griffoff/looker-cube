@@ -34,6 +34,7 @@
     }
     dimension: course_key {
       label: "Course / Section Details Course Key"
+      primary_key: yes
     }
 
     measure: count_courses {
