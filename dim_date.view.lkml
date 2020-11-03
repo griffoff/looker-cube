@@ -399,6 +399,7 @@ view: dim_start_date {
     hidden: no
     type: time
     timeframes: [
+      raw,
       date,
       week,
       month,
@@ -501,6 +502,7 @@ view: dim_activity_date {
     type: time
     hidden: no
     timeframes: [
+      raw,
       date,
       week,
       month,
@@ -581,6 +583,7 @@ view: dim_end_date {
     hidden: no
     type: time
     timeframes: [
+      raw,
       date,
       week,
       month,
