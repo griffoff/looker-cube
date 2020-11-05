@@ -45,3 +45,7 @@ explore: cafe_eventing_server_activity_event{
 explore: rental_events_v{
   label: "Rental_events"
 }
+
+explore: champions_academy_v{
+  label: "Prestige-champions"
+}
