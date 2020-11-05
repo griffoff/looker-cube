@@ -62,7 +62,6 @@ explore: prestige_hair_design_v{
   label: "Prestige-hair_design"
 }
 
-
 explore: prestige_salon_v{
   label: "Prestige-salon"
 }
