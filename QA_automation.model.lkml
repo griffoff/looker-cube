@@ -49,3 +49,24 @@ explore: rental_events_v{
 explore: champions_academy_v{
   label: "Prestige-champions"
 }
+
+explore: prestige_bene_v{
+  label: "Prestige-bene"
+}
+
+explore: prestige_grabber_v{
+  label: "Prestige-champions"
+}
+
+explore: prestige_hair_design_v{
+  label: "Prestige-hair_design"
+}
+
+
+explore: prestige_salon_v{
+  label: "Prestige-salon"
+}
+
+explore: prestige_victorias_v{
+  label: "Prestige-victorias"
+}
