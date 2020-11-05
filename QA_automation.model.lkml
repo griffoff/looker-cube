@@ -55,7 +55,7 @@ explore: prestige_bene_v{
 }
 
 explore: prestige_grabber_v{
-  label: "Prestige-champions"
+  label: "Prestige-grabber"
 }
 
 explore: prestige_hair_design_v{
