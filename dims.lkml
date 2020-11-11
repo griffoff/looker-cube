@@ -9,6 +9,7 @@
 
 include: "dim_*.view.lkml"         # include all views in this project
 include: "fact_*.view.lkml"
+include: "custom_filters.*.view.lkml"
 # include: "stg_clts.olr_courses.view.lkml"
 include: "location.view.lkml"
 include: "UPLOADS.mindtap_lp_activity_tags.view.lkml"
@@ -24,9 +25,11 @@ include: "//project_source/*.view.lkml"
 
 case_sensitive: no
 
-explore:  dim_product {
+explore: dim_product {
   label: "Product"
   extension: required
+  hidden:  no
+  fields: [ALL_FIELDS*,-dim_productplatform.productplatform_all]
 
 #   join: activations_dashboard_20170330 {
 #     sql_on: ${dim_product.discipline} = ${activations_dashboard_20170330.discipline}   ;;
@@ -46,14 +49,20 @@ explore:  dim_product {
     fields: [products.prod_family_cd, products.available_dt*, products.copyright_yr, products.prod_family_cd_edition]
 
   }
+
+  join: dim_productplatform {
+    relationship: many_to_one
+    sql_on: ${products.platform} = ${dim_productplatform.productplatformkey} ;;
+  }
 }
 
 
 
 explore: dim_course {
+  hidden: no
   label: "Course"
   extension: required
-  extends: [dim_institution, dim_product]
+  extends: [dim_institution, dim_product, course_keys_filter_all]
 
   join: olr_courses {
     fields: [olr_courses.curated_fields*]
@@ -82,16 +91,6 @@ explore: dim_course {
     relationship: many_to_one
   }
 
-  # join: dim_institution {
-  #   relationship: many_to_one
-  #   sql_on: ${dim_course.institutionid} = ${dim_institution.institutionid} ;;
-  # }
-
-  join: dim_productplatform {
-    relationship: many_to_one
-    sql_on: ${dim_course.productplatformid} = ${dim_productplatform.productplatformid} ;;
-  }
-
   join: dim_filter {
     relationship: many_to_one
     sql_on: ${dim_course.coursekey} = ${dim_filter.course_key} ;;
@@ -112,11 +111,17 @@ explore: dim_course {
     relationship: many_to_many
   }
 
+  join: course_keys_filter_all {
+    sql_on: ${olr_courses.course_key} = ${course_keys_filter_all.course_key} ;;
+    #type: full_outer
+    relationship: one_to_one
+  }
 
 }
 
 explore: dim_date {
   extension: required
+  hidden:  no
   extends: [fact_session, fact_siteusage]
 
   join: fact_session {
@@ -162,14 +167,17 @@ explore: dim_institution {
 
 explore: dim_deviceplatform {
   extension: required
+  hidden:  no
 }
 
 explore: dim_eventtype {
   extension: required
+  hidden:  no
 }
 
 explore: dim_learningpath {
   extension: required
+  hidden:  no
 
   join: dim_master_first_used_date {
     view_label: "Learning Path"
@@ -195,6 +203,7 @@ explore: dim_learningpath {
 
 explore: dim_location {
   extension: required
+  hidden:  no
 
   join: location {
     type: left_outer
@@ -205,6 +214,8 @@ explore: dim_location {
 
 explore: dim_pagedomain {
   extension: required
+  hidden:  no
+  fields: [ALL_FIELDS*,-dim_productplatform.productplatform_all]
 
   join: dim_productplatform {
     sql_on: ${dim_pagedomain.productplatformid} = ${dim_productplatform.productplatformid} ;;
@@ -216,6 +227,7 @@ explore: dim_pagedomain {
 
 explore:  dim_user {
   extension: required
+  hidden:  no
 
   join: dim_party {
     sql_on: ${dim_user.mainpartyid} = ${dim_party.partyid} ;;

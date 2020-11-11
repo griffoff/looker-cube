@@ -1,19 +1,29 @@
 view: dim_productplatform {
   label: "Product"
-  sql_table_name: DW_GA.DIM_PRODUCTPLATFORM ;;
+  #sql_table_name: DW_GA.DIM_PRODUCTPLATFORM ;;
 
-  dimension: dw_ldid {
-    type: string
-    sql: ${TABLE}.DW_LDID ;;
-    hidden: yes
+  derived_table: {
+    sql:
+      SELECT DISTINCT pp.productplatformid, pp.productplatformid IS NOT NULL AS is_platform, platform AS productplatform
+      FROM prod.stg_clts.products p
+      LEFT JOIN prod.dw_ga.dim_productplatform pp ON p.platform = pp.productplatform
+
+      ;;
+    persist_for: "24 hours"
   }
 
-  dimension_group: dw_ldts {
-    type: time
-    timeframes: [time, date, week, month]
-    sql: ${TABLE}.DW_LDTS ;;
-    hidden: yes
-  }
+#   dimension: dw_ldid {
+#     type: string
+#     sql: ${TABLE}.DW_LDID ;;
+#     hidden: yes
+#   }
+#
+#   dimension_group: dw_ldts {
+#     type: time
+#     timeframes: [time, date, week, month]
+#     sql: ${TABLE}.DW_LDTS ;;
+#     hidden: yes
+#   }
 
   dimension: is_platform {
     type: string
@@ -21,13 +31,29 @@ view: dim_productplatform {
     hidden: yes
   }
 
+  dimension: productplatformkey {
+    label: "Platform name"
+    description: "MindTap, Aplia, CNOW, etc."
+    type: string
+    sql: ${TABLE}.PRODUCTPLATFORM ;;
+    hidden: yes
+    primary_key: yes
+  }
+
   dimension: productplatform {
     label: "Platform name"
     description: "MindTap, Aplia, CNOW, etc."
     type: string
-    sql: COALESCE(${TABLE}.PRODUCTPLATFORM, 'UNKNOWN') ;;
+    sql: COALESCE(NULLIF(COALESCE(NULLIF(${dim_course.product_platform}, 'UNKNOWN'), ${TABLE}.PRODUCTPLATFORM), ''), 'UNKNOWN') ;;
+    alias: [newproductplatform]
   }
 
+  dimension: productplatform_all {
+    label: "Platform name"
+    description: "MindTap, Aplia, CNOW, etc."
+    type: string
+    sql: COALESCE(NULLIF(${TABLE}.PRODUCTPLATFORM, ''), 'UNKNOWN') ;;
+  }
 
 #   dimension: productplatform_other {
 #     label: "Platform name (other)"
@@ -43,14 +69,14 @@ view: dim_productplatform {
 #           ;;
 #   }
 
-  dimension: newproductplatform {
-    hidden: yes
-    label: "New Platform name"
-    description: "MindTap, Aplia, CNOW, etc."
-    type: string
-#     sql: COALESCE(${TABLE}.PRODUCTPLATFORM, 'UNKNOWN') ;;
-    sql: CASE WHEN ${TABLE}.PRODUCTPLATFORM = 'UNKNOWN' THEN ' ' ELSE ${TABLE}.PRODUCTPLATFORM END ;;
-  }
+#   dimension: newproductplatform {
+#     hidden: yes
+#     label: "New Platform name"
+#     description: "MindTap, Aplia, CNOW, etc."
+#     type: string
+# #     sql: COALESCE(${TABLE}.PRODUCTPLATFORM, 'UNKNOWN') ;;
+#     sql: CASE WHEN ${TABLE}.PRODUCTPLATFORM = 'UNKNOWN' THEN ' ' ELSE ${TABLE}.PRODUCTPLATFORM END ;;
+#   }
 
   dimension: includeinactivationsreport {
     label: "Included in Activations report"
@@ -74,7 +100,6 @@ view: dim_productplatform {
     type: string
     sql: ${TABLE}.PRODUCTPLATFORMID ;;
     hidden: yes
-    primary_key: yes
   }
 
   measure: count {

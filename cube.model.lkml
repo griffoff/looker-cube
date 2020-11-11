@@ -2,10 +2,6 @@ include: "//core/common.lkml"
 include: "//project_source/*.view.lkml"
 include: "//core/access_grants_file.view"
 
-# include: "/views/*.view.lkml"
-# include: "/views/*.view"
-# include: "/views/course_keys_filter_3.view"
-
 
 connection: "snowflake_prod"
 label:"Cube Data on Looker"
@@ -39,6 +35,7 @@ explore: fact_activation {
   label: "Activations"
   description: "Starting point for specific activations-related questions (e.g. how many activations do we have per product by institution?)."
   extends: [dim_course]
+  fields: [ALL_FIELDS*,-dim_productplatform.productplatform_all]
 
   join: course_section_facts {
     fields: []
@@ -120,8 +117,17 @@ join: gateway_institution {
 explore: fact_activity {
   label: "Learning Path - MT Instructor Modifications DEV"
   description: "Starting point for learning path analysis from the instructor perspective (e.g. What has the instructor changed?  What has the instructor added?)"
+  from: dim_course
+  view_name: dim_course
+
   extends: [dim_course, dim_learningpath]
   fields: [ALL_FIELDS*, -dim_activity.percent_usage, -fact_siteusage.time_on_task_to_final_score_correlation]
+
+  join: fact_activity {
+    #sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
+    sql_on: ${dim_course.courseid} = ${fact_activity.courseid} ;;
+    relationship: one_to_many
+  }
 
   join: dim_eventtype {
     sql_on: ${fact_activity.eventtypeid} = ${dim_eventtype.eventtypeid} ;;
@@ -157,12 +163,12 @@ explore: fact_activity {
     relationship: many_to_one
   }
 
-  join: dim_course {
-    #sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
-    sql_on: ${fact_activity.courseid} = ${dim_course.courseid} ;;
-    relationship: many_to_one
-    type: full_outer
-  }
+#   join: dim_course {
+#     #sql: right join dw_ga.dim_course on ${courseid} = ${dim_course.courseid} ;;
+#     sql_on: ${fact_activity.courseid} = ${dim_course.courseid} ;;
+#     relationship: many_to_one
+#     type: full_outer
+#   }
 
   join: courseinstructor {
     sql_on: ${olr_courses.course_key} = ${courseinstructor.coursekey} ;;
@@ -202,17 +208,21 @@ explore: fact_activity {
 }
 
 explore:  fact_appusage_by_user {
+  from: dim_course
+  view_name: dim_course
   extends: [dim_course, dim_user, dim_learningpath]
   label: "App dock usage - Mindtap"
   description: "
   Usage metrics about mindapps accessed via the Mindtap app dock
   Does not include usage of apps accessed via inline activities (from the learning path)
   "
-  join: dim_course {
+
+
+  join: fact_appusage_by_user {
     sql_on: ${fact_appusage_by_user.courseid} = ${dim_course.courseid} ;;
-    relationship: one_to_one
-    type: full_outer
-    fields: [dim_course.curated_fields*]
+    relationship: one_to_many
+    #type: full_outer
+    #fields: [dim_course.curated_fields*]
   }
 
   join: dim_iframeapplication {
@@ -278,9 +288,16 @@ explore:  fact_appusage_by_user {
 
 
 explore: fact_siteusage {
+  from: dim_course
+  view_name: dim_course
+  extends: [dim_user, dim_course, dim_pagedomain, dim_learningpath]
   label: "Learning Path - MT Usage Data DEV"
   description: "Start point for learning path usage from the student persepctive including application usage information collected via google analytics."
-  extends: [dim_user, dim_course, dim_pagedomain, dim_learningpath]
+
+  join: fact_siteusage {
+    sql_on:  ${dim_course.courseid} = ${fact_siteusage.courseid} ;;
+    relationship: one_to_many
+  }
 
   join: dim_date {
     from: dim_activity_date
@@ -291,12 +308,6 @@ explore: fact_siteusage {
   join: user_final_scores {
     sql_on: (${fact_siteusage.courseid}, ${fact_siteusage.partyid}) = (${user_final_scores.courseid}, ${user_final_scores.partyid}) ;;
     relationship: many_to_one
-  }
-
-  join: dim_course {
-    sql_on: ${fact_siteusage.courseid} = ${dim_course.courseid} ;;
-    relationship: many_to_one
-    type: full_outer
   }
 
   join: dim_product {
@@ -520,7 +531,9 @@ explore: LP_Analysis_PSR_Limited_View {
 }
   explore: LP_Siteusage_Analysis {
     label: "Learning Path Analysis - MT Usage Data"
-    from: fact_siteusage
+    from: dim_course
+    view_name: dim_course
+
 #     fields: [LP_Siteusage_Analysis.curated_fields*,dim_course.curated_fields*,dim_product.curated_fields*,dim_location.curated_fields*,dim_activity.curated_fields_PM*
 #       ,dim_learningpath.curated_fields*,dim_party.curated_fields*,dim_user.curated_fields*,activity_usage_facts.curated_fields*,activity_chapter_usage_facts.curated_fields*,
 #       course_section_facts.curated_fields*,user_facts.curated_fields*,dim_activity_view_uri.curated_field*,mindtap_lp_activity_tags.curated_fields*]
@@ -528,11 +541,11 @@ explore: LP_Analysis_PSR_Limited_View {
     extends: [dim_user, dim_course, dim_pagedomain, dim_learningpath]
     fields: [ALL_FIELDS*, -dim_activity.percent_usage, -fact_activityoutcome.score_to_final_score_correlation, -LP_Siteusage_Analysis.time_on_task_to_final_score_correlation]
 
-    join: dim_course {
-      sql_on: ${LP_Siteusage_Analysis.courseid} = ${dim_course.courseid} ;;
+    join: LP_Siteusage_Analysis {
+      from: fact_siteusage
+      sql_on: ${dim_course.courseid} = ${LP_Siteusage_Analysis.courseid} ;;
       relationship: many_to_one
-      type: full_outer
-      fields: [dim_course.curated_fields*]
+      #fields: [dim_course.curated_fields*]
     }
 
     join: user_activity_buckets {
@@ -633,12 +646,7 @@ explore: LP_Analysis_PSR_Limited_View {
     join: dim_product {
       fields: [dim_product.curated_fields*]
     }
-#     join: course_keys_filter_3 {
-#       view_label: "**Custom Filters**"
-#       sql_on: ${olr_courses.course_key} = ${course_keys_filter_3.course_key} ;;
-#       type: full_outer
-#       relationship: many_to_one
-#     }
+
   }
 
 explore: LP_Activity_Analysis {

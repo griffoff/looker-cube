@@ -169,6 +169,7 @@ view: course_section_facts {
 
 
   measure: total_noofactivations {
+    hidden: yes
     label: "# Total activations"
     description: "The total number of activations for courses in this context e.g. at item level it will represent the no. of activations on courses where this item appears
     "
@@ -186,6 +187,7 @@ view: course_section_facts {
   }
 
   measure: total_users {
+    hidden: yes
     label: "# Total Users"
     description: "The total number of users who have logged in at least once for courses in this context, regardless of activation status e.g. at item level it will represent the no. of users who have registered some activity on courses where this item appears"
     type: sum_distinct
@@ -196,6 +198,7 @@ view: course_section_facts {
 
 
   measure: institution_count {
+    hidden: yes
     label: "# Institutions with activations"
     description: "Number of Institutions with activations for a course"
     type: count_distinct
@@ -203,6 +206,7 @@ view: course_section_facts {
   }
 
   measure: course_count {
+    hidden: yes
     label: "# Course sections with activations"
     description: "Number of Course Sections activated"
     type: count_distinct
