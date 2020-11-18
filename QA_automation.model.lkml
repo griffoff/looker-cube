@@ -45,3 +45,27 @@ explore: cafe_eventing_server_activity_event{
 explore: rental_events_v{
   label: "Rental_events"
 }
+
+explore: champions_academy_v{
+  label: "Prestige-champions"
+}
+
+explore: prestige_bene_v{
+  label: "Prestige-bene"
+}
+
+explore: prestige_grabber_v{
+  label: "Prestige-grabber"
+}
+
+explore: prestige_hair_design_v{
+  label: "Prestige-hair_design"
+}
+
+explore: prestige_salon_v{
+  label: "Prestige-salon"
+}
+
+explore: prestige_victorias_v{
+  label: "Prestige-victorias"
+}
