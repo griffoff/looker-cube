@@ -8,6 +8,25 @@
       <td style="border: 0px;">
         <table style="border: 0px; height: 9px;" width="800">
           <tbody>
+           <tr>
+              <td style="border: 0px; padding: 0px; padding-right: 2px; width: 50%;"><a style="background-color: #3774d6; border-radius: 5px; text-align: center; color: white; text-decoration: none; display: inline-block; width: 100%; padding: 8px 8px; line-height: 1.5; font-size: 20px;" href="https://cengage.looker.com/explore/cengage_unlimited/session_analysis"> CU User Analysis Prod Explore</a></td>
+              <td style="border: 0px; padding: 0px; padding-right: 2px; width: 50%;"><a style="background-color: #3774d6; border-radius: 5px; text-align: center; color: white; text-decoration: none; display: inline-block; width: 100%; padding: 8px 8px; line-height: 1.5; font-size: 20px;" href="https://cengage.looker.com/dashboards/419"> CU Above the courseware usage</a></td>
+            </tr>
+            <tr>
+              <td style="border: 0px; padding: 10px; padding-left: 0px; width: 50%;"><a style="background-color: white; border-radius: 5px; text-align: center; color: black; text-decoration: none; display: inline-block; width: 100%; padding: 8px 8px; line-height: 1.5; font-size: 20px;" href="https://cengage.looker.com/explore/cengage_unlimited/session_analysis" target="_blank"> <img style="height: 100px; padding: 0px 0px 0px 0px;" src="http://www.iconarchive.com/download/i79780/hamzasaleem/stock/Time-Machine.ico">
+              </a>
+                <a style="border-radius: 5px; border-color: white; display: block;  text-align: center; color: black; text-decoration: none; font-size: 13px; line-height: 1.2;">
+                  <p style="text-align:center;font-size: 15px;"><i><u>CU adhoc analysis</u></i></p>
+                </a>
+              </td>
+              <td style="border: 0px; padding: 10px; padding-left: 0px; width: 50%;"><a style="background-color: white; border-radius: 5px; text-align: center; color: black; text-decoration: none; display: inline-block; width: 100%; padding: 8px 8px; line-height: 1.5; font-size: 20px;" target="_blank"> <img style="height: 100px; padding: 0px 0px 0px 0px;" src="http://www.iconarchive.com/download/i91222/icons8/windows-8/Messaging-More.ico">
+              </a>
+                <a style="border-radius: 5px; border-color: white; display: block;  text-align: center; color: black; text-decoration: none; font-size: 13px; line-height: 1.2;">
+                  <p style="text-align:center;font-size: 15px;"><i><u>Dashboard showcasing usage above courseware</u></i></p>
+                  <p style="font-size:100%;text-align:left;"></p>
+                </a>
+              </td>
+            </tr>
             <tr>
               <td style="border: 0px; padding: 0px; padding-right: 2px; width: 50%;"><a style="background-color: #32D7DA; border-radius: 5px; text-align: center; color: white; text-decoration: none; display: inline-block; width: 100%; padding: 8px 8px; line-height: 1.5; font-size: 20px;" href="https://cengage.looker.com/dashboards/102"> Student: Activity Usage </a>
               </td>
@@ -53,25 +72,7 @@
                 </a>
               </td>
             </tr>
-            <tr>
-              <td style="border: 0px; padding: 0px; padding-right: 2px; width: 50%;"><a style="background-color: #3774d6; border-radius: 5px; text-align: center; color: white; text-decoration: none; display: inline-block; width: 100%; padding: 8px 8px; line-height: 1.5; font-size: 20px;" href="https://cengage.looker.com/explore/cengage_unlimited/session_analysis"> CU User Analysis Prod Explore</a></td>
-              <td style="border: 0px; padding: 0px; padding-right: 2px; width: 50%;"><a style="background-color: #3774d6; border-radius: 5px; text-align: center; color: white; text-decoration: none; display: inline-block; width: 100%; padding: 8px 8px; line-height: 1.5; font-size: 20px;" href="https://cengage.looker.com/dashboards/419"> CU Above the courseware usage</a></td>
-            </tr>
-            <tr>
-              <td style="border: 0px; padding: 10px; padding-left: 0px; width: 50%;"><a style="background-color: white; border-radius: 5px; text-align: center; color: black; text-decoration: none; display: inline-block; width: 100%; padding: 8px 8px; line-height: 1.5; font-size: 20px;" href="https://cengage.looker.com/explore/cengage_unlimited/session_analysis" target="_blank"> <img style="height: 100px; padding: 0px 0px 0px 0px;" src="http://www.iconarchive.com/download/i79780/hamzasaleem/stock/Time-Machine.ico">
-              </a>
-                <a style="border-radius: 5px; border-color: white; display: block;  text-align: center; color: black; text-decoration: none; font-size: 13px; line-height: 1.2;">
-                  <p style="text-align:center;font-size: 15px;"><i><u>CU adhoc analysis</u></i></p>
-                </a>
-              </td>
-              <td style="border: 0px; padding: 10px; padding-left: 0px; width: 50%;"><a style="background-color: white; border-radius: 5px; text-align: center; color: black; text-decoration: none; display: inline-block; width: 100%; padding: 8px 8px; line-height: 1.5; font-size: 20px;" target="_blank"> <img style="height: 100px; padding: 0px 0px 0px 0px;" src="http://www.iconarchive.com/download/i91222/icons8/windows-8/Messaging-More.ico">
-              </a>
-                <a style="border-radius: 5px; border-color: white; display: block;  text-align: center; color: black; text-decoration: none; font-size: 13px; line-height: 1.2;">
-                  <p style="text-align:center;font-size: 15px;"><i><u>Dashboard showcasing usage above courseware</u></i></p>
-                  <p style="font-size:100%;text-align:left;"></p>
-                </a>
-              </td>
-            </tr>
+
           </tbody>
        </table>
       </td>
@@ -89,5 +90,3 @@
     </tr>
   </tbody>
 </table>
-
-
