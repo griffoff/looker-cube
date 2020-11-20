@@ -28,7 +28,7 @@ view: dim_filter {
     label: "Real Course"
     description: "Flag to identify real courses, rather than test/demo/internal"
     type: yesno
-    sql: NOT ${is_internal};;
+    sql: NOT ${is_internal} OR ${is_internal} IS NULL;;
   }
 
 #   # # You can specify the table name if it's different from the view name:
