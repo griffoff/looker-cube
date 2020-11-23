@@ -50,7 +50,10 @@ view: dim_course {
                    , scg.integration_type
                    , LEAD(1)
                           OVER (PARTITION BY hcs.hub_coursesection_key ORDER BY COALESCE(scg.created_at, a.created_at) DESC) IS NULL AS latest
-              FROM prod.datavault.hub_coursesection hcs
+                    , scg.canvas_course_id
+                    , scg.lms_context_id
+                    , scg.lis_course_source_id
+             FROM prod.datavault.hub_coursesection hcs
                    LEFT JOIN prod.datavault.link_coursesectiongateway_coursesection lcsg
                              ON hcs.hub_coursesection_key = lcsg.hub_coursesection_key
                    LEFT JOIN prod.datavault.sat_coursesection_gateway scg
@@ -106,6 +109,9 @@ view: dim_course {
            , UPPER(DECODE(lms.lms_type, 'BB', 'Blackboard', lms.lms_type)) as lms_type
            , lms.lms_version
            , lms.integration_type
+           , lms.canvas_course_id
+           , lms.lms_context_id
+           ,lms.lis_course_source_id
            , lms.lms_type IS NOT NULL AND g.lms_sync_course_scores AS lms_sync_course_scores
            , lms.lms_type IS NOT NULL AND g.lms_sync_activity_scores AS lms_sync_activity_scores
            , COALESCE(el.cui, FALSE) as cui
@@ -303,6 +309,27 @@ view: dim_course {
     hidden: no
     type: string
     sql: ${TABLE}.entity_no ;;
+  }
+
+  dimension: canvas_course_id {
+    label: "Canvas Course ID"
+    type: string
+    sql: ${TABLE}.canvas_course_id ;;
+    hidden: no
+  }
+
+  dimension: lms_context_id {
+    label: "LMS Context ID"
+    type: string
+    sql: ${TABLE}.lms_context_id ;;
+    hidden: no
+  }
+
+  dimension: lis_course_source_id {
+    label: "SIS Course ID"
+    type: string
+    sql: ${TABLE}.lis_course_source_id ;;
+    hidden: no
   }
 
   dimension: context_id {
