@@ -26,7 +26,7 @@ view: dim_course {
                SELECT context_id
                     , (sel.cu_enabled OR iac_isbn13 IN ('0000357700006', '0000357700013', '0000357700020')) AS cui
                     , NOT cui AS ia
-                    , secsm._latest AS latest
+                    , ROW_NUMBER() OVER (PARTITION BY context_id ORDER BY sel.begin_date DESC) = 1 AS latest
                FROM prod.datavault.hub_coursesection hcs
                     INNER JOIN prod.datavault.sat_coursesection scs
                                ON hcs.hub_coursesection_key = scs.hub_coursesection_key AND scs._latest
@@ -42,7 +42,7 @@ view: dim_course {
                                 -- AND sel.begin_date <= current_date()
                     INNER JOIN prod.datavault.sat_eltosectionmapping secsm
                                ON lecsm.hub_eltosectionmapping_key = secsm.hub_eltosectionmapping_key
-                                 --AND secsm._latest
+                                 AND secsm._latest
                                  --AND NOT secsm.deleted
              )
      , lms AS (
