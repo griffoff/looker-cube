@@ -300,6 +300,12 @@ view: fact_siteusage {
     sql:  MAX(${TABLE}.EVENTDATE);;
   }
 
+  measure: ftc_timestamp {
+    label: "EST Timezone"
+    sql: convert_timezone('EST',${lasteventdate}) ;;
+    html: {{ rendered_value | date: "%Y/%d/%m %H:%M:%S" }} ;;
+  }
+
   dimension_group: eventenddate {
     label: "Event End"
     type: time
