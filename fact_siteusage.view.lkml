@@ -307,7 +307,7 @@ view: fact_siteusage {
   measure: ftc_timestamp {
     label: "EST Timezone Last Event Date"
     type: string
-    sql: TO_CHAR(MAX(convert_timezone('EST',${TABLE}.EVENTDATE)),'YYYY/MM/DD HH24:MI:SS') ;;
+    sql: TO_CHAR(MAX(convert_timezone('EST',${TABLE}.EVENTDATE)),'YYYY/DD/MM HH24:MI:SS') ;;
   }
 
   dimension_group: eventenddate {
