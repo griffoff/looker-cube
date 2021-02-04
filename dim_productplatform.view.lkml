@@ -50,7 +50,7 @@ view: dim_productplatform {
 
   measure: platform_list {
     type: string
-    sql: ARRAY_AGG(DISTINCT ${productplatform}) ;;
+    sql: LISTAGG(DISTINCT ${productplatform}, ', ') WITHIN GROUP (ORDER BY ${productplatform}) ;;
     description: "List of Product Platforms"
   }
 
