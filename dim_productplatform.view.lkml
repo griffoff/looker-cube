@@ -48,6 +48,12 @@ view: dim_productplatform {
     alias: [newproductplatform]
   }
 
+  measure: platform_list {
+    type: string
+    sql: LISTAGG(DISTINCT ${productplatform}, ', ') WITHIN GROUP (ORDER BY ${productplatform}) ;;
+    description: "List of Product Platforms"
+  }
+
   dimension: productplatform_all {
     label: "Platform name"
     description: "MindTap, Aplia, CNOW, etc."

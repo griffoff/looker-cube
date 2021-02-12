@@ -340,6 +340,13 @@ explore: fact_siteusage {
     relationship: many_to_one
   }
 
+  join: lms_user_info {
+    from: lms_user_info
+    sql_on: ${dim_party.guid} = ${lms_user_info.uid};;
+    relationship:  one_to_many
+    type:  left_outer
+  }
+
   join: dim_user {
     sql_on: ${fact_siteusage.userid} = ${dim_user.userid} ;;
     relationship: many_to_one
