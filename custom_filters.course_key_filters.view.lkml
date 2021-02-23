@@ -69,7 +69,7 @@ view: course_keys_filter {
 view: course_keys_filter_1 {
   extends: [course_keys_filter]
 
-  sql_table_name: dw.dw.ext_course_keys_filter ;;
+  sql_table_name: dw.cdw_user_tb.ext_course_keys_filter ;;
 
   dimension: included {label: "Included in Filter File 1"}
 
@@ -78,7 +78,7 @@ view: course_keys_filter_1 {
 view: course_keys_filter_2 {
   extends: [course_keys_filter]
 
-  sql_table_name: dw.dw.ext_course_keys_filter_2 ;;
+  sql_table_name: dw.cdw_user_tb.ext_course_keys_filter_2 ;;
 
   dimension: included {label: "Included in Filter File 2"}
 
@@ -87,7 +87,7 @@ view: course_keys_filter_2 {
 view: course_keys_filter_flash {
   extends: [course_keys_filter]
 
-  sql_table_name: dw.dw.EXT_COURSE_KEYS_FILTER_09112020 ;;
+  sql_table_name: dw.cdw_user_tb.EXT_COURSE_KEYS_FILTER_09112020 ;;
 
   dimension: included {label: "Included in Filter File (Flash)"}
 
