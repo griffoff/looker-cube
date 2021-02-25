@@ -51,7 +51,7 @@ view: fact_activityoutcome {
     type: count_distinct
     label: "# Completed Activities"
     description: "Number of completed activities"
-    sql: case when ${TABLE}.completed then ${activityid} end ;;
+    sql: case when ${TABLE}.completed then ${learningpathid} end ;;
   }
 
   dimension: completeddatekey {

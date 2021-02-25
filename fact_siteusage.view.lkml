@@ -540,7 +540,7 @@ view: fact_siteusage {
   measure: activity_count {
     label: "# Activities"
     type: count_distinct
-    sql:  ${activityid} ;;
+    sql:  ${learningpathid} ;;
     value_format: "#,##0"
     hidden: no
   }
