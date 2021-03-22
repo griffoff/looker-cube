@@ -1,5 +1,5 @@
 include: "//core/common.lkml"
-include: "//project_source/*.view.lkml"
+#include: "//project_source/*.view.lkml"
 include: "//core/access_grants_file.view"
 
 
@@ -21,7 +21,8 @@ datagroup: daily_refresh {
 #include dims model
 include: "dims.lkml"
 # include all the views
-include: "/cube/*.view"
+include: "/*.view"
+
 
 
 

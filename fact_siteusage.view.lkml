@@ -56,9 +56,28 @@ view: fact_siteusage {
   derived_table: {
     create_process: {
       sql_step:
-        create or replace transient table ${SQL_TABLE_NAME}
+        create transient table if not exists looker_scratch.fact_siteusage
         cluster by (courseid)
         as
+        select
+          null::int as new_relative_days_from_start
+          --,row_number() over (order by pageinstanceid, userid, learningpathid, eventdate, new_relative_days_from_start) as id
+          ,null::int as id
+          ,fsu.*
+          ,null::decimal(10, 6) as pageviewtime_days
+          --,LAG(fsu.eventdate) over (partition by fsu.userid, fsu.productid, a.applicationname order by fsu.eventdate)
+          ,null as prev_applicationusagedate
+          ,null AS activity_sequence_day
+          ,null AS activity_sequence_week
+          ,null AS activity_sequence_week2
+          ,null AS activity_sequence_week4
+        from dw_ga.fact_siteusage fsu
+        limit 0
+      ;;
+
+
+      sql_step:
+        insert into looker_scratch.fact_siteusage
         select
           coalesce(datediff(day, v.start_date, fsu.eventdate), daysfromcoursestart) as new_relative_days_from_start
           --,row_number() over (order by pageinstanceid, userid, learningpathid, eventdate, new_relative_days_from_start) as id
@@ -83,8 +102,12 @@ view: fact_siteusage {
         left join ${map_course_versions.SQL_TABLE_NAME} v on c.coursekey = v.context_id
                                                           and fsu.eventdate between v.effective_from and v.effective_to
         left join ${dim_activity.SQL_TABLE_NAME} a on fsu.activityid = a.activityid
+        where eventdate > (select coalesce(max(eventdate), '1970-01-01') from looker_scratch.fact_siteusage)
         order by courseid
           --, new_relative_days_from_start, userid
+        ;;
+
+        sql_step: create or replace transient table ${SQL_TABLE_NAME} clone looker_scratch.fact_siteusage
         ;;
 
     }
