@@ -22,7 +22,7 @@ datagroup: daily_refresh {
 include: "dims.lkml"
 # include all the views
 include: "/*.view"
-
+include: "//project_source/views/clts/*.view"
 
 
 
@@ -232,6 +232,7 @@ explore:  fact_appusage_by_user {
   }
 
   join: dim_iframeapplication_map {
+    view_label: "App Map"
     from: dim_iframeapplication
     fields: [dim_iframeapplication_map.iframeapplicationid]
     sql_on: ${dim_iframeapplication.iframeapplicationid} = ${dim_iframeapplication_map.iframeapplicationid_group};;
@@ -765,6 +766,7 @@ explore: LP_Activity_Analysis {
 
     join: dim_product {
       sql_on: ${mt_courses_gcs_setup_status.isbn} = ${dim_product.isbn13} ;;
+      relationship: many_to_one
     }
   }
 
@@ -773,6 +775,7 @@ explore: mt_courses_fall2020 {
 
     join: mt_courses_gcs_setup_status {
       sql_on: ${mt_courses_fall2020.course_key} = ${mt_courses_gcs_setup_status.course_key};;
+      relationship: one_to_one
     }
 
   join: guided_course_setup {
@@ -812,12 +815,14 @@ explore: ga_data_parsed {
     sql_on: COALESCE(${olr_courses.context_id}, ${ga_data_parsed.coursekey}) = ${dim_course.coursekey} ;;
   }
   join: dim_product_1 {
+    view_label: "P1"
     fields: []
     from: dim_product
     sql_on: ${dim_course.productid} = ${dim_product_1.productid}   ;;
     relationship: many_to_one
   }
   join: dim_product_2 {
+    view_label: "P2"
     fields: []
     from: dim_product
     sql_on: ${ga_data_parsed.coretextisbn} = ${dim_product_2.isbn13}

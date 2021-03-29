@@ -1,4 +1,4 @@
-include: "//project_source/*.view.lkml"
+include: "//project_source/views/cafe/*.view.lkml"
 connection: "snowflake_prod"
 label:"QA-DATAPROFILING"
 

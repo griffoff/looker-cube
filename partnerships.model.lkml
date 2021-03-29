@@ -37,6 +37,7 @@ explore:  fact_appusage_by_user {
   }
 
   join: dim_iframeapplication_map {
+    view_label: "App Map"
     from: dim_iframeapplication
     fields: [dim_iframeapplication_map.iframeapplicationid]
     sql_on: ${dim_iframeapplication.iframeapplicationid} = ${dim_iframeapplication_map.iframeapplicationid_group};;

@@ -279,7 +279,7 @@ dimension: activity_usage_facts_grouping {
   }
   link: {
     label: "Activity Type Dashboard"
-    url: "/dashboards/212?ActivityType_SubType={{ value }}&FiscalYear={{_filters['dim_date.fiscalyear'] | url_encode}}&ProductFamily_Edition={{_filters['dim_product.productfamily_edition'] | url_encode}}"
+    url: "/dashboards/212?ActivityType_SubType={{ value }}&ProductFamily_Edition={{_filters['dim_product.productfamily_edition'] | url_encode}}"
   }
 }
 

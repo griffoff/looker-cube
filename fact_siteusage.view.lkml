@@ -1,4 +1,5 @@
 include: "//core/access_grants_file.view"
+include: "//core/named_formats.lkml"
 
 view: paid_users {
 derived_table: {
@@ -532,7 +533,7 @@ view: fact_siteusage {
     type: sum
     sql: ${pageviewtime} ;;
 #     value_format: "d:hh:mm:ss"
-    value_format: "d \d\a\y\s h \h\r\s m \m\i\n\s s \s\e\c\s"
+    value_format_name: duration_hms_full
   }
 
   measure: pageviewtime_sum_hours {
