@@ -4,7 +4,7 @@ include: "//core/access_grants_file.view"
 
 
 connection: "snowflake_prod"
-label:"Cube Data on Looker"
+label:"XX Cube Data - Deprecated please use other explores"
 
 datagroup: fact_siteusage_datagroup {
   sql_trigger: SELECT COUNT(*) FROM dw_ga.fact_siteusage;;
@@ -557,11 +557,11 @@ explore: LP_Analysis_PSR_Limited_View {
       #fields: [dim_course.curated_fields*]
     }
 
-    join: user_activity_buckets {
-      sql_on: ${LP_Siteusage_Analysis.userid} = ${user_activity_buckets.userid}
-      and ${LP_Siteusage_Analysis.courseid} = ${user_activity_buckets.courseid};;
-      relationship: many_to_one
-    }
+    # join: user_activity_buckets {
+    #   sql_on: ${LP_Siteusage_Analysis.userid} = ${user_activity_buckets.userid}
+    #   and ${LP_Siteusage_Analysis.courseid} = ${user_activity_buckets.courseid};;
+    #   relationship: many_to_one
+    # }
 #
 #     join: dim_product {
 #       sql_on: ${LP_Siteusage_Analysis.productid} = ${dim_product.productid} ;;
