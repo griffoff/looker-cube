@@ -20,6 +20,8 @@ include: "courseinstructor.view.lkml"
 # include all views from project source in this model
 include: "//project_source/views/clts/*.view.lkml"
 
+include: "//core/datagroups.lkml"
+
 
 #include: "*.dashboard.lookml"  # include all dashboards in this project
 

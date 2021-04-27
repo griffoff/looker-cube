@@ -59,7 +59,7 @@ view: dim_filter {
 #       union select -1, 'Real Course', 0
 #       order by 3
 #        ;;
-#       persist_for: "24 hours"
+#       datagroup_trigger: daily_refresh
 #   }
 #
 #   dimension: filterflag {
