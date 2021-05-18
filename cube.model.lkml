@@ -296,6 +296,10 @@ explore: fact_siteusage {
   label: "Learning Path - MT Usage Data DEV - XX Cube Data - Deprecated please use another source"
   description: "Start point for learning path usage from the student persepctive including application usage information collected via google analytics."
 
+  join: course_section_facts {
+    view_label: "Course Facts"
+  }
+
   join: fact_siteusage {
     sql_on:  ${dim_course.courseid} = ${fact_siteusage.courseid} ;;
     relationship: one_to_many

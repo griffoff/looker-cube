@@ -64,6 +64,8 @@ explore: dim_course {
   extension: required
   extends: [dim_institution, dim_product, course_keys_filter_all]
 
+  always_filter: {filters: [dim_filter.is_external: "Yes"]}
+
   join: olr_courses {
     fields: [olr_courses.curated_fields*]
     sql_on: ${dim_course.coursekey} = ${olr_courses.context_id};;
@@ -228,6 +230,8 @@ explore: dim_pagedomain {
 explore:  dim_user {
   extension: required
   hidden:  no
+
+  always_filter: {filters: [dim_party.is_external: "Yes"]}
 
   join: dim_party {
     sql_on: ${dim_user.mainpartyid} = ${dim_party.partyid} ;;
