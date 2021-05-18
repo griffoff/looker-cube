@@ -6,7 +6,7 @@ view: dim_date {
       ,row_number() over (partition by GOVERNMENTDEFINEDACADEMICTERM order by DATEVALUE) as day_of_term
       ,ceil(day_of_term/7) as week_of_term
     from prod.dm_common.dim_date_legacy_cube;;
-    persist_for: "8 hours"
+    datagroup_trigger: daily_refresh
   }
 
 #   sql_table_name: prod.dm_common.dim_date_legacy_cube ;;

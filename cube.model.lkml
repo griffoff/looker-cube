@@ -1,4 +1,5 @@
 include: "//core/common.lkml"
+include: "//core/datagroups.lkml"
 #include: "//project_source/*.view.lkml"
 include: "//core/access_grants_file.view"
 
@@ -12,10 +13,6 @@ datagroup: fact_siteusage_datagroup {
 
 datagroup: fact_activityoutcome_datagroup {
   sql_trigger: SELECT COUNT(*) FROM dw_ga.fact_activityoutcome;;
-}
-
-datagroup: daily_refresh {
-  sql_trigger: SELECT CURRENT_DATE() ;;
 }
 
 #include dims model
