@@ -33,7 +33,7 @@ include: "//project_source/views/clts/*.view"
 
 
 explore: fact_activation {
-  label: "Activations"
+  label: "Activations - XX Cube Data - Deprecated please use another source"
   description: "Starting point for specific activations-related questions (e.g. how many activations do we have per product by institution?)."
   extends: [dim_course]
   fields: [ALL_FIELDS*,-dim_productplatform.productplatform_all]
@@ -116,7 +116,7 @@ join: gateway_institution {
 
 
 explore: fact_activity {
-  label: "Learning Path - MT Instructor Modifications DEV"
+  label: "Learning Path - MT Instructor Modifications DEV - XX Cube Data - Deprecated please use another source"
   description: "Starting point for learning path analysis from the instructor perspective (e.g. What has the instructor changed?  What has the instructor added?)"
   from: dim_course
   view_name: dim_course
@@ -212,7 +212,7 @@ explore:  fact_appusage_by_user {
   from: dim_course
   view_name: dim_course
   extends: [dim_course, dim_user, dim_learningpath]
-  label: "App dock usage - Mindtap"
+  label: "App dock usage - Mindtap - XX Cube Data - Deprecated please use another source"
   description: "
   Usage metrics about mindapps accessed via the Mindtap app dock
   Does not include usage of apps accessed via inline activities (from the learning path)
@@ -293,7 +293,7 @@ explore: fact_siteusage {
   from: dim_course
   view_name: dim_course
   extends: [dim_user, dim_course, dim_pagedomain, dim_learningpath]
-  label: "Learning Path - MT Usage Data DEV"
+  label: "Learning Path - MT Usage Data DEV - XX Cube Data - Deprecated please use another source"
   description: "Start point for learning path usage from the student persepctive including application usage information collected via google analytics."
 
   join: fact_siteusage {
@@ -415,7 +415,7 @@ explore: fact_siteusage {
 }
 
 explore: LP_Analysis_PSR_Limited_View {
-  label: "Learning Path Analysis - Pilot Tagging Explore"
+  label: "Learning Path Analysis - Pilot Tagging Explore - XX Cube Data - Deprecated please use another source"
   from: fact_siteusage
   description: "TEST Explore Start point for learning path usage from the student persepctive including application usage information collected via google analytics."
   extends: [dim_user, dim_course, dim_pagedomain, dim_learningpath, dim_product]
@@ -539,7 +539,7 @@ explore: LP_Analysis_PSR_Limited_View {
 
 }
   explore: LP_Siteusage_Analysis {
-    label: "Learning Path Analysis - MT Usage Data"
+    label: "Learning Path Analysis - MT Usage Data - XX Cube Data - Deprecated please use another source"
     from: dim_course
     view_name: dim_course
 
@@ -660,7 +660,7 @@ explore: LP_Analysis_PSR_Limited_View {
 
 explore: LP_Activity_Analysis {
   from: fact_activity
-  label: "Learning Path Analysis - MT Instructor Modifications"
+  label: "Learning Path Analysis - MT Instructor Modifications - XX Cube Data - Deprecated please use another source"
   description: "Starting point for learning path analysis from the instructor perspective (e.g. What has the instructor changed?  What has the instructor added?)"
   extends: [dim_course, dim_learningpath]
 
@@ -795,7 +795,7 @@ explore: mt_courses_fall2020 {
 
 
 explore: ga_data_parsed {
-  label: "Google Analytics Data"
+  label: "Google Analytics Data - XX Cube Data - Deprecated please use another source"
   extends: [dim_course]
   join: user_facts {
     relationship: many_to_one
@@ -840,9 +840,9 @@ explore: ga_data_parsed {
 }
 
 
-explore: datavault_test_report {}
+# explore: datavault_test_report {}
 
 
-explore: olr_nonolr_combined_user_activations {}
-explore: olr_nonolr_combined_user_activations_wkly {}
-explore: qa_rental_v {}
+# explore: olr_nonolr_combined_user_activations {}
+# explore: olr_nonolr_combined_user_activations_wkly {}
+# explore: qa_rental_v {}
