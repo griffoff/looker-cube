@@ -17,9 +17,9 @@ explore: ebook_usage_v{
   label: "EBook_Usage"
 }
 
-explore: cafe_eventing_client_activity_event{
-  label: "CAP_Eventing_Client_Activity"
-}
+# explore: cafe_eventing_client_activity_event{
+#   label: "CAP_Eventing_Client_Activity"
+# }
 
 explore:iam_v{
   label: "IAM_Events"
@@ -68,4 +68,7 @@ explore: prestige_salon_v{
 
 explore: prestige_victorias_v{
   label: "Prestige-victorias"
+}
+explore: additional_datavault_test_report {
+  label: "datavault_test_reports"
 }

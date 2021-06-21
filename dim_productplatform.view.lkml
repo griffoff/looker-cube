@@ -9,7 +9,7 @@ view: dim_productplatform {
       LEFT JOIN prod.dw_ga.dim_productplatform pp ON p.platform = pp.productplatform
 
       ;;
-    datagroup_trigger: daily_refresh
+    # datagroup_trigger: daily_refresh
   }
 
 #   dimension: dw_ldid {

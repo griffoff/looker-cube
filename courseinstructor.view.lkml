@@ -35,7 +35,7 @@ view: courseinstructor {
     where se.access_role != 'STUDENT'
     ;;
 
-   datagroup_trigger: daily_refresh
+  # datagroup_trigger: daily_refresh
   }
 
   set: marketing_fields {fields:[instructoremail,is_new_customer,instructor_guid]}

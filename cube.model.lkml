@@ -1,7 +1,7 @@
 include: "//core/common.lkml"
 include: "//core/datagroups.lkml"
 #include: "//project_source/*.view.lkml"
-include: "//core/access_grants_file.view"
+# include: "//core/access_grants_file.view"
 
 
 connection: "snowflake_prod"

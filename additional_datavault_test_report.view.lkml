@@ -1,4 +1,4 @@
-view: datavault_test_report {
+view: additional_datavault_test_report {
   derived_table: {
     sql: SELECT * FROM "QA_TESTREPORTS"."DATAVAULT_STATUS"
       ;;

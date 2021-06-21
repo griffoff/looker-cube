@@ -1,5 +1,6 @@
-include: "//core/access_grants_file.view"
-include: "//core/named_formats.lkml"
+# include: "//core/access_grants_file.view"
+# include: "//core/named_formats.lkml"
+include: "*.view.lkml"
 
 view: paid_users {
 derived_table: {
@@ -133,7 +134,7 @@ view: fact_siteusage {
     sql: ${TABLE}.id ;;
     hidden: no
     primary_key: yes
-    required_access_grants: [can_view_cube_dev]
+    # required_access_grants: [can_view_cube_dev]
   }
 
   dimension: activityid {
@@ -489,7 +490,7 @@ view: fact_siteusage {
     type: number
     sql: ${pageviewtime_sum};;
     value_format_name: duration_hms
-    required_access_grants: [can_view_cube_dev]
+    # required_access_grants: [cu]
   }
 
 #   measure: pageviewtime_dailyaverage_by_student {
